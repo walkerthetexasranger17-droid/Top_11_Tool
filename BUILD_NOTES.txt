@@ -1,0 +1,29 @@
+TOP ELEVEN TRAINING TOOL — v5 ALPHA 1
+
+This is the first clean v5 rebuild, not a patched v4 stylesheet.
+
+Implemented in this alpha:
+- Clean modular app structure (data/storage/players/scanner/training/team training/recommendations/UI).
+- Scanner v2 with Top Eleven-specific panel alignment and dedicated number recognition.
+- Numeric scanner regression dataset: 11 supplied screenshots / 187 numeric fields.
+- GK structural detection does not depend on text OCR.
+- Name and visible role text use client-side Tesseract.js loaded on demand; no paid API/backend is used.
+- Manual role review supports up to three roles and protects GK/outfield schema integrity.
+- Player Profile rebuilt with generic role artwork, OVR, roles, playstyle, abilities and full skills.
+- Player edit/delete and stable player keys.
+- Individual Training engine rebuilt without invented projected skill gains.
+- 180-rule headroom, 400 normal training cap, grey limit, drill availability, difficulty and diversity logic separated from UI.
+- Training sessions persist by stable player key.
+- Team Training strict grey-limit integrity and full role coverage.
+- Tactics, mentors and playmaker ranking moved into independent recommendation logic.
+- Bottom navigation + More sheet; no burger menu.
+
+Automated checks at packaging:
+- 98 core logic assertions PASS
+- Scanner regression: 11 screenshots / 187 numeric fields PASS
+- Static DOM/navigation/assets checks PASS
+- JavaScript syntax PASS
+- 27 raster production assets verify PASS
+- ZIP integrity PASS
+
+Note: Chromium headless is unreliable in the build environment, so browser interaction testing is included as a smoke-test page but is not claimed as passed here. Phone testing is the next acceptance step.
