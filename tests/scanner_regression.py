@@ -12,6 +12,7 @@ FIX={
 '1000009380.jpg':{'type':'out','ovr':102,'age':22,'def':[116,113,147,44,115],'att':[181,154,48,114,56],'phys':[134,32,45,132,96],'totals':[107,111,88]},
 '1000009381.jpg':{'type':'out','ovr':104,'age':19,'def':[88,83,74,79,60],'att':[124,137,135,143,150],'phys':[136,64,48,117,121],'totals':[77,138,97]},
 '1000009382.jpg':{'type':'out','ovr':103,'age':20,'def':[44,40,70,135,42],'att':[169,137,98,137,144],'phys':[154,46,56,133,138],'totals':[66,137,105]},
+'1000009383.jpg':{'type':'out','ovr':136,'age':18,'def':[91,116,102,103,120],'att':[167,157,155,156,165],'phys':[157,101,113,166,167],'totals':[107,160,141]},
 '1000009384.jpg':{'type':'out','ovr':153,'age':18,'def':[99,102,185,191,115],'att':[178,179,102,180,195],'phys':[119,180,107,187,173],'totals':[138,167,153]},
 '1000009419.jpg':{'type':'out','ovr':105,'age':20,'def':[128,163,137,72,152],'att':[66,94,127,55,62],'phys':[144,75,121,133,47],'totals':[130,81,104]},
 }
@@ -63,9 +64,13 @@ def panel_bounds(arr):
     top=max(range(int(.015*h),int(.2*h)),key=lambda y:diff[y])+1;bot=max(range(int(.75*h),h-2),key=lambda y:diff[y])+1
     return x1,top,x2,bot
 
+FIXTURE_DIR=os.path.join(ROOT,'tests','scanner-fixtures')
 errors=[];count=0
 for fn,f in FIX.items():
-    path=os.path.join('/mnt/data',fn);arr=np.array(Image.open(path));b=panel_bounds(arr)
+    path=os.path.join(FIXTURE_DIR,fn)
+    if not os.path.exists(path):
+        path=os.path.join('/mnt/data',fn)
+    arr=np.array(Image.open(path));b=panel_bounds(arr)
     if any(abs(v-e)>2 for v,e in zip(b,(243,35,1293,660))):errors.append((fn,'panel',b));
     got_ovr=read(arr[100:154,495:565],'ovr');got_age=read(arr[160:210,525:575],'age');count+=2
     if got_ovr!=f['ovr']:errors.append((fn,'ovr',got_ovr,f['ovr']))

@@ -32,3 +32,14 @@ Unchanged by design
 
 Known boundary
 - The exact failing real-world screenshot described during Beta 2 preparation was not supplied with the build, so it cannot yet be added as a permanent image fixture. Once supplied, it should be added to scanner_regression.py with its verified expected values.
+
+Beta 2 scanner deep-read patch (real-device follow-up)
+- Added permanent Richard Kilroy OVR 136 fixture (1000009383.jpg).
+- Added OVR-font digit 6 template from the supplied screenshot.
+- Scanner reads all numeric cells across multiple local thresholds before returning.
+- Fixed chooseGroup reconciliation so already-valid category reads are never altered just to reduce rounded aggregate error.
+- Added conservative repair rules for genuinely unresolved groups only.
+- Added targeted secondary local OCR for unresolved OVR.
+- Scanner regression: 12 screenshots / 204 numeric fields.
+- Core regression: 91 assertions.
+

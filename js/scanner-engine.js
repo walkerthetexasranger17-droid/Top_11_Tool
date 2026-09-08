@@ -154,17 +154,42 @@
     const reads=offsets.map(offset=>readNumber(ctx,rect,kind,templates,{threshold:baseThreshold+offset}));
     const byValue=new Map();
     for(const r of reads){
+      const seenThisPass=new Set();
       for(const c of (r.candidates||[])){
-        const old=byValue.get(c.value);
-        if(!old||c.score<old.score)byValue.set(c.value,{value:c.value,score:c.score});
+        const value=Number(c.value);if(!Number.isFinite(value)||seenThisPass.has(value))continue;seenThisPass.add(value);
+        const item=byValue.get(value)||{value,bestScore:Infinity,scoreTotal:0,scoreCount:0,votes:0,primaryVotes:0};
+        item.bestScore=Math.min(item.bestScore,Number(c.score));item.scoreTotal+=Number(c.score);item.scoreCount++;item.votes++;
+        if(value===r.value)item.primaryVotes++;
+        byValue.set(value,item);
       }
     }
-    const candidates=[...byValue.values()].sort((a,b)=>a.score-b.score).slice(0,12);
+    const validReads=reads.filter(r=>r.value!=null).length;
+    const candidates=[...byValue.values()].map(x=>({
+      value:x.value,
+      score:x.bestScore,
+      avgScore:x.scoreCount?x.scoreTotal/x.scoreCount:x.bestScore,
+      votes:x.votes,
+      primaryVotes:x.primaryVotes,
+      stability:validReads?x.primaryVotes/validReads:0
+    })).sort((a,b)=>b.primaryVotes-a.primaryVotes||a.avgScore-b.avgScore||a.bestScore-b.bestScore).slice(0,12);
     const best=candidates[0];
-    if(!best)return reads.find(r=>r.value!=null)||{value:null,confidence:0,candidates:[],components:0};
-    const second=candidates[1];const margin=second?Math.max(0,second.score-best.score):.2;
-    const confidence=Math.max(0,Math.min(1,(1-best.score/.24)*.72+Math.min(1,margin/.06)*.28));
-    return {value:best.value,confidence,candidates,components:reads.find(r=>r.value===best.value)?.components||0};
+    if(!best)return reads.find(r=>r.value!=null)||{value:null,confidence:0,candidates:[],components:0,stability:0};
+    const second=candidates[1];const margin=second?Math.max(0,second.avgScore-best.avgScore):.2;
+    const confidence=Math.max(0,Math.min(1,(1-best.avgScore/.24)*.58+Math.min(1,margin/.06)*.17+Math.min(1,best.stability)*.25));
+    return {value:best.value,confidence,candidates,components:reads.find(r=>r.value===best.value)?.components||0,stability:best.stability};
+  }
+
+  function deepReadNumber(ctx,rect,kind,templates){
+    const first=readNumber(ctx,rect,kind,templates);
+    const multi=rereadNumberCandidates(ctx,rect,kind,templates);
+    if(first.value==null)return multi;
+    if(multi.value==null)return first;
+    // A stable seven-threshold consensus is stronger than a one-pass read. If the
+    // passes disagree without a strong consensus, keep the original value and lower
+    // confidence rather than forcing a different digit.
+    if(first.value===multi.value)return {...multi,confidence:Math.max(first.confidence,multi.confidence)};
+    if((multi.stability||0)>=.57&&multi.confidence>=first.confidence-.08)return multi;
+    return {...first,confidence:Math.min(first.confidence,.64),candidates:multi.candidates,stability:multi.stability||0};
   }
 
   function reconcileReadToTarget(read,target,tolerance=1.5){
@@ -180,16 +205,27 @@
   }
 
   function chooseGroup(reads,target){
-    if(target==null||!reads.length)return {values:reads.map(r=>r.value),repaired:false,error:null};
-    let states=[{values:[],score:0}];
+    const original=reads.map(r=>r.value);
+    if(target==null||!reads.length||original.some(v=>!Number.isFinite(Number(v))))return {values:original,repaired:false,error:null};
+    const originalAvg=groupAverage(original),originalError=Math.abs(originalAvg-target);
+    // Important: displayed group totals are rounded from hidden values. If the direct
+    // digit reads already agree within the normal tolerance, do not mutate individual
+    // attributes merely to make the rounded aggregate look closer.
+    if(originalError<=1.25)return {values:original,repaired:false,error:originalError};
+    let states=[{values:[],score:0,changes:0}];
     for(const r of reads){
-      const opts=(r.candidates&&r.candidates.length?r.candidates.slice(0,2):[{value:r.value,score:0}]);
-      const next=[];for(const s of states)for(const o of opts)next.push({values:[...s.values,o.value],score:s.score+o.score});
-      states=next.sort((a,b)=>a.score-b.score).slice(0,64);
+      const confident=Number(r.confidence)>=.78&&r.value!=null;
+      const opts=confident?[{value:r.value,score:0}]:(r.candidates&&r.candidates.length?r.candidates.slice(0,3):[{value:r.value,score:0}]);
+      const next=[];
+      for(const st of states)for(const o of opts)next.push({values:[...st.values,o.value],score:st.score+Number(o.score||0),changes:st.changes+(o.value===r.value?0:1)});
+      states=next.sort((a,b)=>a.score-b.score||a.changes-b.changes).slice(0,96);
     }
-    for(const s of states){const avg=s.values.reduce((a,b)=>a+b,0)/s.values.length;s.aggregateError=Math.abs(avg-target);s.objective=s.aggregateError*1.5+s.score*.35;}
+    for(const st of states){const avg=groupAverage(st.values);st.aggregateError=Math.abs(avg-target);st.objective=st.aggregateError*2+st.score*.35+st.changes*.18;}
     states.sort((a,b)=>a.objective-b.objective);
-    const best=states[0];const original=reads.map(r=>r.value);
+    const best=states[0];
+    // Only repair genuinely unresolved groups, and only when recognised alternatives
+    // bring the aggregate inside tolerance. Otherwise surface the mismatch for review.
+    if(!best||best.aggregateError>1.25||best.aggregateError>=originalError-.15)return {values:original,repaired:false,error:originalError};
     return {values:best.values,repaired:best.values.some((v,i)=>v!==original[i]),error:best.aggregateError};
   }
 
@@ -212,6 +248,10 @@
       return {text:String(r.data?.text||'').trim(),confidence:Math.max(0,Math.min(1,conf))};
     }catch(_){return {text:'',confidence:0};}
   }
+  async function ocrNumber(url,min=0,max=520){
+    const r=await ocrText(url,{whitelist:'0123456789',psm:'7'});const text=String(r.text||'').replace(/\D+/g,'');const value=text?Number(text):null;
+    return {value:Number.isFinite(value)&&value>=min&&value<=max?value:null,confidence:r.confidence};
+  }
   function cleanName(text){
     return String(text||'').replace(/[\r\n]+/g,' ').replace(/[^A-Za-zÀ-ž'’\- ]+/g,' ').replace(/\s+/g,' ').trim();
   }
@@ -233,22 +273,26 @@
     const img=await imageFromUrl(dataUrl);const bounds=detectPanelBounds(img);const panel=normalizePanel(img,bounds);const ctx=panel.getContext('2d',{willReadFrequently:true});
     onProgress({step:'align',progress:.18,label:'Player panel aligned'});
 
-    const ovr=readNumber(ctx,RECTS.ovr,'ovr',templates);const age=readNumber(ctx,RECTS.age,'age',templates);
+    // Deliberately spend a little more local CPU time on the numeric grid. Every
+    // number is read across multiple thresholds before reconciliation; this is still
+    // fully on-device and avoids returning a fast but fragile single-pass result.
+    onProgress({step:'numbers',progress:.28,label:'Deep-reading numerical values'});
+    const ovr=deepReadNumber(ctx,RECTS.ovr,'ovr',templates);const age=deepReadNumber(ctx,RECTS.age,'age',templates);
     const columns={};
-    for(const [key,col] of Object.entries(COLS)) columns[key]=ROW_Y.map(y=>readNumber(ctx,{x:col.x,y,w:col.w,h:45},'skill',templates));
-    const totals={def:readNumber(ctx,RECTS.defTotal,'skill',templates),att:readNumber(ctx,RECTS.attTotal,'skill',templates),phys:readNumber(ctx,RECTS.physTotal,'skill',templates)};
+    for(const [key,col] of Object.entries(COLS)) columns[key]=ROW_Y.map(y=>deepReadNumber(ctx,{x:col.x,y,w:col.w,h:45},'skill',templates));
+    const totals={def:deepReadNumber(ctx,RECTS.defTotal,'skill',templates),att:deepReadNumber(ctx,RECTS.attTotal,'skill',templates),phys:deepReadNumber(ctx,RECTS.physTotal,'skill',templates)};
     // GK is also identifiable structurally: the combined GOALKEEPING heading has no
     // separate Defence total in the left header slot, while its combined total sits
     // in the middle slot. This keeps GK numeric parsing working even if text OCR is offline.
     const numericGk=totals.def.value==null&&totals.att.value!=null;
-    onProgress({step:'skills',progress:.58,label:'Attributes read'});
+    onProgress({step:'skills',progress:.64,label:'Numeric passes compared'});
     const [nameOcr,roleOcr,sectionOcr]=await Promise.all([
       ocrText(cropUrl(panel,RECTS.name,2),{psm:'7'}),
       ocrText(cropUrl(panel,RECTS.roles,3),{whitelist:'ABCDEFGHIJKLMNOPQRSTUVWXYZ',psm:'11'}),
       ocrText(cropUrl(panel,RECTS.section,2),{whitelist:'ABCDEFGHIJKLMNOPQRSTUVWXYZ',psm:'7'})
     ]);
     let roles=parseRoles(roleOcr.text);const gk=numericGk||roles.includes('GK')||/GOAL/.test(sectionOcr.text.toUpperCase());if(gk&&!roles.includes('GK'))roles=['GK'];
-    onProgress({step:'header',progress:.75,label:'Header and role read'});
+    onProgress({step:'header',progress:.82,label:'Header and role read'});
 
     let skills={},checks={},repairNotes=[];
     if(gk){
@@ -271,11 +315,17 @@
       const reconciled=reconcileReadToTarget(expandedOvr,overallAvg,1.5);
       if(reconciled.changed){
         finalOvr=reconciled.read;
-        repairNotes.push(`OVR re-read resolved ${ovr.value??'—'} → ${finalOvr.value} using recognised digit candidates`);
+        repairNotes.push(`OVR multi-pass re-read resolved ${ovr.value??'—'} → ${finalOvr.value} using recognised digit candidates`);
       }else if(expandedOvr.value!=null){
-        // Keep the original value unless an alternate recognised value actually resolves
-        // the discrepancy. This avoids "correcting" a screenshot by guesswork.
         finalOvr=ovr.value==null?expandedOvr:ovr;
+      }
+      if(finalOvr.value==null||Math.abs(overallAvg-finalOvr.value)>1.5){
+        onProgress({step:'ovr-retry',progress:.90,label:'Double-checking OVR'});
+        const ocrOvr=await ocrNumber(cropUrl(panel,RECTS.ovr,5),1,520);
+        if(ocrOvr.value!=null&&Math.abs(overallAvg-ocrOvr.value)<=1.5){
+          repairNotes.push(`OVR secondary local OCR resolved ${finalOvr.value??'—'} → ${ocrOvr.value}`);
+          finalOvr={...finalOvr,value:ocrOvr.value,confidence:Math.max(finalOvr.confidence||0,ocrOvr.confidence||0)};
+        }
       }
     }
     checks.ovr={average:overallAvg,error:finalOvr.value==null?null:Math.abs(overallAvg-finalOvr.value),ok:finalOvr.value!=null&&Math.abs(overallAvg-finalOvr.value)<=1.5};
@@ -291,5 +341,5 @@
     };
   }
 
-  TE.Scanner={loadTemplates,ensureTesseract,detectPanelBounds,scan,readNumber,rereadNumberCandidates,reconcileReadToTarget,checkAggregate,chooseGroup,RECTS,COLS,ROW_Y};
+  TE.Scanner={loadTemplates,ensureTesseract,detectPanelBounds,scan,readNumber,rereadNumberCandidates,deepReadNumber,reconcileReadToTarget,checkAggregate,chooseGroup,RECTS,COLS,ROW_Y};
 })();

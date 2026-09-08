@@ -17,3 +17,16 @@ Focused Beta 2 maintenance release based on the known-good v5 Beta 1 build. The 
 - Confirm the installed PWA displays **Top Eleven Tool**.
 
 The authoritative training files remain under `data/build_30527/` and are unchanged from Beta 1.
+
+## Scanner deep-read patch
+
+Real-device testing with Richard Kilroy (OVR 136) exposed two separate issues in the Beta 2 numeric reconciliation path: the OVR template library did not yet contain an OVR-font `6`, and aggregate reconciliation could replace already-correct individual attributes simply because an alternative combination sat closer to the rounded category total.
+
+This patch keeps Scanner v2 but makes the numeric pass deliberately more thorough:
+- every numeric cell is compared across multiple local threshold passes;
+- stable direct reads are protected when the displayed category total is already within tolerance;
+- aggregate totals validate/resolve genuinely ambiguous reads rather than forcing a cosmetically closer average;
+- unresolved OVR gets a targeted secondary local digit-OCR check;
+- the Richard Kilroy screenshot is now a permanent regression fixture.
+
+Regression set: **12 screenshots / 204 numeric fields**.
