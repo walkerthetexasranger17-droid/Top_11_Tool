@@ -1,0 +1,237 @@
+{
+  "captured_at": "2026-09-08T15:40:11.9397034+01:00",
+  "profile": [
+    {
+      "drill_id": "PASS_GO_SHOOT",
+      "name": "Pass, Go and Shoot!",
+      "unlocked": true,
+      "level_id": 3,
+      "level": "World-class",
+      "training_effect_percent": 30
+    },
+    {
+      "drill_id": "FAST_COUNTER_ATTACKS",
+      "name": "Fast Counter-Attacks",
+      "unlocked": true,
+      "level_id": 3,
+      "level": "World-class",
+      "training_effect_percent": 30
+    },
+    {
+      "drill_id": "SKILL_DRILL",
+      "name": "Ball Control",
+      "unlocked": true,
+      "level_id": 2,
+      "level": "Pro",
+      "training_effect_percent": 20
+    },
+    {
+      "drill_id": "SHOOTING_TECHNIQUE",
+      "name": "Shooting Technique",
+      "unlocked": true,
+      "level_id": 2,
+      "level": "Pro",
+      "training_effect_percent": 20
+    },
+    {
+      "drill_id": "SET_PIECE_DELIVERY",
+      "name": "Set-Piece Delivery",
+      "unlocked": true,
+      "level_id": 1,
+      "level": "Semi-pro",
+      "training_effect_percent": 10
+    },
+    {
+      "drill_id": "SLALOM_DRIBBLE",
+      "name": "Slalom Dribble",
+      "unlocked": true,
+      "level_id": 3,
+      "level": "World-class",
+      "training_effect_percent": 30
+    },
+    {
+      "drill_id": "WING_PLAY",
+      "name": "Wing Play",
+      "unlocked": true,
+      "level_id": 3,
+      "level": "World-class",
+      "training_effect_percent": 30
+    },
+    {
+      "drill_id": "FINISHING_1_1",
+      "name": "1-on-1 Finishing",
+      "unlocked": true,
+      "level_id": 2,
+      "level": "Pro",
+      "training_effect_percent": 20
+    },
+    {
+      "drill_id": "PRESS_THE_PLAY",
+      "name": "Press the Play",
+      "unlocked": true,
+      "level_id": 3,
+      "level": "World-class",
+      "training_effect_percent": 30
+    },
+    {
+      "drill_id": "PIGGY_IN_THE_MIDDLE",
+      "name": "Piggy in the Middle",
+      "unlocked": true,
+      "level_id": 1,
+      "level": "Semi-pro",
+      "training_effect_percent": 10
+    },
+    {
+      "drill_id": "GOALKEEPER_TRAINING",
+      "name": "Goalkeeper Training",
+      "unlocked": true,
+      "level_id": 3,
+      "level": "World-class",
+      "training_effect_percent": 30
+    },
+    {
+      "drill_id": "USE_YOUR_HEAD",
+      "name": "Use Your Head",
+      "unlocked": true,
+      "level_id": 2,
+      "level": "Pro",
+      "training_effect_percent": 20
+    },
+    {
+      "drill_id": "STOP_THE_ATTACKER",
+      "name": "Stop the Attacker",
+      "unlocked": true,
+      "level_id": 3,
+      "level": "World-class",
+      "training_effect_percent": 30
+    },
+    {
+      "drill_id": "DEFENDING_CROSSES",
+      "name": "Defending Crosses",
+      "unlocked": true,
+      "level_id": 2,
+      "level": "Pro",
+      "training_effect_percent": 20
+    },
+    {
+      "drill_id": "VIDEO_ANALYSIS",
+      "name": "Video Analysis",
+      "unlocked": true,
+      "level_id": 2,
+      "level": "Pro",
+      "training_effect_percent": 20
+    },
+    {
+      "drill_id": "HOLD_THE_LINE",
+      "name": "Hold the Line",
+      "unlocked": true,
+      "level_id": 3,
+      "level": "World-class",
+      "training_effect_percent": 30
+    },
+    {
+      "drill_id": "WARM_UP",
+      "name": "Warm-Up",
+      "unlocked": true,
+      "level_id": 2,
+      "level": "Pro",
+      "training_effect_percent": 20
+    },
+    {
+      "drill_id": "STRETCH",
+      "name": "Stretch",
+      "unlocked": true,
+      "level_id": 2,
+      "level": "Pro",
+      "training_effect_percent": 20
+    },
+    {
+      "drill_id": "SPRINT",
+      "name": "Sprint",
+      "unlocked": true,
+      "level_id": 3,
+      "level": "World-class",
+      "training_effect_percent": 30
+    },
+    {
+      "drill_id": "CARIOCA_WITH_LADDERS",
+      "name": "Carioca with Ladders",
+      "unlocked": true,
+      "level_id": 1,
+      "level": "Semi-pro",
+      "training_effect_percent": 10
+    },
+    {
+      "drill_id": "LONG_RUN",
+      "name": "Long Run",
+      "unlocked": true,
+      "level_id": 3,
+      "level": "World-class",
+      "training_effect_percent": 30
+    },
+    {
+      "drill_id": "GYM",
+      "name": "Gym",
+      "unlocked": true,
+      "level_id": 2,
+      "level": "Pro",
+      "training_effect_percent": 20
+    },
+    {
+      "drill_id": "SHUTTLE_RUNS",
+      "name": "Shuttle Runs",
+      "unlocked": true,
+      "level_id": 2,
+      "level": "Pro",
+      "training_effect_percent": 20
+    },
+    {
+      "drill_id": "HURDLE_JUMPS",
+      "name": "Hurdle Jumps",
+      "unlocked": true,
+      "level_id": 1,
+      "level": "Semi-pro",
+      "training_effect_percent": 10
+    },
+    {
+      "drill_id": "FIRST_TOUCH_PLAY",
+      "name": "First Touch Play",
+      "unlocked": true,
+      "level_id": 3,
+      "level": "World-class",
+      "training_effect_percent": 30
+    },
+    {
+      "drill_id": "RAPID_SIDE_SWITCH",
+      "name": "Rapid Side Switch",
+      "unlocked": true,
+      "level_id": 1,
+      "level": "Semi-pro",
+      "training_effect_percent": 10
+    },
+    {
+      "drill_id": "STAY_IN_LANE",
+      "name": "Stay In Lane",
+      "unlocked": false,
+      "level_id": 0,
+      "level": "Locked/No level",
+      "training_effect_percent": 0
+    },
+    {
+      "drill_id": "PASSES_BEFORE_SHOT",
+      "name": "Passes Before Shot",
+      "unlocked": true,
+      "level_id": 3,
+      "level": "World-class",
+      "training_effect_percent": 30
+    },
+    {
+      "drill_id": "CONTACT_PLAY",
+      "name": "Contact Play",
+      "unlocked": true,
+      "level_id": 2,
+      "level": "Pro",
+      "training_effect_percent": 20
+    }
+  ]
+}
