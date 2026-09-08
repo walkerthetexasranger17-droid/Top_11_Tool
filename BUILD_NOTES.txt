@@ -1,5 +1,5 @@
-TOP ELEVEN TOOL — v5 BETA 2 — BUILD 30527
-FOCUSED SCANNER / PRODUCT-NAME PASS
+TOP ELEVEN TOOL — v5.2.4 — BUILD 30527
+CURRENT RELEASE: WHITE-SKILL COVERAGE OPTIMISER CORRECTION
 
 Baseline
 - v5 Beta 1 — Build 30527 remains the functional and visual baseline.
@@ -41,5 +41,14 @@ Beta 2 scanner deep-read patch (real-device follow-up)
 - Added conservative repair rules for genuinely unresolved groups only.
 - Added targeted secondary local OCR for unresolved OVR.
 - Scanner regression: 12 screenshots / 204 numeric fields.
-- Core regression: 91 assertions.
+- Core regression: 100 assertions.
 
+
+
+v5.2.4 optimiser correction
+- Deliberately revises only the companion ranking formula; authoritative build-30527 game data is unchanged.
+- Multi-white drill coverage is now rewarded directly: score = drill strength × summed adjusted need of all white/key attributes hit.
+- Grey attributes do not add to, dilute, or penalise individual-player drill score.
+- Balancing credit is applied to every white attribute hit after each selected slot, then all legal drills are rescored.
+- Recommendation cards now show the number of white targets per drill.
+- Training model version bumped so older saved recommendations invalidate automatically.
