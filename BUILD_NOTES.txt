@@ -1,29 +1,48 @@
-TOP ELEVEN TRAINING TOOL — v5 ALPHA 1
+TOP ELEVEN TRAINING TOOL — v5 BETA 1 — BUILD 30527
+FINAL TEST PACKAGE
 
-This is the first clean v5 rebuild, not a patched v4 stylesheet.
+Purpose
+- Continue the existing v5 rebuild without replacing working scanner/player/tactics code.
+- Use TopEleven_Optimizer_Handoff_30527 as the authoritative source for Individual Training.
+- Keep the current professional mock-up direction and existing v5 visual reconstruction intact.
 
-Implemented in this alpha:
-- Clean modular app structure (data/storage/players/scanner/training/team training/recommendations/UI).
-- Scanner v2 with Top Eleven-specific panel alignment and dedicated number recognition.
-- Numeric scanner regression dataset: 11 supplied screenshots / 187 numeric fields.
-- GK structural detection does not depend on text OCR.
-- Name and visible role text use client-side Tesseract.js loaded on demand; no paid API/backend is used.
-- Manual role review supports up to three roles and protects GK/outfield schema integrity.
-- Player Profile rebuilt with generic role artwork, OVR, roles, playstyle, abilities and full skills.
-- Player edit/delete and stable player keys.
-- Individual Training engine rebuilt without invented projected skill gains.
-- 180-rule headroom, 400 normal training cap, grey limit, drill availability, difficulty and diversity logic separated from UI.
-- Training sessions persist by stable player key.
-- Team Training strict grey-limit integrity and full role coverage.
-- Tactics, mentors and playmaker ranking moved into independent recommendation logic.
-- Bottom navigation + More sheet; no burger menu.
+Training source of truth
+- data/build_30527/IMPLEMENTATION_CONTRACT.md
+- data/build_30527/white_skill_map_30527.json
+- data/build_30527/normal_drills.json
+- data/build_30527/master_campus_drills.json
+- data/build_30527/drill_level_system.json
+- data/build_30527/intensity_system.json
+- captured user drill/stock snapshots in the same directory
 
-Automated checks at packaging:
-- 98 core logic assertions PASS
-- Scanner regression: 11 screenshots / 187 numeric fields PASS
-- Static DOM/navigation/assets checks PASS
-- JavaScript syntax PASS
-- 27 raster production assets verify PASS
-- ZIP integrity PASS
+Beta 1 integrity/polish completed
+- Saved Individual Training recommendations are invalidated when the selected player's saved data changes.
+- Any My Drills unlock/level change, Master stock edit, reset, or Master-card deduction invalidates saved recommendations that depended on the old drill state.
+- Restored recommendations also carry source timestamps and are rejected if player/drill source state no longer matches.
+- Completing a session with Master cards deducts stock once, updates the current session's stock snapshot, then re-saves that completed session.
+- Master drills show owned-at-build, cards used, and projected/current remaining stock more clearly.
+- Formation now has a proper empty/incomplete-squad state, disables Team Select until 11 players exist, and labels pre-XI players as Available Players rather than Bench.
+- Existing Scanner v2, player CRUD/stable IDs, multi-role handling, optimiser rules, tactics, playmakers and visual shell were retained.
 
-Note: Chromium headless is unreliable in the build environment, so browser interaction testing is included as a smoke-test page but is not claimed as passed here. Phone testing is the next acceptance step.
+Training contract retained unchanged
+- Multi-position key/white skills use the UNION of all saved roles.
+- Normal drill level/unlock and Training Effect come from My Drills.
+- Master drill duplicates are limited only by owned stock; normal drill duplicates are allowed.
+- Ranking maximises useful development into current required white attributes and re-assesses need across all six slots.
+- Condition is displayed but is not the primary optimisation objective.
+- Outfield players ignore irrelevant GK-only attributes.
+- No exact +X% gain is claimed because final gain is server-side.
+
+Verification for this package
+- Core logic regression: PASS (86 assertions).
+- Scanner regression: PASS (11 real screenshots / 187 numerical values, panel location within 2 px).
+- Static DOM/navigation/runtime-asset checks: PASS.
+- JavaScript syntax checks: PASS.
+- Authoritative packaged build-30527 JSON/contract files: byte-for-byte MATCH against the supplied handoff ZIP.
+- ZIP CRC/integrity: checked during packaging.
+
+Known limitations
+- Exact final training gains remain server-side and are intentionally not predicted.
+- Arbitrary player-name/text OCR loads Tesseract.js from a CDN; the numeric Top Eleven-specific parser is local.
+- Team Training remains a normal-drill group planner and does not model unrecovered server-side TeamPlayTraining multipliers.
+- This Beta is intentionally frozen for user testing before further optimiser or visual changes.
