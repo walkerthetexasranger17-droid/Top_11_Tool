@@ -1,6 +1,6 @@
 {
-  "name":"Top Eleven Training Tool",
-  "short_name":"TE Training",
+  "name":"Top Eleven Tool",
+  "short_name":"Top Eleven Tool",
   "start_url":"./index.html",
   "display":"standalone",
   "background_color":"#030913",

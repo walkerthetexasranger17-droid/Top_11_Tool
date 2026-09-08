@@ -1,21 +1,28 @@
-# v5 Beta 1 — Build 30527 Test Matrix
+# v5 Beta 2 — Build 30527 Test Matrix
 
 ## Automated checks
-- `node tests/core-tests.js` — source data, role union, My Drills persistence, session invalidation, Master stock limits/deduction, six-slot optimiser invariants, team training separation, formation coordinate integrity, tactics/playmaker retention.
-- `python tests/scanner_regression.py` — 11 supplied Top Eleven screenshots, 187 numerical values, GK/outfield layouts and panel location.
-- `python tests/static_checks.py` — duplicate IDs, navigation targets, direct DOM references, runtime assets and stale-session integrity hooks.
-- `node --check` — every JavaScript source plus service worker.
+- `node tests/core-tests.js` — authoritative data, player/session integrity, optimiser invariants, Master stock, Team Training separation, formation/tactics/playmakers, plus Scanner v2 OVR reconciliation safeguards.
+- `python tests/scanner_regression.py` — existing 11 supplied Top Eleven screenshots / 187 numerical fields, GK/outfield layouts and panel location.
+- `python tests/static_checks.py` — duplicate IDs, navigation, DOM references, assets, scanner save-gate hooks and product-name consistency.
+- `python tests/package_integrity.py` — service-worker runtime cache and manifest integrity.
+- `node --check` — JavaScript sources and service worker.
 
-## Manual phone checks for this Beta
-- Add Player button/scan target has no overlap.
-- Scanner review/save/update-existing flow.
-- My Squad ordering and player profile edit/delete.
-- Training save/restore and stale invalidation after player edits or My Drills changes.
-- Master stock projection before completion and remaining stock after completion.
-- Formation empty state below 11 players and readable pitch layout at 11+ players.
-- Bottom navigation, More sheet, Tactics and Playmakers.
+## Scanner Beta 2 acceptance
+- Existing clean scanner fixture set remains unchanged.
+- If OVR conflicts with reconciled skill values, alternate recognised OVR candidates are considered before declaring the scan unresolved.
+- No synthetic value may be created just to make OVR match.
+- Any unresolved Defence/Attack/Physical/Goalkeeping/OVR check blocks Save/Update.
+- Editing OVR or parsed skill values re-runs checks immediately.
+- Save becomes available only when numerical verification passes.
+
+## Manual phone checks
+- Normal outfield, multi-role and GK scans.
+- Known mismatch screenshot when supplied.
+- Add/update-existing player flow after scanner verification.
+- Installed PWA/app label reads `Top Eleven Tool`.
+- Training, My Drills, Formation, Tactics and Playmakers remain visually/functionally unchanged from Beta 1.
 
 ## Known boundaries
-- Final Top Eleven attribute gain is server-computed; Useful Training Score is a ranking score, not an exact gain prediction.
-- Player-name/text OCR uses Tesseract.js loaded from jsDelivr; numeric extraction uses the local Top Eleven-specific recogniser.
-- Team Training deliberately excludes unrecovered TeamPlayTraining session/critical/per-drill multipliers.
+- Final Top Eleven training gain remains server-computed and is not predicted.
+- Player-name/text OCR still uses Tesseract.js from jsDelivr; numeric recognition remains local.
+- The exact newly reported failing screenshot is not part of the regression folder until the user supplies it.

@@ -1,48 +1,34 @@
-TOP ELEVEN TRAINING TOOL — v5 BETA 1 — BUILD 30527
-FINAL TEST PACKAGE
+TOP ELEVEN TOOL — v5 BETA 2 — BUILD 30527
+FOCUSED SCANNER / PRODUCT-NAME PASS
 
-Purpose
-- Continue the existing v5 rebuild without replacing working scanner/player/tactics code.
-- Use TopEleven_Optimizer_Handoff_30527 as the authoritative source for Individual Training.
-- Keep the current professional mock-up direction and existing v5 visual reconstruction intact.
+Baseline
+- v5 Beta 1 — Build 30527 remains the functional and visual baseline.
+- Training optimiser logic and authoritative build-30527 data are unchanged.
+- Scanner v2 fixed-region/digit-template architecture is retained.
+- Existing player, tactics, formation and visual work is retained.
 
-Training source of truth
-- data/build_30527/IMPLEMENTATION_CONTRACT.md
-- data/build_30527/white_skill_map_30527.json
-- data/build_30527/normal_drills.json
-- data/build_30527/master_campus_drills.json
-- data/build_30527/drill_level_system.json
-- data/build_30527/intensity_system.json
-- captured user drill/stock snapshots in the same directory
+Scanner reconciliation fix
+- Root cause in Beta 1: scanner-engine.js already calculated aggregate and OVR discrepancy checks, but app.js only displayed those checks. validateScanForm() validated ordinary ranges/roles and did not reject failed scanner checks, so state.scan.skills could still be saved even when the app already knew the scan was inconsistent.
+- Beta 2 adds a targeted OVR re-read using alternate threshold passes of the existing local digit recogniser.
+- Reconciliation may switch OVR only to a value that the recogniser actually returned as a candidate and only when it resolves the OVR/attribute-average mismatch.
+- If no recognised candidate resolves the mismatch, the original value is retained and the scan remains unresolved rather than being forced to match.
+- Scanner review now continuously recalculates Defence/Attack/Physical (or Goalkeeping/Physical) aggregate checks plus OVR when the user edits OVR or a parsed skill.
+- Save Player is disabled while any numerical verification check remains unresolved.
+- Parsed attribute values can be corrected manually from the visible screenshot; Save unlocks only after reconciliation passes.
+- Saved scanner metadata now records the final checks and resolved/unresolved validation state.
 
-Beta 1 integrity/polish completed
-- Saved Individual Training recommendations are invalidated when the selected player's saved data changes.
-- Any My Drills unlock/level change, Master stock edit, reset, or Master-card deduction invalidates saved recommendations that depended on the old drill state.
-- Restored recommendations also carry source timestamps and are rejected if player/drill source state no longer matches.
-- Completing a session with Master cards deducts stock once, updates the current session's stock snapshot, then re-saves that completed session.
-- Master drills show owned-at-build, cards used, and projected/current remaining stock more clearly.
-- Formation now has a proper empty/incomplete-squad state, disables Team Select until 11 players exist, and labels pre-XI players as Available Players rather than Bench.
-- Existing Scanner v2, player CRUD/stable IDs, multi-role handling, optimiser rules, tactics, playmakers and visual shell were retained.
+Product name
+- PWA manifest name: Top Eleven Tool
+- PWA short name: Top Eleven Tool
+- HTML page title/application name: Top Eleven Tool
+- In-app header branding: TOP ELEVEN TOOL
+- Icon/theme unchanged.
 
-Training contract retained unchanged
-- Multi-position key/white skills use the UNION of all saved roles.
-- Normal drill level/unlock and Training Effect come from My Drills.
-- Master drill duplicates are limited only by owned stock; normal drill duplicates are allowed.
-- Ranking maximises useful development into current required white attributes and re-assesses need across all six slots.
-- Condition is displayed but is not the primary optimisation objective.
-- Outfield players ignore irrelevant GK-only attributes.
-- No exact +X% gain is claimed because final gain is server-side.
+Unchanged by design
+- Individual Training optimiser and build-30527 source data.
+- My Drills / Master stock logic.
+- Scanner numeric templates and established reference dataset.
+- Player CRUD/stable IDs, formation, tactics, playmakers and UI theme.
 
-Verification for this package
-- Core logic regression: PASS (86 assertions).
-- Scanner regression: PASS (11 real screenshots / 187 numerical values, panel location within 2 px).
-- Static DOM/navigation/runtime-asset checks: PASS.
-- JavaScript syntax checks: PASS.
-- Authoritative packaged build-30527 JSON/contract files: byte-for-byte MATCH against the supplied handoff ZIP.
-- ZIP CRC/integrity: checked during packaging.
-
-Known limitations
-- Exact final training gains remain server-side and are intentionally not predicted.
-- Arbitrary player-name/text OCR loads Tesseract.js from a CDN; the numeric Top Eleven-specific parser is local.
-- Team Training remains a normal-drill group planner and does not model unrecovered server-side TeamPlayTraining multipliers.
-- This Beta is intentionally frozen for user testing before further optimiser or visual changes.
+Known boundary
+- The exact failing real-world screenshot described during Beta 2 preparation was not supplied with the build, so it cannot yet be added as a permanent image fixture. Once supplied, it should be added to scanner_regression.py with its verified expected values.

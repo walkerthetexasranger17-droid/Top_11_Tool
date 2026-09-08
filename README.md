@@ -1,16 +1,19 @@
-# Top Eleven Training Tool v5 Beta 1 — Build 30527
+# Top Eleven Tool v5 Beta 2 — Build 30527
 
-This is the first test package using the authoritative build-30527 optimiser handoff while retaining the existing v5 Scanner, player model, tactics and visual rebuild.
+Focused Beta 2 maintenance release based on the known-good v5 Beta 1 build. The authoritative build-30527 training optimiser, current visual system, player model, tactics and Scanner v2 architecture are retained.
+
+## Beta 2 focus
+1. Scanner v2 now performs a targeted OVR re-read when the detected OVR conflicts with the reconciled attribute average.
+2. Automatic correction is only allowed when an alternate value was actually produced by the existing digit recogniser and resolves the discrepancy; no attribute or OVR value is invented.
+3. Any remaining aggregate/OVR mismatch locks Save/Update so a known-bad scan cannot silently enter My Squad.
+4. Parsed skill values are editable in the review screen, allowing the user to correct an unresolved field directly from the screenshot before saving.
+5. Editing the OVR or a parsed skill immediately re-runs scanner reconciliation checks and unlocks Save only when the numeric checks pass.
+6. Product/display name is now consistently **Top Eleven Tool** while retaining the existing icon and visual theme.
 
 ## Test priority
-1. Add/scan an outfield player and a GK; confirm name, age, OVR, roles and all attributes before saving.
-2. Edit an existing player, then return to Training and confirm any old recommendation is gone and a fresh session is required.
-3. In My Drills, change one normal drill level/unlock and one Master stock number; return to Training and confirm the saved recommendation is invalidated.
-4. Build a six-slot session with Master stock available. Check the Master card display shows owned, used and projected remaining quantities.
-5. Mark the whole session completed and confirm Master stock is deducted exactly once.
-6. Open Formation with fewer than 11 players and with 11+ players to check the empty state and pitch layout.
+- Re-test a normal outfield scan, multi-role scan and GK scan.
+- Confirm a clean scan still saves normally.
+- Confirm an intentionally mismatched OVR/attribute set shows a warning and Save remains disabled until corrected.
+- Confirm the installed PWA displays **Top Eleven Tool**.
 
-## Authoritative training data
-The immutable source tables and implementation contract are packaged under `data/build_30527/`. The app's optimiser is built around those files and does not claim to reproduce the unrecovered server-side gain formula.
-
-See `BUILD_NOTES.txt` for the exact Beta 1 integrity changes and `docs/TEST_MATRIX.md` for regression coverage and known limitations.
+The authoritative training files remain under `data/build_30527/` and are unchanged from Beta 1.

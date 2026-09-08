@@ -1,7 +1,7 @@
 const fs=require('fs'),vm=require('vm'),path=require('path');
 global.window=global;global.localStorage={_m:new Map(),getItem(k){return this._m.has(k)?this._m.get(k):null},setItem(k,v){this._m.set(k,String(v))},removeItem(k){this._m.delete(k)},key(i){return [...this._m.keys()][i]||null},get length(){return this._m.size}};
-for(const f of ['optimizer-data.js','data.js','storage.js','drill-profile.js','players.js','training-engine.js','team-training-engine.js','recommendations.js','formation.js'])vm.runInThisContext(fs.readFileSync(path.join(__dirname,'..','js',f),'utf8'),{filename:f});
-const {OptimizerData:OD,Data:D,Storage:S,DrillProfile:DP,Players:P,Training:T,TeamTraining:TT,Recommendations:R,Formation:F}=global.TE5;
+for(const f of ['optimizer-data.js','data.js','scanner-engine.js','storage.js','drill-profile.js','players.js','training-engine.js','team-training-engine.js','recommendations.js','formation.js'])vm.runInThisContext(fs.readFileSync(path.join(__dirname,'..','js',f),'utf8'),{filename:f});
+const {OptimizerData:OD,Data:D,Scanner:SC,Storage:S,DrillProfile:DP,Players:P,Training:T,TeamTraining:TT,Recommendations:R,Formation:F}=global.TE5;
 let passed=0;function ok(cond,msg){if(!cond)throw new Error(msg);passed++;}function eq(a,b,msg){ok(JSON.stringify(a)===JSON.stringify(b),`${msg}\n${JSON.stringify(a)} != ${JSON.stringify(b)}`)}function near(a,b,e,msg){ok(Math.abs(a-b)<=e,`${msg}: ${a} vs ${b}`)}
 (async()=>{
   ok(D.GAME_DATA_VERSION==='build_30527','game data version');ok(D.NORMAL_DRILLS.length===29,'29 authoritative normal drills');ok(D.MASTER_CAMPUS_DRILLS.length===4,'4 Master/Campus drills');ok(D.ALL_POSITIONS.length===14,'14 roles');
@@ -11,6 +11,10 @@ let passed=0;function ok(cond,msg){if(!cond)throw new Error(msg);passed++;}funct
   eq(D.DRILL_LEVELS.levels.map(x=>x.training_effect_percent),[10,20,30],'level effect mapping exact');
   const fast=D.NORMAL_DRILLS.find(d=>d.drillId==='FAST_COUNTER_ATTACKS');ok(fast.diff==='Very Hard'&&fast.xpPerPlayer===5&&fast.conditionDrop===3.75,'authoritative Fast Counter properties');
   const master=D.MASTER_CAMPUS_DRILLS.find(d=>d.drillId==='ATTACKING_MASTERCLASS');ok(master.additionalTrainingEffectPercent===80&&master.xpPerPlayer===5&&master.conditionDrop===3.75,'Master properties exact');
+
+  const ovrRepair=SC.reconcileReadToTarget({value:111,candidates:[{value:111,score:.01},{value:105,score:.02}]},105.2,1.5);ok(ovrRepair.changed&&ovrRepair.read.value===105,'scanner OVR reconciliation only selects a recognised candidate that resolves the mismatch');
+  const noInvent=SC.reconcileReadToTarget({value:111,candidates:[{value:111,score:.01},{value:109,score:.02}]},105.2,1.5);ok(!noInvent.changed&&noInvent.read.value===111,'scanner never invents an OVR when no recognised candidate reconciles');
+  ok(SC.checkAggregate([100,100,100,100,100],106).ok===false,'scanner aggregate mismatch remains unresolved instead of silently passing');
 
   const seeded=await DP.ensure();ok(Object.keys(seeded.normal.drills).length===29,'normal profile seeded 29 drills');ok(Object.values(seeded.normal.drills).filter(x=>x.unlocked).length===28,'captured normal unlock snapshot preserved');eq(seeded.master.stock,{ATTACKING_MASTERCLASS:0,MIDFIELD_MASTERCLASS:0,PHYSICAL_MASTERCLASS:0,DEFENDING_MASTERCLASS:0},'captured Master stock seeded');
   await DP.setMasterStock('ATTACKING_MASTERCLASS',17);ok((await DP.getMaster()).stock.ATTACKING_MASTERCLASS===17,'Master stock has no arbitrary max');await DP.setMasterStock('ATTACKING_MASTERCLASS',0);

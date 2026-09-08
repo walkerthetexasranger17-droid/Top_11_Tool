@@ -4,6 +4,7 @@ import re,sys
 ROOT=Path(__file__).resolve().parents[1]
 html=(ROOT/'index.html').read_text()
 js=(ROOT/'js/app.js').read_text()
+scanner=(ROOT/'js/scanner-engine.js').read_text()
 soup=BeautifulSoup(html,'html.parser')
 errs=[]
 ids=[x.get('id') for x in soup.find_all(id=True)]
@@ -26,6 +27,21 @@ for needle,label in [
 ]:
     hay=(ROOT/'js/app.js').read_text()+(ROOT/'js/players.js').read_text()+(ROOT/'js/drill-profile.js').read_text()
     if needle not in hay: errs.append(f'missing integrity hook: {label}')
+
+# Beta 2 scanner integrity: a detected mismatch must affect saving, not just UI text.
+for needle,label,hay in [
+    ('reconcileReadToTarget', 'targeted OVR candidate reconciliation', scanner),
+    ('save.disabled=unresolved.length>0', 'scanner unresolved save lock', js),
+    ('if(!refreshScanVerification())return', 'scanner validation gate before save', js),
+    ('data-scan-skill', 'manual parsed-skill correction path', js),
+]:
+    if needle not in hay: errs.append(f'missing scanner Beta 2 hook: {label}')
+
+# Product/display name must be consistent across the visible shell and PWA metadata.
+manifest=__import__('json').loads((ROOT/'manifest.json').read_text())
+if manifest.get('name')!='Top Eleven Tool' or manifest.get('short_name')!='Top Eleven Tool': errs.append('manifest app name is not Top Eleven Tool')
+if not soup.title or soup.title.get_text(strip=True)!='Top Eleven Tool': errs.append('page title is not Top Eleven Tool')
+if 'TOP ELEVEN <span>TOOL</span>' not in html: errs.append('in-app header branding is not Top Eleven Tool')
 
 # Check local static assets referenced by HTML/CSS/JS. Skip remote/data/hash URLs.
 paths=set()

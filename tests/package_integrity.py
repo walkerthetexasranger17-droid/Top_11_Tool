@@ -25,6 +25,8 @@ if missing: errs.append('runtime files not precached: '+', '.join(missing))
 extra=sorted(set(assets)-required)
 # Extra runtime cache entries are okay only if they exist; docs are intentionally not precached.
 manifest=json.loads((ROOT/'manifest.json').read_text())
+if manifest.get('name')!='Top Eleven Tool': errs.append('manifest name must be Top Eleven Tool')
+if manifest.get('short_name')!='Top Eleven Tool': errs.append('manifest short_name must be Top Eleven Tool')
 for icon in manifest.get('icons',[]):
     if not (ROOT/icon['src'].lstrip('./')).is_file(): errs.append(f'manifest icon missing: {icon["src"]}')
 if errs:

@@ -124,11 +124,12 @@
     return byDigit.slice(0,3);
   }
 
-  function readNumber(ctx,rect,kind,templates){
+  function readNumber(ctx,rect,kind,templates,overrides={}){
     const spec=templates[kind];
     const opts=kind==='ovr'?{mode:'bright',threshold:templates.meta.ovrThreshold,minArea:30,minHeight:18}:
       kind==='age'?{mode:'dark',threshold:templates.meta.ageThreshold,minArea:20,minHeight:15}:
       {mode:'dark',threshold:templates.meta.skillThreshold,minArea:12,minHeight:12};
+    if(Number.isFinite(Number(overrides.threshold)))opts.threshold=Number(overrides.threshold);
     const seg=componentsFromImageData(cropData(ctx,rect),opts);
     if(!seg.components.length||seg.components.length>3)return {value:null,confidence:0,candidates:[],components:seg.components.length};
     const digitChoices=seg.components.map(c=>classifyGlyph(normalizeGlyph(seg,c,spec.width,spec.height),spec));
@@ -145,6 +146,37 @@
     const margin=second?Math.max(0,second.score-best.score):.2;
     const confidence=Math.max(0,Math.min(1,(1-best.score/.24)*.72+Math.min(1,margin/.06)*.28));
     return {value:best.value,confidence,candidates,components:seg.components.length};
+  }
+
+  function rereadNumberCandidates(ctx,rect,kind,templates){
+    const baseThreshold=kind==='ovr'?templates.meta.ovrThreshold:kind==='age'?templates.meta.ageThreshold:templates.meta.skillThreshold;
+    const offsets=kind==='ovr'?[-28,-18,-10,0,10,18,28]:[-24,-14,-8,0,8,14,24];
+    const reads=offsets.map(offset=>readNumber(ctx,rect,kind,templates,{threshold:baseThreshold+offset}));
+    const byValue=new Map();
+    for(const r of reads){
+      for(const c of (r.candidates||[])){
+        const old=byValue.get(c.value);
+        if(!old||c.score<old.score)byValue.set(c.value,{value:c.value,score:c.score});
+      }
+    }
+    const candidates=[...byValue.values()].sort((a,b)=>a.score-b.score).slice(0,12);
+    const best=candidates[0];
+    if(!best)return reads.find(r=>r.value!=null)||{value:null,confidence:0,candidates:[],components:0};
+    const second=candidates[1];const margin=second?Math.max(0,second.score-best.score):.2;
+    const confidence=Math.max(0,Math.min(1,(1-best.score/.24)*.72+Math.min(1,margin/.06)*.28));
+    return {value:best.value,confidence,candidates,components:reads.find(r=>r.value===best.value)?.components||0};
+  }
+
+  function reconcileReadToTarget(read,target,tolerance=1.5){
+    if(!read||target==null||!Number.isFinite(Number(target)))return {read,changed:false};
+    const currentError=read.value==null?Infinity:Math.abs(Number(read.value)-Number(target));
+    if(currentError<=tolerance)return {read,changed:false};
+    const viable=(read.candidates||[]).filter(c=>Math.abs(Number(c.value)-Number(target))<=tolerance).sort((a,b)=>a.score-b.score);
+    if(!viable.length)return {read,changed:false};
+    const chosen=viable[0];
+    // Only switch to a value actually produced by the digit recogniser. Never synthesize
+    // a number merely to force the visible OVR and attribute average to agree.
+    return {read:{...read,value:chosen.value,candidates:read.candidates},changed:chosen.value!==read.value};
   }
 
   function chooseGroup(reads,target){
@@ -232,17 +264,32 @@
       if(rd.repaired)repairNotes.push('Defence values cross-checked against the displayed total');if(ra.repaired)repairNotes.push('Attack values cross-checked against the displayed total');if(rp.repaired)repairNotes.push('Physical values cross-checked against the displayed total');
       checks.defence=checkAggregate(rd.values,totals.def.value);checks.attack=checkAggregate(ra.values,totals.att.value);checks.physical=checkAggregate(rp.values,totals.phys.value);
     }
-    const skillValues=Object.values(skills).filter(v=>Number.isFinite(v));const overallAvg=groupAverage(skillValues);checks.ovr={average:overallAvg,error:ovr.value==null?null:Math.abs(overallAvg-ovr.value),ok:ovr.value!=null&&Math.abs(overallAvg-ovr.value)<=1.5};
-    const numericReads=[ovr,age,...columns.def,...columns.att,...columns.phys];const numericConf=numericReads.filter(r=>r.value!=null).reduce((a,r)=>a+r.confidence,0)/Math.max(1,numericReads.filter(r=>r.value!=null).length);
+    const skillValues=Object.values(skills).filter(v=>Number.isFinite(v));const overallAvg=groupAverage(skillValues);
+    let finalOvr=ovr;
+    if(ovr.value==null||Math.abs(overallAvg-ovr.value)>1.5){
+      const expandedOvr=rereadNumberCandidates(ctx,RECTS.ovr,'ovr',templates);
+      const reconciled=reconcileReadToTarget(expandedOvr,overallAvg,1.5);
+      if(reconciled.changed){
+        finalOvr=reconciled.read;
+        repairNotes.push(`OVR re-read resolved ${ovr.value??'—'} → ${finalOvr.value} using recognised digit candidates`);
+      }else if(expandedOvr.value!=null){
+        // Keep the original value unless an alternate recognised value actually resolves
+        // the discrepancy. This avoids "correcting" a screenshot by guesswork.
+        finalOvr=ovr.value==null?expandedOvr:ovr;
+      }
+    }
+    checks.ovr={average:overallAvg,error:finalOvr.value==null?null:Math.abs(overallAvg-finalOvr.value),ok:finalOvr.value!=null&&Math.abs(overallAvg-finalOvr.value)<=1.5};
+    const numericReads=[finalOvr,age,...columns.def,...columns.att,...columns.phys];const numericConf=numericReads.filter(r=>r.value!=null).reduce((a,r)=>a+r.confidence,0)/Math.max(1,numericReads.filter(r=>r.value!=null).length);
     const checksList=Object.values(checks);const verifiedRatio=checksList.filter(c=>c.ok).length/Math.max(1,checksList.length);
     const overallConfidence=Math.max(0,Math.min(1,numericConf*.70+verifiedRatio*.22+(roles.length?.05:0)+(nameOcr.text?.03:0)));
+    const unresolvedChecks=Object.entries(checks).filter(([,c])=>!c.ok).map(([name,c])=>({name,error:c.error,average:c.average}));
     onProgress({step:'verify',progress:1,label:'Scan verified'});
     return {
-      name:cleanName(nameOcr.text),age:age.value,ovr:ovr.value,roles,position:roles[0]||'',skills,
+      name:cleanName(nameOcr.text),age:age.value,ovr:finalOvr.value,roles,position:roles[0]||'',skills,
       confidence:{overall:overallConfidence,numeric:numericConf,name:nameOcr.confidence,roles:roles.length?Math.max(.75,roleOcr.confidence):0},
-      checks,repairNotes,panelBounds:bounds,layout:gk?'gk':'outfield',raw:{roleText:roleOcr.text,sectionText:sectionOcr.text,totals:{def:totals.def.value,att:totals.att.value,phys:totals.phys.value}}
+      checks,repairNotes,validation:{resolved:unresolvedChecks.length===0,unresolvedChecks},panelBounds:bounds,layout:gk?'gk':'outfield',raw:{roleText:roleOcr.text,sectionText:sectionOcr.text,initialOvr:ovr.value,totals:{def:totals.def.value,att:totals.att.value,phys:totals.phys.value}}
     };
   }
 
-  TE.Scanner={loadTemplates,ensureTesseract,detectPanelBounds,scan,readNumber,checkAggregate,chooseGroup,RECTS,COLS,ROW_Y};
+  TE.Scanner={loadTemplates,ensureTesseract,detectPanelBounds,scan,readNumber,rereadNumberCandidates,reconcileReadToTarget,checkAggregate,chooseGroup,RECTS,COLS,ROW_Y};
 })();
