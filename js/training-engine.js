@@ -1,112 +1,76 @@
 (() => {
-  const TE = window.TE5 = window.TE5 || {};
-  const D = TE.Data;
-  if(!D) throw new Error('TE5.Data must load before training-engine.js');
+  const TE=window.TE5=window.TE5||{};const D=TE.Data;
+  if(!D)throw new Error('data.js must load before training-engine.js');
+  const MODEL_VERSION='build_30527-contract-v1';
 
-  const EFFICIENCY_RULE = 180;
-  const ATTRIBUTE_CAP = 400;
-  const DIFFICULTY_WEIGHT = {"Very Easy":0.86,"Easy":1.00,"Medium":1.20,"Hard":1.45,"Very Hard":1.72};
-
-  function skillsFor(pos){ return pos==='GK' ? [...D.GK_SKILLS,'Fitness'] : D.OUTFIELD_SKILLS; }
-
-  function fitDrill(drill,pos){
-    const white=D.POSITION_WHITE[pos]||[];
-    const pool=skillsFor(pos);
-    const fit={white:[],grey:[],na:[]};
-    for(const skill of drill.skills){
-      if(white.includes(skill)) fit.white.push(skill);
-      else if(pool.includes(skill)) fit.grey.push(skill);
-      else fit.na.push(skill);
-    }
-    return fit;
+  function rolesFor(player,roles,position){
+    const raw=Array.isArray(roles)?roles:(Array.isArray(player?.roles)?player.roles:[position||player?.position]);const out=[];
+    for(const r of raw){const n=D.normaliseRole(r);if(n&&!out.includes(n))out.push(n);}const p=D.normaliseRole(position||player?.position);if(p&&!out.includes(p))out.unshift(p);return out.slice(0,3);
   }
-
-  function priorityFor(pos,skill){ return Number((D.POSITION_PRIORITY[pos]||{})[skill]||1); }
-
-  function evaluateDrill(drill,pos,skills,maxGrey=1){
-    const fit=fitDrill(drill,pos);
-    if(!fit.white.length || fit.grey.length>maxGrey) return {...drill,fit,viable:false,reason:'grey-limit'};
-    const values=fit.white.map(s=>Number(skills?.[s]||0));
-    const ruleCap=EFFICIENCY_RULE*fit.white.length;
-    const whiteTotal=values.reduce((a,b)=>a+b,0);
-    const headroom=Math.max(0,ruleCap-whiteTotal);
-    const capRoom=fit.white.reduce((sum,s)=>sum+Math.max(0,ATTRIBUTE_CAP-Number(skills?.[s]||0)),0);
-    const weightedNeed=fit.white.reduce((sum,s)=>sum+Math.max(0,EFFICIENCY_RULE-Number(skills?.[s]||0))*priorityFor(pos,s),0);
-    const priorityMass=fit.white.reduce((sum,s)=>sum+priorityFor(pos,s),0);
-    const efficiency=headroom/Math.max(1,ruleCap);
-    const difficulty=DIFFICULTY_WEIGHT[drill.diff]||1;
-    const viable=headroom>0 && capRoom>0;
-    const greyPenalty=fit.grey.length*12;
-    // Recommendation score only. It is deliberately not presented as an official XP formula.
-    const core=(weightedNeed*1.10)+(headroom*0.52)+(priorityMass*13)+(efficiency*45)-greyPenalty;
-    const baseScore=core*difficulty;
-    return {...drill,fit,viable,ruleCap,whiteTotal,headroom,capRoom,weightedNeed,efficiency,difficulty,baseScore,
-      nearWall: viable && headroom<=Math.max(10,ruleCap*.12)};
+  function whiteSkillsFor(player,roles,position){return D.whiteSkillsForRoles(rolesFor(player,roles,position));}
+  function applicableSkillsFor(player,roles,position){return D.applicableSkillsForRoles(rolesFor(player,roles,position));}
+  function buildNeeds(white,skills){
+    const missing=white.filter(a=>skills?.[a]===undefined||skills?.[a]===null||skills?.[a]==='');
+    const values=Object.fromEntries(white.map(a=>[a,Number(skills?.[a]??0)]));
+    const target=white.length?Math.max(...white.map(a=>values[a])):0;const need={};
+    for(const a of white)need[a]=Math.max(1,target-values[a]+1);
+    return {missing,values,target,need};
   }
-
-  function getEligibleDrills(pos,skills,maxGrey=1,disabled=[]){
-    const off=new Set(disabled||[]);
-    return D.MASTER_DRILLS
-      .filter(d=>!off.has(d.name))
-      .map(d=>evaluateDrill(d,pos,skills,maxGrey))
-      .filter(d=>d.viable)
-      .sort((a,b)=>b.baseScore-a.baseScore || a.name.localeCompare(b.name));
+  function normalLevelSetting(profile,drill){const row=profile?.drills?.[drill.drillId];return row||{unlocked:!!drill.capturedUnlocked,level:Number(drill.capturedLevelId||0)};}
+  function levelEffectPct(level){const row=(D.DRILL_LEVELS.levels||[]).find(x=>Number(x.level_id)===Number(level));return row?Number(row.training_effect_percent):0;}
+  function levelName(level){return (D.DRILL_LEVELS.levels||[]).find(x=>Number(x.level_id)===Number(level))?.name||'Locked';}
+  function candidateFromNormal(drill,normalProfile,whiteSet,applicableSet){
+    const setting=normalLevelSetting(normalProfile,drill);if(!setting.unlocked)return null;const level=Math.trunc(Number(setting.level)||0);if(level<1||level>3)return null;
+    const effectPct=levelEffectPct(level);const strength=Number(drill.xpPerPlayer)*(1+effectPct/100);
+    return makeCandidate({...drill,isMaster:false,level,effectPct,levelName:levelName(level),strength,catalogueOrder:drill.index},whiteSet,applicableSet);
   }
-
-  function slotScore(candidate,pos,coverage,useCount){
-    let novelty=0, reinforcement=0;
-    for(const skill of candidate.fit.white){
-      const c=coverage.get(skill)||0;
-      const p=priorityFor(pos,skill);
-      if(c===0) novelty+=32*p;
-      else if(c===1) reinforcement+=10*p;
-      else if(c===2) reinforcement+=3*p;
-    }
-    const repeats=useCount.get(candidate.name)||0;
-    const repeatMultiplier=repeats===0?1:(repeats===1?.80:repeats===2?.62:repeats===3?.48:.38);
-    return (candidate.baseScore+novelty+reinforcement)*repeatMultiplier;
+  function candidateFromMaster(drill,stock,whiteSet,applicableSet){
+    const quantity=Math.max(0,Math.trunc(Number(stock?.stock?.[drill.drillId]??stock?.[drill.drillId]??0)));if(quantity<=0)return null;
+    const effectPct=Number(drill.additionalTrainingEffectPercent);const strength=Number(drill.xpPerPlayer)*(1+effectPct/100);
+    return makeCandidate({...drill,isMaster:true,quantity,level:null,effectPct,levelName:'Master',strength,catalogueOrder:D.NORMAL_DRILLS.length+drill.index},whiteSet,applicableSet);
   }
+  function makeCandidate(base,whiteSet,applicableSet){
+    const applicableAttributes=base.skills.filter(a=>applicableSet.has(a));if(!applicableAttributes.length)return null;
+    const whiteAttributes=applicableAttributes.filter(a=>whiteSet.has(a));const greyAttributes=applicableAttributes.filter(a=>!whiteSet.has(a));
+    return {...base,applicableAttributes,whiteAttributes,greyAttributes,denominator:applicableAttributes.length};
+  }
+  function scoreCandidate(candidate,need,sessionCredit,covered){
+    const adjustedNeed={};let usefulNeed=0;for(const a of candidate.whiteAttributes){const n=Math.max(1,Number(need[a]||1)-Number(sessionCredit[a]||0));adjustedNeed[a]=n;usefulNeed+=n;}
+    const score=candidate.denominator?candidate.strength*usefulNeed/candidate.denominator:0;
+    const newWhiteCount=candidate.whiteAttributes.filter(a=>!covered.has(a)).length;
+    return {score,usefulNeed,adjustedNeed,newWhiteCount};
+  }
+  function compareScored(a,b){
+    const eps=1e-9;if(Math.abs(a.metric.score-b.metric.score)>eps)return b.metric.score-a.metric.score;
+    if(a.metric.newWhiteCount!==b.metric.newWhiteCount)return b.metric.newWhiteCount-a.metric.newWhiteCount;
+    if(Number(a.candidate.conditionDrop)!==Number(b.candidate.conditionDrop))return Number(a.candidate.conditionDrop)-Number(b.candidate.conditionDrop);
+    return a.candidate.catalogueOrder-b.candidate.catalogueOrder;
+  }
+  function buildIndividualSession({player,roles,position,skills,normalProfile,masterStock,slots=6}={}){
+    const resolvedRoles=rolesFor(player,roles,position);if(!resolvedRoles.length)return {drills:[],error:'invalid-position'};
+    const actualSkills=skills||player?.skills||{};const white=whiteSkillsFor(player,resolvedRoles);const applicable=applicableSkillsFor(player,resolvedRoles);
+    const needs=buildNeeds(white,actualSkills);if(needs.missing.length)return {drills:[],error:'missing-white-attributes',missingAttributes:needs.missing,meta:{model:MODEL_VERSION,roles:resolvedRoles,whiteAttributes:white}};
+    const whiteSet=new Set(white),applicableSet=new Set(applicable);
+    const normalCandidates=D.NORMAL_DRILLS.map(d=>candidateFromNormal(d,normalProfile,whiteSet,applicableSet)).filter(Boolean);
+    const masterCandidates=D.MASTER_CAMPUS_DRILLS.map(d=>candidateFromMaster(d,masterStock,whiteSet,applicableSet)).filter(Boolean);
+    const candidates=[...normalCandidates,...masterCandidates];if(!candidates.length)return {drills:[],error:'no-available-drills',meta:{model:MODEL_VERSION,roles:resolvedRoles,whiteAttributes:white}};
 
-  function buildIndividualSession({position,skills,maxGrey=1,disabled=[],slots=6}={}){
-    if(!D.ALL_POSITIONS.includes(position)) return {drills:[],error:'invalid-position'};
-    const candidates=getEligibleDrills(position,skills,maxGrey,disabled);
-    if(!candidates.length) return {drills:[],error:'no-eligible-drills',candidates:[]};
-
-    const selected=[];
-    const coverage=new Map();
-    const useCount=new Map();
+    const selected=[],sessionCredit={},covered=new Set(),masterUsage={};let totalUsefulScore=0,totalCondition=0,totalXp=0;
     for(let slot=0;slot<slots;slot++){
-      let best=null,bestScore=-Infinity;
-      let bestUnique=null,bestUniqueScore=-Infinity;
-      for(const c of candidates){
-        const repeatsAlready=useCount.get(c.name)||0;
-        const anyUnused=candidates.some(x=>!(useCount.get(x.name)||0));
-        if(repeatsAlready>=2 && anyUnused) continue;
-        const score=slotScore(c,position,coverage,useCount);
-        if(score>bestScore){best=c;bestScore=score;}
-        if(!(useCount.get(c.name)||0) && score>bestUniqueScore){bestUnique=c;bestUniqueScore=score;}
-      }
-      // Prefer a new drill whenever it remains reasonably competitive. Repeats are allowed
-      // only when the repeated drill is clearly more useful than every unused alternative.
-      if(bestUnique && bestUniqueScore>=bestScore*.82){best=bestUnique;bestScore=bestUniqueScore;}
-      if(!best) break;
-      const repeatsBefore=useCount.get(best.name)||0;
-      const reasons=[];
-      if(best.difficulty>=DIFFICULTY_WEIGHT.Hard) reasons.push('high difficulty');
-      if(best.headroom>best.ruleCap*.45) reasons.push('strong 180-rule headroom');
-      const newSkills=best.fit.white.filter(s=>!(coverage.get(s)||0));
-      if(newSkills.length) reasons.push(`new coverage: ${newSkills.join(', ')}`);
-      if(repeatsBefore) reasons.push('repeat still outscored alternatives');
-      selected.push({...best,slot:slot+1,recommendationScore:bestScore,reasons,repeated:repeatsBefore>0});
-      useCount.set(best.name,repeatsBefore+1);
-      for(const s of best.fit.white) coverage.set(s,(coverage.get(s)||0)+1);
+      const legal=candidates.filter(c=>!c.isMaster||(masterUsage[c.drillId]||0)<c.quantity);if(!legal.length)break;
+      const scored=legal.map(candidate=>({candidate,metric:scoreCandidate(candidate,needs.need,sessionCredit,covered)})).filter(x=>x.metric.usefulNeed>0).sort(compareScored);
+      if(!scored.length)break;const best=scored[0],c=best.candidate,m=best.metric;const creditPerHit=c.strength/c.denominator;
+      const slotResult={...c,slot:slot+1,usefulTrainingScore:m.score,usefulNeed:m.usefulNeed,adjustedNeed:m.adjustedNeed,creditPerHit,targetedWhiteAttributes:[...c.whiteAttributes],greyApplicableAttributes:[...c.greyAttributes],inapplicableAttributes:c.skills.filter(a=>!applicableSet.has(a))};
+      selected.push(slotResult);totalUsefulScore+=m.score;totalCondition+=Number(c.conditionDrop)||0;totalXp+=Number(c.xpPerPlayer)||0;
+      for(const a of c.whiteAttributes){sessionCredit[a]=Number(sessionCredit[a]||0)+creditPerHit;covered.add(a);}if(c.isMaster)masterUsage[c.drillId]=(masterUsage[c.drillId]||0)+1;
     }
-    return {
-      drills:selected,
-      error:null,
-      meta:{position,maxGrey,slotsRequested:slots,eligibleCount:candidates.length,coveredWhiteSkills:[...coverage.keys()],rule:EFFICIENCY_RULE,attributeCap:ATTRIBUTE_CAP}
-    };
+    const priorityAttributes=white.map(a=>({attribute:a,value:needs.values[a],need:needs.need[a],credit:Number(sessionCredit[a]||0)})).sort((a,b)=>b.need-a.need||a.value-b.value||a.attribute.localeCompare(b.attribute));
+    const remainingMasterStock={};for(const d of D.MASTER_CAMPUS_DRILLS){const owned=Math.max(0,Math.trunc(Number(masterStock?.stock?.[d.drillId]??masterStock?.[d.drillId]??0)));remainingMasterStock[d.drillId]=Math.max(0,owned-(masterUsage[d.drillId]||0));}
+    return {drills:selected,error:selected.length===slots?null:'insufficient-legal-drills',meta:{model:MODEL_VERSION,gameDataVersion:D.GAME_DATA_VERSION,roles:resolvedRoles,whiteAttributes:white,applicableAttributes:applicable,target:needs.target,baseNeed:needs.need,sessionCredit,priorityAttributes,coveredWhiteAttributes:[...covered],totalUsefulScore,totalCondition,totalXp,masterUsage,remainingMasterStock,normalCandidateCount:normalCandidates.length,masterCandidateCount:masterCandidates.length,exactGainPrediction:false}};
   }
-
-  TE.Training={EFFICIENCY_RULE,ATTRIBUTE_CAP,DIFFICULTY_WEIGHT,fitDrill,evaluateDrill,getEligibleDrills,buildIndividualSession};
+  function evaluateCatalogue({player,roles,position,skills,normalProfile,masterStock}={}){
+    const resolvedRoles=rolesFor(player,roles,position);const white=whiteSkillsFor(player,resolvedRoles),applicable=applicableSkillsFor(player,resolvedRoles),needs=buildNeeds(white,skills||player?.skills||{});const whiteSet=new Set(white),applicableSet=new Set(applicable),credit={},covered=new Set();
+    const rows=[...D.NORMAL_DRILLS.map(d=>candidateFromNormal(d,normalProfile,whiteSet,applicableSet)),...D.MASTER_CAMPUS_DRILLS.map(d=>candidateFromMaster(d,masterStock,whiteSet,applicableSet))].filter(Boolean).map(candidate=>({candidate,metric:scoreCandidate(candidate,needs.need,credit,covered)})).sort(compareScored);return {roles:resolvedRoles,white,applicable,needs,rows};
+  }
+  TE.Training={MODEL_VERSION,rolesFor,whiteSkillsFor,applicableSkillsFor,buildNeeds,levelEffectPct,levelName,buildIndividualSession,evaluateCatalogue,scoreCandidate};
 })();
