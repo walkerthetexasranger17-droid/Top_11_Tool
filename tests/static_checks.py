@@ -16,6 +16,17 @@ for el in soup.select('[data-go]'):
 refs=set(re.findall(r"\$\(['\"]#([A-Za-z0-9_-]+)['\"]\)",js))
 missing=sorted(refs-set(ids))
 if missing: errs.append('missing DOM ids: '+', '.join(missing))
+
+# Integrity hooks that protect recommendations from stale player/drill data.
+for needle,label in [
+    ('sourceSnapshot:trainingSourceSnapshot', 'training source snapshot on build'),
+    ('sameTrainingSource', 'training source snapshot comparison'),
+    ("await S.del(`training:session:${outKey}`)", 'player edit session invalidation'),
+    ('invalidateAllSessions', 'drill-library session invalidation')
+]:
+    hay=(ROOT/'js/app.js').read_text()+(ROOT/'js/players.js').read_text()+(ROOT/'js/drill-profile.js').read_text()
+    if needle not in hay: errs.append(f'missing integrity hook: {label}')
+
 # Check local static assets referenced by HTML/CSS/JS. Skip remote/data/hash URLs.
 paths=set()
 for el in soup.find_all(src=True): paths.add(el['src'])
