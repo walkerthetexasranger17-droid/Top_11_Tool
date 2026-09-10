@@ -1,8 +1,8 @@
-# v5.2.7 Bible Compliance Record — Build 30527
+# v5.2.8 Bible Compliance Record — Build 30527
 
 Contract: `TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.md` (document v1.0). This record classifies the shipped implementation against the creator checklist and does not treat unresolved private server/match-engine formulas as implementation failures.
 
-| Area | v5.2.7 implementation | Status |
+| Area | v5.2.8 implementation | Status |
 | --- | --- | --- |
 | Roles / player model | Exactly 12 current roles. DML/DMR removed from current selectors/scanner outputs and retained only as legacy metadata. Natural and Related roles stored separately. | PASS |
 | Playstyle / SA preservation | Full playstyle object state is retained; role-aware chooser; Ball Playing GK not offered. Current 19 SAs, no Shadow Striker, no hard two-SA storage cap, no invented universal SA eligibility matrix. | PASS |
@@ -16,7 +16,7 @@ Contract: `TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.md` (document v1.0). This record
 | Mentors | Seven documented mentors and captured raw effects are preserved. Recommendation is lexicographic direct tactic match → useful assigned-role attribute coverage → mentor level → stable order. Best + at least two alternatives with reasons are returned. Raw arrays are not reinterpreted. | PASS |
 | Individual Training | Natural-role white union; target = mean(top 3 white values); need formula per Bible; grey utility exactly zero; drill strength from XP/effect; multi-white utility accumulated; diminishing credits; Master stock respected; six-slot beam width 250. No exact gain prediction. | PASS |
 | Team Training | Uses actual saved players in each selected group, each player's white union/need and per-player credits; six-slot beam width 250. Protocol TeamPlayTrainingDrill remains explicitly separate. | PASS |
-| PWA / precache | Existing theme/assets/icon/PWA behaviour retained. Service-worker cache `te-v5-2-7-30527` precaches every required runtime module/data/asset: 69/69. | PASS |
+| PWA / precache | Existing theme/assets/icon/PWA behaviour retained. Service-worker cache `te-v5-2-8-30527` precaches every required runtime module/data/asset: 69/69. | PASS |
 | Specialists | Optional companion-only logic is visibly treated as companion logic and does not alter Formation Role Score. No authoritative captain formula is fabricated. | PASS |
 | Evidence boundary | GAME/LIVE facts come from Build-30527 Bible/data; companion calculations are labelled; unresolved private logic is not fabricated. | PASS |
 

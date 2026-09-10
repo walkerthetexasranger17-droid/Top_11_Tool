@@ -1,4 +1,4 @@
-Top Eleven Tool v5.2.7 — Build 30527
+Top Eleven Tool v5.2.8 — Build 30527
 
 Implementation contract: docs/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.md
 Compliance record: docs/BIBLE_COMPLIANCE.md
@@ -25,3 +25,10 @@ Release verification:
 - Service-worker precache: PASS — 69/69 runtime files
 - JavaScript syntax: PASS
 - Browser UI smoke: ENVIRONMENT BLOCKED — headless Chromium failed to start/terminate correctly in this build environment; no application assertion failure was produced.
+
+
+v5.2.8 scanner hotfix
+- Remaining scanner aggregate mismatches no longer disable Save. If reconciliation still disagrees, Save asks for one explicit manual confirmation and then records the reviewed values as manually verified.
+- Clean scans still auto-verify normally.
+- Manual override is explicit and saved as scanner.validation.manualVerified=true; unresolved checks remain recorded.
+- No formation, tactics, mentor, individual-training or team-training calculation logic changed.

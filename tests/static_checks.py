@@ -46,8 +46,8 @@ for needle,label in [
 # Scanner v2: mismatch affects Save, no DML/DMR current parser, no synthesized values.
 for needle,label,src in [
     ('reconcileReadToTarget', 'targeted OVR candidate reconciliation', scanner),
-    ('save.disabled=unresolved.length>0', 'scanner unresolved save lock', js),
-    ('if(!refreshScanVerification())return', 'scanner validation gate before save', js),
+    ('save.disabled=false', 'scanner mismatch does not dead-lock Save', js),
+    ('window.confirm(`Scanner reconciliation still reports:', 'scanner explicit manual verification confirmation', js),
     ('data-scan-skill', 'manual parsed-skill correction path', js),
 ]:
     if needle not in src: errs.append(f'missing scanner hook: {label}')
@@ -81,7 +81,7 @@ manifest=json.loads((ROOT/'manifest.json').read_text())
 if manifest.get('name')!='Top Eleven Tool' or manifest.get('short_name')!='Top Eleven Tool': errs.append('manifest app name is not Top Eleven Tool')
 if not soup.title or soup.title.get_text(strip=True)!='Top Eleven Tool': errs.append('page title is not Top Eleven Tool')
 if 'TOP ELEVEN <span>TOOL</span>' not in html: errs.append('in-app header branding is not Top Eleven Tool')
-if 'v5.2.7' not in html: errs.append('visible build label is not v5.2.7')
+if 'v5.2.8' not in html: errs.append('visible build label is not v5.2.8')
 bible_data=(ROOT/'js/bible-data.js').read_text(encoding='utf-8')
 if "tackling:[['balanced','Balanced',0,0,.50],['stay','Stay On Feet',1,7,.30],['aggressive','Aggressive',2,5,.80]]" not in bible_data:
     errs.append('tackling IDs do not match direct build-30527 provenance correction')

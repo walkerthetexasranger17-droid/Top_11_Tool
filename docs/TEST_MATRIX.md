@@ -1,4 +1,4 @@
-# Top Eleven Tool v5.2.7 — Build 30527 Test Matrix
+# Top Eleven Tool v5.2.8 — Build 30527 Test Matrix
 
 Implementation contract: `TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.md`.
 
@@ -30,7 +30,7 @@ Implementation contract: `TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.md`.
 - Normal drill catalogue count is 29; Master/Campus count is 4; intensity XP/condition and drill-level effect data match Build 30527.
 - Individual Training uses natural-role white-skill union, mean(top 3) target, grey utility zero, multi-white accumulated utility, Master stock limits and six-slot beam width 250.
 - Team Training uses the actual players included in the selected group, each player's own natural-role white union/need, diminishing credits and six-slot beam width 250.
-- Scanner v2 regression/save-blocking reconciliation survives unchanged apart from Bible-required role plumbing.
+- Scanner v2 reconciliation still flags unresolved aggregate/OVR differences, while an explicit manual verification can save reviewed values without fabricating scanner agreement.
 - v5.2.4 user data migration is idempotent and preserves players, attributes, images/scanner metadata, drill levels/unlocks, Master stock, natural/related role data that remains current, full playstyle state and all abilities.
 
 ## Release result
@@ -47,7 +47,7 @@ Implementation contract: `TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.md`.
 1. Launch/install PWA and confirm name is **Top Eleven Tool** and navigation is Home / Squad / Team Plan / Training / More.
 2. Open Squad: search and filter by role, age, OVR, playstyle and availability; open an existing profile.
 3. Edit a multi-role player and confirm roles/related roles, playstyle state and more than two abilities are not silently lost.
-4. Scan one known screenshot and confirm unresolved OVR/aggregate mismatches still block Save.
+4. Scan one known screenshot with an unresolved OVR/aggregate mismatch; confirm Save remains available, shows an explicit manual-verification confirmation, and records manual verification if accepted.
 5. Build Team Plan: confirm formation pitch, assigned roles, Natural/Related badges, Role Score, weakest three role-key skills, playstyle fit/level, abilities and bench are shown.
 6. Change only Approach/Drain and confirm the XI/pitch remains unchanged while tactics and mentor update.
 7. Build Individual Training and confirm six legal slots, multi-white targets and Master stock limits.

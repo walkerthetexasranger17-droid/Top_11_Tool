@@ -1,4 +1,4 @@
-# Top Eleven Tool v5.2.7 — Build 30527
+# Top Eleven Tool v5.2.8 — Build 30527
 
 Static GitHub Pages/PWA companion app. The implementation contract for this release is `docs/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.md`. Release compliance is recorded in `docs/BIBLE_COMPLIANCE.md` and the regression matrix in `docs/TEST_MATRIX.md`.
 
@@ -26,6 +26,8 @@ Browser UI smoke is classified **ENVIRONMENT BLOCKED — NOT APPLICATION FAILURE
 
 The tool does not reproduce unresolved private Nordeus formulas. Exact final normal-training gain, hidden match-engine weights, playstyle magnitude, mentor magnitude/signature-array semantics, universal special-ability eligibility, Squad Balance and hidden Talent weighting remain unresolved and are not invented.
 
-## v5.2.7 provenance audit
+## v5.2.8 provenance audit
 
 See `docs/PROVENANCE_AUDIT.md`. This pass did not merely retest the Bible: it compared the runtime against the recovered reverse-engineering trail and corrected the Tackling protocol IDs/order, numeric drain-override interpretation and a formation tie-break deviation.
+
+- Scanner mismatches remain visible but no longer dead-lock Save; manually checked values can be explicitly confirmed and stored with manual-verification provenance.
