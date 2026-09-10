@@ -1,10 +1,15 @@
 from pathlib import Path
 from bs4 import BeautifulSoup
-import re,sys
+import re,sys,json
 ROOT=Path(__file__).resolve().parents[1]
 html=(ROOT/'index.html').read_text()
 js=(ROOT/'js/app.js').read_text()
+players=(ROOT/'js/players.js').read_text()
 scanner=(ROOT/'js/scanner-engine.js').read_text()
+formation=(ROOT/'js/formation.js').read_text()
+tactics=(ROOT/'js/tactics-engine.js').read_text()
+team=(ROOT/'js/team-training-engine.js').read_text()
+training=(ROOT/'js/training-engine.js').read_text()
 soup=BeautifulSoup(html,'html.parser')
 errs=[]
 ids=[x.get('id') for x in soup.find_all(id=True)]
@@ -18,48 +23,94 @@ refs=set(re.findall(r"\$\(['\"]#([A-Za-z0-9_-]+)['\"]\)",js))
 missing=sorted(refs-set(ids))
 if missing: errs.append('missing DOM ids: '+', '.join(missing))
 
+# Bible information architecture / required screens and controls.
+nav=[x.get_text(' ',strip=True) for x in soup.select('.bottom-nav .nav-btn')]
+if nav!=['Home','Squad','Team Plan','Training','More']: errs.append(f'bottom nav does not match Bible: {nav}')
+for rid in ['squadRoleFilter','squadPlaystyleFilter','squadAvailabilityFilter','squadAgeMin','squadAgeMax','squadOvrMin','squadOvrMax','formationXIList','formationPitch','tacticPlan','mentorAlternatives','profilePlaystyleState','profileRelatedPicker','scanRelatedPicker']:
+    if rid not in ids: errs.append(f'missing Bible UI control: {rid}')
+if 'formation' in pages or 'tactics' in pages: errs.append('legacy standalone Formation/Tactics page survives instead of Team Plan')
+if not soup.select_one('[data-training-tab="individual"]') or not soup.select_one('[data-training-tab="team"]'): errs.append('Training does not expose Individual | Team tabs')
+
 # Integrity hooks that protect recommendations from stale player/drill data.
+hay=js+players+(ROOT/'js/drill-profile.js').read_text()
 for needle,label in [
     ('sourceSnapshot:trainingSourceSnapshot', 'training source snapshot on build'),
     ('sameTrainingSource', 'training source snapshot comparison'),
     ("await S.del(`training:session:${outKey}`)", 'player edit session invalidation'),
-    ('invalidateAllSessions', 'drill-library session invalidation')
+    ('invalidateAllSessions', 'drill-library session invalidation'),
+    ('mergeVisibleNaturalRoles', 'non-truncating visible role editor'),
+    ('mergePlaystyleState', 'full playstyle-state preserving edit path'),
 ]:
-    hay=(ROOT/'js/app.js').read_text()+(ROOT/'js/players.js').read_text()+(ROOT/'js/drill-profile.js').read_text()
     if needle not in hay: errs.append(f'missing integrity hook: {label}')
 
-# Beta 2 scanner integrity: a detected mismatch must affect saving, not just UI text.
-for needle,label,hay in [
+# Scanner v2: mismatch affects Save, no DML/DMR current parser, no synthesized values.
+for needle,label,src in [
     ('reconcileReadToTarget', 'targeted OVR candidate reconciliation', scanner),
     ('save.disabled=unresolved.length>0', 'scanner unresolved save lock', js),
     ('if(!refreshScanVerification())return', 'scanner validation gate before save', js),
     ('data-scan-skill', 'manual parsed-skill correction path', js),
 ]:
-    if needle not in hay: errs.append(f'missing scanner Beta 2 hook: {label}')
+    if needle not in src: errs.append(f'missing scanner hook: {label}')
+parse_block=re.search(r'function parseRoles[\s\S]*?function groupAverage',scanner)
+if parse_block and re.search(r'\bDML\b|\bDMR\b',parse_block.group(0)): errs.append('scanner current role parser still accepts DML/DMR')
 
-# Product/display name must be consistent across the visible shell and PWA metadata.
-manifest=__import__('json').loads((ROOT/'manifest.json').read_text())
+# The historical data-package contract path must never contradict the canonical Bible.
+legacy_contract=(ROOT/'data/build_30527/IMPLEMENTATION_CONTRACT.md').read_text()
+if 'docs/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.md' not in legacy_contract: errs.append('legacy implementation-contract path does not defer to canonical Bible')
+for stale in ['target = max(current value among whiteAttributes)','Build six slots greedily','They still remain in the denominator']:
+    if stale in legacy_contract: errs.append(f'stale superseded training rule survives compatibility contract: {stale}')
+
+# Superseded models must not survive.
+if re.search(r'positionFit|posBonus|OVR\s*\*\s*0?\.55|slotSkill\s*\*\s*0?\.35|ADJAC',formation,re.I): errs.append('old greedy/adjacency/OVR formation formula survives')
+if 'BEAM_WIDTH=250' not in training: errs.append('Individual Training beam width 250 missing')
+if 'BEAM_WIDTH=250' not in team: errs.append('Team Training beam width 250 missing')
+if 'weakSet' not in training or 'effectiveNeed' not in training: errs.append('Individual Training top3/credit logic missing')
+if 'prepared.valid' not in team or 'whiteSet' not in team: errs.append('Team Training does not visibly use actual per-player white sets')
+if 'enumerate(values=>' not in tactics or 'mentality' not in tactics: errs.append('Tactics exhaustive fixed-mentality search missing')
+if re.search(r'Shoot on Sight.*Mixed.*Both Flanks',tactics,re.I|re.S): errs.append('possible old hard-coded tactic preset survives')
+
+# Current roles / abilities / playstyles are not silently truncated.
+data=(ROOT/'js/data.js').read_text()
+if 'slice(0,2)' in players or 'specialAbilities.slice(0,2)' in js: errs.append('hard two-special-ability cap survives')
+if 'Shadow Striker' in data or 'Shadow Striker' in html: errs.append('stale Shadow Striker survives current UI/data')
+if 'Ball Playing GK' not in data: errs.append('legacy Ball Playing GK preservation metadata unexpectedly missing')
+if re.search(r"const ALL_POSITIONS=.*DML|const ALL_POSITIONS=.*DMR",data): errs.append('DML/DMR survive in current position list')
+
+# Product/display name consistency.
+manifest=json.loads((ROOT/'manifest.json').read_text())
 if manifest.get('name')!='Top Eleven Tool' or manifest.get('short_name')!='Top Eleven Tool': errs.append('manifest app name is not Top Eleven Tool')
 if not soup.title or soup.title.get_text(strip=True)!='Top Eleven Tool': errs.append('page title is not Top Eleven Tool')
 if 'TOP ELEVEN <span>TOOL</span>' not in html: errs.append('in-app header branding is not Top Eleven Tool')
+if 'v5.2.7' not in html: errs.append('visible build label is not v5.2.7')
+bible_data=(ROOT/'js/bible-data.js').read_text(encoding='utf-8')
+if "tackling:[['balanced','Balanced',0,0,.50],['stay','Stay On Feet',1,7,.30],['aggressive','Aggressive',2,5,.80]]" not in bible_data:
+    errs.append('tackling IDs do not match direct build-30527 provenance correction')
+packaged_bible=(ROOT/'docs/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.md').read_text(encoding='utf-8')
+if '| Tackling | Stay On Feet | 1 | High | 7 |' not in packaged_bible or '| Tackling | Balanced | 0 | Low | 0 |' not in packaged_bible:
+    errs.append('packaged Bible still contains stale tackling protocol IDs')
 
-# Check local static assets referenced by HTML/CSS/JS. Skip remote/data/hash URLs.
+
+# Required runtime module scripts present before app.js.
+scripts=[Path(x.get('src')).name for x in soup.find_all('script',src=True)]
+for req in ['bible-data.js','formation.js','tactics-engine.js','mentor-engine.js','team-plan-engine.js','training-engine.js','team-training-engine.js','scanner-engine.js','app.js']:
+    if req not in scripts: errs.append(f'missing runtime script {req}')
+if scripts and scripts[-1]!='app.js': errs.append('app.js must load after dependency modules')
+
+# Check local static assets referenced by HTML/CSS. Skip remote/data/hash URLs.
 paths=set()
 for el in soup.find_all(src=True): paths.add(el['src'])
 for el in soup.find_all(href=True): paths.add(el['href'])
-css=(ROOT/'css/app.css').read_text()
-paths.update(re.findall(r"url\(['\"]?([^)'\"]+)",css))
+css=(ROOT/'css/app.css').read_text(); paths.update(re.findall(r"url\(['\"]?([^)\'\"]+)",css))
 for rel in sorted(paths):
     if rel.startswith(('http:','https:','data:','#')): continue
     rel=rel.split('?')[0].split('#')[0]
     if not rel: continue
-    p=(ROOT/rel).resolve() if not rel.startswith('../') else (ROOT/'css'/rel).resolve()
-    # CSS refs are relative to css/app.css, HTML refs to root. Resolve CSS ../ correctly when needed.
-    if rel.startswith('../assets/'):
-        p=(ROOT/'css'/rel).resolve()
+    p=(ROOT/rel).resolve()
+    if rel.startswith('../assets/'): p=(ROOT/'css'/rel).resolve()
     if not p.exists(): errs.append(f'missing asset {rel} -> {p}')
+
 if errs:
     print('FAIL static checks')
     for e in errs: print('-',e)
     sys.exit(1)
-print(f'PASS static checks: {len(ids)} ids, {len(pages)} pages, {len(refs)} direct DOM refs, {len(paths)} static paths')
+print(f'PASS static checks: {len(ids)} ids, {len(pages)} pages, {len(refs)} direct DOM refs, {len(paths)} static paths; Bible UI/integrity hooks present')

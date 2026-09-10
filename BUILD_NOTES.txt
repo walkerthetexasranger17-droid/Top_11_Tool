@@ -1,54 +1,27 @@
-TOP ELEVEN TOOL — v5.2.4 — BUILD 30527
-CURRENT RELEASE: WHITE-SKILL COVERAGE OPTIMISER CORRECTION
+Top Eleven Tool v5.2.7 — Build 30527
 
-Baseline
-- v5 Beta 1 — Build 30527 remains the functional and visual baseline.
-- Training optimiser logic and authoritative build-30527 data are unchanged.
-- Scanner v2 fixed-region/digit-template architecture is retained.
-- Existing player, tactics, formation and visual work is retained.
+Implementation contract: docs/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.md
+Compliance record: docs/BIBLE_COMPLIANCE.md
+Regression matrix: docs/TEST_MATRIX.md
 
-Scanner reconciliation fix
-- Root cause in Beta 1: scanner-engine.js already calculated aggregate and OVR discrepancy checks, but app.js only displayed those checks. validateScanForm() validated ordinary ranges/roles and did not reject failed scanner checks, so state.scan.skills could still be saved even when the app already knew the scan was inconsistent.
-- Beta 2 adds a targeted OVR re-read using alternate threshold passes of the existing local digit recogniser.
-- Reconciliation may switch OVR only to a value that the recogniser actually returned as a candidate and only when it resolves the OVR/attribute-average mismatch.
-- If no recognised candidate resolves the mismatch, the original value is retained and the scan remains unresolved rather than being forced to match.
-- Scanner review now continuously recalculates Defence/Attack/Physical (or Goalkeeping/Physical) aggregate checks plus OVR when the user edits OVR or a parsed skill.
-- Save Player is disabled while any numerical verification check remains unresolved.
-- Parsed attribute values can be corrected manually from the visible screenshot; Save unlocks only after reconciliation passes.
-- Saved scanner metadata now records the final checks and resolved/unresolved validation state.
+This release updates v5.2.4 in place. Scanner v2, player CRUD, My Drills, visual theme/assets and authoritative captured drill data are retained. Superseded companion logic is replaced only where required by the Bible.
 
-Product name
-- PWA manifest name: Top Eleven Tool
-- PWA short name: Top Eleven Tool
-- HTML page title/application name: Top Eleven Tool
-- In-app header branding: TOP ELEVEN TOOL
-- Icon/theme unchanged.
+Model versions:
+- Formation: 30527-role-v1
+- Tactics: 30527-drain-fit-v1
+- Mentor: 30527-synergy-v1
+- Individual Training: 30527-white-beam-v1
+- Team Training: 30527-team-white-beam-v1
 
-Unchanged by design
-- Individual Training optimiser and build-30527 source data.
-- My Drills / Master stock logic.
-- Scanner numeric templates and established reference dataset.
-- Player CRUD/stable IDs, formation, tactics, playmakers and UI theme.
+Evidence boundary:
+- GAME FACT / LIVE FACT values come from the Bible and packaged Build 30527 data.
+- TOP ELEVEN TOOL CALCULATION labels companion recommendation logic.
+- Unresolved private/server logic is not fabricated.
 
-Known boundary
-- The exact failing real-world screenshot described during Beta 2 preparation was not supplied with the build, so it cannot yet be added as a permanent image fixture. Once supplied, it should be added to scanner_regression.py with its verified expected values.
-
-Beta 2 scanner deep-read patch (real-device follow-up)
-- Added permanent Richard Kilroy OVR 136 fixture (1000009383.jpg).
-- Added OVR-font digit 6 template from the supplied screenshot.
-- Scanner reads all numeric cells across multiple local thresholds before returning.
-- Fixed chooseGroup reconciliation so already-valid category reads are never altered just to reduce rounded aggregate error.
-- Added conservative repair rules for genuinely unresolved groups only.
-- Added targeted secondary local OCR for unresolved OVR.
-- Scanner regression: 12 screenshots / 204 numeric fields.
-- Core regression: 100 assertions.
-
-
-
-v5.2.4 optimiser correction
-- Deliberately revises only the companion ranking formula; authoritative build-30527 game data is unchanged.
-- Multi-white drill coverage is now rewarded directly: score = drill strength × summed adjusted need of all white/key attributes hit.
-- Grey attributes do not add to, dilute, or penalise individual-player drill score.
-- Balancing credit is applied to every white attribute hit after each selected slot, then all legal drills are rescored.
-- Recommendation cards now show the number of white targets per drill.
-- Training model version bumped so older saved recommendations invalidate automatically.
+Release verification:
+- Core/deterministic: PASS — 241 assertions
+- Scanner: PASS — 12 fixtures / 204 numerical fields
+- Static/integrity: PASS
+- Service-worker precache: PASS — 69/69 runtime files
+- JavaScript syntax: PASS
+- Browser UI smoke: ENVIRONMENT BLOCKED — headless Chromium failed to start/terminate correctly in this build environment; no application assertion failure was produced.

@@ -1,29 +1,31 @@
-# Top Eleven Tool v5.2.4 — Build 30527
+# Top Eleven Tool v5.2.7 — Build 30527
 
-Focused optimiser correction on top of the tested v5.2.x baseline. Scanner v2, player logic, tactics, visuals and the authoritative build-30527 drill/role data are unchanged.
+Static GitHub Pages/PWA companion app. The implementation contract for this release is `docs/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.md`. Release compliance is recorded in `docs/BIBLE_COMPLIANCE.md` and the regression matrix in `docs/TEST_MATRIX.md`.
 
-## v5.2.4 change
+## What changed from v5.2.4
 
-Real-device testing showed the individual optimiser was undervaluing drills that hit several useful white/key attributes in one drill slot. The previous companion score divided useful white need by all applicable affected attributes. That made a strong five-white drill compete too closely with a drill that delivered only one useful white hit.
+- Current roles are the 12 Build-30527 roles; DML/DMR are preserved only as legacy record metadata.
+- Player schema migration is idempotent and preserves existing `te:` records, attributes, images/scanner metadata, drill state, Master stock, full playstyle state, current natural/related roles and all special abilities.
+- Playstyle selection is filtered by current natural-role eligibility; Ball Playing GK is not offered.
+- Current 19-item special-ability catalogue; no Shadow Striker, no two-ability cap and no invented universal role eligibility matrix.
+- Squad adds search and role, age, OVR, playstyle and availability filters.
+- Team Plan combines globally optimised Formation, exact 0–1000 pitch geometry, exhaustive Build-30527 tactics/drain search and captured mentor synergy.
+- Formation uses target-role white-skill means, Natural/Related eligibility and global XI assignment rather than legacy OVR/adjacency weights.
+- Individual Training uses top-three white target + six-slot beam search width 250, with grey utility zero and Master stock respected.
+- Team Training uses the actual players in each group and the same per-player white-need/credit model with beam width 250.
+- Scanner v2 numeric recognition/reconciliation remains intact; only Bible-required role/data plumbing changed.
+- Service worker precaches all 69 required runtime files for this build.
 
-The ranking is deliberately revised as follows:
+## Test status
 
-- Start from the selected player's union of authoritative white/key skills.
-- Weakest white skills carry the largest need values.
-- For each available drill, sum the current need of **every white/key attribute that drill can train**.
-- Multiply that total useful need by the drill's authoritative strength (XP × saved Training Effect).
-- Grey attributes neither add value nor reduce/dilute the score.
-- Strong/high-intensity drills therefore gain a major advantage when they hit several weak white skills in the same slot.
-- After each selected slot, balancing credit is applied to every white skill hit and the next slot is rescored, keeping the six-slot session focused on remaining weak white areas.
-- Normal duplicates remain allowed; Master/Campus duplicates remain stock-limited.
-- Condition cost remains display information, not the primary objective.
+Core/deterministic **PASS — 245 assertions**; Scanner v2 **PASS — 12 screenshots / 204 numerical fields**; static/integrity **PASS**; service-worker/package integrity **PASS — 69/69 runtime files**; JavaScript syntax **PASS**.
 
-This is still a companion-app ranking model, not an exact server-side gain prediction.
+Browser UI smoke is classified **ENVIRONMENT BLOCKED — NOT APPLICATION FAILURE** because headless Chromium failed to start/terminate correctly in the build environment and produced no application assertion failure. Manual device/browser smoke testing is recommended.
 
-## Unchanged
+## Important boundary
 
-- Scanner v2 and its permanent regression fixtures
-- Build-30527 authoritative JSON data
-- My Drills / Master stock persistence
-- Player CRUD and stable IDs
-- Formation, tactics, playmakers and the current UI/theme
+The tool does not reproduce unresolved private Nordeus formulas. Exact final normal-training gain, hidden match-engine weights, playstyle magnitude, mentor magnitude/signature-array semantics, universal special-ability eligibility, Squad Balance and hidden Talent weighting remain unresolved and are not invented.
+
+## v5.2.7 provenance audit
+
+See `docs/PROVENANCE_AUDIT.md`. This pass did not merely retest the Bible: it compared the runtime against the recovered reverse-engineering trail and corrected the Tackling protocol IDs/order, numeric drain-override interpretation and a formation tie-break deviation.

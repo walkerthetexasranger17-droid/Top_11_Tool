@@ -1,0 +1,178 @@
+{
+  "source": "TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.md \u00a77",
+  "playstyles": [
+    {
+      "id": 1,
+      "name": "No Playstyle",
+      "eligible_roles": [],
+      "offered": false
+    },
+    {
+      "id": 2,
+      "name": "Poacher",
+      "eligible_roles": [
+        "ST"
+      ],
+      "offered": true
+    },
+    {
+      "id": 3,
+      "name": "False Nine",
+      "eligible_roles": [
+        "ST",
+        "AMC"
+      ],
+      "offered": true
+    },
+    {
+      "id": 4,
+      "name": "Target Man",
+      "eligible_roles": [
+        "ST"
+      ],
+      "offered": true
+    },
+    {
+      "id": 5,
+      "name": "Enganche",
+      "eligible_roles": [
+        "AMC"
+      ],
+      "offered": true
+    },
+    {
+      "id": 6,
+      "name": "Inside Forward",
+      "eligible_roles": [
+        "AML",
+        "AMR"
+      ],
+      "offered": true
+    },
+    {
+      "id": 7,
+      "name": "Winger",
+      "eligible_roles": [
+        "AML",
+        "AMR",
+        "ML",
+        "MR"
+      ],
+      "offered": true
+    },
+    {
+      "id": 8,
+      "name": "False Winger",
+      "eligible_roles": [
+        "ML",
+        "MR"
+      ],
+      "offered": true
+    },
+    {
+      "id": 9,
+      "name": "Mezzala",
+      "eligible_roles": [
+        "MC"
+      ],
+      "offered": true
+    },
+    {
+      "id": 10,
+      "name": "Box-to-Box",
+      "eligible_roles": [
+        "MC"
+      ],
+      "offered": true
+    },
+    {
+      "id": 11,
+      "name": "Regista",
+      "eligible_roles": [
+        "MC",
+        "DMC"
+      ],
+      "offered": true
+    },
+    {
+      "id": 12,
+      "name": "Ball Winner",
+      "eligible_roles": [
+        "DMC"
+      ],
+      "offered": true
+    },
+    {
+      "id": 13,
+      "name": "Anchor Man",
+      "eligible_roles": [
+        "DMC"
+      ],
+      "offered": true
+    },
+    {
+      "id": 14,
+      "name": "No-Nonsense DC",
+      "eligible_roles": [
+        "DC"
+      ],
+      "offered": true
+    },
+    {
+      "id": 15,
+      "name": "Stopper",
+      "eligible_roles": [
+        "DC"
+      ],
+      "offered": true
+    },
+    {
+      "id": 16,
+      "name": "Ball Playing DC",
+      "eligible_roles": [
+        "DC"
+      ],
+      "offered": true
+    },
+    {
+      "id": 17,
+      "name": "Full Back",
+      "eligible_roles": [
+        "DL",
+        "DR"
+      ],
+      "offered": true
+    },
+    {
+      "id": 18,
+      "name": "Wing Back",
+      "eligible_roles": [
+        "DL",
+        "DR"
+      ],
+      "offered": true
+    },
+    {
+      "id": 19,
+      "name": "Ball Playing GK",
+      "eligible_roles": [],
+      "offered": false
+    },
+    {
+      "id": 20,
+      "name": "Sweeper Keeper",
+      "eligible_roles": [
+        "GK"
+      ],
+      "offered": true
+    },
+    {
+      "id": 21,
+      "name": "Box Commander",
+      "eligible_roles": [
+        "GK"
+      ],
+      "offered": true
+    }
+  ]
+}

@@ -257,10 +257,10 @@
   }
   function parseRoles(text){
     const raw=String(text||'').toUpperCase();
-    let matches=raw.match(/\b(?:DML|DMC|DMR|AML|AMC|AMR|GK|DL|DC|DR|ML|MC|MR|ST)\b/g)||[];
+    let matches=raw.match(/\b(?:DMC|AML|AMC|AMR|GK|DL|DC|DR|ML|MC|MR|ST)\b/g)||[];
     if(!matches.length){
       const compact=raw.replace(/ROLES?/g,'').replace(/[^A-Z]/g,'');
-      matches=compact.match(/(?:DML|DMC|DMR|AML|AMC|AMR|GK|DL|DC|DR|ML|MC|MR|ST)/g)||[];
+      matches=compact.match(/(?:DMC|AML|AMC|AMR|GK|DL|DC|DR|ML|MC|MR|ST)/g)||[];
     }
     return [...new Set(matches)].slice(0,3);
   }
