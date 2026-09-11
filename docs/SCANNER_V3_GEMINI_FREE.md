@@ -2,7 +2,7 @@
 
 ## Architecture
 
-v5.2.11 is a static browser/PWA scanner. The selected Skills screenshot is sent directly from the user's browser to the Gemini Developer API using `gemini-3.8-flash` first and `gemini-3.7-flash` only when 3.8 returns a transient capacity/high-demand error.
+v5.2.12 is a static browser/PWA scanner. The selected Skills screenshot is sent directly from the user's browser to the Gemini Developer API using `gemini-3.8-flash` first and `gemini-3.7-flash` only when 3.8 returns a transient capacity/high-demand error.
 
 The request contains three images:
 

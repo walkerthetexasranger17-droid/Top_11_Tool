@@ -1,6 +1,6 @@
-# Top Eleven Tool v5.2.11 — Build 30527
+# Top Eleven Tool v5.2.12 — Build 30527
 
-Static GitHub Pages/PWA companion app. The application contract remains `docs/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.md`; v5.2.11 changes only the Scanner v3 connection model and keeps the rest of the app intact.
+Static GitHub Pages/PWA companion app. The application contract remains `docs/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.md`; v5.2.12 changes only the Scanner v3 connection model and keeps the rest of the app intact.
 
 ## Scanner v3 — Gemini free-tier path
 
@@ -10,7 +10,7 @@ The old Scanner v2 digit-template/reconciliation engine is not in the production
 - The scan request includes the recovered official 20-playstyle × 4-level reference sheet and the canonical 19-special-ability reference sheet.
 - Players may have zero, one, two, three or more special abilities. The scanner contract returns an array and explicitly requires every visible icon in left-to-right order.
 - The app never rewrites a detected number to make OVR or group totals fit. Cross-checks only flag discrepancies for review.
-- No Cloud Vision, Cloud Run, Vertex AI or paid service fallback is used in v5.2.11. Both Gemini models use the same free-tier API key/project.
+- No Cloud Vision, Cloud Run, Vertex AI or paid service fallback is used in v5.2.12. Both Gemini models use the same free-tier API key/project.
 - The Gemini API key is entered in Settings and stored only in this browser (`localStorage`). It is not in the ZIP or source code.
 
 ## £0 setup
@@ -18,6 +18,17 @@ The old Scanner v2 digit-template/reconciliation engine is not in the production
 See `SETUP_GEMINI_FREE.txt` or `docs/SCANNER_V3_GEMINI_FREE.md`.
 
 The user must keep the Google AI Studio project on the **Free Tier**. If free quota/rate limits are exhausted, the app reports the 429 error and stops; it does not switch to another paid API. If the user later upgrades that Google project to paid billing, Google pricing can apply.
+
+## v5.2.12 review workflow
+
+- The scanner file picker accepts multiple screenshots at once and processes them sequentially through a review queue.
+- Scanned players are not saved automatically. Each result remains in the queue until reviewed and saved, skipped, retried, or removed.
+- **Save & Next** saves only the current verified player and moves to the next ready result.
+- Failed scans can be retried without discarding successful queue items. Free-tier quota/rate-limit errors pause the remaining queue instead of switching to a paid service.
+- Manual player entry uses the same review form and does not consume a Gemini request.
+- Playstyle tier is manually editable as Standard / Intermediate / Advanced / Master for scanned players, manual players, and existing-player profile edits.
+- Special abilities remain an uncapped multi-selection.
+- When all numerical cross-checks pass, the UI shows **Numerical checks verified**. Gemini's self-reported confidence is displayed separately so a correct scan is not misleadingly presented as “98% correct”. Small 0.x aggregate gaps are labelled as Top Eleven whole-number display rounding rather than scanner errors.
 
 ## Tests
 

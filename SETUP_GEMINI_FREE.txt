@@ -1,4 +1,4 @@
-TOP ELEVEN TOOL v5.2.11 — GEMINI FREE-TIER SCANNER SETUP
+TOP ELEVEN TOOL v5.2.12 — GEMINI FREE-TIER SCANNER SETUP
 
 You do NOT need Cloud Run, Cloud Vision, Vertex AI, gcloud deployment, or an open Cloud Billing account for this build.
 
@@ -10,9 +10,9 @@ You do NOT need Cloud Run, Cloud Vision, Vertex AI, gcloud deployment, or an ope
    New AI Studio keys are created for the Gemini API.
 6) DO NOT click "Set up billing" / upgrade the project if you want the scanner to remain £0.
 7) Copy the API key.
-8) Open Top Eleven Tool v5.2.11 -> More -> Settings -> Gemini Scanner · Free Tier.
+8) Open Top Eleven Tool v5.2.12 -> More -> Settings -> Gemini Scanner · Free Tier.
 9) Paste the key -> Save Key -> Test Connection.
 10) Scan the David Andrews fixture first. It must recognise BOTH visible special abilities, not only the first.
 
 The API key is stored only in that browser on that device. It is never included in the app ZIP or GitHub source.
-If Gemini 3.8 is temporarily overloaded, v5.2.11 automatically retries on Gemini 3.7. Genuine free-tier quota exhaustion stops the scan. No paid fallback is used.
+If Gemini 3.8 is temporarily overloaded, v5.2.12 automatically retries on Gemini 3.7. Genuine free-tier quota exhaustion stops the scan. No paid fallback is used.

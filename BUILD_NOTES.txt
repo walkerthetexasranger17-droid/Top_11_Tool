@@ -1,4 +1,4 @@
-Top Eleven Tool v5.2.11 — Build 30527
+Top Eleven Tool v5.2.12 — Build 30527
 
 - Replaces the v5.2.9 Cloud Run / Vision / Vertex deployment with direct Gemini Developer API free-tier access.
 - Models: gemini-3.8-flash primary; gemini-3.7-flash automatic transient-capacity fallback.
@@ -8,3 +8,11 @@ Top Eleven Tool v5.2.11 — Build 30527
 - All 19 special ability references are supplied; scanner contract explicitly supports 0..N abilities.
 - Old Scanner v2 digit-template and value-repair logic remains absent from the production path.
 - Numerical consistency checks flag mismatches only; they never rewrite values.
+
+v5.2.12
+- Multi-screenshot Gemini scan queue with sequential processing and per-player review.
+- Save & Next / skip / retry / remove queue workflow.
+- Manual player entry without Gemini usage.
+- Playstyle tier manually editable in scanner/manual entry/profile editing.
+- Multiple special abilities remain supported without a fixed cap.
+- Verification UX separates deterministic numerical verification from Gemini self-confidence; 0.x aggregate deltas are labelled as display rounding.
