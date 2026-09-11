@@ -48,7 +48,7 @@ for needle,label,src in [
     ("const VERSION=3", "Scanner v3 version marker", scanner),
     ("gemini-3.6-flash", "Gemini 3.6 Flash model", scanner),
     ("REQUEST_TIMEOUT_MS=20000", "20-second Gemini request timeout", scanner),
-    ("REQUEST_RETRY_DELAYS_MS=[0,2000,4000,8000,12000,15000]", "automatic retry backoff seed", scanner),
+    ("RETRY_DELAY_MS=2000", "fixed two-second automatic retry delay", scanner),
     ("DO NOT analyse, identify, locate or return playstyles", "playstyle scanning removed", scanner),
     ("DO NOT analyse, identify, locate or return special abilities", "special-ability scanning removed", scanner),
     ("generativelanguage.googleapis.com", "direct Gemini Developer API", scanner),
@@ -79,7 +79,7 @@ manifest=json.loads((ROOT/'manifest.json').read_text())
 if manifest.get('name')!='Top Eleven Tool' or manifest.get('short_name')!='Top Eleven Tool': errs.append('manifest app name is not Top Eleven Tool')
 if not soup.title or soup.title.get_text(strip=True)!='Top Eleven Tool': errs.append('page title is not Top Eleven Tool')
 if 'TOP ELEVEN <span>TOOL</span>' not in html: errs.append('in-app header branding is not Top Eleven Tool')
-if 'v5.2.18' not in html: errs.append('visible build label is not v5.2.18')
+if 'v5.2.19' not in html: errs.append('visible build label is not v5.2.19')
 bible_data=(ROOT/'js/bible-data.js').read_text(encoding='utf-8')
 if "tackling:[['balanced','Balanced',0,0,.50],['stay','Stay On Feet',1,7,.30],['aggressive','Aggressive',2,5,.80]]" not in bible_data:
     errs.append('tackling IDs do not match direct build-30527 provenance correction')

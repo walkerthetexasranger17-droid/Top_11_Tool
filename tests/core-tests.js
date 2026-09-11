@@ -77,7 +77,7 @@ function inside(role,x,y){const r=B.ROLE_RECTS[role];return x>=r.minX&&x<r.maxX&
   ok(/DO NOT analyse, identify, locate or return playstyles/.test(scannerSource),'scanner does not classify playstyles');
   ok(/DO NOT analyse, identify, locate or return special abilities/.test(scannerSource),'scanner does not classify special abilities');
   ok(SC.REQUEST_TIMEOUT_MS===20000,'scanner request timeout is 20 seconds');
-  ok(JSON.stringify(SC.REQUEST_RETRY_DELAYS_MS)===JSON.stringify([0,2000,4000,8000,12000,15000]),'scanner retry backoff seed is stable');
+  ok(SC.RETRY_DELAY_MS===2000,'scanner retry delay is fixed at 2 seconds');
   const simpleScan=SC._normaliseResult({name:'Test',age:21,ovr:100,roles:['MC'],layout:'outfield',skills:{}},'gemini-3.6-flash');
   ok(simpleScan.playstyle===null&&simpleScan.specialAbilities.length===0,'scanner leaves manual visual fields empty');
   ok(!/scanner-templates|reconcileReadToTarget|classifyGlyph|function readNumber/.test(scannerSource),'legacy local digit-template/repair engine is absent from production scanner');

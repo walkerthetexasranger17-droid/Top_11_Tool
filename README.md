@@ -1,6 +1,6 @@
-# Top Eleven Tool v5.2.18 — Build 30527
+# Top Eleven Tool v5.2.19 — Build 30527
 
-Static GitHub Pages/PWA companion app. The canonical application contract remains `docs/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.md`. v5.2.18 is a targeted scanner simplification release; training, tactics, formation, mentor and Build 30527 calculations are not redesigned.
+Static GitHub Pages/PWA companion app. The canonical application contract remains `docs/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.md`. v5.2.19 is a targeted scanner simplification release; training, tactics, formation, mentor and Build 30527 calculations are not redesigned.
 
 ## Scanner v3 — core data only
 
@@ -10,7 +10,7 @@ Playstyle, playstyle level and Special Abilities are no longer scanned or matche
 
 There is no Tesseract/custom OCR, digit-template repair, Cloud Vision, Cloud Run, Vertex AI or paid fallback.
 
-Temporary API failures and incomplete/inconsistent reads retry automatically with backoff until a valid result is returned or the user cancels the queued scan. Auth errors, invalid images, unavailable-model errors and exhausted daily free quota stop immediately.
+Temporary API failures and incomplete/inconsistent reads retry automatically every 2 seconds until a valid result is returned or the user cancels the queued scan. Auth errors, invalid images, unavailable-model errors and exhausted daily free quota stop immediately.
 
 ## Existing app behaviour preserved
 

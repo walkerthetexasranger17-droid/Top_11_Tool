@@ -1,4 +1,4 @@
-# Scanner v3 — Gemini Free API — v5.2.18
+# Scanner v3 — Gemini Free API — v5.2.19
 
 ## Scope
 The scanner reads only core player data from one Top Eleven player screenshot:
@@ -16,7 +16,7 @@ Playstyle, playstyle level and Special Abilities are deliberately **not scanned*
 The browser sends the original screenshot directly to `gemini-3.6-flash` through the Gemini Developer API. There is no Tesseract, digit-template OCR, Cloud Vision, Cloud Run, Vertex AI, playstyle matching or Special Ability matching in the production scanner.
 
 ## Retry behaviour
-Each request has a 20-second timeout. Temporary API errors, rate limits, network errors, timeouts, malformed responses, missing required core fields, missing skill values, or arithmetic-inconsistent results are rejected and retried automatically. Backoff grows through 2s, 4s, 8s, 12s and then 15s between subsequent attempts. The retry loop continues until a valid result is returned or the user cancels/removes the queued scan.
+Each request has a 20-second timeout. Temporary API errors, rate limits, network errors, timeouts, malformed responses, missing required core fields, missing skill values, or arithmetic-inconsistent results are rejected and retried automatically. Every retry uses the same short 2-second delay. Temporary server load does not make later retries progressively slower. The retry loop continues until a valid result is returned or the user cancels/removes the queued scan.
 
 Authentication errors, invalid image input, unavailable model errors and exhausted daily free-tier quota stop immediately because retrying cannot repair them.
 

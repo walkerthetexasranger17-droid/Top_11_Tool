@@ -11,8 +11,8 @@
   const API_BASE='https://generativelanguage.googleapis.com/v1beta';
   const DISCOVERY_TTL_MS=15*60*1000;
   const REQUEST_TIMEOUT_MS=20000;
-  // After the sixth delay the scanner keeps using the final 15s delay until it succeeds or the user cancels.
-  const REQUEST_RETRY_DELAYS_MS=[0,2000,4000,8000,12000,15000];
+  // Fixed short retry delay: server-busy/transient failures do not get progressively slower.
+  const RETRY_DELAY_MS=2000;
   let discoveryCache=null;
 
   function cleanKey(value){return String(value||'').trim();}
@@ -145,7 +145,7 @@ Return exactly this shape:
     return{ok:problems.length===0,problems,checks};
   }
 
-  function retryDelay(attempt,err){const seeded=REQUEST_RETRY_DELAYS_MS[Math.min(attempt-1,REQUEST_RETRY_DELAYS_MS.length-1)]||0;const api=Math.min(15000,Math.max(0,Number(err?.retryAfterMs)||0));return Math.max(seeded,api);}
+  function retryDelay(){return RETRY_DELAY_MS;}
 
   async function scan(dataUrl,onProgress=()=>{},options={}){
     const externalSignal=options?.signal||null,screenshot=dataUrlPart(dataUrl),model=MODEL,label=modelLabel(model);
@@ -177,7 +177,7 @@ Return exactly this shape:
     }
   }
 
-  async function health(){const available=await discoverModels(true);if(!available.includes(MODEL))throw new Error(`${modelLabel(MODEL)} was not returned for this API key.`);return{ok:true,provider:'Gemini Developer API',model:MODEL,models:available,orderedModels:[MODEL],freeTierOnly:true,requestTimeoutMs:REQUEST_TIMEOUT_MS,automaticRetry:true};}
+  async function health(){const available=await discoverModels(true);if(!available.includes(MODEL))throw new Error(`${modelLabel(MODEL)} was not returned for this API key.`);return{ok:true,provider:'Gemini Developer API',model:MODEL,models:available,orderedModels:[MODEL],freeTierOnly:true,requestTimeoutMs:REQUEST_TIMEOUT_MS,automaticRetry:true,retryDelayMs:RETRY_DELAY_MS};}
 
-  TE.Scanner={VERSION,MODEL,MODELS,DOCUMENTED_MODELS,REQUEST_TIMEOUT_MS,REQUEST_RETRY_DELAYS_MS,scan,health,discoverModels,modelOrder,getApiKey,setApiKey,clearApiKey,checkAggregate,_normaliseResult:normaliseResult,_normaliseCoreResult:normaliseCoreResult,_buildPrompt:buildPrompt,_classifyApiError:classifyApiError,_parseDurationMs:parseDurationMs,_validateResult:validateResult};
+  TE.Scanner={VERSION,MODEL,MODELS,DOCUMENTED_MODELS,REQUEST_TIMEOUT_MS,RETRY_DELAY_MS,scan,health,discoverModels,modelOrder,getApiKey,setApiKey,clearApiKey,checkAggregate,_normaliseResult:normaliseResult,_normaliseCoreResult:normaliseCoreResult,_buildPrompt:buildPrompt,_classifyApiError:classifyApiError,_parseDurationMs:parseDurationMs,_validateResult:validateResult};
 })();

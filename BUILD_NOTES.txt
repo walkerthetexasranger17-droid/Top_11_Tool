@@ -1,4 +1,4 @@
-Top Eleven Tool v5.2.18 — Build 30527
+Top Eleven Tool v5.2.19 — Build 30527
 
 Targeted Scanner v3 asset-reference replacement from v5.2.15:
 - Gemini 3.6 Flash remains the only scanner model.

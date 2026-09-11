@@ -1,4 +1,4 @@
-# Top Eleven Tool v5.2.18 — Build 30527 Release Report
+# Top Eleven Tool v5.2.19 — Build 30527 Release Report
 
 ## Scanner simplification
 
@@ -10,7 +10,7 @@
 - Removed production scanner visual-reference manifest, playstyle-level assets, playstyle reference assets, Special Ability reference assets and local visual matching code.
 - No OCR/template engine was added.
 - Added automatic retry for temporary/network/rate-limit/timeout/malformed/incomplete/inconsistent scan results.
-- Retry backoff becomes 2s → 4s → 8s → 12s → 15s and remains at 15s until success or cancellation.
+- Retry timing is now fixed at 2 seconds between attempts; it no longer increases after repeated temporary/busy failures.
 - Daily quota, authentication, invalid-image and unavailable-model errors stop immediately.
 
 ## Validation
