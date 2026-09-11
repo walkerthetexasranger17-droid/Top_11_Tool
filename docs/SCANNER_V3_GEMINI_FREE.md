@@ -1,26 +1,38 @@
-# Scanner v3 — Gemini Free Tier (v5.2.16)
+# Scanner v3 — Gemini Free Tier (v5.2.17)
 
-Scanner v3 sends each Top Eleven Skills screenshot directly from the browser to the Gemini Developer API. v5.2.16 deliberately uses **Gemini 3.8 Flash only**. There is no model fallback to 3.5/3.6/3.7 and no paid fallback.
+Scanner v3 is still **100% OCR-free** in production. It does not use Tesseract, legacy digit templates or custom OCR. The player screenshot is sent directly to Gemini 3.8 Flash.
+
+## One-image Gemini request
+v5.2.17 deliberately sends only the current player screenshot to Gemini. Gemini reads:
+
+- player name
+- age
+- OVR
+- visible natural roles
+- three group totals
+- visible skill values
+
+Gemini does **not** receive the 20 playstyle references, 4 playstyle-level references or 19 Special Ability references. Instead it returns tight 0..1000 bounding boxes for any visible playstyle badge and every visible Special Ability icon.
+
+## Local visual matching
+After Gemini returns, the browser compares those visible icon regions against the packaged finished assets:
+
+- 20 playstyle identity PNGs
+- 4 playstyle-level PNGs: Locked, Intermediate, Advanced, Master
+- 19 Special Ability assets
+
+Playstyle identity and level are independent. A playstyle is returned only when an actual badge was located and both local comparisons are confident enough. If a badge/icon is not visible or the local match is uncertain, the app leaves the field for manual review instead of inventing a value.
 
 ## Retry policy
-Temporary overload, service-unavailable, network and rate-limit responses keep the queue item in an automatic retry state. Retries use provider `Retry-After`/RetryInfo when supplied, otherwise 10s → 20s → 45s → 90s → 120s and then remain capped at roughly 120s between attempts. Retryable items continue until successful or until the user removes them from the queue. Daily free-tier quota exhaustion is retained for delayed retry with a minimum 15-minute wait. Authentication errors, invalid images, malformed requests and invalid scanner responses are hard failures rather than infinite retries.
+Gemini 3.8 Flash remains the only model.
 
-## Exact reference architecture
-The production scanner loads `assets/scanner/reference-manifest.json` and sends three separately labelled visual libraries:
+Each API attempt has a **20-second timeout**. Temporary busy/rate-limit/network/timeout failures may use at most three attempts total:
 
-- **20 playstyle identity images** from the finished user-supplied asset pack.
-- **4 playstyle-level images**: Locked, Intermediate, Advanced and Master.
-- **19 individual Special Ability images**.
+1. immediate attempt
+2. retry after 3 seconds
+3. retry after 8 seconds
 
-The 20 identity PNGs and four level PNGs are copied unchanged from the supplied asset pack. The old 80 generated identity+tier combinations and old playstyle example workarounds are not packaged.
+After the third failed attempt, the queue item stops and shows **Retry Scan**. There is no repeat-until-success loop. Daily free-tier quota exhaustion also stops immediately for manual retry later. Authentication and malformed-request failures remain hard failures.
 
-## Playstyle classification
-Playstyle recognition is deliberately split into two decisions:
-
-1. **Identity** — compare the centre playstyle symbol against the 20 identity images. Ignore progression frame state while choosing identity.
-2. **Level** — compare only the surrounding frame, active red segments and padlock against the four False Nine level references. Ignore the centre False Nine symbol.
-
-The scanner visual level contract is **Locked / Intermediate / Advanced / Master**. A visible padlock means Locked. Intermediate has one active red outer segment, Advanced has two and Master has all three.
-
-## Special abilities
-The scanner inspects the entire Special Ability row and may return zero, one, two, three or more abilities. Results still pass the existing review and numerical validation path before save.
+## Verification language
+The existing group-total/OVR calculations remain useful as arithmetic consistency checks. They are not described as proof that Gemini read the screenshot correctly. The user can edit any parsed value before saving.

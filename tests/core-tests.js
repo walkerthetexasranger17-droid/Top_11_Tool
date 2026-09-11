@@ -77,10 +77,13 @@ function inside(role,x,y){const r=B.ROLE_RECTS[role];return x>=r.minX&&x<r.maxX&
   ok(/Gemini Scanner is not configured/.test(scannerSource),'scanner requires a configured Gemini API key');
   ok(/gemini-3\.8-flash/.test(scannerSource),'scanner uses Gemini 3.8 Flash');
   for(const m of ['3.4','3.5','3.6','3.7'])ok(!new RegExp(`gemini-${m.replace('.', '\\.')}\-flash`).test(scannerSource),`scanner has no Gemini ${m} fallback`);
-    ok(/ZERO, ONE, TWO, THREE OR MORE abilities/.test(scannerSource),'scanner prompt explicitly supports multiple special abilities');
+  ok(/There are NO reference images in this request/.test(scannerSource),'Gemini receives only the current screenshot');
+  ok(/specialAbilityIcons/.test(scannerSource)&&/playstyleBadge/.test(scannerSource),'Gemini locates visual regions for local matching');
+  ok(SC.REQUEST_TIMEOUT_MS===20000,'scanner request timeout is 20 seconds');
+  ok(JSON.stringify(SC.REQUEST_RETRY_DELAYS_MS)===JSON.stringify([0,3000,8000]),'scanner uses bounded 3-attempt retry policy');
   const lockedScan=SC._normaliseResult({roles:['AMR'],layout:'outfield',skills:{},playstyle:{name:'Winger',levelName:'Locked',confidence:1}},'gemini-3.8-flash');eq([lockedScan.playstyle?.name,lockedScan.playstyle?.level],['Winger',1],'scanner preserves Locked playstyle state');
   const intermediateScan=SC._normaliseResult({roles:['ST'],layout:'outfield',skills:{},playstyle:{name:'False Nine',levelName:'Intermediate',confidence:1}},'gemini-3.8-flash');eq([intermediateScan.playstyle?.name,intermediateScan.playstyle?.level],['False Nine',3],'scanner preserves Intermediate playstyle state');
-  ok(/No paid fallback was used/.test(scannerSource),'free-tier exhaustion has no paid fallback');
+  ok(!/gemini-3\.[4567]-flash/.test(scannerSource),'free-tier scanner has no older-model fallback');
   ok(!/scanner-templates|reconcileReadToTarget|classifyGlyph|function readNumber/.test(scannerSource),'legacy local digit-template/repair engine is absent from production scanner');
   ok(!fs.existsSync(path.join(ROOT,'js','scanner-templates.json')),'legacy scanner template file is not packaged');
 
