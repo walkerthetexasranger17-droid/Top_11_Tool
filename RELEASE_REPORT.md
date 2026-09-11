@@ -1,26 +1,28 @@
-# Top Eleven Tool v5.2.17 — Build 30527 Release Report
+# Top Eleven Tool v5.2.18 — Build 30527 Release Report
 
-## Scope
-Targeted Scanner v3 speed/accuracy architecture change only. Training, tactics, formation, squad, navigation, storage and Build 30527 calculation logic are retained.
+## Scanner simplification
 
-## What changed
-- Gemini 3.8 Flash now receives only the player screenshot rather than 44 images.
-- Gemini reads player text/numbers and locates visual icon regions; it no longer decides playstyle or Special Ability identity from the giant reference prompt.
-- The exact packaged playstyle, playstyle-level and Special Ability assets are matched locally in the browser.
-- A playstyle is not produced when no actual badge is visible.
-- Each Gemini request times out after 20 seconds.
-- Temporary failures use at most three attempts total with 3s/8s retry waits.
-- After three failures the item stops and exposes Retry Scan; no infinite background retry remains.
-- Retry/rescan/remove cancel an in-flight request for that queue item.
-- The review badge now says **Arithmetic checks passed** instead of **Numerical checks verified**.
+- Switched scanner model from Gemini 3.8 Flash to Gemini 3.6 Flash.
+- Gemini receives one player screenshot only.
+- Scanner extracts only name, age, OVR, natural roles, group totals and all 15 skills.
+- Playstyle and Special Ability recognition were removed from the scanner.
+- Playstyle, level and Special Abilities remain manual Review fields.
+- Removed production scanner visual-reference manifest, playstyle-level assets, playstyle reference assets, Special Ability reference assets and local visual matching code.
+- No OCR/template engine was added.
+- Added automatic retry for temporary/network/rate-limit/timeout/malformed/incomplete/inconsistent scan results.
+- Retry backoff becomes 2s → 4s → 8s → 12s → 15s and remains at 15s until success or cancellation.
+- Daily quota, authentication, invalid-image and unavailable-model errors stop immediately.
 
-## Assets
-The final scanner assets are unchanged from v5.2.16 and remain the exact user-approved asset pack:
-- 20 playstyle identity PNGs
-- 4 playstyle-level PNGs: Locked / Intermediate / Advanced / Master
-- 19 Special Ability assets
+## Validation
 
-No scanner artwork is generated, redrawn, recoloured or cropped during this release build.
+A Gemini result is not released to Review until all required core fields and skill values are present and existing arithmetic checks pass. The scanner never edits a returned number to force a pass.
 
-## Evidence boundary
-Gemini still performs visual reading of the screenshot directly. No OCR engine or digit-template fallback has been reintroduced.
+## Regression status
+
+Run locally before packaging:
+- core deterministic suite
+- scanner retry/error-classification suite
+- simplified scanner contract regression
+- static integrity checks
+- navigation/queue contract
+- PWA package integrity

@@ -1,49 +1,24 @@
-# Top Eleven Tool v5.2.17 — Build 30527
+# Top Eleven Tool v5.2.18 — Build 30527
 
-Static GitHub Pages/PWA companion app. The canonical application contract remains `docs/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.md`. v5.2.17 is a targeted Scanner v3 speed/accuracy release; training, tactics, formation, mentor and Build 30527 calculations are not redesigned.
+Static GitHub Pages/PWA companion app. The canonical application contract remains `docs/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.md`. v5.2.18 is a targeted scanner simplification release; training, tactics, formation, mentor and Build 30527 calculations are not redesigned.
 
-## Mobile usability
+## Scanner v3 — core data only
 
-- My Squad supports deliberate swipe-left-to-delete with a confirmation dialog. Normal vertical scrolling is gesture-locked away from delete; only one row can remain open.
-- App navigation is written to browser history so Android/PWA Back follows actual navigation. Temporary delete/drawer overlays close before page navigation.
-- Refresh/reload restores the current page plus key context such as player, Training tab/player and Squad filters, then shows a short success toast.
-- More opens a left-side drawer generated from existing main application pages. Team Plan remains the existing page containing tactics; no fake standalone Tactics page was created.
+The scanner now has one job: read the player's visible core data from the supplied Top Eleven screenshot. It sends one screenshot to Gemini 3.6 Flash and asks for name, age, OVR, natural roles, group totals and all 15 skills.
 
-## Scanner v3 reliability
+Playstyle, playstyle level and Special Abilities are no longer scanned or matched. Those fields remain available during Review and are entered manually. The old scanner visual-reference manifest/assets and local icon-matching code are not packaged in this build.
 
-The old Scanner v2 OCR/digit-template engine remains outside the production path.
+There is no Tesseract/custom OCR, digit-template repair, Cloud Vision, Cloud Run, Vertex AI or paid fallback.
 
-- The client uses the Gemini Developer API directly with the user's free-tier key.
-- **Gemini 3.8 Flash is the only production scanner model.** There is no 3.5/3.6/3.7 model fallback and no paid fallback.
-- A normal scan sends **one image only** to Gemini: the player's screenshot. The 20 playstyle images, 4 level images and 19 Special Ability images are no longer uploaded to Gemini on every scan.
-- Gemini reads player text/numbers and returns only tight bounding boxes for any visible playstyle badge and Special Ability icons.
-- Playstyle identity, playstyle level and Special Ability identity are then matched **locally in the browser** against the finished asset pack.
-- A Gemini request has a **20-second timeout**. Temporary failure is retried at most twice more after short 3s and 8s waits. After three failed attempts, the queue stops that item and shows **Retry Scan** instead of retrying forever.
-- Rescan/retry/remove cancel any in-flight request for that queue item.
-- A playstyle is not returned when no actual playstyle badge is visible.
-- Multiple Special Abilities remain fully supported.
-- Arithmetic checks are labelled as arithmetic consistency checks; they are no longer presented as proof that Gemini visually read every value correctly.
+Temporary API failures and incomplete/inconsistent reads retry automatically with backoff until a valid result is returned or the user cancels the queued scan. Auth errors, invalid images, unavailable-model errors and exhausted daily free quota stop immediately.
 
-Gemini values are never rewritten merely to force OVR/group totals to fit. All parsed values, playstyle fields and Special Abilities remain editable before save.
+## Existing app behaviour preserved
 
-## Queue persistence
+- My Squad, Player Profile, Formation, Training, Team Training, Team Plan/Tactics and mentor logic remain intact.
+- Player records retain the existing local storage keys and migrations.
+- Manual playstyle and Special Ability editing remains available.
+- Scanner queue/review persistence, rescan cancellation, swipe-to-delete, navigation drawer and back/refresh behaviour remain intact.
 
-Scanner metadata is persisted in existing local storage and screenshot payloads are persisted in IndexedDB. Navigating away does not destroy the queue. Reload restores queued/review results. An in-flight request interrupted by a full reload is marked for manual retry so the app does not silently submit a duplicate request.
+## Scanner configuration
 
-## Tests
-
-Run from the project root:
-
-```bash
-node tests/core-tests.js
-python tests/scanner_regression.py
-node tests/scanner_failover_tests.js
-python tests/navigation_queue_contract.py
-python tests/static_checks.py
-python tests/package_integrity.py
-```
-
-A live Gemini acceptance test remains optional (`tests/gemini_scanner_live.py`) and requires `GEMINI_API_KEY`.
-
-## v5.2.17 scanner references
-The production scanner keeps the exact finished reference library under `assets/scanner/references/`, but those images are used locally rather than attached to the Gemini request. The packaged playstyle/level assets are unchanged from the user-supplied asset pack; old generated combinations remain absent.
+Open **Settings → Gemini Scanner · Free Tier**, paste the Google AI Studio API key and use **Test Connection**. The key remains in browser local storage and is not included in this package.

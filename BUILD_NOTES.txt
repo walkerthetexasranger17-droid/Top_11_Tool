@@ -1,7 +1,7 @@
-Top Eleven Tool v5.2.17 — Build 30527
+Top Eleven Tool v5.2.18 — Build 30527
 
 Targeted Scanner v3 asset-reference replacement from v5.2.15:
-- Gemini 3.8 Flash remains the only scanner model.
+- Gemini 3.6 Flash remains the only scanner model.
 - Removed the old 80 generated playstyle/tier reference images and old example workarounds.
 - Added the 20 exact playstyle identity PNGs from the finished user asset pack.
 - Added the 4 exact user-approved level references: Locked, Intermediate, Advanced, Master.

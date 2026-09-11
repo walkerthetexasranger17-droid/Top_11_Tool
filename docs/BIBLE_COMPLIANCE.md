@@ -1,8 +1,8 @@
-# v5.2.17 Bible Compliance Record — Build 30527
+# v5.2.18 Bible Compliance Record — Build 30527
 
 Contract: `TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.md` (document v1.0). This record classifies the shipped implementation against the creator checklist and does not treat unresolved private server/match-engine formulas as implementation failures.
 
-| Area | v5.2.17 implementation | Status |
+| Area | v5.2.18 implementation | Status |
 | --- | --- | --- |
 | Roles / player model | Exactly 12 current roles. DML/DMR removed from current selectors/scanner outputs and retained only as legacy metadata. Natural and Related roles stored separately. | PASS |
 | Playstyle / SA preservation | Full playstyle object state is retained; role-aware chooser; Ball Playing GK not offered. Current 19 SAs, no Shadow Striker, no hard two-SA storage cap, no invented universal SA eligibility matrix. | PASS |

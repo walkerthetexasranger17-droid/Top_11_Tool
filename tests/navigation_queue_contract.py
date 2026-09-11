@@ -8,7 +8,7 @@ checks=[
  ('drawer-backdrop',html+css,'left drawer'),('drawerNav',js+html,'drawer route generation'),('finishDrawerSwipe',js,'drawer swipe-away'),
  ('QUEUE_DB_NAME',js,'IndexedDB queue image persistence'),('SCAN_QUEUE_META_KEY',js,'queue metadata persistence'),('scanControllers=new Map()',js,'per-item scan cancellation controllers'),
  ('cancelScanForItem',js,'explicit rescan cancellation'),('Retry Scan',js,'manual retry action'),('SCAN FAILED',js,'failed scan status'),
- ('Arithmetic checks passed',js,'honest arithmetic verification label'),('Local visual match:',js,'local asset match review label'),
+ ('Arithmetic checks passed',js,'honest arithmetic verification label'),('Manual fields:',js,'manual playstyle/ability review label'),
 ]
 for needle,src,label in checks:
     if needle not in src: errs.append(f'missing {label}: {needle}')
@@ -23,4 +23,4 @@ if errs:
     print('FAIL navigation/queue contract')
     for e in errs: print('-',e)
     sys.exit(1)
-print(f'PASS navigation/queue contract: {len(checks)} targeted hooks + bounded retry/cancellation invariants')
+print(f'PASS navigation/queue contract: {len(checks)} targeted hooks + automatic retry/cancellation invariants')

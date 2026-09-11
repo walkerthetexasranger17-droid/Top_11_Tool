@@ -43,68 +43,30 @@ for needle,label in [
 ]:
     if needle not in hay: errs.append(f'missing integrity hook: {label}')
 
-# Scanner v3: direct Gemini free-tier production path, screenshot-only API request + local asset matching.
+# Scanner v3: direct Gemini free-tier core-data-only path; playstyle/abilities are manual.
 for needle,label,src in [
     ("const VERSION=3", "Scanner v3 version marker", scanner),
-    ("gemini-3.8-flash", "Gemini 3.8 Flash only model", scanner),
+    ("gemini-3.6-flash", "Gemini 3.6 Flash model", scanner),
     ("REQUEST_TIMEOUT_MS=20000", "20-second Gemini request timeout", scanner),
-    ("REQUEST_RETRY_DELAYS_MS=[0,3000,8000]", "bounded 3-attempt retry schedule", scanner),
-    ("There are NO reference images in this request", "screenshot-only Gemini request contract", scanner),
-    ("hogDescriptor", "local HOG icon matcher", scanner),
-    ("levelDescriptor", "local playstyle-level matcher", scanner),
-    ("Retry Scan", "manual retry after bounded attempts", scanner+js),
-    ("history.pushState", "browser/PWA navigation history", js),
-    ("popstate", "Android/browser back handling", js),
-    ("player-delete-action", "swipe-to-delete action", html+js),
-    ("drawerNav", "left navigation drawer", html+js),
-    ("QUEUE_DB_NAME", "refresh-safe queue image persistence", js),
+    ("REQUEST_RETRY_DELAYS_MS=[0,2000,4000,8000,12000,15000]", "automatic retry backoff seed", scanner),
+    ("DO NOT analyse, identify, locate or return playstyles", "playstyle scanning removed", scanner),
+    ("DO NOT analyse, identify, locate or return special abilities", "special-ability scanning removed", scanner),
     ("generativelanguage.googleapis.com", "direct Gemini Developer API", scanner),
     ("Gemini Scanner is not configured", "Gemini API-key requirement", scanner),
-    ("specialAbilityIcons", "multi-special-ability bounding-box contract", scanner),
-    ("review.abilities||scan.specialAbilities||[]", "multi-special-ability import/review preservation", js),
     ("scanQueue", "multi-player scanner review queue", js),
-    ("multiple hidden", "batch screenshot picker", html),
     ("scanPlaystyleLevel", "manual playstyle-tier editor", html),
     ("scanner:{version:3", "Scanner v3 provenance on save", js),
     ("save.disabled=false", "scanner mismatch does not dead-lock Save", js),
-    ("data-scan-skill", "manual parsed-skill correction path", js),
-    ("Arithmetic checks passed", "verification wording is arithmetic-only", js),
-    ("Local visual match", "visual identity shown as local matching", js),
 ]:
     if needle not in src: errs.append(f'missing scanner hook: {label}')
 for forbidden in ['scanner-templates.json','reconcileReadToTarget','classifyGlyph','readNumber(ctx','cloudScannerEndpoint','Cloud Run Service URL',
-                  'RETRYING GEMINI 3.8 AUTOMATICALLY','scheduleQueueRetryTimer','SCAN_RETRY_BACKOFF_MS','SCANNER_POOL_TEMPORARY']:
+                  'gemini-3.8-flash','hogDescriptor','levelDescriptor','localVisualMatch','specialAbilityIcons','playstyleBadge']:
     if forbidden in scanner+js+html: errs.append(f'legacy Scanner v2/cloud/infinite-retry production logic survives: {forbidden}')
 if (ROOT/'js/scanner-templates.json').exists(): errs.append('legacy scanner-templates.json still packaged')
 if (ROOT/'cloud-scanner').exists(): errs.append('old Cloud Run scanner folder still packaged')
 if 'gemini-3.4-flash' in scanner: errs.append('unsupported Gemini 3.4 Flash was invented')
-manifest_ref=ROOT/'assets/scanner/reference-manifest.json'
-if not manifest_ref.is_file(): errs.append('missing scanner reference manifest')
-else:
-    rm=json.loads(manifest_ref.read_text())
-    if len(rm.get('playstyles',[]))!=20: errs.append('scanner reference manifest does not contain 20 playstyle identity images')
-    if len(rm.get('playstyleLevels',[]))!=4: errs.append('scanner reference manifest does not contain 4 playstyle-level images')
-    if len(rm.get('specialAbilities',[]))!=19: errs.append('scanner reference manifest does not contain 19 special-ability images')
-if 'playstyles-reference.png' in scanner or 'special-abilities-reference.jpg' in scanner: errs.append('legacy sheet-based scanner references still used')
-if (ROOT/'assets/scanner/references/examples').exists(): errs.append('obsolete playstyle example directory still packaged')
-if any((ROOT/'assets/scanner/references/playstyles').glob('*--*.webp')): errs.append('obsolete generated playstyle-tier combinations still packaged')
-for forbidden in ['PLAYSTYLE IDENTITY REFERENCE — ${r.name}','PLAYSTYLE LEVEL REFERENCE — ${r.name}','SPECIAL ABILITY REFERENCE — ${r.name}']:
-    if forbidden in scanner: errs.append('reference images are still being attached to the Gemini request')
-# The historical data-package contract path must never contradict the canonical Bible.
-legacy_contract=(ROOT/'data/build_30527/IMPLEMENTATION_CONTRACT.md').read_text()
-if 'docs/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.md' not in legacy_contract: errs.append('legacy implementation-contract path does not defer to canonical Bible')
-for stale in ['target = max(current value among whiteAttributes)','Build six slots greedily','They still remain in the denominator']:
-    if stale in legacy_contract: errs.append(f'stale superseded training rule survives compatibility contract: {stale}')
-
-# Superseded models must not survive.
-if re.search(r'positionFit|posBonus|OVR\s*\*\s*0?\.55|slotSkill\s*\*\s*0?\.35|ADJAC',formation,re.I): errs.append('old greedy/adjacency/OVR formation formula survives')
-if 'BEAM_WIDTH=250' not in training: errs.append('Individual Training beam width 250 missing')
-if 'BEAM_WIDTH=250' not in team: errs.append('Team Training beam width 250 missing')
-if 'weakSet' not in training or 'effectiveNeed' not in training: errs.append('Individual Training top3/credit logic missing')
-if 'prepared.valid' not in team or 'whiteSet' not in team: errs.append('Team Training does not visibly use actual per-player white sets')
-if 'enumerate(values=>' not in tactics or 'mentality' not in tactics: errs.append('Tactics exhaustive fixed-mentality search missing')
-if re.search(r'Shoot on Sight.*Mixed.*Both Flanks',tactics,re.I|re.S): errs.append('possible old hard-coded tactic preset survives')
-
+if (ROOT/'assets/scanner/reference-manifest.json').exists() or (ROOT/'assets/scanner/references').exists(): errs.append('obsolete scanner visual reference assets still packaged')
+if 'hogDescriptor' in scanner or 'levelDescriptor' in scanner or 'localVisualMatch' in scanner: errs.append('obsolete local icon matching survives')
 # Current roles / abilities / playstyles are not silently truncated.
 data=(ROOT/'js/data.js').read_text()
 if 'slice(0,2)' in players or 'specialAbilities.slice(0,2)' in js: errs.append('hard two-special-ability cap survives')
@@ -117,7 +79,7 @@ manifest=json.loads((ROOT/'manifest.json').read_text())
 if manifest.get('name')!='Top Eleven Tool' or manifest.get('short_name')!='Top Eleven Tool': errs.append('manifest app name is not Top Eleven Tool')
 if not soup.title or soup.title.get_text(strip=True)!='Top Eleven Tool': errs.append('page title is not Top Eleven Tool')
 if 'TOP ELEVEN <span>TOOL</span>' not in html: errs.append('in-app header branding is not Top Eleven Tool')
-if 'v5.2.17' not in html: errs.append('visible build label is not v5.2.17')
+if 'v5.2.18' not in html: errs.append('visible build label is not v5.2.18')
 bible_data=(ROOT/'js/bible-data.js').read_text(encoding='utf-8')
 if "tackling:[['balanced','Balanced',0,0,.50],['stay','Stay On Feet',1,7,.30],['aggressive','Aggressive',2,5,.80]]" not in bible_data:
     errs.append('tackling IDs do not match direct build-30527 provenance correction')

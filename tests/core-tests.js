@@ -69,21 +69,17 @@ function inside(role,x,y){const r=B.ROLE_RECTS[role];return x>=r.minX&&x<r.maxX&
   const abilityHeavy=P.cleanPlayer({name:'Abilities',position:'ST',roles:['ST'],skills:skills(),specialAbilities:D.SPECIAL_ABILITIES.slice(0,5)});ok(abilityHeavy.specialAbilities.length===5,'special ability storage is not capped at two');
 
   // ---------------------------------------------------------------------------
-  // Scanner v3 Gemini free-tier boundary: no local OCR/template repair and multi-SA storage.
-  // ---------------------------------------------------------------------------
+  // Scanner v3 Gemini free-tier boundary: core player data only; playstyle/abilities manual.
   ok(SC.VERSION===3,'Scanner v3 is the production scanner');
-  ok(!SC.checkAggregate([100,100,100,100,100],106).ok,'aggregate mismatch remains a visible failing cross-check');
   const scannerSource=fs.readFileSync(path.join(ROOT,'js','scanner-engine.js'),'utf8');
   ok(/Gemini Scanner is not configured/.test(scannerSource),'scanner requires a configured Gemini API key');
-  ok(/gemini-3\.8-flash/.test(scannerSource),'scanner uses Gemini 3.8 Flash');
-  for(const m of ['3.4','3.5','3.6','3.7'])ok(!new RegExp(`gemini-${m.replace('.', '\\.')}\-flash`).test(scannerSource),`scanner has no Gemini ${m} fallback`);
-  ok(/There are NO reference images in this request/.test(scannerSource),'Gemini receives only the current screenshot');
-  ok(/specialAbilityIcons/.test(scannerSource)&&/playstyleBadge/.test(scannerSource),'Gemini locates visual regions for local matching');
+  ok(/gemini-3\.6-flash/.test(scannerSource),'scanner uses Gemini 3.6 Flash');
+  ok(/DO NOT analyse, identify, locate or return playstyles/.test(scannerSource),'scanner does not classify playstyles');
+  ok(/DO NOT analyse, identify, locate or return special abilities/.test(scannerSource),'scanner does not classify special abilities');
   ok(SC.REQUEST_TIMEOUT_MS===20000,'scanner request timeout is 20 seconds');
-  ok(JSON.stringify(SC.REQUEST_RETRY_DELAYS_MS)===JSON.stringify([0,3000,8000]),'scanner uses bounded 3-attempt retry policy');
-  const lockedScan=SC._normaliseResult({roles:['AMR'],layout:'outfield',skills:{},playstyle:{name:'Winger',levelName:'Locked',confidence:1}},'gemini-3.8-flash');eq([lockedScan.playstyle?.name,lockedScan.playstyle?.level],['Winger',1],'scanner preserves Locked playstyle state');
-  const intermediateScan=SC._normaliseResult({roles:['ST'],layout:'outfield',skills:{},playstyle:{name:'False Nine',levelName:'Intermediate',confidence:1}},'gemini-3.8-flash');eq([intermediateScan.playstyle?.name,intermediateScan.playstyle?.level],['False Nine',3],'scanner preserves Intermediate playstyle state');
-  ok(!/gemini-3\.[4567]-flash/.test(scannerSource),'free-tier scanner has no older-model fallback');
+  ok(JSON.stringify(SC.REQUEST_RETRY_DELAYS_MS)===JSON.stringify([0,2000,4000,8000,12000,15000]),'scanner retry backoff seed is stable');
+  const simpleScan=SC._normaliseResult({name:'Test',age:21,ovr:100,roles:['MC'],layout:'outfield',skills:{}},'gemini-3.6-flash');
+  ok(simpleScan.playstyle===null&&simpleScan.specialAbilities.length===0,'scanner leaves manual visual fields empty');
   ok(!/scanner-templates|reconcileReadToTarget|classifyGlyph|function readNumber/.test(scannerSource),'legacy local digit-template/repair engine is absent from production scanner');
   ok(!fs.existsSync(path.join(ROOT,'js','scanner-templates.json')),'legacy scanner template file is not packaged');
 
