@@ -1,7 +1,7 @@
-Top Eleven Tool v5.2.10 — Build 30527
+Top Eleven Tool v5.2.11 — Build 30527
 
 - Replaces the v5.2.9 Cloud Run / Vision / Vertex deployment with direct Gemini Developer API free-tier access.
-- Model: gemini-3.8-flash.
+- Models: gemini-3.8-flash primary; gemini-3.7-flash automatic transient-capacity fallback.
 - API key is user-entered and stored only on the device/browser; no key is packaged.
 - No paid fallback exists in the app.
 - 20 playstyles × 4 visual levels are supplied as an authoritative scanner reference.

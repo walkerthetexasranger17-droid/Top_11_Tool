@@ -46,7 +46,8 @@ for needle,label in [
 # Scanner v3: direct Gemini free-tier production path, no legacy digit-template repair engine.
 for needle,label,src in [
     ("const VERSION=3", "Scanner v3 version marker", scanner),
-    ("gemini-3.8-flash", "Gemini 3.8 Flash model", scanner),
+    ("gemini-3.8-flash", "Gemini 3.8 Flash primary model", scanner),
+    ("gemini-3.7-flash", "Gemini 3.7 Flash transient fallback", scanner),
     ("generativelanguage.googleapis.com", "direct Gemini Developer API", scanner),
     ("Gemini Scanner is not configured", "Gemini API-key requirement", scanner),
     ("ZERO, ONE, TWO, THREE OR MORE abilities", "multi-special-ability prompt", scanner),
@@ -91,7 +92,7 @@ manifest=json.loads((ROOT/'manifest.json').read_text())
 if manifest.get('name')!='Top Eleven Tool' or manifest.get('short_name')!='Top Eleven Tool': errs.append('manifest app name is not Top Eleven Tool')
 if not soup.title or soup.title.get_text(strip=True)!='Top Eleven Tool': errs.append('page title is not Top Eleven Tool')
 if 'TOP ELEVEN <span>TOOL</span>' not in html: errs.append('in-app header branding is not Top Eleven Tool')
-if 'v5.2.10' not in html: errs.append('visible build label is not v5.2.10')
+if 'v5.2.11' not in html: errs.append('visible build label is not v5.2.11')
 bible_data=(ROOT/'js/bible-data.js').read_text(encoding='utf-8')
 if "tackling:[['balanced','Balanced',0,0,.50],['stay','Stay On Feet',1,7,.30],['aggressive','Aggressive',2,5,.80]]" not in bible_data:
     errs.append('tackling IDs do not match direct build-30527 provenance correction')

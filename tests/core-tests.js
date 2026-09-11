@@ -75,7 +75,7 @@ function inside(role,x,y){const r=B.ROLE_RECTS[role];return x>=r.minX&&x<r.maxX&
   ok(!SC.checkAggregate([100,100,100,100,100],106).ok,'aggregate mismatch remains a visible failing cross-check');
   const scannerSource=fs.readFileSync(path.join(ROOT,'js','scanner-engine.js'),'utf8');
   ok(/Gemini Scanner is not configured/.test(scannerSource),'scanner requires a configured Gemini API key');
-  ok(/gemini-3\.8-flash/.test(scannerSource),'scanner targets Gemini 3.8 Flash');
+  ok(/gemini-3\.8-flash/.test(scannerSource)&&/gemini-3\.7-flash/.test(scannerSource),'scanner uses Gemini 3.8 primary with Gemini 3.7 transient fallback');
   ok(/ZERO, ONE, TWO, THREE OR MORE abilities/.test(scannerSource),'scanner prompt explicitly supports multiple special abilities');
   ok(/No paid fallback was used/.test(scannerSource),'free-tier exhaustion has no paid fallback');
   ok(!/scanner-templates|reconcileReadToTarget|classifyGlyph|function readNumber/.test(scannerSource),'legacy local digit-template/repair engine is absent from production scanner');

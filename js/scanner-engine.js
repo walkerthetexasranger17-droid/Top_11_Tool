@@ -4,7 +4,8 @@
   if(!D||!B) throw new Error('data.js and bible-data.js must load before scanner-engine.js');
 
   const VERSION=3;
-  const MODEL='gemini-3.8-flash';
+  const MODELS=['gemini-3.8-flash','gemini-3.7-flash'];
+  const MODEL=MODELS[0];
   const API_KEY_STORAGE='te:scanner:geminiApiKey';
   const API_BASE='https://generativelanguage.googleapis.com/v1beta';
   const PLAYSTYLE_REF='./assets/scanner/playstyles-reference.png';
@@ -65,15 +66,19 @@
     let body=null;try{body=await response.json();}catch(_){/* ignored */}
     if(!response.ok){
       const detail=body?.error?.message||body?.message||`HTTP ${response.status}`;
-      if(response.status===429)throw new Error('Gemini free-tier quota/rate limit reached. No paid fallback was used. Try again after the free quota resets.');
-      if(response.status===401||response.status===403)throw new Error(`Gemini API key was rejected. ${detail}`);
-      if(response.status===400&&/API key|key not valid|invalid/i.test(detail))throw new Error(`Gemini API key is invalid. ${detail}`);
-      throw new Error(`Gemini scanner error: ${detail}`);
+      const highDemand=/high demand|overload|overloaded|temporar|capacity|unavailable|try again/i.test(detail);
+      const transient=[500,502,503,504].includes(response.status)||(response.status===429&&highDemand);
+      const err=new Error(`Gemini scanner error: ${detail}`);
+      err.status=response.status;err.detail=detail;err.transient=transient;
+      if(response.status===429&&!highDemand)err.message='Gemini free-tier quota/rate limit reached. No paid fallback was used. Try again after the free quota resets.';
+      if(response.status===401||response.status===403)err.message=`Gemini API key was rejected. ${detail}`;
+      if(response.status===400&&/API key|key not valid|invalid/i.test(detail))err.message=`Gemini API key is invalid. ${detail}`;
+      throw err;
     }
     return body;
   }
 
-  function normaliseResult(raw={}){
+  function normaliseResult(raw={},usedModel=MODEL){
     const roles=[...(Array.isArray(raw.roles)?raw.roles:[])].map(validRole).filter(Boolean).filter((x,i,a)=>a.indexOf(x)===i).slice(0,3);
     const layout=(raw.layout==='gk'||roles.includes('GK'))?'gk':'outfield';
     const allowedSkills=layout==='gk'?[...D.GK_SKILLS,...D.GK_PHYSICAL]:[...D.OUTFIELD_SKILLS];
@@ -87,10 +92,10 @@
     const specialAbilities=[...(Array.isArray(raw.specialAbilities)?raw.specialAbilities:[])].map(String).map(x=>x.trim()).filter(x=>ABILITIES.includes(x)).filter((x,i,a)=>a.indexOf(x)===i);
     const c=raw.confidence||{},warnings=[...(Array.isArray(raw.warnings)?raw.warnings:[])].map(String).slice(0,30);
     return {
-      version:VERSION,provider:'google-gemini-developer-api-free',model:MODEL,
+      version:VERSION,provider:'google-gemini-developer-api-free',model:usedModel,
       name:String(raw.name||'').trim(),age:finiteOrNull(raw.age),ovr:finiteOrNull(raw.ovr),roles,position:roles[0]||null,layout,skills,playstyle,specialAbilities,
       confidence:{overall:clamp01(c.overall),text:clamp01(c.text),numbers:clamp01(c.numbers),roles:clamp01(c.roles),playstyle:clamp01(c.playstyle),specialAbilities:clamp01(c.specialAbilities)},
-      raw:{totals:{def:finiteOrNull(raw.totals?.def),att:finiteOrNull(raw.totals?.att),phys:finiteOrNull(raw.totals?.phys)},model:MODEL,warnings,providerResponseVersion:3},
+      raw:{totals:{def:finiteOrNull(raw.totals?.def),att:finiteOrNull(raw.totals?.att),phys:finiteOrNull(raw.totals?.phys)},model:usedModel,warnings,providerResponseVersion:3},
       repairNotes:warnings,validation:{resolved:true,unresolvedChecks:[]}
     };
   }
@@ -99,7 +104,6 @@
     const screenshot=dataUrlPart(dataUrl);
     onProgress({progress:.05,label:'Loading official icon references'});
     const [playstyleRef,abilityRef]=await references();
-    onProgress({progress:.12,label:'Sending screenshot to Gemini 3.8 Flash'});
     const payload={
       contents:[{role:'user',parts:[
         {text:buildPrompt()},
@@ -107,11 +111,26 @@
         {text:'REFERENCE IMAGE 1 — all playstyle names and visual levels:'},playstyleRef,
         {text:'REFERENCE IMAGE 2 — all current special ability names and icons:'},abilityRef
       ]}],
-      generationConfig:{responseMimeType:'application/json',maxOutputTokens:7000}
+      generationConfig:{responseMimeType:'application/json',maxOutputTokens:7000,thinkingConfig:{thinkingLevel:'low'}}
     };
-    const body=await apiFetch(`/models/${MODEL}:generateContent`,{method:'POST',body:JSON.stringify(payload)});
-    onProgress({progress:.90,label:'Validating Gemini result'});
-    const result=normaliseResult(parseJson(extractText(body)));
+    let body=null,usedModel=null,lastError=null;
+    for(let i=0;i<MODELS.length;i++){
+      const model=MODELS[i];
+      onProgress({progress:i===0?.12:.18,label:i===0?'Sending screenshot to Gemini 3.8 Flash':'3.8 busy — automatically trying Gemini 3.7 Flash'});
+      try{
+        body=await apiFetch(`/models/${model}:generateContent`,{method:'POST',body:JSON.stringify(payload)});
+        usedModel=model;break;
+      }catch(err){
+        lastError=err;
+        if(i<MODELS.length-1&&err?.transient)continue;
+        if(err?.transient)throw new Error('Gemini 3.8 Flash and Gemini 3.7 Flash are both temporarily busy. No paid fallback was used. Try the scan again in a few minutes.');
+        throw err;
+      }
+    }
+    if(!body||!usedModel)throw lastError||new Error('Gemini scanner could not obtain a response.');
+    onProgress({progress:.90,label:`Validating ${usedModel.replace('gemini-','Gemini ')} result`});
+    const result=normaliseResult(parseJson(extractText(body)),usedModel);
+    if(usedModel!==MODEL)result.repairNotes.push('Gemini 3.8 Flash was temporarily unavailable; this scan used Gemini 3.7 Flash automatically.');
     if(!result.name&&!result.roles.length&&!Object.keys(result.skills).length)throw new Error('Gemini could not read this as a Top Eleven Skills screenshot.');
     const required=result.layout==='gk'?[...D.GK_SKILLS,...D.GK_PHYSICAL]:[...D.OUTFIELD_SKILLS];
     const missing=required.filter(s=>!Number.isFinite(Number(result.skills[s])));
@@ -132,5 +151,5 @@
     return{average,error,ok:error<=1.5};
   }
 
-  TE.Scanner={VERSION,MODEL,scan,health,getApiKey,setApiKey,clearApiKey,checkAggregate,_normaliseResult:normaliseResult,_buildPrompt:buildPrompt};
+  TE.Scanner={VERSION,MODEL,MODELS,scan,health,getApiKey,setApiKey,clearApiKey,checkAggregate,_normaliseResult:normaliseResult,_buildPrompt:buildPrompt};
 })();

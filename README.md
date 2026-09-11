@@ -1,16 +1,16 @@
-# Top Eleven Tool v5.2.10 — Build 30527
+# Top Eleven Tool v5.2.11 — Build 30527
 
-Static GitHub Pages/PWA companion app. The application contract remains `docs/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.md`; v5.2.10 changes only the Scanner v3 connection model and keeps the rest of the app intact.
+Static GitHub Pages/PWA companion app. The application contract remains `docs/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.md`; v5.2.11 changes only the Scanner v3 connection model and keeps the rest of the app intact.
 
 ## Scanner v3 — Gemini free-tier path
 
 The old Scanner v2 digit-template/reconciliation engine is not in the production scan path.
 
-- Gemini 3.8 Flash reads the original Top Eleven Skills screenshot directly.
+- Gemini 3.8 Flash reads the original Top Eleven Skills screenshot directly, with automatic Gemini 3.7 Flash fallback only for transient capacity/high-demand errors.
 - The scan request includes the recovered official 20-playstyle × 4-level reference sheet and the canonical 19-special-ability reference sheet.
 - Players may have zero, one, two, three or more special abilities. The scanner contract returns an array and explicitly requires every visible icon in left-to-right order.
 - The app never rewrites a detected number to make OVR or group totals fit. Cross-checks only flag discrepancies for review.
-- No Cloud Vision, Cloud Run, Vertex AI or paid fallback is used in v5.2.10.
+- No Cloud Vision, Cloud Run, Vertex AI or paid service fallback is used in v5.2.11. Both Gemini models use the same free-tier API key/project.
 - The Gemini API key is entered in Settings and stored only in this browser (`localStorage`). It is not in the ZIP or source code.
 
 ## £0 setup

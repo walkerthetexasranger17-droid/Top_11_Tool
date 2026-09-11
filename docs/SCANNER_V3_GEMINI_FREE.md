@@ -2,7 +2,7 @@
 
 ## Architecture
 
-v5.2.10 is a static browser/PWA scanner. The selected Skills screenshot is sent directly from the user's browser to the Gemini Developer API using `gemini-3.8-flash`.
+v5.2.11 is a static browser/PWA scanner. The selected Skills screenshot is sent directly from the user's browser to the Gemini Developer API using `gemini-3.8-flash` first and `gemini-3.7-flash` only when 3.8 returns a transient capacity/high-demand error.
 
 The request contains three images:
 
@@ -20,7 +20,7 @@ Paste the key in **More -> Settings -> Gemini Scanner · Free Tier**. The key is
 
 ## Cost boundary
 
-This build has no Cloud Vision, Cloud Run, Vertex AI, or paid fallback. A Gemini HTTP 429 is surfaced as a free-tier quota/rate-limit error and the scan stops. The app itself cannot prevent charges if the user later upgrades the underlying Gemini project to a paid billing tier, so keeping the project on Free Tier is part of the deployment contract.
+This build has no Cloud Vision, Cloud Run, Vertex AI, or paid fallback. A genuine free-tier quota/rate-limit 429 is surfaced and the scan stops. Temporary overload/capacity errors automatically retry once on Gemini 3.7 Flash. The app itself cannot prevent charges if the user later upgrades the underlying Gemini project to a paid billing tier, so keeping the project on Free Tier is part of the deployment contract.
 
 ## Evidence / reconciliation boundary
 

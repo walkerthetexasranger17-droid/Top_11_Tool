@@ -1,10 +1,18 @@
-# Top Eleven Tool v5.2.10 — Build 30527 Release Report
+# Top Eleven Tool v5.2.11 — Build 30527 Release Report
 
 ## Scanner change
 
-v5.2.10 removes the Cloud Run / Cloud Vision / Vertex AI deployment introduced in v5.2.9 and replaces it with a direct Gemini Developer API free-tier path using `gemini-3.8-flash`.
+v5.2.11 removes the Cloud Run / Cloud Vision / Vertex AI deployment introduced in v5.2.9 and replaces it with a direct Gemini Developer API free-tier path using `gemini-3.8-flash`.
 
 The scanner sends the original Skills screenshot together with the recovered playstyle-level and special-ability reference sheets. The prompt forbids number repair/invention and requires every visible special ability to be returned, with no fixed maximum count.
+
+## v5.2.11 capacity fallback
+
+- Primary scan model remains `gemini-3.8-flash`.
+- If Google returns a transient overload/capacity error (HTTP 5xx, or a high-demand 429), the exact same scan request is retried once with `gemini-3.7-flash`.
+- Authentication, malformed requests, and genuine free-tier quota exhaustion are not hidden by the fallback.
+- There is still no Cloud Run, Vertex AI, Cloud Vision, or paid-service fallback.
+- The actual model used is saved in scanner provenance for each player.
 
 ## Cost / credential model
 
@@ -13,7 +21,7 @@ The scanner sends the original Skills screenshot together with the recovered pla
 - No API key is embedded in the package.
 - The user's Gemini key is stored only in the current browser.
 - HTTP 429 quota/rate-limit failures stop scanning; there is no paid fallback.
-- If the user later upgrades the Gemini project to paid billing, Google pricing may apply; v5.2.10 assumes the project remains on Free Tier.
+- If the user later upgrades the Gemini project to paid billing, Google pricing may apply; v5.2.11 assumes the project remains on Free Tier.
 
 ## Regression target
 
