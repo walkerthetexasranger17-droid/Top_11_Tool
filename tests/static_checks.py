@@ -73,8 +73,19 @@ for forbidden in ['scanner-templates.json','reconcileReadToTarget','classifyGlyp
 if (ROOT/'js/scanner-templates.json').exists(): errs.append('legacy scanner-templates.json still packaged')
 if (ROOT/'cloud-scanner').exists(): errs.append('old Cloud Run scanner folder still packaged')
 if 'gemini-3.4-flash' in scanner: errs.append('unsupported Gemini 3.4 Flash was invented')
-for ref in ['assets/scanner/playstyles-reference.png','assets/scanner/special-abilities-reference.jpg']:
-    if not (ROOT/ref).is_file(): errs.append(f'missing scanner reference: {ref}')
+manifest_ref=ROOT/'assets/scanner/reference-manifest.json'
+if not manifest_ref.is_file(): errs.append('missing individual scanner reference manifest')
+else:
+    rm=json.loads(manifest_ref.read_text())
+    if len(rm.get('playstyles',[]))!=20: errs.append('scanner reference manifest does not contain 20 playstyle identity images')
+    if len(rm.get('playstyleLevels',[]))!=4: errs.append('scanner reference manifest does not contain 4 playstyle-level images')
+    if len(rm.get('specialAbilities',[]))!=19: errs.append('scanner reference manifest does not contain 19 special-ability images')
+if 'playstyles-reference.png' in scanner or 'special-abilities-reference.jpg' in scanner: errs.append('legacy sheet-based scanner references still used')
+if (ROOT/'assets/scanner/references/examples').exists(): errs.append('obsolete playstyle example directory still packaged')
+if any((ROOT/'assets/scanner/references/playstyles').glob('*--*.webp')): errs.append('obsolete generated playstyle-tier combinations still packaged')
+if 'PLAYSTYLE IDENTITY REFERENCE — ${r.name}' not in scanner: errs.append('individual labelled playstyle identity references not sent to Gemini')
+if 'PLAYSTYLE LEVEL REFERENCE — ${r.name}' not in scanner: errs.append('individual labelled playstyle-level references not sent to Gemini')
+if 'SPECIAL ABILITY REFERENCE — ${r.name}' not in scanner: errs.append('individual labelled special-ability references not sent to Gemini')
 
 # The historical data-package contract path must never contradict the canonical Bible.
 legacy_contract=(ROOT/'data/build_30527/IMPLEMENTATION_CONTRACT.md').read_text()
@@ -103,7 +114,7 @@ manifest=json.loads((ROOT/'manifest.json').read_text())
 if manifest.get('name')!='Top Eleven Tool' or manifest.get('short_name')!='Top Eleven Tool': errs.append('manifest app name is not Top Eleven Tool')
 if not soup.title or soup.title.get_text(strip=True)!='Top Eleven Tool': errs.append('page title is not Top Eleven Tool')
 if 'TOP ELEVEN <span>TOOL</span>' not in html: errs.append('in-app header branding is not Top Eleven Tool')
-if 'v5.2.14' not in html: errs.append('visible build label is not v5.2.14')
+if 'v5.2.16' not in html: errs.append('visible build label is not v5.2.16')
 bible_data=(ROOT/'js/bible-data.js').read_text(encoding='utf-8')
 if "tackling:[['balanced','Balanced',0,0,.50],['stay','Stay On Feet',1,7,.30],['aggressive','Aggressive',2,5,.80]]" not in bible_data:
     errs.append('tackling IDs do not match direct build-30527 provenance correction')

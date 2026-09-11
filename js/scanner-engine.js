@@ -12,10 +12,10 @@
   const API_KEY_STORAGE='te:scanner:geminiApiKey';
   const MODEL_HEALTH_STORAGE='te:scanner:modelHealth:v1';
   const API_BASE='https://generativelanguage.googleapis.com/v1beta';
-  const PLAYSTYLE_REF='./assets/scanner/playstyles-reference.png';
-  const ABILITY_REF='./assets/scanner/special-abilities-reference.jpg';
+  const REFERENCE_MANIFEST='./assets/scanner/reference-manifest.json';
   const PLAYSTYLES=B.PLAYSTYLES.filter(x=>x.id!==1).map(x=>x.name);
-  const LEVELS=B.PLAYSTYLE_LEVELS.filter(x=>x.id>=1).map(x=>x.name);
+  const LEVELS=['Locked','Intermediate','Advanced','Master'];
+  const SCANNER_LEGACY_PLAYSTYLES=['Holding Midfielder'];
   const ABILITIES=[...D.SPECIAL_ABILITIES];
   const DISCOVERY_TTL_MS=15*60*1000;
   const DEFAULT_BUSY_MS=15000;
@@ -39,22 +39,69 @@
     if(!m)throw scannerError('INVALID_IMAGE','Choose a valid PNG, JPEG or WebP screenshot.',{scanFailure:true});
     return {inline_data:{mime_type:m[1].toLowerCase().replace('jpg','jpeg'),data:m[2].replace(/\s+/g,'')}};
   }
-  async function fileToInline(url,mime){
+  async function fileToInline(url,mime=''){
     const r=await fetch(url,{cache:'force-cache'});if(!r.ok)throw new Error(`Scanner reference asset is missing: ${url}`);
     const blob=await r.blob();
     const data=await new Promise((res,rej)=>{const fr=new FileReader();fr.onload=()=>res(String(fr.result||'').split(',')[1]||'');fr.onerror=rej;fr.readAsDataURL(blob);});
-    return {inline_data:{mime_type:mime,data}};
+    return {inline_data:{mime_type:mime||blob.type||'image/webp',data}};
   }
   async function references(){
-    if(!referencePromise)referencePromise=Promise.all([fileToInline(PLAYSTYLE_REF,'image/png'),fileToInline(ABILITY_REF,'image/jpeg')]);
+    if(!referencePromise)referencePromise=(async()=>{
+      const r=await fetch(REFERENCE_MANIFEST,{cache:'force-cache'});if(!r.ok)throw new Error('Scanner reference manifest is missing.');
+      const manifest=await r.json();
+      const load=async row=>({...row,image:await fileToInline(row.file)});
+      const [playstyles,playstyleLevels,specialAbilities]=await Promise.all([
+        Promise.all((manifest.playstyles||[]).map(load)),
+        Promise.all((manifest.playstyleLevels||[]).map(load)),
+        Promise.all((manifest.specialAbilities||[]).map(load))
+      ]);
+      if(playstyles.length!==20||playstyleLevels.length!==4||specialAbilities.length!==19)throw new Error('Scanner reference library is incomplete. Expected 20 playstyle identities, 4 playstyle levels and 19 special abilities.');
+      return{manifest,playstyles,playstyleLevels,specialAbilities};
+    })();
     return referencePromise;
   }
 
-  function buildPrompt(){
+  function buildPrompt(refs=null){
     const outfield=[...D.OUTFIELD_SKILLS],gk=[...D.GK_SKILLS,...D.GK_PHYSICAL];
-    return `You are Scanner v3 for a private Top Eleven companion app. Read the supplied CURRENT Top Eleven player Skills screenshot with extreme care. The next two images are authoritative visual reference sheets for playstyles/levels and special abilities.\n\nHARD RULES\n1. Read values from the screenshot itself. Never invent, infer, average, reconcile, or change a number merely to make OVR or column totals agree. If you cannot read a value, omit it from skills and add a warning.\n2. Read player name, age, OVR, every visible natural role, the three group totals, and every one of the 15 displayed skill values.\n3. PLAYSTYLE: match the small playstyle badge beside the player's name against REFERENCE IMAGE 1. Identify BOTH playstyle name and its visual state. Allowed states are Locked, Standard, Intermediate, Advanced, or Master. A visible PADLOCK overlay means Locked/Potential and MUST NEVER be returned as Standard. For an unlocked badge: Standard has no progression bars, Intermediate has 1 bar, Advanced has 2 bars, and Master has 3 bars plus the Master-style outer badge. Judge the OUTER FRAME/BARS/LOCK separately from the inner playstyle symbol. Do not infer the playstyle from the player's role. Role is only a sanity check. If the badge or its state is too unclear, return playstyle=null rather than guessing.\n4. SPECIAL ABILITIES: inspect the ENTIRE row after the words "Special ability:". A player may have ZERO, ONE, TWO, THREE OR MORE abilities. Segment every visible icon and match each independently against REFERENCE IMAGE 2. Return ALL visible abilities in left-to-right order. NEVER stop after the first icon.\n5. The screenshot may recolour or scale an icon. Match the symbol/shape, not just colour.\n6. Do not report an ability or playstyle merely because it would suit the player's position. Only report what is visibly present.\n7. Return JSON only. Confidence fields are numbers from 0 to 1.\n\nREFERENCE IMAGE 1 also contains two labelled real screenshot examples added for regression: Ariel Bravo = Winger + Locked, and François Roelandt = False Nine + Intermediate. Use those examples to distinguish the lock overlay and the 1-bar Intermediate frame.
+    const referencePlaystyles=(refs?.manifest?.playstyles||[]).map(x=>x.name).filter(Boolean);
+    const allowedPlaystyles=referencePlaystyles.length?referencePlaystyles:[...PLAYSTYLES,...SCANNER_LEGACY_PLAYSTYLES];
+    return `You are Scanner v3 for a private Top Eleven companion app. Read the supplied CURRENT Top Eleven player Skills screenshot with extreme care. After the screenshot you will receive three INDIVIDUALLY LABELLED authoritative visual reference libraries. Every text label immediately before an image is the identity of that reference image.
 
-Allowed roles: ${D.ALL_POSITIONS.join(', ')}.\nAllowed playstyles: ${PLAYSTYLES.join(', ')}.\nAllowed playstyle levels: ${LEVELS.join(', ')}.\nAllowed special abilities: ${ABILITIES.join(', ')}.\nOutfield skills (exact names): ${outfield.join(', ')}.\nGoalkeeper skills (exact names): ${gk.join(', ')}.\n\nFor an outfield player, totals.def/att/phys are the large DEFENCE/ATTACK/PHYSICAL numbers above the columns. For a goalkeeper put the GOALKEEPING total in totals.att for app compatibility, totals.phys is PHYSICAL, and totals.def may be null.\n\nReturn exactly this object shape:\n{\n  "name": string|null,\n  "age": number|null,\n  "ovr": number|null,\n  "roles": string[],\n  "layout": "outfield"|"gk",\n  "totals": {"def": number|null, "att": number|null, "phys": number|null},\n  "skills": {"Skill Name": number},\n  "playstyle": {"name": string, "levelName": string, "confidence": number}|null,\n  "specialAbilities": string[],\n  "confidence": {"overall":number,"text":number,"numbers":number,"roles":number,"playstyle":number,"specialAbilities":number},\n  "warnings": string[]\n}`;
+HARD RULES
+1. Read values from the screenshot itself. Never invent, infer, average, reconcile, or change a number merely to make OVR or column totals agree. If you cannot read a value, omit it from skills and add a warning.
+2. Read player name, age, OVR, every visible natural role, the three group totals, and every one of the 15 displayed skill values.
+3. PLAYSTYLE IDENTITY AND PLAYSTYLE LEVEL ARE TWO COMPLETELY SEPARATE VISUAL DECISIONS.
+   A) IDENTITY: compare only the playstyle symbol/icon in the player's badge against the 20 individually labelled PLAYSTYLE IDENTITY REFERENCE images. The supplied identity images are the exact approved asset pack. Ignore frame progression when deciding identity. Never infer identity from role.
+   B) LEVEL: compare only the surrounding badge/frame/lock treatment against the four individually labelled PLAYSTYLE LEVEL REFERENCE images. All four level references intentionally use the False Nine symbol: IGNORE that centre symbol when deciding level. The only valid scanner states are Locked, Intermediate, Advanced and Master. A visible PADLOCK overlay means Locked/Potential. Intermediate has one active red outer segment, Advanced has two active red outer segments, and Master has all three active red outer segments. There is no Standard state in this scanner reference contract. If identity or level is unclear, return playstyle=null rather than guessing.
+4. SPECIAL ABILITIES: inspect the ENTIRE row after the words "Special ability:". A player may have ZERO, ONE, TWO, THREE OR MORE abilities. Each special ability has its OWN individually labelled reference image. Segment every visible icon, compare each icon independently, and return ALL visible abilities in left-to-right order. NEVER stop after the first icon.
+5. The screenshot may recolour, tint or scale an icon. Match the symbol/shape and structural details, not just colour.
+6. Do not report an ability or playstyle merely because it would suit the player's position. Only report what is visibly present.
+7. The reference labels are authoritative. Do not reinterpret or rename them.
+8. Return JSON only. Confidence fields are numbers from 0 to 1.
+
+Allowed roles: ${D.ALL_POSITIONS.join(', ')}.
+Allowed playstyles: ${allowedPlaystyles.join(', ')}.
+Allowed playstyle levels: ${LEVELS.join(', ')}.
+Allowed special abilities: ${ABILITIES.join(', ')}.
+Outfield skills (exact names): ${outfield.join(', ')}.
+Goalkeeper skills (exact names): ${gk.join(', ')}.
+
+For an outfield player, totals.def/att/phys are the large DEFENCE/ATTACK/PHYSICAL numbers above the columns. For a goalkeeper put the GOALKEEPING total in totals.att for app compatibility, totals.phys is PHYSICAL, and totals.def may be null.
+
+Return exactly this object shape:
+{
+  "name": string|null,
+  "age": number|null,
+  "ovr": number|null,
+  "roles": string[],
+  "layout": "outfield"|"gk",
+  "totals": {"def": number|null, "att": number|null, "phys": number|null},
+  "skills": {"Skill Name": number},
+  "playstyle": {"name": string, "levelName": string, "confidence": number}|null,
+  "specialAbilities": string[],
+  "confidence": {"overall":number,"text":number,"numbers":number,"roles":number,"playstyle":number,"specialAbilities":number},
+  "warnings": string[]
+}`;
   }
 
   function extractText(body){
@@ -150,8 +197,10 @@ Allowed roles: ${D.ALL_POSITIONS.join(', ')}.\nAllowed playstyles: ${PLAYSTYLES.
     const skills={};
     for(const name of allowedSkills){const n=finiteOrNull(raw.skills?.[name]);if(n!=null&&n>=0&&n<=520)skills[name]=n;}
     const psName=String(raw.playstyle?.name||'').trim(),psDef=D.playstyleDefinition(psName),levelName=String(raw.playstyle?.levelName||'').trim();
-    const level=D.PLAYSTYLE_LEVELS.find(x=>String(x.name).toLowerCase()===levelName.toLowerCase())?.id||0;
-    const playstyle=psDef&&psDef.id!==1&&level>=1?{name:psDef.name,type:psDef.type,level,levelName:D.PLAYSTYLE_LEVELS.find(x=>x.id===level)?.name||levelName,confidence:clamp01(raw.playstyle?.confidence)}:null;
+    const allowedLevel=LEVELS.some(x=>x.toLowerCase()===levelName.toLowerCase());
+    const level=allowedLevel?(D.PLAYSTYLE_LEVELS.find(x=>String(x.name).toLowerCase()===levelName.toLowerCase())?.id||0):0;
+    const legacyAllowed=SCANNER_LEGACY_PLAYSTYLES.includes(psName);
+    const playstyle=level>=1&&((psDef&&psDef.id!==1)||legacyAllowed)?{name:psDef?.name||psName,type:psDef?.type||psName,level,levelName:D.PLAYSTYLE_LEVELS.find(x=>x.id===level)?.name||levelName,confidence:clamp01(raw.playstyle?.confidence)}:null;
     const specialAbilities=[...(Array.isArray(raw.specialAbilities)?raw.specialAbilities:[])].map(String).map(x=>x.trim()).filter(x=>ABILITIES.includes(x)).filter((x,i,a)=>a.indexOf(x)===i);
     const c=raw.confidence||{},warnings=[...(Array.isArray(raw.warnings)?raw.warnings:[])].map(String).slice(0,30);
     return{version:VERSION,provider:'google-gemini-developer-api-free',model:usedModel,name:String(raw.name||'').trim(),age:finiteOrNull(raw.age),ovr:finiteOrNull(raw.ovr),roles,position:roles[0]||null,layout,skills,playstyle,specialAbilities,confidence:{overall:clamp01(c.overall),text:clamp01(c.text),numbers:clamp01(c.numbers),roles:clamp01(c.roles),playstyle:clamp01(c.playstyle),specialAbilities:clamp01(c.specialAbilities)},raw:{totals:{def:finiteOrNull(raw.totals?.def),att:finiteOrNull(raw.totals?.att),phys:finiteOrNull(raw.totals?.phys)},model:usedModel,warnings,providerResponseVersion:3},repairNotes:warnings,validation:{resolved:true,unresolvedChecks:[]}};
@@ -159,9 +208,15 @@ Allowed roles: ${D.ALL_POSITIONS.join(', ')}.\nAllowed playstyles: ${PLAYSTYLES.
 
   async function scan(dataUrl,onProgress=()=>{}){
     const screenshot=dataUrlPart(dataUrl);
-    onProgress({progress:.04,label:'Loading official icon references',event:'prepare'});
-    const [playstyleRef,abilityRef]=await references();
-    const payload={contents:[{role:'user',parts:[{text:buildPrompt()},{text:'PLAYER SKILLS SCREENSHOT — this is the image to scan:'},screenshot,{text:'REFERENCE IMAGE 1 — all playstyle names, unlocked levels, and real Locked/Intermediate examples:'},playstyleRef,{text:'REFERENCE IMAGE 2 — all current special ability names and icons:'},abilityRef]}],generationConfig:{responseMimeType:'application/json',maxOutputTokens:7000,thinkingConfig:{thinkingLevel:'low'}}};
+    onProgress({progress:.04,label:'Loading individual icon references',event:'prepare'});
+    const refs=await references();
+    const parts=[{text:buildPrompt(refs)},{text:'PLAYER SKILLS SCREENSHOT — this is the ONLY image to scan for player data:'},screenshot,{text:'PLAYSTYLE IDENTITY REFERENCE LIBRARY — compare the centre playstyle symbol only. Every following label belongs only to the immediately following exact asset-pack image:'}];
+    for(const r of refs.playstyles)parts.push({text:`PLAYSTYLE IDENTITY REFERENCE — ${r.name}`},r.image);
+    parts.push({text:'PLAYSTYLE LEVEL REFERENCE LIBRARY — all four images intentionally use False Nine. IGNORE the centre False Nine symbol and compare only the outer frame, active red segments and padlock state:'});
+    for(const r of refs.playstyleLevels)parts.push({text:`PLAYSTYLE LEVEL REFERENCE — ${r.name}`},r.image);
+    parts.push({text:'SPECIAL ABILITY REFERENCE LIBRARY — each ability is a separate labelled official recovered game asset:'});
+    for(const r of refs.specialAbilities)parts.push({text:`SPECIAL ABILITY REFERENCE — ${r.name}`},r.image);
+    const payload={contents:[{role:'user',parts}],generationConfig:{responseMimeType:'application/json',maxOutputTokens:7000,thinkingConfig:{thinkingLevel:'low'}}};
     const model=MODEL,label=modelLabel(model);
     onProgress({progress:.12,label:`Scanning with ${label}`,event:'model-start',model,attempt:1,totalModels:1});
     let body;

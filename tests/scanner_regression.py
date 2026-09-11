@@ -9,9 +9,17 @@ if not fixture.is_file(): errs.append('David Andrews multi-SA regression fixture
 else:
     im=Image.open(fixture)
     if im.width<1000 or im.height<500: errs.append(f'unexpected regression fixture size: {im.size}')
-refs=[ROOT/'assets/scanner/playstyles-reference.png',ROOT/'assets/scanner/special-abilities-reference.jpg']
-for p in refs:
-    if not p.is_file() or p.stat().st_size<10000: errs.append(f'missing/empty AI reference: {p.relative_to(ROOT)}')
+manifest_path=ROOT/'assets/scanner/reference-manifest.json'
+if not manifest_path.is_file(): errs.append('individual reference manifest missing')
+else:
+    manifest=json.loads(manifest_path.read_text())
+    if len(manifest.get('playstyles',[]))!=20: errs.append('expected 20 individually labelled playstyle identity references')
+    if len(manifest.get('playstyleLevels',[]))!=4: errs.append('expected 4 individually labelled playstyle-level references')
+    if [x.get('name') for x in manifest.get('playstyleLevels',[])]!=['Locked','Intermediate','Advanced','Master']: errs.append('playstyle-level references must be Locked/Intermediate/Advanced/Master only')
+    if len(manifest.get('specialAbilities',[]))!=19: errs.append('expected 19 individually labelled special-ability references')
+    for row in manifest.get('playstyles',[])+manifest.get('playstyleLevels',[])+manifest.get('specialAbilities',[]):
+        p=ROOT/row['file'].lstrip('./')
+        if not p.is_file() or p.stat().st_size<200: errs.append(f'missing/empty individual AI reference: {row.get("file")}')
 scanner=(ROOT/'js/scanner-engine.js').read_text()
 if 'const VERSION=3' not in scanner: errs.append('Scanner v3 client marker missing')
 if "const DOCUMENTED_MODELS=['gemini-3.8-flash']" not in scanner: errs.append('scanner must use Gemini 3.8 Flash only')
@@ -29,15 +37,11 @@ state_expected=json.loads((ROOT/'tests/playstyle_state_expected.json').read_text
 for row in state_expected['fixtures']:
     fp=ROOT/'tests/scanner-fixtures'/row['fixture']
     if not fp.is_file(): errs.append(f"playstyle state fixture missing: {row['fixture']}")
-if 'Allowed playstyle levels: ${LEVELS.join' not in scanner or 'x.id>=1' not in scanner: errs.append('Locked playstyle state is not offered to scanner')
+if "const LEVELS=['Locked','Intermediate','Advanced','Master']" not in scanner: errs.append('scanner level contract is not exactly Locked/Intermediate/Advanced/Master')
 if 'A visible PADLOCK overlay means Locked/Potential' not in scanner: errs.append('locked/potential visual rule missing')
-if 'Intermediate has 1 bar' not in scanner: errs.append('Intermediate 1-bar visual rule missing')
-ps=Image.open(refs[0]) if refs[0].exists() else None
-sa=Image.open(refs[1]) if refs[1].exists() else None
-if ps and ps.width<1200: errs.append('playstyle reference unexpectedly small')
-if sa and sa.width<1200: errs.append('special-ability reference unexpectedly small')
+if 'Intermediate has one active red outer segment' not in scanner: errs.append('Intermediate one-segment visual rule missing')
 if errs:
     print('FAIL Scanner v3 offline contract regression')
     for e in errs: print('-',e)
     sys.exit(1)
-print('PASS Scanner v3 offline contract: Gemini 3.8-only repeat policy, Locked/Standard/Intermediate/Advanced/Master playstyle states, Ariel Bravo Locked + François Roelandt Intermediate regression fixtures, 19 special abilities, David Andrews multi-SA fixture')
+print('PASS Scanner v3 offline contract: Gemini 3.8-only repeat policy, 20 exact playstyle identity refs + 4 exact playstyle-level refs + 19 individually labelled special abilities, David Andrews multi-SA fixture')

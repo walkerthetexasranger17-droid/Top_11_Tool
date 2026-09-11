@@ -1,6 +1,6 @@
-# Top Eleven Tool v5.2.14 — Build 30527
+# Top Eleven Tool v5.2.16 — Build 30527
 
-Static GitHub Pages/PWA companion app. The canonical application contract remains `docs/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.md`. v5.2.14 is a targeted mobile usability/navigation and Scanner v3 reliability release; training, tactics, formation, mentor and Build 30527 calculations are not redesigned.
+Static GitHub Pages/PWA companion app. The canonical application contract remains `docs/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.md`. v5.2.16 is a targeted mobile usability/navigation and Scanner v3 reliability release; training, tactics, formation, mentor and Build 30527 calculations are not redesigned.
 
 ## Mobile usability
 
@@ -18,12 +18,11 @@ The old Scanner v2 digit-template/value-repair engine remains outside the produc
 - Temporary busy/overload/rate-limit/network responses keep the queue item alive and retry Gemini 3.8 automatically until success or explicit user removal.
 - Retry delay is 10s → 20s → 45s → 90s → 120s, then remains capped at roughly 120s, while respecting longer provider `Retry-After`/RetryInfo values.
 - Daily free-tier quota exhaustion remains queued with a minimum 15-minute retry delay rather than switching to a paid service.
-- Authentication, invalid-image, malformed-request and invalid-response failures are hard failures rather than pointless infinite retries.
-- Playstyle detection now treats **Locked/Potential** as a real state (Bible level 1), distinct from Standard. A padlock must return Locked; unlocked frames are Standard=no bars, Intermediate=1 bar, Advanced=2 bars, Master=3 bars + Master frame.
-- The visual reference includes real regression examples: Ariel Bravo = Winger/Locked and François Roelandt = False Nine/Intermediate.
+- Playstyle recognition is now split into **identity** and **level**. Identity uses the 20 exact user-supplied playstyle PNGs. Level uses the four exact approved False Nine references: Locked, Intermediate, Advanced and Master.
+- The obsolete 80 generated playstyle/tier combinations and old playstyle workaround examples are removed from the package.
 - Multiple Special Abilities remain fully supported.
 
-Every successful result passes the same existing normalisation/review/validation path. Gemini values are never rewritten to force OVR/group totals to fit. Playstyle + state and every visible Special Ability remain editable before save.
+Every successful result passes the same existing normalisation/review/validation path. Gemini values are never rewritten to force OVR/group totals to fit. Playstyle + level and every visible Special Ability remain editable before save.
 
 ## Queue persistence
 
@@ -43,3 +42,7 @@ python tests/package_integrity.py
 ```
 
 A live Gemini acceptance test remains optional (`tests/gemini_scanner_live.py`) and requires `GEMINI_API_KEY`.
+
+
+## v5.2.16 scanner references
+The production scanner loads `assets/scanner/reference-manifest.json` and sends 20 exact playstyle identity references, 4 exact playstyle-level references and 19 individual Special Ability references. Playstyle identity and level are separate visual decisions. The supplied playstyle/level assets are copied unchanged into the package; old generated combinations are absent.

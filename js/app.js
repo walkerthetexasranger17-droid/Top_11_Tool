@@ -107,7 +107,7 @@
   }
   function playstyleLevelOptions(current=0,hasPlaystyle=true){
     const n=Number(current)||0;
-    const rows=B.PLAYSTYLE_LEVELS.filter(x=>x.id>=1);
+    const rows=B.PLAYSTYLE_LEVELS.filter(x=>x.id>=1&&x.name!=='Standard');
     return `<option value="">${hasPlaystyle?'Tier not captured':'No playstyle'}</option>`+rows.map(x=>`<option value="${x.id}" ${x.id===n?'selected':''}>${esc(x.name)}</option>`).join('');
   }
   function renderPlaystyleState(p){
@@ -160,7 +160,7 @@
     if(!name||!primary){toast('Name and primary role are required','err');return;}if(!Number.isFinite(age)||age<15||age>60){toast('Age must be between 15 and 60','err');return;}if(!Number.isFinite(ovr)||ovr<1||ovr>520){toast('OVR must be between 1 and 520','err');return;}
     const duplicate=(await P.all()).find(x=>x.key!==state.playerKey&&String(x.name||'').trim().toLowerCase()===name.toLowerCase());if(duplicate){toast('Another player already uses that name','err');return;}
     const roles=P.mergeVisibleNaturalRoles(P.normaliseRoles(existing),currentEditRoles(),3),related=state.profileRelatedRoles.filter(r=>!roles.includes(r));
-    let playstyle=P.mergePlaystyleState(existing.playstyle,$('#profileEditPlaystyle').value);const profileLevel=Number($('#profileEditPlaystyleLevel').value)||0;if($('#profileEditPlaystyle').value&&profileLevel>=2)playstyle={...playstyle,level:profileLevel};
+    let playstyle=P.mergePlaystyleState(existing.playstyle,$('#profileEditPlaystyle').value);const profileLevel=Number($('#profileEditPlaystyleLevel').value)||0;if($('#profileEditPlaystyle').value&&profileLevel>=1)playstyle={...playstyle,level:profileLevel};
     await P.save({...existing,name,age,ovr,position:roles[0]||primary,roles,relatedRoles:related,playstyle,specialAbilities:[...state.profileAbilities]},state.playerKey);
     toast('Player updated');await renderDashboard();await renderPlayerProfile();
   });
