@@ -46,8 +46,19 @@ for needle,label in [
 # Scanner v3: direct Gemini free-tier production path, no legacy digit-template repair engine.
 for needle,label,src in [
     ("const VERSION=3", "Scanner v3 version marker", scanner),
-    ("gemini-3.8-flash", "Gemini 3.8 Flash primary model", scanner),
-    ("gemini-3.7-flash", "Gemini 3.7 Flash transient fallback", scanner),
+    ("gemini-3.5-flash", "Gemini 3.5 Flash pool member", scanner),
+    ("gemini-3.6-flash", "Gemini 3.6 Flash pool member", scanner),
+    ("gemini-3.7-flash", "Gemini 3.7 Flash pool member", scanner),
+    ("gemini-3.8-flash", "Gemini 3.8 Flash pool member", scanner),
+    ("/models?pageSize=1000", "runtime Gemini model discovery", scanner),
+    ("SCANNER_POOL_TEMPORARY", "temporary scanner-pool error classification", scanner),
+    ("RETRYING AUTOMATICALLY", "automatic scanner retry status", js),
+    ("MAX_AUTO_SCAN_ATTEMPTS=3", "bounded scanner auto retry", js),
+    ("history.pushState", "browser/PWA navigation history", js),
+    ("popstate", "Android/browser back handling", js),
+    ("player-delete-action", "swipe-to-delete action", html+js),
+    ("drawerNav", "left navigation drawer", html+js),
+    ("QUEUE_DB_NAME", "refresh-safe queue image persistence", js),
     ("generativelanguage.googleapis.com", "direct Gemini Developer API", scanner),
     ("Gemini Scanner is not configured", "Gemini API-key requirement", scanner),
     ("ZERO, ONE, TWO, THREE OR MORE abilities", "multi-special-ability prompt", scanner),
@@ -65,6 +76,7 @@ for forbidden in ['scanner-templates.json','reconcileReadToTarget','classifyGlyp
     if forbidden in scanner+js+html: errs.append(f'legacy Scanner v2/cloud production logic survives: {forbidden}')
 if (ROOT/'js/scanner-templates.json').exists(): errs.append('legacy scanner-templates.json still packaged')
 if (ROOT/'cloud-scanner').exists(): errs.append('old Cloud Run scanner folder still packaged')
+if 'gemini-3.4-flash' in scanner: errs.append('unsupported Gemini 3.4 Flash was invented')
 for ref in ['assets/scanner/playstyles-reference.png','assets/scanner/special-abilities-reference.jpg']:
     if not (ROOT/ref).is_file(): errs.append(f'missing scanner reference: {ref}')
 
@@ -95,7 +107,7 @@ manifest=json.loads((ROOT/'manifest.json').read_text())
 if manifest.get('name')!='Top Eleven Tool' or manifest.get('short_name')!='Top Eleven Tool': errs.append('manifest app name is not Top Eleven Tool')
 if not soup.title or soup.title.get_text(strip=True)!='Top Eleven Tool': errs.append('page title is not Top Eleven Tool')
 if 'TOP ELEVEN <span>TOOL</span>' not in html: errs.append('in-app header branding is not Top Eleven Tool')
-if 'v5.2.12' not in html: errs.append('visible build label is not v5.2.12')
+if 'v5.2.13' not in html: errs.append('visible build label is not v5.2.13')
 bible_data=(ROOT/'js/bible-data.js').read_text(encoding='utf-8')
 if "tackling:[['balanced','Balanced',0,0,.50],['stay','Stay On Feet',1,7,.30],['aggressive','Aggressive',2,5,.80]]" not in bible_data:
     errs.append('tackling IDs do not match direct build-30527 provenance correction')

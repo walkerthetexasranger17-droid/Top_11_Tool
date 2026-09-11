@@ -1,11 +1,13 @@
-# Top Eleven Tool v5.2.12 — Build 30527 Test Matrix
+# Top Eleven Tool v5.2.13 — Build 30527 Test Matrix
 
 Implementation contract: `TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.md`.
 
 ## Automated release checks
 
 - `node tests/core-tests.js` — deterministic Build-30527 data, migration, formation, pitch, tactics/drain, mentor, Individual Training, Team Training, specialist and scanner safeguards.
-- `python tests/scanner_regression.py` — Scanner v3 offline contract: direct Gemini free-tier production path, reference assets, no paid fallback, and David Andrews multi-special-ability fixture.
+- `python tests/scanner_regression.py` — Scanner v3 offline contract: runtime-discovered stable Flash pool (3.5/3.6/3.7/3.8), no invented 3.4, reference assets, no paid fallback, and David Andrews multi-special-ability fixture.
+- `node tests/scanner_failover_tests.js` — temporary overload/rate-limit/daily-quota/request classification, RetryInfo delay parsing and model-pool order.
+- `python tests/navigation_queue_contract.py` — swipe-delete, browser/PWA history, refresh state, drawer and persistent scanner queue/retry contract.
 - `python tests/static_checks.py` — duplicate IDs, navigation, Team Plan/Training information architecture, DOM references, required UI controls, stale-model removal, scanner save gates, product naming and static asset references.
 - `python tests/package_integrity.py` — service-worker runtime precache coverage, manifest name/icons and existence/non-empty checks for every runtime asset.
 - `node --check` — every `js/*.js` source file and `sw.js`.
@@ -35,24 +37,28 @@ Implementation contract: `TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.md`.
 
 ## Release result
 
-- Deterministic/core suite: **PASS — 249 assertions**.
+- Deterministic/core suite: **PASS — 254 assertions**.
 - Scanner v3 offline contract: **PASS**; optional live Gemini acceptance is covered by `tests/gemini_scanner_live.py` and requires `GEMINI_API_KEY`.
-- Static/integrity checks: **PASS — 132 IDs, 9 pages, 122 direct DOM refs, 31 static paths**.
+- Static/integrity checks: **PASS — 145 IDs, 9 pages, 135 direct DOM refs, 29 static paths**.
 - Service-worker/package integrity: **PASS — 70/70 required runtime files precached**.
 - JavaScript syntax (`node --check`): **PASS**.
 - Browser UI smoke: **ENVIRONMENT BLOCKED — NOT APPLICATION FAILURE.** Headless Chromium failed to start/terminate correctly in the build environment. No application assertion failure was produced. Manual device/browser smoke testing is recommended after packaging.
 
 ## Manual phone smoke checklist
 
-1. Launch/install PWA and confirm name is **Top Eleven Tool** and navigation is Home / Squad / Team Plan / Training / More.
-2. Open Squad: search and filter by role, age, OVR, playstyle and availability; open an existing profile.
-3. Edit a multi-role player and confirm roles/related roles, playstyle state and more than two abilities are not silently lost.
-4. Scan one known screenshot with an unresolved OVR/aggregate mismatch; confirm Save remains available, shows an explicit manual-verification confirmation, and records manual verification if accepted.
-5. Build Team Plan: confirm formation pitch, assigned roles, Natural/Related badges, Role Score, weakest three role-key skills, playstyle fit/level, abilities and bench are shown.
-6. Change only Approach/Drain and confirm the XI/pitch remains unchanged while tactics and mentor update.
-7. Build Individual Training and confirm six legal slots, multi-white targets and Master stock limits.
-8. Open Team Training and confirm the selected group is evaluated from the actual saved players.
-9. Reload/offline after first successful online load and confirm the PWA shell/runtime remains available from the service-worker cache.
+1. Launch/install PWA and confirm name is **Top Eleven Tool** and bottom navigation is Home / Squad / Team Plan / Training / More. Open More and verify the left drawer, outside-tap close, left-swipe close and Android Back close.
+2. Navigate Home → Squad → Player and verify Android Back returns Player → Squad → Home without duplicate Back presses.
+3. On Squad, vertical-scroll without exposing Delete; deliberately swipe left to reveal Delete; cancel once, then confirm deletion on a disposable player.
+4. Refresh from Squad, Player, Training and Scanner and verify the same page/context restores plus the refresh toast.
+5. Queue several scanner screenshots; navigate away/back and refresh while queued/waiting; verify queue restore and no duplicate in-flight request.
+6. Open Squad: search and filter by role, age, OVR, playstyle and availability; open an existing profile.
+7. Edit a multi-role player and confirm roles/related roles, playstyle state and more than two abilities are not silently lost.
+8. Scan one known screenshot with an unresolved OVR/aggregate mismatch; confirm Save remains available, shows an explicit manual-verification confirmation, and records manual verification if accepted.
+9. Build Team Plan: confirm formation pitch, assigned roles, Natural/Related badges, Role Score, weakest three role-key skills, playstyle fit/level, abilities and bench are shown.
+10. Change only Approach/Drain and confirm the XI/pitch remains unchanged while tactics and mentor update.
+11. Build Individual Training and confirm six legal slots, multi-white targets and Master stock limits.
+12. Open Team Training and confirm the selected group is evaluated from the actual saved players.
+13. Reload/offline after first successful online load and confirm the PWA shell/runtime remains available from the service-worker cache.
 
 ## Explicit unresolved/non-goals
 

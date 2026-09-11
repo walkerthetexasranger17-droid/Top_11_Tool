@@ -1,18 +1,17 @@
-Top Eleven Tool v5.2.12 — Build 30527
+Top Eleven Tool v5.2.13 — Build 30527
 
-- Replaces the v5.2.9 Cloud Run / Vision / Vertex deployment with direct Gemini Developer API free-tier access.
-- Models: gemini-3.8-flash primary; gemini-3.7-flash automatic transient-capacity fallback.
-- API key is user-entered and stored only on the device/browser; no key is packaged.
-- No paid fallback exists in the app.
-- 20 playstyles × 4 visual levels are supplied as an authoritative scanner reference.
-- All 19 special ability references are supplied; scanner contract explicitly supports 0..N abilities.
-- Old Scanner v2 digit-template and value-repair logic remains absent from the production path.
-- Numerical consistency checks flag mismatches only; they never rewrite values.
+TARGETED USABILITY / NAVIGATION
+- My Squad: deliberate left swipe reveals Delete; deletion still requires explicit confirmation. Existing Player Profile delete remains.
+- Pull/reload restores current page/context and shows “✓ Successfully refreshed”.
+- Browser/Android PWA history now follows actual page navigation. Back closes delete dialog/drawer before navigating pages.
+- More now opens a left navigation drawer generated from existing main pages. Bottom navigation is unchanged.
 
-v5.2.12
-- Multi-screenshot Gemini scan queue with sequential processing and per-player review.
-- Save & Next / skip / retry / remove queue workflow.
-- Manual player entry without Gemini usage.
-- Playstyle tier manually editable in scanner/manual entry/profile editing.
-- Multiple special abilities remain supported without a fixed cap.
-- Verification UX separates deterministic numerical verification from Gemini self-confidence; 0.x aggregate deltas are labelled as display rounding.
+SCANNER RELIABILITY
+- Runtime Gemini models.list discovery with an allow-list of confirmed stable full Flash models: 3.5, 3.6, 3.7 and 3.8. No invented 3.4 model.
+- Base preference: 3.7 -> 3.6 -> 3.5 -> 3.8; last-success preference + temporary per-model cooldown adapts it to observed availability.
+- Fast failover for transient/rate-limit/capacity conditions; no paid fallback.
+- Bounded automatic delayed retry for temporary whole-pool unavailability; provider retry delay is respected when supplied.
+- Queue continues other players instead of turning a single busy model into a batch failure.
+- Scanner statuses distinguish queue/scanning/fallback/automatic retry/review/saved/manual-retry/scan-failure states.
+- Queue metadata survives refresh in local storage; screenshot payloads are retained in IndexedDB. Interrupted in-flight requests are not duplicated automatically.
+- Accuracy/validation pipeline, playstyle tier, 0..N special abilities and Build 30527 logic remain intact.

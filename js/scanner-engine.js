@@ -4,32 +4,39 @@
   if(!D||!B) throw new Error('data.js and bible-data.js must load before scanner-engine.js');
 
   const VERSION=3;
-  const MODELS=['gemini-3.8-flash','gemini-3.7-flash'];
-  const MODEL=MODELS[0];
+  // Confirmed stable full Flash models in the Gemini Developer API as of 2026-09.
+  // The suggested 3.4 generation is intentionally absent: Google does not expose it as a supported Flash model.
+  const DOCUMENTED_MODELS=['gemini-3.7-flash','gemini-3.6-flash','gemini-3.5-flash','gemini-3.8-flash'];
+  const MODEL=DOCUMENTED_MODELS[0];
+  const MODELS=[...DOCUMENTED_MODELS];
   const API_KEY_STORAGE='te:scanner:geminiApiKey';
+  const MODEL_HEALTH_STORAGE='te:scanner:modelHealth:v1';
   const API_BASE='https://generativelanguage.googleapis.com/v1beta';
   const PLAYSTYLE_REF='./assets/scanner/playstyles-reference.png';
   const ABILITY_REF='./assets/scanner/special-abilities-reference.jpg';
   const PLAYSTYLES=B.PLAYSTYLES.filter(x=>x.id!==1).map(x=>x.name);
   const LEVELS=B.PLAYSTYLE_LEVELS.filter(x=>x.id>=2).map(x=>x.name);
   const ABILITIES=[...D.SPECIAL_ABILITIES];
-  let referencePromise=null;
+  const DISCOVERY_TTL_MS=15*60*1000;
+  const DEFAULT_BUSY_MS=15000;
+  let referencePromise=null,discoveryCache=null;
 
   function cleanKey(value){return String(value||'').trim();}
   async function getApiKey(){return cleanKey(localStorage.getItem(API_KEY_STORAGE));}
   async function setApiKey(value){
     const key=cleanKey(value);
     if(key)localStorage.setItem(API_KEY_STORAGE,key); else localStorage.removeItem(API_KEY_STORAGE);
+    discoveryCache=null;
     return key;
   }
-  async function clearApiKey(){localStorage.removeItem(API_KEY_STORAGE);}
+  async function clearApiKey(){localStorage.removeItem(API_KEY_STORAGE);discoveryCache=null;}
 
   function finiteOrNull(v){const n=Number(v);return Number.isFinite(n)?n:null;}
   function validRole(v){const r=D.normaliseRole(v);return r||null;}
   function clamp01(v){return Math.max(0,Math.min(1,Number(v)||0));}
   function dataUrlPart(dataUrl){
     const m=String(dataUrl||'').match(/^data:(image\/(?:png|jpe?g|webp));base64,([A-Za-z0-9+/=\r\n]+)$/i);
-    if(!m)throw new Error('Choose a valid PNG, JPEG or WebP screenshot.');
+    if(!m)throw scannerError('INVALID_IMAGE','Choose a valid PNG, JPEG or WebP screenshot.',{scanFailure:true});
     return {inline_data:{mime_type:m[1].toLowerCase().replace('jpg','jpeg'),data:m[2].replace(/\s+/g,'')}};
   }
   async function fileToInline(url,mime){
@@ -45,37 +52,99 @@
 
   function buildPrompt(){
     const outfield=[...D.OUTFIELD_SKILLS],gk=[...D.GK_SKILLS,...D.GK_PHYSICAL];
-    return `You are Scanner v3 for a private Top Eleven companion app. Read the supplied CURRENT Top Eleven player Skills screenshot with extreme care. The next two images are authoritative visual reference sheets for playstyles/levels and special abilities.\n\nHARD RULES\n1. Read values from the screenshot itself. Never invent, infer, average, reconcile, or change a number merely to make OVR or column totals agree. If you cannot read a value, omit it from skills and add a warning.\n2. Read player name, age, OVR, every visible natural role, the three group totals, and every one of the 15 displayed skill values.\n3. PLAYSTYLE: match the small playstyle badge beside the player's name against REFERENCE IMAGE 1. Identify BOTH playstyle name and its visual level: Standard, Intermediate, Advanced, or Master. Do not infer the playstyle from the player's role. Role is only a sanity check. If the badge is too unclear, return playstyle=null.\n4. SPECIAL ABILITIES: inspect the ENTIRE row after the words \"Special ability:\". A player may have ZERO, ONE, TWO, THREE OR MORE abilities. Segment every visible icon and match each independently against REFERENCE IMAGE 2. Return ALL visible abilities in left-to-right order. NEVER stop after the first icon.\n5. The screenshot may recolour or scale an icon. Match the symbol/shape, not just colour.\n6. Do not report an ability or playstyle merely because it would suit the player's position. Only report what is visibly present.\n7. Return JSON only. Confidence fields are numbers from 0 to 1.\n\nAllowed roles: ${D.ALL_POSITIONS.join(', ')}.\nAllowed playstyles: ${PLAYSTYLES.join(', ')}.\nAllowed playstyle levels: ${LEVELS.join(', ')}.\nAllowed special abilities: ${ABILITIES.join(', ')}.\nOutfield skills (exact names): ${outfield.join(', ')}.\nGoalkeeper skills (exact names): ${gk.join(', ')}.\n\nFor an outfield player, totals.def/att/phys are the large DEFENCE/ATTACK/PHYSICAL numbers above the columns. For a goalkeeper put the GOALKEEPING total in totals.att for app compatibility, totals.phys is PHYSICAL, and totals.def may be null.\n\nReturn exactly this object shape:\n{\n  \"name\": string|null,\n  \"age\": number|null,\n  \"ovr\": number|null,\n  \"roles\": string[],\n  \"layout\": \"outfield\"|\"gk\",\n  \"totals\": {\"def\": number|null, \"att\": number|null, \"phys\": number|null},\n  \"skills\": {\"Skill Name\": number},\n  \"playstyle\": {\"name\": string, \"levelName\": string, \"confidence\": number}|null,\n  \"specialAbilities\": string[],\n  \"confidence\": {\"overall\":number,\"text\":number,\"numbers\":number,\"roles\":number,\"playstyle\":number,\"specialAbilities\":number},\n  \"warnings\": string[]\n}`;
+    return `You are Scanner v3 for a private Top Eleven companion app. Read the supplied CURRENT Top Eleven player Skills screenshot with extreme care. The next two images are authoritative visual reference sheets for playstyles/levels and special abilities.\n\nHARD RULES\n1. Read values from the screenshot itself. Never invent, infer, average, reconcile, or change a number merely to make OVR or column totals agree. If you cannot read a value, omit it from skills and add a warning.\n2. Read player name, age, OVR, every visible natural role, the three group totals, and every one of the 15 displayed skill values.\n3. PLAYSTYLE: match the small playstyle badge beside the player's name against REFERENCE IMAGE 1. Identify BOTH playstyle name and its visual level: Standard, Intermediate, Advanced, or Master. Do not infer the playstyle from the player's role. Role is only a sanity check. If the badge is too unclear, return playstyle=null.\n4. SPECIAL ABILITIES: inspect the ENTIRE row after the words "Special ability:". A player may have ZERO, ONE, TWO, THREE OR MORE abilities. Segment every visible icon and match each independently against REFERENCE IMAGE 2. Return ALL visible abilities in left-to-right order. NEVER stop after the first icon.\n5. The screenshot may recolour or scale an icon. Match the symbol/shape, not just colour.\n6. Do not report an ability or playstyle merely because it would suit the player's position. Only report what is visibly present.\n7. Return JSON only. Confidence fields are numbers from 0 to 1.\n\nAllowed roles: ${D.ALL_POSITIONS.join(', ')}.\nAllowed playstyles: ${PLAYSTYLES.join(', ')}.\nAllowed playstyle levels: ${LEVELS.join(', ')}.\nAllowed special abilities: ${ABILITIES.join(', ')}.\nOutfield skills (exact names): ${outfield.join(', ')}.\nGoalkeeper skills (exact names): ${gk.join(', ')}.\n\nFor an outfield player, totals.def/att/phys are the large DEFENCE/ATTACK/PHYSICAL numbers above the columns. For a goalkeeper put the GOALKEEPING total in totals.att for app compatibility, totals.phys is PHYSICAL, and totals.def may be null.\n\nReturn exactly this object shape:\n{\n  "name": string|null,\n  "age": number|null,\n  "ovr": number|null,\n  "roles": string[],\n  "layout": "outfield"|"gk",\n  "totals": {"def": number|null, "att": number|null, "phys": number|null},\n  "skills": {"Skill Name": number},\n  "playstyle": {"name": string, "levelName": string, "confidence": number}|null,\n  "specialAbilities": string[],\n  "confidence": {"overall":number,"text":number,"numbers":number,"roles":number,"playstyle":number,"specialAbilities":number},\n  "warnings": string[]\n}`;
   }
 
   function extractText(body){
     const parts=body?.candidates?.[0]?.content?.parts||[];
     const text=parts.map(p=>p?.text||'').join('').trim();
-    if(!text)throw new Error('Gemini returned no scanner result.');
+    if(!text)throw scannerError('EMPTY_RESPONSE','Gemini returned no scanner result.',{scanFailure:true});
     return text;
   }
   function parseJson(text){
     const s=String(text||'').trim();
-    try{return JSON.parse(s);}catch(_){const a=s.indexOf('{'),b=s.lastIndexOf('}');if(a>=0&&b>a)return JSON.parse(s.slice(a,b+1));throw new Error('Gemini returned an unreadable scanner result.');}
+    try{return JSON.parse(s);}catch(_){const a=s.indexOf('{'),b=s.lastIndexOf('}');if(a>=0&&b>a){try{return JSON.parse(s.slice(a,b+1));}catch(__){/* fall through */}}throw scannerError('INVALID_RESPONSE','Gemini returned an unreadable scanner result.',{scanFailure:true});}
   }
-  async function apiFetch(path,options={}){
+
+  function scannerError(code,message,extra={}){const e=new Error(message);e.code=code;Object.assign(e,extra);return e;}
+  function parseDurationMs(value){
+    if(value==null)return 0;const s=String(value).trim();
+    const m=s.match(/^([0-9]+(?:\.[0-9]+)?)s$/i);if(m)return Math.ceil(Number(m[1])*1000);
+    const ms=s.match(/^([0-9]+(?:\.[0-9]+)?)ms$/i);if(ms)return Math.ceil(Number(ms[1]));
+    return 0;
+  }
+  function retryAfterFrom(response,body,detail=''){
+    let ms=0;
+    const header=response?.headers?.get?.('Retry-After');
+    if(header){const n=Number(header);if(Number.isFinite(n))ms=Math.max(ms,n*1000);else{const t=Date.parse(header);if(Number.isFinite(t))ms=Math.max(ms,t-Date.now());}}
+    for(const d of body?.error?.details||[]){if(String(d?.['@type']||'').includes('RetryInfo'))ms=Math.max(ms,parseDurationMs(d.retryDelay));}
+    const m=String(detail).match(/retry in\s+([0-9]+(?:\.[0-9]+)?)s/i);if(m)ms=Math.max(ms,Math.ceil(Number(m[1])*1000));
+    return Math.max(0,ms);
+  }
+  function quotaInfo(body,detail=''){
+    const violations=[];for(const d of body?.error?.details||[]){if(String(d?.['@type']||'').includes('QuotaFailure'))for(const v of d.violations||[])violations.push(v);}
+    const ids=violations.map(v=>String(v.quotaId||''));
+    const daily=ids.some(x=>/PerDay/i.test(x))||/per day|daily quota|day-free/i.test(detail);
+    const perMinute=ids.some(x=>/PerMinute/i.test(x))||/per minute|rate limit/i.test(detail);
+    return{violations,daily,perMinute};
+  }
+  function classifyApiError(response,body,model){
+    const status=Number(response?.status)||0,detail=body?.error?.message||body?.message||`HTTP ${status}`;
+    const retryAfterMs=retryAfterFrom(response,body,detail),quota=quotaInfo(body,detail);
+    const demand=/high demand|overload|overloaded|temporar|capacity|unavailable|service unavailable|try again/i.test(detail);
+    let kind='request',retryable=false,failover=false,scanFailure=false;
+    if(status===408||[500,502,503,504].includes(status)){kind='temporary';retryable=true;failover=true;}
+    else if(status===429){kind=quota.daily?'quota_daily':'rate_limit';retryable=!quota.daily;failover=true;}
+    else if(status===404&&/model|not found|not supported|unavailable/i.test(detail)){kind='model_unavailable';failover=true;}
+    else if(status===401||status===403){kind='auth';}
+    else if(status===400&&/API key|key not valid|invalid api key/i.test(detail)){kind='auth';}
+    else if(status>=400&&status<500){kind='request';scanFailure=true;}
+    if(demand&&status===429){kind='temporary';retryable=true;failover=true;}
+    let message=`Gemini scanner error: ${detail}`;
+    if(kind==='auth')message=`Gemini API key was rejected. ${detail}`;
+    else if(kind==='quota_daily')message=`${modelLabel(model)} free-tier daily quota is currently exhausted. No paid fallback was used.`;
+    else if(kind==='rate_limit')message=`${modelLabel(model)} is rate limited right now.`;
+    else if(kind==='temporary')message=`${modelLabel(model)} is temporarily busy or unavailable.`;
+    else if(kind==='model_unavailable')message=`${modelLabel(model)} is not available to this API key.`;
+    return scannerError('GEMINI_API_ERROR',message,{status,detail,kind,retryable,failover,scanFailure,retryAfterMs,model,quota});
+  }
+  async function apiFetch(path,options={},model=''){
     const key=await getApiKey();
-    if(!key)throw new Error('Gemini Scanner is not configured. Open Settings and paste your free Gemini API key.');
+    if(!key)throw scannerError('NOT_CONFIGURED','Gemini Scanner is not configured. Open Settings and paste your free Gemini API key.');
     let response;
-    try{response=await fetch(`${API_BASE}${path}`,{...options,headers:{'Content-Type':'application/json','x-goog-api-key':key,...(options.headers||{})}});}catch(_){throw new Error('Could not reach the Gemini API. Check your internet connection.');}
+    try{response=await fetch(`${API_BASE}${path}`,{...options,headers:{'Content-Type':'application/json','x-goog-api-key':key,...(options.headers||{})}});}catch(_){throw scannerError('NETWORK','Could not reach the Gemini API. Check your internet connection.',{retryable:true,kind:'network'});}
     let body=null;try{body=await response.json();}catch(_){/* ignored */}
-    if(!response.ok){
-      const detail=body?.error?.message||body?.message||`HTTP ${response.status}`;
-      const highDemand=/high demand|overload|overloaded|temporar|capacity|unavailable|try again/i.test(detail);
-      const transient=[500,502,503,504].includes(response.status)||(response.status===429&&highDemand);
-      const err=new Error(`Gemini scanner error: ${detail}`);
-      err.status=response.status;err.detail=detail;err.transient=transient;
-      if(response.status===429&&!highDemand)err.message='Gemini free-tier quota/rate limit reached. No paid fallback was used. Try again after the free quota resets.';
-      if(response.status===401||response.status===403)err.message=`Gemini API key was rejected. ${detail}`;
-      if(response.status===400&&/API key|key not valid|invalid/i.test(detail))err.message=`Gemini API key is invalid. ${detail}`;
-      throw err;
-    }
+    if(!response.ok)throw classifyApiError(response,body,model);
     return body;
+  }
+
+  function modelLabel(model){return String(model||'Gemini').replace(/^gemini-/,'Gemini ').replace(/-flash$/,' Flash').replace(/-/g,' ');}
+  function loadHealth(){try{return JSON.parse(localStorage.getItem(MODEL_HEALTH_STORAGE)||'{}')||{};}catch(_){return{};}}
+  function saveHealth(h){try{localStorage.setItem(MODEL_HEALTH_STORAGE,JSON.stringify(h));}catch(_){/* best effort */}}
+  function noteModelResult(model,{success=false,error=null}={}){
+    const all=loadHealth(),h=all[model]||{};h.lastTriedAt=Date.now();
+    if(success){h.lastSuccessAt=Date.now();h.consecutiveTransient=0;h.cooldownUntil=0;all.lastSuccessfulModel=model;}
+    else if(error){h.lastErrorKind=error.kind||error.code||'error';h.lastErrorAt=Date.now();if(error.retryable||error.kind==='temporary'||error.kind==='rate_limit'){h.consecutiveTransient=(h.consecutiveTransient||0)+1;const fallback=Math.min(120000,DEFAULT_BUSY_MS*Math.max(1,h.consecutiveTransient));h.cooldownUntil=Date.now()+Math.max(error.retryAfterMs||0,fallback);}else if(error.kind==='quota_daily'){h.cooldownUntil=Date.now()+Math.max(error.retryAfterMs||0,60*60*1000);}else if(error.kind==='model_unavailable'){h.cooldownUntil=Date.now()+60*60*1000;}}
+    all[model]=h;saveHealth(all);
+  }
+  async function discoverModels(force=false){
+    const now=Date.now();if(!force&&discoveryCache&&now-discoveryCache.at<DISCOVERY_TTL_MS)return discoveryCache.models;
+    let body;try{body=await apiFetch('/models?pageSize=1000',{method:'GET',headers:{Accept:'application/json'}});}catch(err){if(discoveryCache)return discoveryCache.models;return [...DOCUMENTED_MODELS];}
+    const listed=(body?.models||[]).filter(m=>(m.supportedGenerationMethods||m.supportedActions||[]).some(x=>String(x).toLowerCase()==='generatecontent')).map(m=>String(m.name||'').replace(/^models\//,''));
+    const supported=DOCUMENTED_MODELS.filter(id=>listed.includes(id));
+    discoveryCache={at:now,models:supported.length?supported:[...DOCUMENTED_MODELS],listed};
+    return discoveryCache.models;
+  }
+  async function modelOrder(){
+    const available=await discoverModels(),health=loadHealth(),now=Date.now(),last=health.lastSuccessfulModel;
+    const base=new Map(DOCUMENTED_MODELS.map((m,i)=>[m,i]));
+    const sorted=[...available].sort((a,b)=>{
+      const ah=health[a]||{},bh=health[b]||{},ac=(ah.cooldownUntil||0)>now,bc=(bh.cooldownUntil||0)>now;
+      if(ac!==bc)return ac?1:-1;if(a===last&&b!==last)return-1;if(b===last&&a!==last)return 1;
+      const af=ah.consecutiveTransient||0,bf=bh.consecutiveTransient||0;if(af!==bf)return af-bf;return(base.get(a)??99)-(base.get(b)??99);
+    });
+    const ready=sorted.filter(m=>(health[m]?.cooldownUntil||0)<=now),cooling=sorted.filter(m=>(health[m]?.cooldownUntil||0)>now);
+    return{ready,cooling,all:sorted};
   }
 
   function normaliseResult(raw={},usedModel=MODEL){
@@ -84,64 +153,59 @@
     const allowedSkills=layout==='gk'?[...D.GK_SKILLS,...D.GK_PHYSICAL]:[...D.OUTFIELD_SKILLS];
     const skills={};
     for(const name of allowedSkills){const n=finiteOrNull(raw.skills?.[name]);if(n!=null&&n>=0&&n<=520)skills[name]=n;}
-    const psName=String(raw.playstyle?.name||'').trim();
-    const psDef=D.playstyleDefinition(psName);
-    const levelName=String(raw.playstyle?.levelName||'').trim();
+    const psName=String(raw.playstyle?.name||'').trim(),psDef=D.playstyleDefinition(psName),levelName=String(raw.playstyle?.levelName||'').trim();
     const level=D.PLAYSTYLE_LEVELS.find(x=>String(x.name).toLowerCase()===levelName.toLowerCase())?.id||0;
     const playstyle=psDef&&psDef.id!==1&&level>=2?{name:psDef.name,type:psDef.type,level,levelName:D.PLAYSTYLE_LEVELS.find(x=>x.id===level)?.name||levelName,confidence:clamp01(raw.playstyle?.confidence)}:null;
     const specialAbilities=[...(Array.isArray(raw.specialAbilities)?raw.specialAbilities:[])].map(String).map(x=>x.trim()).filter(x=>ABILITIES.includes(x)).filter((x,i,a)=>a.indexOf(x)===i);
     const c=raw.confidence||{},warnings=[...(Array.isArray(raw.warnings)?raw.warnings:[])].map(String).slice(0,30);
-    return {
-      version:VERSION,provider:'google-gemini-developer-api-free',model:usedModel,
-      name:String(raw.name||'').trim(),age:finiteOrNull(raw.age),ovr:finiteOrNull(raw.ovr),roles,position:roles[0]||null,layout,skills,playstyle,specialAbilities,
-      confidence:{overall:clamp01(c.overall),text:clamp01(c.text),numbers:clamp01(c.numbers),roles:clamp01(c.roles),playstyle:clamp01(c.playstyle),specialAbilities:clamp01(c.specialAbilities)},
-      raw:{totals:{def:finiteOrNull(raw.totals?.def),att:finiteOrNull(raw.totals?.att),phys:finiteOrNull(raw.totals?.phys)},model:usedModel,warnings,providerResponseVersion:3},
-      repairNotes:warnings,validation:{resolved:true,unresolvedChecks:[]}
-    };
+    return{version:VERSION,provider:'google-gemini-developer-api-free',model:usedModel,name:String(raw.name||'').trim(),age:finiteOrNull(raw.age),ovr:finiteOrNull(raw.ovr),roles,position:roles[0]||null,layout,skills,playstyle,specialAbilities,confidence:{overall:clamp01(c.overall),text:clamp01(c.text),numbers:clamp01(c.numbers),roles:clamp01(c.roles),playstyle:clamp01(c.playstyle),specialAbilities:clamp01(c.specialAbilities)},raw:{totals:{def:finiteOrNull(raw.totals?.def),att:finiteOrNull(raw.totals?.att),phys:finiteOrNull(raw.totals?.phys)},model:usedModel,warnings,providerResponseVersion:3},repairNotes:warnings,validation:{resolved:true,unresolvedChecks:[]}};
   }
 
   async function scan(dataUrl,onProgress=()=>{}){
     const screenshot=dataUrlPart(dataUrl);
-    onProgress({progress:.05,label:'Loading official icon references'});
+    onProgress({progress:.04,label:'Loading official icon references',event:'prepare'});
     const [playstyleRef,abilityRef]=await references();
-    const payload={
-      contents:[{role:'user',parts:[
-        {text:buildPrompt()},
-        {text:'PLAYER SKILLS SCREENSHOT — this is the image to scan:'},screenshot,
-        {text:'REFERENCE IMAGE 1 — all playstyle names and visual levels:'},playstyleRef,
-        {text:'REFERENCE IMAGE 2 — all current special ability names and icons:'},abilityRef
-      ]}],
-      generationConfig:{responseMimeType:'application/json',maxOutputTokens:7000,thinkingConfig:{thinkingLevel:'low'}}
-    };
-    let body=null,usedModel=null,lastError=null;
-    for(let i=0;i<MODELS.length;i++){
-      const model=MODELS[i];
-      onProgress({progress:i===0?.12:.18,label:i===0?'Sending screenshot to Gemini 3.8 Flash':'3.8 busy — automatically trying Gemini 3.7 Flash'});
+    const payload={contents:[{role:'user',parts:[{text:buildPrompt()},{text:'PLAYER SKILLS SCREENSHOT — this is the image to scan:'},screenshot,{text:'REFERENCE IMAGE 1 — all playstyle names and visual levels:'},playstyleRef,{text:'REFERENCE IMAGE 2 — all current special ability names and icons:'},abilityRef]}],generationConfig:{responseMimeType:'application/json',maxOutputTokens:7000,thinkingConfig:{thinkingLevel:'low'}}};
+    const order=await modelOrder();
+    if(!order.ready.length){
+      const health=loadHealth(),next=Math.min(...order.cooling.map(m=>health[m]?.cooldownUntil||Date.now()+DEFAULT_BUSY_MS));
+      throw scannerError('SCANNER_POOL_TEMPORARY','All compatible free Gemini scanners are cooling down after temporary availability/rate-limit responses. No paid fallback was used.',{kind:'temporary_pool',retryable:true,retryAfterMs:Math.max(1000,next-Date.now()),models:order.all});
+    }
+    let body=null,usedModel=null,lastError=null;const failures=[];
+    for(let i=0;i<order.ready.length;i++){
+      const model=order.ready[i],label=modelLabel(model);
+      onProgress({progress:.10+Math.min(.45,i*.09),label:i===0?`Scanning with ${label}`:`Trying ${label}`,event:i===0?'model-start':'model-fallback',model,attempt:i+1,totalModels:order.ready.length});
       try{
-        body=await apiFetch(`/models/${model}:generateContent`,{method:'POST',body:JSON.stringify(payload)});
-        usedModel=model;break;
+        body=await apiFetch(`/models/${model}:generateContent`,{method:'POST',body:JSON.stringify(payload)},model);usedModel=model;noteModelResult(model,{success:true});break;
       }catch(err){
-        lastError=err;
-        if(i<MODELS.length-1&&err?.transient)continue;
-        if(err?.transient)throw new Error('Gemini 3.8 Flash and Gemini 3.7 Flash are both temporarily busy. No paid fallback was used. Try the scan again in a few minutes.');
+        lastError=err;failures.push({model,kind:err.kind||err.code,status:err.status||0,retryAfterMs:err.retryAfterMs||0});noteModelResult(model,{error:err});
+        if(err.failover&&i<order.ready.length-1){onProgress({progress:.14+Math.min(.45,i*.09),label:`${label} ${err.kind==='rate_limit'?'rate limited':'busy'} · trying another available scanner…`,event:'model-busy',model,errorKind:err.kind,retryAfterMs:err.retryAfterMs||0});continue;}
+        if(err.failover)break;
         throw err;
       }
     }
-    if(!body||!usedModel)throw lastError||new Error('Gemini scanner could not obtain a response.');
-    onProgress({progress:.90,label:`Validating ${usedModel.replace('gemini-','Gemini ')} result`});
+    if(!body||!usedModel){
+      const retryable=failures.some(x=>['temporary','rate_limit','network'].includes(x.kind)),daily=failures.length&&failures.every(x=>x.kind==='quota_daily'||x.kind==='model_unavailable');
+      const retryAfterMs=Math.max(DEFAULT_BUSY_MS,...failures.map(x=>x.retryAfterMs||0));
+      if(retryable)throw scannerError('SCANNER_POOL_TEMPORARY','Every compatible free Gemini scanner tried is temporarily busy or rate limited. No paid fallback was used.',{kind:'temporary_pool',retryable:true,retryAfterMs,failures,models:order.ready});
+      if(daily)throw scannerError('SCANNER_POOL_QUOTA','The compatible free Gemini scanner pool is currently unavailable or its free per-model quota is exhausted. No paid fallback was used.',{kind:'quota_pool',retryable:false,retryAfterMs,failures,models:order.ready});
+      throw lastError||scannerError('SCANNER_POOL_FAILED','Gemini scanner could not obtain a response.',{scanFailure:true,failures});
+    }
+    onProgress({progress:.90,label:`Validating ${modelLabel(usedModel)} result`,event:'validating',model:usedModel});
     const result=normaliseResult(parseJson(extractText(body)),usedModel);
-    if(usedModel!==MODEL)result.repairNotes.push('Gemini 3.8 Flash was temporarily unavailable; this scan used Gemini 3.7 Flash automatically.');
-    if(!result.name&&!result.roles.length&&!Object.keys(result.skills).length)throw new Error('Gemini could not read this as a Top Eleven Skills screenshot.');
-    const required=result.layout==='gk'?[...D.GK_SKILLS,...D.GK_PHYSICAL]:[...D.OUTFIELD_SKILLS];
-    const missing=required.filter(s=>!Number.isFinite(Number(result.skills[s])));
+    result.raw.modelAttempts=failures;
+    if(failures.length)result.repairNotes.push(`Automatic failover used ${modelLabel(usedModel)} after ${failures.length} unavailable scanner${failures.length===1?'':'s'}.`);
+    if(!result.name&&!result.roles.length&&!Object.keys(result.skills).length)throw scannerError('NOT_TOP_ELEVEN','Gemini could not read this as a Top Eleven Skills screenshot.',{scanFailure:true,kind:'scan'});
+    const required=result.layout==='gk'?[...D.GK_SKILLS,...D.GK_PHYSICAL]:[...D.OUTFIELD_SKILLS],missing=required.filter(s=>!Number.isFinite(Number(result.skills[s])));
     if(missing.length)result.repairNotes.push(`Needs review: Gemini could not confidently read ${missing.join(', ')}`);
-    onProgress({progress:1,label:'Gemini scan complete'});
+    onProgress({progress:1,label:`Scan complete · ${modelLabel(usedModel)}`,event:'complete',model:usedModel});
     return result;
   }
 
   async function health(){
-    const body=await apiFetch(`/models/${MODEL}`,{method:'GET',headers:{Accept:'application/json'}});
-    return {ok:true,provider:'Gemini Developer API',model:body?.name?.split('/').pop()||MODEL,freeTierOnly:true};
+    const available=await discoverModels(true),order=await modelOrder();
+    if(!available.length)throw new Error('No compatible stable Gemini Flash scanner models were returned for this API key.');
+    return{ok:true,provider:'Gemini Developer API',model:order.ready[0]||available[0],models:available,orderedModels:order.all,freeTierOnly:true};
   }
 
   function checkAggregate(values,total){
@@ -151,5 +215,5 @@
     return{average,error,ok:error<=1.5};
   }
 
-  TE.Scanner={VERSION,MODEL,MODELS,scan,health,getApiKey,setApiKey,clearApiKey,checkAggregate,_normaliseResult:normaliseResult,_buildPrompt:buildPrompt};
+  TE.Scanner={VERSION,MODEL,MODELS,DOCUMENTED_MODELS,scan,health,discoverModels,modelOrder,getApiKey,setApiKey,clearApiKey,checkAggregate,_normaliseResult:normaliseResult,_buildPrompt:buildPrompt,_classifyApiError:classifyApiError,_parseDurationMs:parseDurationMs};
 })();

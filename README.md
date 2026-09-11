@@ -1,34 +1,33 @@
-# Top Eleven Tool v5.2.12 — Build 30527
+# Top Eleven Tool v5.2.13 — Build 30527
 
-Static GitHub Pages/PWA companion app. The application contract remains `docs/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.md`; v5.2.12 changes only the Scanner v3 connection model and keeps the rest of the app intact.
+Static GitHub Pages/PWA companion app. The canonical application contract remains `docs/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.md`. v5.2.13 is a targeted mobile usability/navigation and Scanner v3 reliability release; training, tactics, formation, mentor and Build 30527 calculations are not redesigned.
 
-## Scanner v3 — Gemini free-tier path
+## Mobile usability
 
-The old Scanner v2 digit-template/reconciliation engine is not in the production scan path.
+- My Squad supports deliberate swipe-left-to-delete with a confirmation dialog. Normal vertical scrolling is gesture-locked away from delete; only one row can remain open.
+- App navigation is written to browser history so Android/PWA Back follows actual navigation. Temporary delete/drawer overlays close before page navigation.
+- Refresh/reload restores the current page plus key context such as player, Training tab/player and Squad filters, then shows a short success toast.
+- More opens a left-side drawer generated from existing main application pages. Team Plan remains the existing page containing tactics; no fake standalone Tactics page was created.
 
-- Gemini 3.8 Flash reads the original Top Eleven Skills screenshot directly, with automatic Gemini 3.7 Flash fallback only for transient capacity/high-demand errors.
-- The scan request includes the recovered official 20-playstyle × 4-level reference sheet and the canonical 19-special-ability reference sheet.
-- Players may have zero, one, two, three or more special abilities. The scanner contract returns an array and explicitly requires every visible icon in left-to-right order.
-- The app never rewrites a detected number to make OVR or group totals fit. Cross-checks only flag discrepancies for review.
-- No Cloud Vision, Cloud Run, Vertex AI or paid service fallback is used in v5.2.12. Both Gemini models use the same free-tier API key/project.
-- The Gemini API key is entered in Settings and stored only in this browser (`localStorage`). It is not in the ZIP or source code.
+## Scanner v3 reliability
 
-## £0 setup
+The old Scanner v2 digit-template/value-repair engine remains outside the production path.
 
-See `SETUP_GEMINI_FREE.txt` or `docs/SCANNER_V3_GEMINI_FREE.md`.
+- The client uses the Gemini Developer API directly with the user's free-tier key.
+- It calls `models.list` and filters to the documented stable, image-capable full Flash models used by this build: `gemini-3.5-flash`, `gemini-3.6-flash`, `gemini-3.7-flash`, and `gemini-3.8-flash`.
+- `gemini-3.4-flash` is not used because it is not a documented supported endpoint.
+- Flash-Lite models are deliberately excluded from automatic fallback because accuracy remains more important than squeezing in another lower-capability fallback.
+- Base preference is 3.7 → 3.6 → 3.5 → 3.8. Last-success history and short cooldowns after transient failures adapt that order to real responses seen on the device.
+- Temporary `429`/`408`/`5xx` availability conditions trigger fast model failover. A valid response immediately stops further model calls.
+- Whole-pool temporary unavailability schedules bounded automatic retries with backoff, rather than immediately turning every batch item into NEEDS RETRY.
+- Daily/free-quota exhaustion, authentication problems, malformed API responses and genuine scan failures are separated from temporary congestion.
+- No paid API/service fallback exists.
 
-The user must keep the Google AI Studio project on the **Free Tier**. If free quota/rate limits are exhausted, the app reports the 429 error and stops; it does not switch to another paid API. If the user later upgrades that Google project to paid billing, Google pricing can apply.
+Every successful model result passes the same existing normalisation/review/validation path. Gemini values are never rewritten to force OVR/group totals to fit. Playstyle + tier and every visible Special Ability remain editable before save.
 
-## v5.2.12 review workflow
+## Queue persistence
 
-- The scanner file picker accepts multiple screenshots at once and processes them sequentially through a review queue.
-- Scanned players are not saved automatically. Each result remains in the queue until reviewed and saved, skipped, retried, or removed.
-- **Save & Next** saves only the current verified player and moves to the next ready result.
-- Failed scans can be retried without discarding successful queue items. Free-tier quota/rate-limit errors pause the remaining queue instead of switching to a paid service.
-- Manual player entry uses the same review form and does not consume a Gemini request.
-- Playstyle tier is manually editable as Standard / Intermediate / Advanced / Master for scanned players, manual players, and existing-player profile edits.
-- Special abilities remain an uncapped multi-selection.
-- When all numerical cross-checks pass, the UI shows **Numerical checks verified**. Gemini's self-reported confidence is displayed separately so a correct scan is not misleadingly presented as “98% correct”. Small 0.x aggregate gaps are labelled as Top Eleven whole-number display rounding rather than scanner errors.
+Scanner metadata is persisted in existing local storage and screenshot payloads are persisted in IndexedDB. Navigating away does not destroy the queue. Reload restores queued/waiting/review results. An in-flight request interrupted by a full reload is marked for manual retry so the app does not silently submit a duplicate request.
 
 ## Tests
 
@@ -37,8 +36,10 @@ Run from the project root:
 ```bash
 node tests/core-tests.js
 python tests/scanner_regression.py
+node tests/scanner_failover_tests.js
+python tests/navigation_queue_contract.py
 python tests/static_checks.py
 python tests/package_integrity.py
 ```
 
-A live Gemini acceptance test is included as `tests/gemini_scanner_live.py`; it runs only when `GEMINI_API_KEY` is present in the environment.
+A live Gemini acceptance test remains optional (`tests/gemini_scanner_live.py`) and requires `GEMINI_API_KEY`.
