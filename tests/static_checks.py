@@ -43,16 +43,26 @@ for needle,label in [
 ]:
     if needle not in hay: errs.append(f'missing integrity hook: {label}')
 
-# Scanner v2: mismatch affects Save, no DML/DMR current parser, no synthesized values.
+# Scanner v3: direct Gemini free-tier production path, no legacy digit-template repair engine.
 for needle,label,src in [
-    ('reconcileReadToTarget', 'targeted OVR candidate reconciliation', scanner),
-    ('save.disabled=false', 'scanner mismatch does not dead-lock Save', js),
-    ('window.confirm(`Scanner reconciliation still reports:', 'scanner explicit manual verification confirmation', js),
-    ('data-scan-skill', 'manual parsed-skill correction path', js),
+    ("const VERSION=3", "Scanner v3 version marker", scanner),
+    ("gemini-3.8-flash", "Gemini 3.8 Flash model", scanner),
+    ("generativelanguage.googleapis.com", "direct Gemini Developer API", scanner),
+    ("Gemini Scanner is not configured", "Gemini API-key requirement", scanner),
+    ("ZERO, ONE, TWO, THREE OR MORE abilities", "multi-special-ability prompt", scanner),
+    ("No paid fallback was used", "free-tier no-paid-fallback error", scanner),
+    ("state.scanAbilities=[...(scan.specialAbilities||[])]", "multi-special-ability AI import", js),
+    ("scanner:{version:3", "Scanner v3 provenance on save", js),
+    ("save.disabled=false", "scanner mismatch does not dead-lock Save", js),
+    ("data-scan-skill", "manual parsed-skill correction path", js),
 ]:
     if needle not in src: errs.append(f'missing scanner hook: {label}')
-parse_block=re.search(r'function parseRoles[\s\S]*?function groupAverage',scanner)
-if parse_block and re.search(r'\bDML\b|\bDMR\b',parse_block.group(0)): errs.append('scanner current role parser still accepts DML/DMR')
+for forbidden in ['scanner-templates.json','reconcileReadToTarget','classifyGlyph','readNumber(ctx','cloudScannerEndpoint','Cloud Run Service URL']:
+    if forbidden in scanner+js+html: errs.append(f'legacy Scanner v2/cloud production logic survives: {forbidden}')
+if (ROOT/'js/scanner-templates.json').exists(): errs.append('legacy scanner-templates.json still packaged')
+if (ROOT/'cloud-scanner').exists(): errs.append('old Cloud Run scanner folder still packaged')
+for ref in ['assets/scanner/playstyles-reference.png','assets/scanner/special-abilities-reference.jpg']:
+    if not (ROOT/ref).is_file(): errs.append(f'missing scanner reference: {ref}')
 
 # The historical data-package contract path must never contradict the canonical Bible.
 legacy_contract=(ROOT/'data/build_30527/IMPLEMENTATION_CONTRACT.md').read_text()
@@ -81,7 +91,7 @@ manifest=json.loads((ROOT/'manifest.json').read_text())
 if manifest.get('name')!='Top Eleven Tool' or manifest.get('short_name')!='Top Eleven Tool': errs.append('manifest app name is not Top Eleven Tool')
 if not soup.title or soup.title.get_text(strip=True)!='Top Eleven Tool': errs.append('page title is not Top Eleven Tool')
 if 'TOP ELEVEN <span>TOOL</span>' not in html: errs.append('in-app header branding is not Top Eleven Tool')
-if 'v5.2.8' not in html: errs.append('visible build label is not v5.2.8')
+if 'v5.2.10' not in html: errs.append('visible build label is not v5.2.10')
 bible_data=(ROOT/'js/bible-data.js').read_text(encoding='utf-8')
 if "tackling:[['balanced','Balanced',0,0,.50],['stay','Stay On Feet',1,7,.30],['aggressive','Aggressive',2,5,.80]]" not in bible_data:
     errs.append('tackling IDs do not match direct build-30527 provenance correction')

@@ -1,3 +1,7 @@
+# v5.2.10 note
+
+The Scanner v2 verification row below is retained as historical provenance for the superseded v5.2.8 engine. v5.2.10 does not execute that engine; Scanner v3 is documented in `SCANNER_V3_GEMINI_FREE.md`.
+
 # Top Eleven Build 30527 — Full Verification Audit
 
 **Audit date:** 2026-09-10  

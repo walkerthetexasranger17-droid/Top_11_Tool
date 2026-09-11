@@ -1,11 +1,11 @@
-# Top Eleven Tool v5.2.8 — Build 30527 Test Matrix
+# Top Eleven Tool v5.2.10 — Build 30527 Test Matrix
 
 Implementation contract: `TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.md`.
 
 ## Automated release checks
 
 - `node tests/core-tests.js` — deterministic Build-30527 data, migration, formation, pitch, tactics/drain, mentor, Individual Training, Team Training, specialist and scanner safeguards.
-- `python tests/scanner_regression.py` — permanent Scanner v2 fixture set: 12 screenshots / 204 numerical fields, including Richard Kilroy OVR 136, GK/outfield layouts and calibrated panel detection.
+- `python tests/scanner_regression.py` — Scanner v3 offline contract: direct Gemini free-tier production path, reference assets, no paid fallback, and David Andrews multi-special-ability fixture.
 - `python tests/static_checks.py` — duplicate IDs, navigation, Team Plan/Training information architecture, DOM references, required UI controls, stale-model removal, scanner save gates, product naming and static asset references.
 - `python tests/package_integrity.py` — service-worker runtime precache coverage, manifest name/icons and existence/non-empty checks for every runtime asset.
 - `node --check` — every `js/*.js` source file and `sw.js`.
@@ -30,15 +30,15 @@ Implementation contract: `TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.md`.
 - Normal drill catalogue count is 29; Master/Campus count is 4; intensity XP/condition and drill-level effect data match Build 30527.
 - Individual Training uses natural-role white-skill union, mean(top 3) target, grey utility zero, multi-white accumulated utility, Master stock limits and six-slot beam width 250.
 - Team Training uses the actual players included in the selected group, each player's own natural-role white union/need, diminishing credits and six-slot beam width 250.
-- Scanner v2 reconciliation still flags unresolved aggregate/OVR differences, while an explicit manual verification can save reviewed values without fabricating scanner agreement.
+- Scanner v3 aggregate/OVR checks flag unresolved differences; Gemini-returned values are never rewritten to fabricate agreement.
 - v5.2.4 user data migration is idempotent and preserves players, attributes, images/scanner metadata, drill levels/unlocks, Master stock, natural/related role data that remains current, full playstyle state and all abilities.
 
 ## Release result
 
-- Deterministic/core suite: **PASS — 241 assertions**.
-- Scanner v2 regression: **PASS — 12 screenshots / 204 numerical fields**; panel detection within 2 px.
-- Static/integrity checks: **PASS — 124 IDs, 9 pages, 114 direct DOM refs, 31 static paths**.
-- Service-worker/package integrity: **PASS — 69/69 required runtime files precached**.
+- Deterministic/core suite: **PASS — 249 assertions**.
+- Scanner v3 offline contract: **PASS**; optional live Gemini acceptance is covered by `tests/gemini_scanner_live.py` and requires `GEMINI_API_KEY`.
+- Static/integrity checks: **PASS — 132 IDs, 9 pages, 122 direct DOM refs, 31 static paths**.
+- Service-worker/package integrity: **PASS — 70/70 required runtime files precached**.
 - JavaScript syntax (`node --check`): **PASS**.
 - Browser UI smoke: **ENVIRONMENT BLOCKED — NOT APPLICATION FAILURE.** Headless Chromium failed to start/terminate correctly in the build environment. No application assertion failure was produced. Manual device/browser smoke testing is recommended after packaging.
 

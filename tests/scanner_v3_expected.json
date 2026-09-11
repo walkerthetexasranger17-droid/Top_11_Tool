@@ -1,0 +1,30 @@
+{
+  "fixture": "david-andrews-multi-sa.jpg",
+  "expected": {
+    "name": "David Andrews",
+    "age": 20,
+    "ovr": 116,
+    "roles": ["MC"],
+    "layout": "outfield",
+    "totals": {"def": 122, "att": 120, "phys": 107},
+    "skills": {
+      "Tackling": 122,
+      "Marking": 154,
+      "Positioning": 162,
+      "Heading": 47,
+      "Bravery": 124,
+      "Passing": 221,
+      "Dribbling": 181,
+      "Crossing": 31,
+      "Shooting": 133,
+      "Finishing": 37,
+      "Fitness": 155,
+      "Strength": 23,
+      "Aggression": 68,
+      "Speed": 181,
+      "Creativity": 109
+    },
+    "playstyle": {"name": "Box-to-Box", "levelName": "Standard", "level": 2},
+    "specialAbilities": ["Defensive Wall", "Dribbler"]
+  }
+}

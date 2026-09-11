@@ -1,34 +1,10 @@
-Top Eleven Tool v5.2.8 — Build 30527
+Top Eleven Tool v5.2.10 — Build 30527
 
-Implementation contract: docs/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.md
-Compliance record: docs/BIBLE_COMPLIANCE.md
-Regression matrix: docs/TEST_MATRIX.md
-
-This release updates v5.2.4 in place. Scanner v2, player CRUD, My Drills, visual theme/assets and authoritative captured drill data are retained. Superseded companion logic is replaced only where required by the Bible.
-
-Model versions:
-- Formation: 30527-role-v1
-- Tactics: 30527-drain-fit-v1
-- Mentor: 30527-synergy-v1
-- Individual Training: 30527-white-beam-v1
-- Team Training: 30527-team-white-beam-v1
-
-Evidence boundary:
-- GAME FACT / LIVE FACT values come from the Bible and packaged Build 30527 data.
-- TOP ELEVEN TOOL CALCULATION labels companion recommendation logic.
-- Unresolved private/server logic is not fabricated.
-
-Release verification:
-- Core/deterministic: PASS — 241 assertions
-- Scanner: PASS — 12 fixtures / 204 numerical fields
-- Static/integrity: PASS
-- Service-worker precache: PASS — 69/69 runtime files
-- JavaScript syntax: PASS
-- Browser UI smoke: ENVIRONMENT BLOCKED — headless Chromium failed to start/terminate correctly in this build environment; no application assertion failure was produced.
-
-
-v5.2.8 scanner hotfix
-- Remaining scanner aggregate mismatches no longer disable Save. If reconciliation still disagrees, Save asks for one explicit manual confirmation and then records the reviewed values as manually verified.
-- Clean scans still auto-verify normally.
-- Manual override is explicit and saved as scanner.validation.manualVerified=true; unresolved checks remain recorded.
-- No formation, tactics, mentor, individual-training or team-training calculation logic changed.
+- Replaces the v5.2.9 Cloud Run / Vision / Vertex deployment with direct Gemini Developer API free-tier access.
+- Model: gemini-3.8-flash.
+- API key is user-entered and stored only on the device/browser; no key is packaged.
+- No paid fallback exists in the app.
+- 20 playstyles × 4 visual levels are supplied as an authoritative scanner reference.
+- All 19 special ability references are supplied; scanner contract explicitly supports 0..N abilities.
+- Old Scanner v2 digit-template and value-repair logic remains absent from the production path.
+- Numerical consistency checks flag mismatches only; they never rewrite values.

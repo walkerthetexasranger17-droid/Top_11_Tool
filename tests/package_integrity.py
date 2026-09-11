@@ -16,7 +16,6 @@ for rel in assets:
 required={
     './index.html','./manifest.json','./icon-192.png','./icon-512.png','./css/app.css',
     *{f'./js/{p.name}' for p in (ROOT/'js').glob('*.js')},
-    './js/scanner-templates.json',
     *{f'./assets/{p.relative_to(ROOT/"assets").as_posix()}' for p in (ROOT/'assets').rglob('*') if p.is_file()},
     *{f'./data/build_30527/{p.name}' for p in (ROOT/'data/build_30527').glob('*.json')},
 }

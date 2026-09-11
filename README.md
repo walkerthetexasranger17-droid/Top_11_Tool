@@ -1,33 +1,33 @@
-# Top Eleven Tool v5.2.8 — Build 30527
+# Top Eleven Tool v5.2.10 — Build 30527
 
-Static GitHub Pages/PWA companion app. The implementation contract for this release is `docs/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.md`. Release compliance is recorded in `docs/BIBLE_COMPLIANCE.md` and the regression matrix in `docs/TEST_MATRIX.md`.
+Static GitHub Pages/PWA companion app. The application contract remains `docs/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.md`; v5.2.10 changes only the Scanner v3 connection model and keeps the rest of the app intact.
 
-## What changed from v5.2.4
+## Scanner v3 — Gemini free-tier path
 
-- Current roles are the 12 Build-30527 roles; DML/DMR are preserved only as legacy record metadata.
-- Player schema migration is idempotent and preserves existing `te:` records, attributes, images/scanner metadata, drill state, Master stock, full playstyle state, current natural/related roles and all special abilities.
-- Playstyle selection is filtered by current natural-role eligibility; Ball Playing GK is not offered.
-- Current 19-item special-ability catalogue; no Shadow Striker, no two-ability cap and no invented universal role eligibility matrix.
-- Squad adds search and role, age, OVR, playstyle and availability filters.
-- Team Plan combines globally optimised Formation, exact 0–1000 pitch geometry, exhaustive Build-30527 tactics/drain search and captured mentor synergy.
-- Formation uses target-role white-skill means, Natural/Related eligibility and global XI assignment rather than legacy OVR/adjacency weights.
-- Individual Training uses top-three white target + six-slot beam search width 250, with grey utility zero and Master stock respected.
-- Team Training uses the actual players in each group and the same per-player white-need/credit model with beam width 250.
-- Scanner v2 numeric recognition/reconciliation remains intact; only Bible-required role/data plumbing changed.
-- Service worker precaches all 69 required runtime files for this build.
+The old Scanner v2 digit-template/reconciliation engine is not in the production scan path.
 
-## Test status
+- Gemini 3.8 Flash reads the original Top Eleven Skills screenshot directly.
+- The scan request includes the recovered official 20-playstyle × 4-level reference sheet and the canonical 19-special-ability reference sheet.
+- Players may have zero, one, two, three or more special abilities. The scanner contract returns an array and explicitly requires every visible icon in left-to-right order.
+- The app never rewrites a detected number to make OVR or group totals fit. Cross-checks only flag discrepancies for review.
+- No Cloud Vision, Cloud Run, Vertex AI or paid fallback is used in v5.2.10.
+- The Gemini API key is entered in Settings and stored only in this browser (`localStorage`). It is not in the ZIP or source code.
 
-Core/deterministic **PASS — 245 assertions**; Scanner v2 **PASS — 12 screenshots / 204 numerical fields**; static/integrity **PASS**; service-worker/package integrity **PASS — 69/69 runtime files**; JavaScript syntax **PASS**.
+## £0 setup
 
-Browser UI smoke is classified **ENVIRONMENT BLOCKED — NOT APPLICATION FAILURE** because headless Chromium failed to start/terminate correctly in the build environment and produced no application assertion failure. Manual device/browser smoke testing is recommended.
+See `SETUP_GEMINI_FREE.txt` or `docs/SCANNER_V3_GEMINI_FREE.md`.
 
-## Important boundary
+The user must keep the Google AI Studio project on the **Free Tier**. If free quota/rate limits are exhausted, the app reports the 429 error and stops; it does not switch to another paid API. If the user later upgrades that Google project to paid billing, Google pricing can apply.
 
-The tool does not reproduce unresolved private Nordeus formulas. Exact final normal-training gain, hidden match-engine weights, playstyle magnitude, mentor magnitude/signature-array semantics, universal special-ability eligibility, Squad Balance and hidden Talent weighting remain unresolved and are not invented.
+## Tests
 
-## v5.2.8 provenance audit
+Run from the project root:
 
-See `docs/PROVENANCE_AUDIT.md`. This pass did not merely retest the Bible: it compared the runtime against the recovered reverse-engineering trail and corrected the Tackling protocol IDs/order, numeric drain-override interpretation and a formation tie-break deviation.
+```bash
+node tests/core-tests.js
+python tests/scanner_regression.py
+python tests/static_checks.py
+python tests/package_integrity.py
+```
 
-- Scanner mismatches remain visible but no longer dead-lock Save; manually checked values can be explicitly confirmed and stored with manual-verification provenance.
+A live Gemini acceptance test is included as `tests/gemini_scanner_live.py`; it runs only when `GEMINI_API_KEY` is present in the environment.

@@ -69,12 +69,17 @@ function inside(role,x,y){const r=B.ROLE_RECTS[role];return x>=r.minX&&x<r.maxX&
   const abilityHeavy=P.cleanPlayer({name:'Abilities',position:'ST',roles:['ST'],skills:skills(),specialAbilities:D.SPECIAL_ABILITIES.slice(0,5)});ok(abilityHeavy.specialAbilities.length===5,'special ability storage is not capped at two');
 
   // ---------------------------------------------------------------------------
-  // Scanner v2 retained: no value synthesis + unresolved mismatch remains blocking.
+  // Scanner v3 Gemini free-tier boundary: no local OCR/template repair and multi-SA storage.
   // ---------------------------------------------------------------------------
-  const ovrRepair=SC.reconcileReadToTarget({value:111,candidates:[{value:111,score:.01},{value:105,score:.02}]},105.2,1.5);ok(ovrRepair.changed&&ovrRepair.read.value===105,'scanner reconciles only to an actually recognised alternate candidate');
-  const noInvent=SC.reconcileReadToTarget({value:111,candidates:[{value:111,score:.01},{value:109,score:.02}]},105.2,1.5);ok(!noInvent.changed&&noInvent.read.value===111,'scanner does not invent OVR to force a match');
-  ok(!SC.checkAggregate([100,100,100,100,100],106).ok,'unresolved aggregate remains a failing check');
-  const scannerSource=fs.readFileSync(path.join(ROOT,'js','scanner-engine.js'),'utf8');ok(!/DML|DMR/.test(scannerSource.match(/function parseRoles[\s\S]*?function groupAverage/)?.[0]||''),'scanner current role parser does not emit DML/DMR');
+  ok(SC.VERSION===3,'Scanner v3 is the production scanner');
+  ok(!SC.checkAggregate([100,100,100,100,100],106).ok,'aggregate mismatch remains a visible failing cross-check');
+  const scannerSource=fs.readFileSync(path.join(ROOT,'js','scanner-engine.js'),'utf8');
+  ok(/Gemini Scanner is not configured/.test(scannerSource),'scanner requires a configured Gemini API key');
+  ok(/gemini-3\.8-flash/.test(scannerSource),'scanner targets Gemini 3.8 Flash');
+  ok(/ZERO, ONE, TWO, THREE OR MORE abilities/.test(scannerSource),'scanner prompt explicitly supports multiple special abilities');
+  ok(/No paid fallback was used/.test(scannerSource),'free-tier exhaustion has no paid fallback');
+  ok(!/scanner-templates|reconcileReadToTarget|classifyGlyph|function readNumber/.test(scannerSource),'legacy local digit-template/repair engine is absent from production scanner');
+  ok(!fs.existsSync(path.join(ROOT,'js','scanner-templates.json')),'legacy scanner template file is not packaged');
 
   // ---------------------------------------------------------------------------
   // Exact pitch geometry and target-role Role Score.

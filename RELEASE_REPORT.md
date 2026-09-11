@@ -1,32 +1,24 @@
-# Top Eleven Tool v5.2.8 — Build 30527 Release Report
+# Top Eleven Tool v5.2.10 — Build 30527 Release Report
 
-## Status
+## Scanner change
 
-A provenance audit was completed against the recovered reverse-engineering evidence chain. The packaged Bible contains the v1.1 verified correction to the build-30527 Tackling protocol IDs and remains the implementation contract for this build.
+v5.2.10 removes the Cloud Run / Cloud Vision / Vertex AI deployment introduced in v5.2.9 and replaces it with a direct Gemini Developer API free-tier path using `gemini-3.8-flash`.
 
-## Final provenance-audit corrections
+The scanner sends the original Skills screenshot together with the recovered playstyle-level and special-ability reference sheets. The prompt forbids number repair/invention and requires every visible special ability to be returned, with no fixed maximum count.
 
-- Corrected Tackling protocol IDs/order to direct-build evidence: Balanced=0, Stay On Feet=1, Aggressive=2; retained the already-correct drain intensities by label.
-- Corrected numeric `ConditionDrainIntensity` override plumbing (0/1/2 -> 0/5/7 contributions).
-- Removed undocumented aggregate playstyle-level sum from whole-XI formation tie-breaking; playstyle level remains only in the documented per-slot candidate tie.
-- Changed “Auto best shape” to “Auto best of 5 templates” to avoid implying the five companion templates exhaust all possible shapes.
-- Removed the contradictory legacy training instructions from `data/build_30527/IMPLEMENTATION_CONTRACT.md`; that historical path now explicitly defers to the canonical Bible.
-- Added a static regression guard so the superseded `target=max`, greedy six-slot selector and grey-skill dilution wording cannot silently return.
-- The remaining changes are narrow provenance corrections; unresolved private/server-owned logic remains deliberately unresolved.
+## Cost / credential model
 
-## Automated verification
+- No Google Cloud Billing account is required by the app architecture.
+- No Cloud Run, Vision API or Vertex AI service is used.
+- No API key is embedded in the package.
+- The user's Gemini key is stored only in the current browser.
+- HTTP 429 quota/rate-limit failures stop scanning; there is no paid fallback.
+- If the user later upgrades the Gemini project to paid billing, Google pricing may apply; v5.2.10 assumes the project remains on Free Tier.
 
-- Core/deterministic: PASS — 245 assertions.
-- Scanner v2: PASS — 12 real screenshots / 204 numerical fields; panel detection exact within 2 px.
-- Static application integrity: PASS — 124 DOM IDs, 9 pages, 114 direct DOM references, 31 static paths.
-- Service-worker/package integrity: PASS — 69/69 required runtime files precached.
-- JavaScript/service-worker syntax: PASS (`node --check`).
-- Final ZIP integrity: recorded after packaging with `unzip -t`.
+## Regression target
 
-## Browser smoke
+`tests/scanner-fixtures/david-andrews-multi-sa.jpg` remains the multi-special-ability acceptance fixture. Expected result includes Box-to-Box Standard and both `Defensive Wall` and `Dribbler`, plus all 15 exact outfield skills.
 
-**ENVIRONMENT BLOCKED — NOT APPLICATION FAILURE.** Headless Chromium failed to start/terminate correctly in the build environment. No application assertion failure was produced. Manual device/browser smoke testing is recommended after packaging.
+## Offline verification
 
-## Contract boundary
-
-The app deliberately does not fabricate unresolved private Nordeus logic: exact final server-side training gains, hidden match-engine weights, exact playstyle/mentor magnitude, universal role→SA eligibility without player-specific data, Squad Balance, or hidden Talent weighting.
+Core logic, scanner contract, static integrity, PWA precache integrity and JavaScript syntax are tested locally. Live Gemini accuracy remains an environment-dependent acceptance test and requires the user's API key.
