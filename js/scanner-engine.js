@@ -6,16 +6,16 @@
   const VERSION=3;
   // Confirmed stable full Flash models in the Gemini Developer API as of 2026-09.
   // The suggested 3.4 generation is intentionally absent: Google does not expose it as a supported Flash model.
-  const DOCUMENTED_MODELS=['gemini-3.7-flash','gemini-3.6-flash','gemini-3.5-flash','gemini-3.8-flash'];
-  const MODEL=DOCUMENTED_MODELS[0];
-  const MODELS=[...DOCUMENTED_MODELS];
+  const DOCUMENTED_MODELS=['gemini-3.8-flash'];
+  const MODEL='gemini-3.8-flash';
+  const MODELS=[MODEL];
   const API_KEY_STORAGE='te:scanner:geminiApiKey';
   const MODEL_HEALTH_STORAGE='te:scanner:modelHealth:v1';
   const API_BASE='https://generativelanguage.googleapis.com/v1beta';
   const PLAYSTYLE_REF='./assets/scanner/playstyles-reference.png';
   const ABILITY_REF='./assets/scanner/special-abilities-reference.jpg';
   const PLAYSTYLES=B.PLAYSTYLES.filter(x=>x.id!==1).map(x=>x.name);
-  const LEVELS=B.PLAYSTYLE_LEVELS.filter(x=>x.id>=2).map(x=>x.name);
+  const LEVELS=B.PLAYSTYLE_LEVELS.filter(x=>x.id>=1).map(x=>x.name);
   const ABILITIES=[...D.SPECIAL_ABILITIES];
   const DISCOVERY_TTL_MS=15*60*1000;
   const DEFAULT_BUSY_MS=15000;
@@ -52,7 +52,9 @@
 
   function buildPrompt(){
     const outfield=[...D.OUTFIELD_SKILLS],gk=[...D.GK_SKILLS,...D.GK_PHYSICAL];
-    return `You are Scanner v3 for a private Top Eleven companion app. Read the supplied CURRENT Top Eleven player Skills screenshot with extreme care. The next two images are authoritative visual reference sheets for playstyles/levels and special abilities.\n\nHARD RULES\n1. Read values from the screenshot itself. Never invent, infer, average, reconcile, or change a number merely to make OVR or column totals agree. If you cannot read a value, omit it from skills and add a warning.\n2. Read player name, age, OVR, every visible natural role, the three group totals, and every one of the 15 displayed skill values.\n3. PLAYSTYLE: match the small playstyle badge beside the player's name against REFERENCE IMAGE 1. Identify BOTH playstyle name and its visual level: Standard, Intermediate, Advanced, or Master. Do not infer the playstyle from the player's role. Role is only a sanity check. If the badge is too unclear, return playstyle=null.\n4. SPECIAL ABILITIES: inspect the ENTIRE row after the words "Special ability:". A player may have ZERO, ONE, TWO, THREE OR MORE abilities. Segment every visible icon and match each independently against REFERENCE IMAGE 2. Return ALL visible abilities in left-to-right order. NEVER stop after the first icon.\n5. The screenshot may recolour or scale an icon. Match the symbol/shape, not just colour.\n6. Do not report an ability or playstyle merely because it would suit the player's position. Only report what is visibly present.\n7. Return JSON only. Confidence fields are numbers from 0 to 1.\n\nAllowed roles: ${D.ALL_POSITIONS.join(', ')}.\nAllowed playstyles: ${PLAYSTYLES.join(', ')}.\nAllowed playstyle levels: ${LEVELS.join(', ')}.\nAllowed special abilities: ${ABILITIES.join(', ')}.\nOutfield skills (exact names): ${outfield.join(', ')}.\nGoalkeeper skills (exact names): ${gk.join(', ')}.\n\nFor an outfield player, totals.def/att/phys are the large DEFENCE/ATTACK/PHYSICAL numbers above the columns. For a goalkeeper put the GOALKEEPING total in totals.att for app compatibility, totals.phys is PHYSICAL, and totals.def may be null.\n\nReturn exactly this object shape:\n{\n  "name": string|null,\n  "age": number|null,\n  "ovr": number|null,\n  "roles": string[],\n  "layout": "outfield"|"gk",\n  "totals": {"def": number|null, "att": number|null, "phys": number|null},\n  "skills": {"Skill Name": number},\n  "playstyle": {"name": string, "levelName": string, "confidence": number}|null,\n  "specialAbilities": string[],\n  "confidence": {"overall":number,"text":number,"numbers":number,"roles":number,"playstyle":number,"specialAbilities":number},\n  "warnings": string[]\n}`;
+    return `You are Scanner v3 for a private Top Eleven companion app. Read the supplied CURRENT Top Eleven player Skills screenshot with extreme care. The next two images are authoritative visual reference sheets for playstyles/levels and special abilities.\n\nHARD RULES\n1. Read values from the screenshot itself. Never invent, infer, average, reconcile, or change a number merely to make OVR or column totals agree. If you cannot read a value, omit it from skills and add a warning.\n2. Read player name, age, OVR, every visible natural role, the three group totals, and every one of the 15 displayed skill values.\n3. PLAYSTYLE: match the small playstyle badge beside the player's name against REFERENCE IMAGE 1. Identify BOTH playstyle name and its visual state. Allowed states are Locked, Standard, Intermediate, Advanced, or Master. A visible PADLOCK overlay means Locked/Potential and MUST NEVER be returned as Standard. For an unlocked badge: Standard has no progression bars, Intermediate has 1 bar, Advanced has 2 bars, and Master has 3 bars plus the Master-style outer badge. Judge the OUTER FRAME/BARS/LOCK separately from the inner playstyle symbol. Do not infer the playstyle from the player's role. Role is only a sanity check. If the badge or its state is too unclear, return playstyle=null rather than guessing.\n4. SPECIAL ABILITIES: inspect the ENTIRE row after the words "Special ability:". A player may have ZERO, ONE, TWO, THREE OR MORE abilities. Segment every visible icon and match each independently against REFERENCE IMAGE 2. Return ALL visible abilities in left-to-right order. NEVER stop after the first icon.\n5. The screenshot may recolour or scale an icon. Match the symbol/shape, not just colour.\n6. Do not report an ability or playstyle merely because it would suit the player's position. Only report what is visibly present.\n7. Return JSON only. Confidence fields are numbers from 0 to 1.\n\nREFERENCE IMAGE 1 also contains two labelled real screenshot examples added for regression: Ariel Bravo = Winger + Locked, and François Roelandt = False Nine + Intermediate. Use those examples to distinguish the lock overlay and the 1-bar Intermediate frame.
+
+Allowed roles: ${D.ALL_POSITIONS.join(', ')}.\nAllowed playstyles: ${PLAYSTYLES.join(', ')}.\nAllowed playstyle levels: ${LEVELS.join(', ')}.\nAllowed special abilities: ${ABILITIES.join(', ')}.\nOutfield skills (exact names): ${outfield.join(', ')}.\nGoalkeeper skills (exact names): ${gk.join(', ')}.\n\nFor an outfield player, totals.def/att/phys are the large DEFENCE/ATTACK/PHYSICAL numbers above the columns. For a goalkeeper put the GOALKEEPING total in totals.att for app compatibility, totals.phys is PHYSICAL, and totals.def may be null.\n\nReturn exactly this object shape:\n{\n  "name": string|null,\n  "age": number|null,\n  "ovr": number|null,\n  "roles": string[],\n  "layout": "outfield"|"gk",\n  "totals": {"def": number|null, "att": number|null, "phys": number|null},\n  "skills": {"Skill Name": number},\n  "playstyle": {"name": string, "levelName": string, "confidence": number}|null,\n  "specialAbilities": string[],\n  "confidence": {"overall":number,"text":number,"numbers":number,"roles":number,"playstyle":number,"specialAbilities":number},\n  "warnings": string[]\n}`;
   }
 
   function extractText(body){
@@ -94,7 +96,7 @@
     const demand=/high demand|overload|overloaded|temporar|capacity|unavailable|service unavailable|try again/i.test(detail);
     let kind='request',retryable=false,failover=false,scanFailure=false;
     if(status===408||[500,502,503,504].includes(status)){kind='temporary';retryable=true;failover=true;}
-    else if(status===429){kind=quota.daily?'quota_daily':'rate_limit';retryable=!quota.daily;failover=true;}
+    else if(status===429){kind=quota.daily?'quota_daily':'rate_limit';retryable=true;failover=true;}
     else if(status===404&&/model|not found|not supported|unavailable/i.test(detail)){kind='model_unavailable';failover=true;}
     else if(status===401||status===403){kind='auth';}
     else if(status===400&&/API key|key not valid|invalid api key/i.test(detail)){kind='auth';}
@@ -102,7 +104,7 @@
     if(demand&&status===429){kind='temporary';retryable=true;failover=true;}
     let message=`Gemini scanner error: ${detail}`;
     if(kind==='auth')message=`Gemini API key was rejected. ${detail}`;
-    else if(kind==='quota_daily')message=`${modelLabel(model)} free-tier daily quota is currently exhausted. No paid fallback was used.`;
+    else if(kind==='quota_daily')message=`${modelLabel(model)} free-tier daily quota is currently exhausted. It will retry later; No paid fallback was used.`;
     else if(kind==='rate_limit')message=`${modelLabel(model)} is rate limited right now.`;
     else if(kind==='temporary')message=`${modelLabel(model)} is temporarily busy or unavailable.`;
     else if(kind==='model_unavailable')message=`${modelLabel(model)} is not available to this API key.`;
@@ -136,15 +138,9 @@
     return discoveryCache.models;
   }
   async function modelOrder(){
-    const available=await discoverModels(),health=loadHealth(),now=Date.now(),last=health.lastSuccessfulModel;
-    const base=new Map(DOCUMENTED_MODELS.map((m,i)=>[m,i]));
-    const sorted=[...available].sort((a,b)=>{
-      const ah=health[a]||{},bh=health[b]||{},ac=(ah.cooldownUntil||0)>now,bc=(bh.cooldownUntil||0)>now;
-      if(ac!==bc)return ac?1:-1;if(a===last&&b!==last)return-1;if(b===last&&a!==last)return 1;
-      const af=ah.consecutiveTransient||0,bf=bh.consecutiveTransient||0;if(af!==bf)return af-bf;return(base.get(a)??99)-(base.get(b)??99);
-    });
-    const ready=sorted.filter(m=>(health[m]?.cooldownUntil||0)<=now),cooling=sorted.filter(m=>(health[m]?.cooldownUntil||0)>now);
-    return{ready,cooling,all:sorted};
+    const available=await discoverModels();
+    const ready=available.includes(MODEL)?[MODEL]:[];
+    return{ready,cooling:[],all:ready.length?ready:[MODEL]};
   }
 
   function normaliseResult(raw={},usedModel=MODEL){
@@ -155,7 +151,7 @@
     for(const name of allowedSkills){const n=finiteOrNull(raw.skills?.[name]);if(n!=null&&n>=0&&n<=520)skills[name]=n;}
     const psName=String(raw.playstyle?.name||'').trim(),psDef=D.playstyleDefinition(psName),levelName=String(raw.playstyle?.levelName||'').trim();
     const level=D.PLAYSTYLE_LEVELS.find(x=>String(x.name).toLowerCase()===levelName.toLowerCase())?.id||0;
-    const playstyle=psDef&&psDef.id!==1&&level>=2?{name:psDef.name,type:psDef.type,level,levelName:D.PLAYSTYLE_LEVELS.find(x=>x.id===level)?.name||levelName,confidence:clamp01(raw.playstyle?.confidence)}:null;
+    const playstyle=psDef&&psDef.id!==1&&level>=1?{name:psDef.name,type:psDef.type,level,levelName:D.PLAYSTYLE_LEVELS.find(x=>x.id===level)?.name||levelName,confidence:clamp01(raw.playstyle?.confidence)}:null;
     const specialAbilities=[...(Array.isArray(raw.specialAbilities)?raw.specialAbilities:[])].map(String).map(x=>x.trim()).filter(x=>ABILITIES.includes(x)).filter((x,i,a)=>a.indexOf(x)===i);
     const c=raw.confidence||{},warnings=[...(Array.isArray(raw.warnings)?raw.warnings:[])].map(String).slice(0,30);
     return{version:VERSION,provider:'google-gemini-developer-api-free',model:usedModel,name:String(raw.name||'').trim(),age:finiteOrNull(raw.age),ovr:finiteOrNull(raw.ovr),roles,position:roles[0]||null,layout,skills,playstyle,specialAbilities,confidence:{overall:clamp01(c.overall),text:clamp01(c.text),numbers:clamp01(c.numbers),roles:clamp01(c.roles),playstyle:clamp01(c.playstyle),specialAbilities:clamp01(c.specialAbilities)},raw:{totals:{def:finiteOrNull(raw.totals?.def),att:finiteOrNull(raw.totals?.att),phys:finiteOrNull(raw.totals?.phys)},model:usedModel,warnings,providerResponseVersion:3},repairNotes:warnings,validation:{resolved:true,unresolvedChecks:[]}};
@@ -165,40 +161,27 @@
     const screenshot=dataUrlPart(dataUrl);
     onProgress({progress:.04,label:'Loading official icon references',event:'prepare'});
     const [playstyleRef,abilityRef]=await references();
-    const payload={contents:[{role:'user',parts:[{text:buildPrompt()},{text:'PLAYER SKILLS SCREENSHOT — this is the image to scan:'},screenshot,{text:'REFERENCE IMAGE 1 — all playstyle names and visual levels:'},playstyleRef,{text:'REFERENCE IMAGE 2 — all current special ability names and icons:'},abilityRef]}],generationConfig:{responseMimeType:'application/json',maxOutputTokens:7000,thinkingConfig:{thinkingLevel:'low'}}};
-    const order=await modelOrder();
-    if(!order.ready.length){
-      const health=loadHealth(),next=Math.min(...order.cooling.map(m=>health[m]?.cooldownUntil||Date.now()+DEFAULT_BUSY_MS));
-      throw scannerError('SCANNER_POOL_TEMPORARY','All compatible free Gemini scanners are cooling down after temporary availability/rate-limit responses. No paid fallback was used.',{kind:'temporary_pool',retryable:true,retryAfterMs:Math.max(1000,next-Date.now()),models:order.all});
+    const payload={contents:[{role:'user',parts:[{text:buildPrompt()},{text:'PLAYER SKILLS SCREENSHOT — this is the image to scan:'},screenshot,{text:'REFERENCE IMAGE 1 — all playstyle names, unlocked levels, and real Locked/Intermediate examples:'},playstyleRef,{text:'REFERENCE IMAGE 2 — all current special ability names and icons:'},abilityRef]}],generationConfig:{responseMimeType:'application/json',maxOutputTokens:7000,thinkingConfig:{thinkingLevel:'low'}}};
+    const model=MODEL,label=modelLabel(model);
+    onProgress({progress:.12,label:`Scanning with ${label}`,event:'model-start',model,attempt:1,totalModels:1});
+    let body;
+    try{
+      body=await apiFetch(`/models/${model}:generateContent`,{method:'POST',body:JSON.stringify(payload)},model);
+      noteModelResult(model,{success:true});
+    }catch(err){
+      noteModelResult(model,{error:err});
+      const delay=Math.max(DEFAULT_BUSY_MS,Number(err?.retryAfterMs||0));
+      if(err?.kind==='quota_daily')throw scannerError('SCANNER_POOL_QUOTA','Gemini 3.8 Flash free-tier daily quota is currently exhausted. The queue will keep it and retry later; No paid fallback was used.',{kind:'quota_daily',retryable:true,retryAfterMs:delay,model});
+      if(err?.retryable||['temporary','rate_limit','network','model_unavailable'].includes(err?.kind))throw scannerError('SCANNER_POOL_TEMPORARY',err?.message||'Gemini 3.8 Flash is temporarily unavailable.',{kind:err?.kind||'temporary',retryable:true,retryAfterMs:delay,model,status:err?.status||0,detail:err?.detail||''});
+      throw err;
     }
-    let body=null,usedModel=null,lastError=null;const failures=[];
-    for(let i=0;i<order.ready.length;i++){
-      const model=order.ready[i],label=modelLabel(model);
-      onProgress({progress:.10+Math.min(.45,i*.09),label:i===0?`Scanning with ${label}`:`Trying ${label}`,event:i===0?'model-start':'model-fallback',model,attempt:i+1,totalModels:order.ready.length});
-      try{
-        body=await apiFetch(`/models/${model}:generateContent`,{method:'POST',body:JSON.stringify(payload)},model);usedModel=model;noteModelResult(model,{success:true});break;
-      }catch(err){
-        lastError=err;failures.push({model,kind:err.kind||err.code,status:err.status||0,retryAfterMs:err.retryAfterMs||0});noteModelResult(model,{error:err});
-        if(err.failover&&i<order.ready.length-1){onProgress({progress:.14+Math.min(.45,i*.09),label:`${label} ${err.kind==='rate_limit'?'rate limited':'busy'} · trying another available scanner…`,event:'model-busy',model,errorKind:err.kind,retryAfterMs:err.retryAfterMs||0});continue;}
-        if(err.failover)break;
-        throw err;
-      }
-    }
-    if(!body||!usedModel){
-      const retryable=failures.some(x=>['temporary','rate_limit','network'].includes(x.kind)),daily=failures.length&&failures.every(x=>x.kind==='quota_daily'||x.kind==='model_unavailable');
-      const retryAfterMs=Math.max(DEFAULT_BUSY_MS,...failures.map(x=>x.retryAfterMs||0));
-      if(retryable)throw scannerError('SCANNER_POOL_TEMPORARY','Every compatible free Gemini scanner tried is temporarily busy or rate limited. No paid fallback was used.',{kind:'temporary_pool',retryable:true,retryAfterMs,failures,models:order.ready});
-      if(daily)throw scannerError('SCANNER_POOL_QUOTA','The compatible free Gemini scanner pool is currently unavailable or its free per-model quota is exhausted. No paid fallback was used.',{kind:'quota_pool',retryable:false,retryAfterMs,failures,models:order.ready});
-      throw lastError||scannerError('SCANNER_POOL_FAILED','Gemini scanner could not obtain a response.',{scanFailure:true,failures});
-    }
-    onProgress({progress:.90,label:`Validating ${modelLabel(usedModel)} result`,event:'validating',model:usedModel});
-    const result=normaliseResult(parseJson(extractText(body)),usedModel);
-    result.raw.modelAttempts=failures;
-    if(failures.length)result.repairNotes.push(`Automatic failover used ${modelLabel(usedModel)} after ${failures.length} unavailable scanner${failures.length===1?'':'s'}.`);
+    onProgress({progress:.90,label:`Validating ${label} result`,event:'validating',model});
+    const result=normaliseResult(parseJson(extractText(body)),model);
+    result.raw.modelAttempts=[];
     if(!result.name&&!result.roles.length&&!Object.keys(result.skills).length)throw scannerError('NOT_TOP_ELEVEN','Gemini could not read this as a Top Eleven Skills screenshot.',{scanFailure:true,kind:'scan'});
     const required=result.layout==='gk'?[...D.GK_SKILLS,...D.GK_PHYSICAL]:[...D.OUTFIELD_SKILLS],missing=required.filter(s=>!Number.isFinite(Number(result.skills[s])));
     if(missing.length)result.repairNotes.push(`Needs review: Gemini could not confidently read ${missing.join(', ')}`);
-    onProgress({progress:1,label:`Scan complete · ${modelLabel(usedModel)}`,event:'complete',model:usedModel});
+    onProgress({progress:1,label:`Scan complete · ${label}`,event:'complete',model});
     return result;
   }
 

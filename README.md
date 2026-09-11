@@ -1,6 +1,6 @@
-# Top Eleven Tool v5.2.13 — Build 30527
+# Top Eleven Tool v5.2.14 — Build 30527
 
-Static GitHub Pages/PWA companion app. The canonical application contract remains `docs/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.md`. v5.2.13 is a targeted mobile usability/navigation and Scanner v3 reliability release; training, tactics, formation, mentor and Build 30527 calculations are not redesigned.
+Static GitHub Pages/PWA companion app. The canonical application contract remains `docs/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.md`. v5.2.14 is a targeted mobile usability/navigation and Scanner v3 reliability release; training, tactics, formation, mentor and Build 30527 calculations are not redesigned.
 
 ## Mobile usability
 
@@ -14,16 +14,16 @@ Static GitHub Pages/PWA companion app. The canonical application contract remain
 The old Scanner v2 digit-template/value-repair engine remains outside the production path.
 
 - The client uses the Gemini Developer API directly with the user's free-tier key.
-- It calls `models.list` and filters to the documented stable, image-capable full Flash models used by this build: `gemini-3.5-flash`, `gemini-3.6-flash`, `gemini-3.7-flash`, and `gemini-3.8-flash`.
-- `gemini-3.4-flash` is not used because it is not a documented supported endpoint.
-- Flash-Lite models are deliberately excluded from automatic fallback because accuracy remains more important than squeezing in another lower-capability fallback.
-- Base preference is 3.7 → 3.6 → 3.5 → 3.8. Last-success history and short cooldowns after transient failures adapt that order to real responses seen on the device.
-- Temporary `429`/`408`/`5xx` availability conditions trigger fast model failover. A valid response immediately stops further model calls.
-- Whole-pool temporary unavailability schedules bounded automatic retries with backoff, rather than immediately turning every batch item into NEEDS RETRY.
-- Daily/free-quota exhaustion, authentication problems, malformed API responses and genuine scan failures are separated from temporary congestion.
-- No paid API/service fallback exists.
+- **Gemini 3.8 Flash is the only production scanner model.** There is no 3.5/3.6/3.7 model fallback and no paid fallback.
+- Temporary busy/overload/rate-limit/network responses keep the queue item alive and retry Gemini 3.8 automatically until success or explicit user removal.
+- Retry delay is 10s → 20s → 45s → 90s → 120s, then remains capped at roughly 120s, while respecting longer provider `Retry-After`/RetryInfo values.
+- Daily free-tier quota exhaustion remains queued with a minimum 15-minute retry delay rather than switching to a paid service.
+- Authentication, invalid-image, malformed-request and invalid-response failures are hard failures rather than pointless infinite retries.
+- Playstyle detection now treats **Locked/Potential** as a real state (Bible level 1), distinct from Standard. A padlock must return Locked; unlocked frames are Standard=no bars, Intermediate=1 bar, Advanced=2 bars, Master=3 bars + Master frame.
+- The visual reference includes real regression examples: Ariel Bravo = Winger/Locked and François Roelandt = False Nine/Intermediate.
+- Multiple Special Abilities remain fully supported.
 
-Every successful model result passes the same existing normalisation/review/validation path. Gemini values are never rewritten to force OVR/group totals to fit. Playstyle + tier and every visible Special Ability remain editable before save.
+Every successful result passes the same existing normalisation/review/validation path. Gemini values are never rewritten to force OVR/group totals to fit. Playstyle + state and every visible Special Ability remain editable before save.
 
 ## Queue persistence
 

@@ -9,9 +9,9 @@ checks=[
  ('player-swipe',js+css,'swipe wrapper'),('player-delete-action',js+css,'swipe delete action'),('confirmDialogBackdrop',js+html,'delete confirmation dialog'),
  ('history.pushState',js,'history push'),("addEventListener('popstate'",js,'popstate back handler'),('UI_STATE_KEY',js,'refresh UI state'),("✓ Successfully refreshed",js,'refresh toast'),
  ('drawer-backdrop',html+css,'left drawer'),('drawerNav',js+html,'drawer route generation'),('finishDrawerSwipe',js,'drawer swipe-away'),
- ('QUEUE_DB_NAME',js,'IndexedDB queue image persistence'),('SCAN_QUEUE_META_KEY',js,'queue metadata persistence'),('MAX_AUTO_SCAN_ATTEMPTS=3',js,'bounded retry attempts'),
- ('SCAN_RETRY_BACKOFF_MS=[15000,45000,120000]',js,'retry backoff'),('scheduleQueueRetryTimer',js,'delayed retry scheduler'),('SCANNER_POOL_TEMPORARY',js,'temporary pool error handling'),
- ('MODEL BUSY — TRYING FALLBACK',js,'fallback status'),('RETRYING AUTOMATICALLY',js,'auto-retry status'),('SCAN FAILED',js,'actual scan failure status'),
+ ('QUEUE_DB_NAME',js,'IndexedDB queue image persistence'),('SCAN_QUEUE_META_KEY',js,'queue metadata persistence'),('SCAN_RETRY_BACKOFF_MS=[10000,20000,45000,90000,120000]',js,'progressive retry backoff'),
+ ('RETRYING GEMINI 3.8 AUTOMATICALLY',js,'repeat-until-success status'),('scheduleQueueRetryTimer',js,'delayed retry scheduler'),('SCANNER_POOL_TEMPORARY',js,'temporary pool error handling'),
+ ('RETRYING AUTOMATICALLY',js,'auto-retry status'),('SCAN FAILED',js,'actual scan failure status'),
 ]
 for needle,src,label in checks:
     if needle not in src: errs.append(f'missing {label}: {needle}')

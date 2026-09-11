@@ -46,14 +46,10 @@ for needle,label in [
 # Scanner v3: direct Gemini free-tier production path, no legacy digit-template repair engine.
 for needle,label,src in [
     ("const VERSION=3", "Scanner v3 version marker", scanner),
-    ("gemini-3.5-flash", "Gemini 3.5 Flash pool member", scanner),
-    ("gemini-3.6-flash", "Gemini 3.6 Flash pool member", scanner),
-    ("gemini-3.7-flash", "Gemini 3.7 Flash pool member", scanner),
-    ("gemini-3.8-flash", "Gemini 3.8 Flash pool member", scanner),
-    ("/models?pageSize=1000", "runtime Gemini model discovery", scanner),
-    ("SCANNER_POOL_TEMPORARY", "temporary scanner-pool error classification", scanner),
-    ("RETRYING AUTOMATICALLY", "automatic scanner retry status", js),
-    ("MAX_AUTO_SCAN_ATTEMPTS=3", "bounded scanner auto retry", js),
+    ("gemini-3.8-flash", "Gemini 3.8 Flash only model", scanner),
+    ("SCANNER_POOL_TEMPORARY", "temporary Gemini 3.8 retry classification", scanner),
+    ("RETRYING GEMINI 3.8 AUTOMATICALLY", "Gemini 3.8 repeat-until-success status", js),
+    ("SCAN_RETRY_BACKOFF_MS=[10000,20000,45000,90000,120000]", "scanner retry backoff", js),
     ("history.pushState", "browser/PWA navigation history", js),
     ("popstate", "Android/browser back handling", js),
     ("player-delete-action", "swipe-to-delete action", html+js),
@@ -107,7 +103,7 @@ manifest=json.loads((ROOT/'manifest.json').read_text())
 if manifest.get('name')!='Top Eleven Tool' or manifest.get('short_name')!='Top Eleven Tool': errs.append('manifest app name is not Top Eleven Tool')
 if not soup.title or soup.title.get_text(strip=True)!='Top Eleven Tool': errs.append('page title is not Top Eleven Tool')
 if 'TOP ELEVEN <span>TOOL</span>' not in html: errs.append('in-app header branding is not Top Eleven Tool')
-if 'v5.2.13' not in html: errs.append('visible build label is not v5.2.13')
+if 'v5.2.14' not in html: errs.append('visible build label is not v5.2.14')
 bible_data=(ROOT/'js/bible-data.js').read_text(encoding='utf-8')
 if "tackling:[['balanced','Balanced',0,0,.50],['stay','Stay On Feet',1,7,.30],['aggressive','Aggressive',2,5,.80]]" not in bible_data:
     errs.append('tackling IDs do not match direct build-30527 provenance correction')

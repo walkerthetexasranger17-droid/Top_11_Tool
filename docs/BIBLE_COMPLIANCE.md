@@ -1,8 +1,8 @@
-# v5.2.13 Bible Compliance Record — Build 30527
+# v5.2.14 Bible Compliance Record — Build 30527
 
 Contract: `TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.md` (document v1.0). This record classifies the shipped implementation against the creator checklist and does not treat unresolved private server/match-engine formulas as implementation failures.
 
-| Area | v5.2.13 implementation | Status |
+| Area | v5.2.14 implementation | Status |
 | --- | --- | --- |
 | Roles / player model | Exactly 12 current roles. DML/DMR removed from current selectors/scanner outputs and retained only as legacy metadata. Natural and Related roles stored separately. | PASS |
 | Playstyle / SA preservation | Full playstyle object state is retained; role-aware chooser; Ball Playing GK not offered. Current 19 SAs, no Shadow Striker, no hard two-SA storage cap, no invented universal SA eligibility matrix. | PASS |
@@ -25,7 +25,7 @@ Contract: `TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.md` (document v1.0). This record
 ## Automated evidence
 
 - `tests/core-tests.js`: PASS — 254 assertions.
-- `tests/scanner_regression.py`: PASS — discovered stable Flash pool contract (3.5/3.6/3.7/3.8), no invented 3.4, 20 playstyles × 4 levels, 19 special abilities, and the David Andrews two-ability fixture.
+- `tests/scanner_regression.py`: PASS — Gemini 3.8-only retry contract, Locked/Standard/Intermediate/Advanced/Master playstyle states, Ariel Bravo Locked + François Roelandt Intermediate fixtures, 19 special abilities, and the David Andrews two-ability fixture.
 - `tests/scanner_failover_tests.js`: PASS — transient/rate/daily/request classification and RetryInfo/backoff parsing.
 - `tests/navigation_queue_contract.py`: PASS — swipe delete, history/back, refresh persistence, drawer and scanner queue retry/persistence hooks.
 - `tests/static_checks.py`: PASS.

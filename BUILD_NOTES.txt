@@ -1,17 +1,9 @@
-Top Eleven Tool v5.2.13 — Build 30527
+Top Eleven Tool v5.2.14 — Build 30527
 
-TARGETED USABILITY / NAVIGATION
-- My Squad: deliberate left swipe reveals Delete; deletion still requires explicit confirmation. Existing Player Profile delete remains.
-- Pull/reload restores current page/context and shows “✓ Successfully refreshed”.
-- Browser/Android PWA history now follows actual page navigation. Back closes delete dialog/drawer before navigating pages.
-- More now opens a left navigation drawer generated from existing main pages. Bottom navigation is unchanged.
-
-SCANNER RELIABILITY
-- Runtime Gemini models.list discovery with an allow-list of confirmed stable full Flash models: 3.5, 3.6, 3.7 and 3.8. No invented 3.4 model.
-- Base preference: 3.7 -> 3.6 -> 3.5 -> 3.8; last-success preference + temporary per-model cooldown adapts it to observed availability.
-- Fast failover for transient/rate-limit/capacity conditions; no paid fallback.
-- Bounded automatic delayed retry for temporary whole-pool unavailability; provider retry delay is respected when supplied.
-- Queue continues other players instead of turning a single busy model into a batch failure.
-- Scanner statuses distinguish queue/scanning/fallback/automatic retry/review/saved/manual-retry/scan-failure states.
-- Queue metadata survives refresh in local storage; screenshot payloads are retained in IndexedDB. Interrupted in-flight requests are not duplicated automatically.
-- Accuracy/validation pipeline, playstyle tier, 0..N special abilities and Build 30527 logic remain intact.
+Targeted Scanner v3 correction from v5.2.13:
+- Gemini 3.8 Flash is now the ONLY scanner model. No 3.5/3.6/3.7 fallback and no paid fallback.
+- Retryable 3.8 busy/rate-limit/network/quota conditions automatically retry with backoff until success or user removal.
+- Playstyle state now supports Locked/Potential as a first-class level (Bible level 1).
+- Scanner prompt explicitly distinguishes Locked, Standard, Intermediate, Advanced and Master from the outer frame/lock bars.
+- Added real regression examples: Ariel Bravo = Winger/Locked; François Roelandt = False Nine/Intermediate.
+- Existing training, tactics, formation, storage and numerical scanner validation logic unchanged.

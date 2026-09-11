@@ -1,12 +1,12 @@
-# Top Eleven Tool v5.2.13 — Build 30527 Test Matrix
+# Top Eleven Tool v5.2.14 — Build 30527 Test Matrix
 
 Implementation contract: `TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.md`.
 
 ## Automated release checks
 
 - `node tests/core-tests.js` — deterministic Build-30527 data, migration, formation, pitch, tactics/drain, mentor, Individual Training, Team Training, specialist and scanner safeguards.
-- `python tests/scanner_regression.py` — Scanner v3 offline contract: runtime-discovered stable Flash pool (3.5/3.6/3.7/3.8), no invented 3.4, reference assets, no paid fallback, and David Andrews multi-special-ability fixture.
-- `node tests/scanner_failover_tests.js` — temporary overload/rate-limit/daily-quota/request classification, RetryInfo delay parsing and model-pool order.
+- `python tests/scanner_regression.py` — Scanner v3 offline contract: Gemini 3.8-only retry path, Locked/Potential playstyle state, reference assets, no paid fallback, and David Andrews multi-special-ability fixture.
+- `node tests/scanner_failover_tests.js` — temporary overload/rate-limit/daily-quota/request classification, RetryInfo delay parsing and Gemini 3.8-only model contract.
 - `python tests/navigation_queue_contract.py` — swipe-delete, browser/PWA history, refresh state, drawer and persistent scanner queue/retry contract.
 - `python tests/static_checks.py` — duplicate IDs, navigation, Team Plan/Training information architecture, DOM references, required UI controls, stale-model removal, scanner save gates, product naming and static asset references.
 - `python tests/package_integrity.py` — service-worker runtime precache coverage, manifest name/icons and existence/non-empty checks for every runtime asset.

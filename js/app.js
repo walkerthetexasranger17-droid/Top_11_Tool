@@ -4,7 +4,7 @@
   const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const state={page:'dashboard',squadFilter:'ALL',search:'',squadRole:'',squadAgeMin:'',squadAgeMax:'',squadOvrMin:'',squadOvrMax:'',squadPlaystyle:'',squadAvailability:'',scan:null,scanAbilities:[],scanRelatedRoles:[],scanDuplicateKey:'',scanPreservedRoles:[],scanQueue:[],scanQueueReviewIndex:-1,scanQueueScanning:false,scanQueueSeq:0,scanManualVerified:false,playerKey:'',profileAbilities:[],profileRelatedRoles:[],profilePreservedRoles:[],trainingKey:'',trainingTab:'individual',session:null,approach:'balanced',drainLimit:'Medium'};
   const UI_STATE_KEY='te:ui:state:v5213',SCAN_QUEUE_META_KEY='scanner:queue:v1',QUEUE_DB_NAME='te-scanner-queue-v1',QUEUE_STORE='images';
-  const MAX_AUTO_SCAN_ATTEMPTS=3,SCAN_RETRY_BACKOFF_MS=[15000,45000,120000];
+  const SCAN_RETRY_BACKOFF_MS=[10000,20000,45000,90000,120000];
   let drawerOpen=false,deleteTarget=null,pendingDrawerNavigation=null,scanRetryTimer=null,openSquadSwipeKey='',suppressSquadClickUntil=0;
 
   function toast(msg,type='ok'){const el=$('#toast');if(!el)return;el.textContent=msg;el.className='toast show'+(type==='err'?' err':'');clearTimeout(toast.t);toast.t=setTimeout(()=>el.className='toast',2800);}
@@ -107,7 +107,7 @@
   }
   function playstyleLevelOptions(current=0,hasPlaystyle=true){
     const n=Number(current)||0;
-    const rows=B.PLAYSTYLE_LEVELS.filter(x=>x.id>=2);
+    const rows=B.PLAYSTYLE_LEVELS.filter(x=>x.id>=1);
     return `<option value="">${hasPlaystyle?'Tier not captured':'No playstyle'}</option>`+rows.map(x=>`<option value="${x.id}" ${x.id===n?'selected':''}>${esc(x.name)}</option>`).join('');
   }
   function renderPlaystyleState(p){
@@ -246,9 +246,10 @@
   function nextReadyIndex(from=state.scanQueueReviewIndex){const ready=reviewableIndices();if(!ready.length)return-1;const after=ready.find(i=>i>from);return after??ready[0];}
   function automaticRetryDelay(item,err){
     const attempt=Math.max(1,Number(item.autoAttempts||1)),base=SCAN_RETRY_BACKOFF_MS[Math.min(attempt-1,SCAN_RETRY_BACKOFF_MS.length-1)]||120000,provider=Math.max(0,Number(err?.retryAfterMs||0));
-    // Small deterministic per-item spread avoids a queued batch hammering the same instant after a provider window reopens.
+    const quotaFloor=(err?.kind==='quota_daily'||err?.kind==='quota_pool')?15*60*1000:0;
+    // Small deterministic per-item spread avoids a queued batch hammering Gemini 3.8 at the same instant.
     const spread=(Number(item.id||0)%7)*350;
-    return Math.max(base,provider)+spread;
+    return Math.max(base,provider,quotaFloor)+spread;
   }
   function scheduleQueueRetryTimer(){
     clearTimeout(scanRetryTimer);scanRetryTimer=null;
@@ -267,17 +268,15 @@
         $('#scanPreview').src=item.dataUrl;$('#scanWindow').classList.add('has-image','scanning');
         try{
           const scan=await SC.scan(item.dataUrl,p=>{
-            if(p.event==='model-busy'||p.event==='model-fallback'){item.status='fallback';item.statusText=p.label||'Scanner busy · trying another available scanner…';}
+            if(p.event==='model-busy'){item.status='waiting';item.statusText='GEMINI 3.8 BUSY · automatic retry pending';}
             else{item.status='scanning';item.statusText=p.label||'SCANNING';}
             progress({progress:p.progress||0,label:`Player ${idx+1}/${state.scanQueue.length} · ${p.label||'Scanning'}`});renderScanQueue();schedulePersistScanQueue();
           });
           item.scan=scan;item.status='ready';item.statusText=`READY TO REVIEW · ${String(scan.raw?.model||scan.model||'Gemini').replace(/^gemini-/,'')}`;item.fileName=scan.name||item.fileName;item.nextRetryAt=0;item.error='';renderScanQueue();schedulePersistScanQueue();
         }catch(err){
-          const temporary=err?.code==='SCANNER_POOL_TEMPORARY'||err?.retryable&&['temporary_pool','temporary','rate_limit','network'].includes(err?.kind);
-          if(temporary&&Number(item.autoAttempts||0)<MAX_AUTO_SCAN_ATTEMPTS){const delay=automaticRetryDelay(item,err);item.status='waiting';item.nextRetryAt=Date.now()+delay;item.error='';item.statusText=`RETRYING AUTOMATICALLY · attempt ${item.autoAttempts}/${MAX_AUTO_SCAN_ATTEMPTS}`;renderScanQueue();schedulePersistScanQueue();scheduleQueueRetryTimer();}
-          else if(temporary){item.status='error';item.nextRetryAt=0;item.error=err.message||'Scanner pool remained temporarily unavailable after automatic retries.';item.statusText='NEEDS RETRY · automatic retry limit reached';renderScanQueue();schedulePersistScanQueue();}
-          else if(err?.code==='SCANNER_POOL_QUOTA'||err?.kind==='quota_pool'||err?.kind==='quota_daily'){item.status='error';item.nextRetryAt=0;item.error=err.message||'Free scanner quota is unavailable.';item.statusText='NEEDS RETRY · free-tier quota unavailable';renderScanQueue();schedulePersistScanQueue();}
-          else{item.status='failed';item.nextRetryAt=0;item.error=err?.message||'Scan failed';item.statusText='SCAN FAILED · review screenshot or retry';renderScanQueue();schedulePersistScanQueue();}
+          const automatic=err?.code==='SCANNER_POOL_TEMPORARY'||err?.code==='SCANNER_POOL_QUOTA'||err?.retryable&&['temporary_pool','temporary','rate_limit','network','quota_pool','quota_daily'].includes(err?.kind);
+          if(automatic){const delay=automaticRetryDelay(item,err);item.status='waiting';item.nextRetryAt=Date.now()+delay;item.error='';item.statusText=`RETRYING GEMINI 3.8 AUTOMATICALLY · attempt ${item.autoAttempts}`;renderScanQueue();schedulePersistScanQueue();scheduleQueueRetryTimer();}
+          else{item.status='failed';item.nextRetryAt=0;item.error=err?.message||'Scan failed';item.statusText='SCAN FAILED · review screenshot or API key';renderScanQueue();schedulePersistScanQueue();}
         }finally{$('#scanWindow').classList.remove('scanning');}
         // Keep processing other queued players even if this item is waiting/error/failed.
       }
@@ -286,7 +285,7 @@
       if(state.scanQueueReviewIndex<0){const first=reviewableIndices()[0];if(first!=null)loadQueueReview(first);}
       const ready=reviewableIndices().length,waiting=state.scanQueue.filter(x=>x.status==='waiting').length,pending=state.scanQueue.filter(x=>x.status==='queued'||x.status==='scanning'||x.status==='fallback').length;
       if(ready)progress({progress:1,label:`Queue ready · ${ready} player${ready===1?'':'s'} to review${waiting?` · ${waiting} retrying automatically`:''}`});
-      else if(waiting)progress({progress:1,label:`Scanner pool busy · ${waiting} player${waiting===1?'':'s'} retrying automatically shortly`});
+      else if(waiting)progress({progress:1,label:`Gemini 3.8 busy · ${waiting} player${waiting===1?'':'s'} retrying automatically`});
       else if(!pending)progress({progress:1,label:'Queue finished'});
     }
   }
@@ -305,7 +304,7 @@
   function validateScanForm(x){if(!state.scan)return'No player loaded';if(!x.name||!x.position)return'Check the name and primary role before saving';if(!Number.isFinite(x.age)||x.age<15||x.age>60)return'Check the player age before saving';if(!Number.isFinite(x.ovr)||x.ovr<1||x.ovr>520)return'Check the OVR before saving';if(!state.scan.manualEntry&&state.scan.layout==='gk'&&x.roles.some(r=>r!=='GK'))return'GK scans can only be saved as GK';if(!state.scan.manualEntry&&state.scan.layout!=='gk'&&x.roles.includes('GK'))return'Outfield scans cannot be saved as GK';const missing=scanRequiredSkills().filter(s=>!Number.isFinite(Number(state.scan.skills?.[s])));if(missing.length)return`Enter all ${scanRequiredSkills().length} skill values before saving (${missing.length} missing)`;refreshScanVerification();return'';}
   async function saveScanToKey(key=null){
     const x=scanFormData(),err=validateScanForm(x);if(err){toast(err,'err');return false;}const unresolved=scanUnresolved(state.scan?.checks||{});if(unresolved.length&&!state.scan.manualEntry&&!state.scanManualVerified){const detail=unresolved.map(([name,c])=>`${name}${c.error==null?'':` (${Number(c.error).toFixed(1)} out)`}`).join(', ');const accepted=window.confirm(`Scanner verification still reports: ${detail}.\n\nIf you checked the screenshot and the visible values are correct, press OK to save them as manually verified.`);if(!accepted)return false;state.scanManualVerified=true;if($('#scanManualVerified'))$('#scanManualVerified').checked=true;refreshScanVerification();}
-    const existing=key?await P.get(key):null;let roles=x.roles;if(existing)roles=P.mergeVisibleNaturalRoles(P.normaliseRoles(existing),x.roles,3);const relatedRoles=state.scanRelatedRoles.length?[...x.relatedRoles]:(existing?.relatedRoles||x.relatedRoles);const selectedPlaystyle=$('#scanPlaystyle').value,selectedLevel=playstyleTierValue();let playstyle=existing?P.mergePlaystyleState(existing.playstyle,selectedPlaystyle||P.playstyleName(existing)):P.mergePlaystyleState(null,selectedPlaystyle);if(selectedPlaystyle&&selectedLevel>=2)playstyle={...playstyle,level:selectedLevel};
+    const existing=key?await P.get(key):null;let roles=x.roles;if(existing)roles=P.mergeVisibleNaturalRoles(P.normaliseRoles(existing),x.roles,3);const relatedRoles=state.scanRelatedRoles.length?[...x.relatedRoles]:(existing?.relatedRoles||x.relatedRoles);const selectedPlaystyle=$('#scanPlaystyle').value,selectedLevel=playstyleTierValue();let playstyle=existing?P.mergePlaystyleState(existing.playstyle,selectedPlaystyle||P.playstyleName(existing)):P.mergePlaystyleState(null,selectedPlaystyle);if(selectedPlaystyle&&selectedLevel>=1)playstyle={...playstyle,level:selectedLevel};
     await P.save({...existing,...x,position:roles[0]||x.position,roles,relatedRoles,skills:state.scan.skills,playstyle,specialAbilities:[...state.scanAbilities],scanner:{version:3,provider:state.scan.provider||'manual-entry',model:state.scan.raw?.model||null,confidence:state.scan.confidence,checks:state.scan.checks,validation:{...state.scan.validation,manualVerified:!!state.scanManualVerified||!!state.scan.manualEntry,manualEntry:!!state.scan.manualEntry}}},key);return true;
   }
   async function completeQueueSave(name){const item=currentQueueItem();if(item){item.status='saved';item.statusText='SAVED';item.reviewState=null;item.nextRetryAt=0;if(item.imageStored){await queueImageDelete(item.id);item.imageStored=false;item.dataUrl=null;}}await renderDashboard();renderScanQueue();schedulePersistScanQueue();const n=nextReadyIndex(state.scanQueueReviewIndex);if(n>=0&&state.scanQueue[n]?.status==='ready'){loadQueueReview(n);toast(`${name} saved · next player ready`);}else{const queued=state.scanQueue.filter(x=>['queued','scanning','fallback','waiting'].includes(x.status)).length,failed=state.scanQueue.filter(x=>x.status==='error'||x.status==='failed').length;clearScannerReview();$('#scanProgressBar').style.width='100%';$('#scanPercent').textContent='100%';if(queued){$('#scanProgressText').textContent=`${name} saved · ${queued} scan${queued===1?'':'s'} still queued/retrying`;toast(`${name} saved · scanner queue continues`);}else if(failed){$('#scanProgressText').textContent=`${name} saved · ${failed} player${failed===1?'':'s'} need retry`;toast(`${name} saved · ${failed} need retry`,'err');}else{$('#scanProgressText').textContent='Review queue complete';toast(`${name} saved · queue complete`);}}}
@@ -321,10 +320,10 @@
 
 
   // ---------- Gemini Scanner settings ----------
-  async function renderGeminiScannerSettings(){const el=$('#geminiScannerApiKey');if(!el)return;const key=await SC.getApiKey();el.value=key;const status=$('#geminiScannerStatus');if(status)status.textContent=key?`API key saved on this device · ${SC.MODELS?.join(' → ')||SC.MODEL}. Test the connection before scanning.`:'Not configured yet. Create a free Gemini API key in Google AI Studio; do not enable paid billing for this scanner project.';}
-  $('#saveGeminiScannerKey')?.addEventListener('click',async()=>{const key=await SC.setApiKey($('#geminiScannerApiKey').value);$('#geminiScannerApiKey').value=key;$('#geminiScannerStatus').textContent=key?`API key saved on this device · ${SC.MODELS?.join(' → ')||SC.MODEL}.`:'API key cleared.';toast(key?'Gemini scanner key saved':'Gemini scanner key cleared');});
+  async function renderGeminiScannerSettings(){const el=$('#geminiScannerApiKey');if(!el)return;const key=await SC.getApiKey();el.value=key;const status=$('#geminiScannerStatus');if(status)status.textContent=key?`API key saved on this device · Gemini 3.8 Flash only. Test the connection before scanning.`:'Not configured yet. Create a free Gemini API key in Google AI Studio; do not enable paid billing for this scanner project.';}
+  $('#saveGeminiScannerKey')?.addEventListener('click',async()=>{const key=await SC.setApiKey($('#geminiScannerApiKey').value);$('#geminiScannerApiKey').value=key;$('#geminiScannerStatus').textContent=key?`API key saved on this device · Gemini 3.8 Flash only.`:'API key cleared.';toast(key?'Gemini scanner key saved':'Gemini scanner key cleared');});
   $('#clearGeminiScannerKey')?.addEventListener('click',async()=>{await SC.clearApiKey();$('#geminiScannerApiKey').value='';$('#geminiScannerStatus').textContent='API key cleared. Scanner is disabled until a free Gemini key is added.';toast('Gemini scanner key cleared');});
-  $('#testGeminiScannerKey')?.addEventListener('click',async()=>{const input=$('#geminiScannerApiKey').value.trim();if(input)await SC.setApiKey(input);const status=$('#geminiScannerStatus');status.textContent='Testing Gemini free-tier connection…';try{const h=await SC.health();const pool=(h.models||[]).map(x=>String(x).replace(/^gemini-/,'')).join(' · ');status.textContent=`Connected · ${h.provider} · compatible free pool ${pool||'none'} · adaptive failover enabled · no paid fallback`;toast('Gemini scanner connected');}catch(err){status.textContent=err.message||'Connection failed';toast(err.message||'Connection failed','err');}});
+  $('#testGeminiScannerKey')?.addEventListener('click',async()=>{const input=$('#geminiScannerApiKey').value.trim();if(input)await SC.setApiKey(input);const status=$('#geminiScannerStatus');status.textContent='Testing Gemini free-tier connection…';try{const h=await SC.health();status.textContent=`Connected · ${h.provider} · Gemini 3.8 Flash only · automatic repeat-until-success retry enabled · no paid fallback`;toast('Gemini scanner connected');}catch(err){status.textContent=err.message||'Connection failed';toast(err.message||'Connection failed','err');}});
 
   // ---------- Drill profile ----------
   async function renderMyDrills(){const {normal,master}=await DP.ensure();$('#normalDrillConfig').innerHTML=D.NORMAL_DRILLS.map(d=>{const s=normal.drills[d.drillId]||{unlocked:false,level:0};return `<div class="drill-config-row" data-drill-id="${esc(d.drillId)}"><div class="drill-config-main"><img src="${drillAsset(d.name,d.cat)}"><div><b>${esc(d.name)}</b><span>${esc(d.diff)} · ${fmt(d.conditionDrop,2)}% condition · +${esc(d.xpPerPlayer)} XP</span></div></div><label class="unlock-control"><input type="checkbox" data-normal-unlock="${esc(d.drillId)}" ${s.unlocked?'checked':''}><i></i></label><select class="level-select" data-normal-level="${esc(d.drillId)}" ${s.unlocked?'':'disabled'}><option value="1" ${Number(s.level)===1?'selected':''}>Semi-pro +10%</option><option value="2" ${Number(s.level)===2?'selected':''}>Pro +20%</option><option value="3" ${Number(s.level)===3?'selected':''}>World-class +30%</option></select></div>`;}).join('');$('#masterStockConfig').innerHTML=D.MASTER_CAMPUS_DRILLS.map(d=>`<div class="master-card"><img src="${drillAsset(d.name,d.cat)}"><div class="master-card-copy"><span class="master-badge">MASTER +${esc(d.additionalTrainingEffectPercent)}%</span><b>${esc(d.name)}</b><small>${esc(d.diff)} · ${fmt(d.conditionDrop,2)}% condition · +${esc(d.xpPerPlayer)} XP</small><small>${esc(d.skills.join(' · '))}</small></div><label><span>CARDS OWNED</span><input type="number" min="0" step="1" inputmode="numeric" data-master-stock="${esc(d.drillId)}" value="${Math.max(0,Number(master.stock[d.drillId]||0))}"></label></div>`).join('');}
