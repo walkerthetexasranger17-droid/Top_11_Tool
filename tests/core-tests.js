@@ -69,18 +69,23 @@ function inside(role,x,y){const r=B.ROLE_RECTS[role];return x>=r.minX&&x<r.maxX&
   const abilityHeavy=P.cleanPlayer({name:'Abilities',position:'ST',roles:['ST'],skills:skills(),specialAbilities:D.SPECIAL_ABILITIES.slice(0,5)});ok(abilityHeavy.specialAbilities.length===5,'special ability storage is not capped at two');
 
   // ---------------------------------------------------------------------------
-  // Scanner v3 Gemini free-tier boundary: core player data only; playstyle/abilities manual.
-  ok(SC.VERSION===3,'Scanner v3 is the production scanner');
+  // Scanner v4 Gemini 3.1 Flash Live boundary: core + visual fields.
+  // ---------------------------------------------------------------------------
+  ok(SC.VERSION===4,'Scanner v4 is the production scanner');
   const scannerSource=fs.readFileSync(path.join(ROOT,'js','scanner-engine.js'),'utf8');
   ok(/Gemini Scanner is not configured/.test(scannerSource),'scanner requires a configured Gemini API key');
-  ok(/gemini-3\.6-flash/.test(scannerSource),'scanner uses Gemini 3.6 Flash');
-  ok(/DO NOT analyse, identify, locate or return playstyles/.test(scannerSource),'scanner does not classify playstyles');
-  ok(/DO NOT analyse, identify, locate or return special abilities/.test(scannerSource),'scanner does not classify special abilities');
-  ok(SC.REQUEST_TIMEOUT_MS===20000,'scanner request timeout is 20 seconds');
-  ok(SC.RETRY_DELAY_MS===2000,'scanner retry delay is fixed at 2 seconds');
-  const simpleScan=SC._normaliseResult({name:'Test',age:21,ovr:100,roles:['MC'],layout:'outfield',skills:{}},'gemini-3.6-flash');
-  ok(simpleScan.playstyle===null&&simpleScan.specialAbilities.length===0,'scanner leaves manual visual fields empty');
-  ok(!/scanner-templates|reconcileReadToTarget|classifyGlyph|function readNumber/.test(scannerSource),'legacy local digit-template/repair engine is absent from production scanner');
+  ok(/gemini-3\.1-flash-live-preview/.test(scannerSource),'scanner uses Gemini 3.1 Flash Live');
+  ok(/thinkingLevel:'HIGH'/.test(scannerSource),'scanner uses HIGH thinking');
+  ok(/playstyles-index-final\.png/.test(scannerSource)&&/playstyle-levels-index-final\.png/.test(scannerSource),'scanner uses playstyle identity and level indexes');
+  ok(/special-abilities-standard-index-final\.png/.test(scannerSource)&&/special-abilities-boosted-index-final\.png/.test(scannerSource),'scanner uses exact-geometry standard and boosted ability indexes');
+  ok(/submit_playstyle_identity/.test(scannerSource)&&/submit_playstyle_level_segments/.test(scannerSource),'playstyle identity and level are separate Live passes');
+  ok(/submit_ability_slot_scan/.test(scannerSource)&&/Ability slot/.test(scannerSource),'Special Abilities are classified per occupied slot');
+  ok(SC.REQUEST_TIMEOUT_MS===90000,'scanner Live task timeout is 90 seconds');
+  ok(SC._canonicalPlaystyle('Box To Box')==='Box-to-Box','scanner maps visual Box To Box to app canonical playstyle');
+  ok(SC._playstyleFamily('Wing Back')==='defending','Wing Back maps to defending reference family');
+  for(const name of ['David Andrews','François Roelandt','Ariel Bravo','Richard Kilroy'])ok(!scannerSource.includes(name),'production scanner contains no benchmark player answers: '+name);
+  ok(!/models\/[^`]*:generateContent/.test(scannerSource),'production scanner does not use generateContent transport');
+  ok(!/scanner-templates|reconcileReadToTarget|classifyGlyph|function readNumber/.test(scannerSource),'legacy local digit-template/repair engine is absent');
   ok(!fs.existsSync(path.join(ROOT,'js','scanner-templates.json')),'legacy scanner template file is not packaged');
 
   // ---------------------------------------------------------------------------

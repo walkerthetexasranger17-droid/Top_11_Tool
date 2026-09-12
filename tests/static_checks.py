@@ -43,30 +43,36 @@ for needle,label in [
 ]:
     if needle not in hay: errs.append(f'missing integrity hook: {label}')
 
-# Scanner v3: direct Gemini free-tier core-data-only path; playstyle/abilities are manual.
+# Scanner v4: Gemini 3.1 Flash Live with visual indexes and independent passes.
 for needle,label,src in [
-    ("const VERSION=3", "Scanner v3 version marker", scanner),
-    ("gemini-3.6-flash", "Gemini 3.6 Flash model", scanner),
-    ("REQUEST_TIMEOUT_MS=20000", "20-second Gemini request timeout", scanner),
-    ("RETRY_DELAY_MS=2000", "fixed two-second automatic retry delay", scanner),
-    ("DO NOT analyse, identify, locate or return playstyles", "playstyle scanning removed", scanner),
-    ("DO NOT analyse, identify, locate or return special abilities", "special-ability scanning removed", scanner),
-    ("generativelanguage.googleapis.com", "direct Gemini Developer API", scanner),
+    ("const VERSION=4", "Scanner v4 version marker", scanner),
+    ("gemini-3.1-flash-live-preview", "Gemini 3.1 Flash Live model", scanner),
+    ("thinkingLevel:'HIGH'", "HIGH thinking configuration", scanner),
+    ("BidiGenerateContent", "Gemini Live WebSocket transport", scanner),
+    ("submit_playstyle_identity", "independent playstyle identity pass", scanner),
+    ("submit_playstyle_level_segments", "independent playstyle level pass", scanner),
+    ("submit_ability_slot_scan", "per-slot Special Ability pass", scanner),
+    ("playstyles-index-final.png", "playstyle identity reference", scanner),
+    ("playstyle-levels-index-final.png", "playstyle level reference", scanner),
+    ("special-abilities-standard-index-final.png", "standard ability reference", scanner),
+    ("special-abilities-boosted-index-final.png", "boosted ability reference", scanner),
     ("Gemini Scanner is not configured", "Gemini API-key requirement", scanner),
     ("scanQueue", "multi-player scanner review queue", js),
-    ("scanPlaystyleLevel", "manual playstyle-tier editor", html),
-    ("scanner:{version:3", "Scanner v3 provenance on save", js),
+    ("scanPlaystyleLevel", "editable playstyle-tier editor", html),
+    ("scanner:{version:SC.VERSION", "Scanner version provenance on save", js),
     ("save.disabled=false", "scanner mismatch does not dead-lock Save", js),
 ]:
     if needle not in src: errs.append(f'missing scanner hook: {label}')
 for forbidden in ['scanner-templates.json','reconcileReadToTarget','classifyGlyph','readNumber(ctx','cloudScannerEndpoint','Cloud Run Service URL',
-                  'gemini-3.8-flash','hogDescriptor','levelDescriptor','localVisualMatch','specialAbilityIcons','playstyleBadge']:
-    if forbidden in scanner+js+html: errs.append(f'legacy Scanner v2/cloud/infinite-retry production logic survives: {forbidden}')
+                  'gemini-3.8-flash','gemini-3.6-flash','hogDescriptor','levelDescriptor','localVisualMatch',':generateContent']:
+    if forbidden in scanner+js+html: errs.append(f'legacy/superseded scanner production logic survives: {forbidden}')
 if (ROOT/'js/scanner-templates.json').exists(): errs.append('legacy scanner-templates.json still packaged')
 if (ROOT/'cloud-scanner').exists(): errs.append('old Cloud Run scanner folder still packaged')
-if 'gemini-3.4-flash' in scanner: errs.append('unsupported Gemini 3.4 Flash was invented')
-if (ROOT/'assets/scanner/reference-manifest.json').exists() or (ROOT/'assets/scanner/references').exists(): errs.append('obsolete scanner visual reference assets still packaged')
-if 'hogDescriptor' in scanner or 'levelDescriptor' in scanner or 'localVisualMatch' in scanner: errs.append('obsolete local icon matching survives')
+for rel in ['playstyles-index-final.png','playstyle-levels-index-final.png','special-abilities-standard-index-final.png','special-abilities-boosted-index-final.png']:
+    p=ROOT/'assets/scanner'/rel
+    if not p.is_file() or p.stat().st_size==0: errs.append(f'missing scanner reference: {rel}')
+for player in ['David Andrews','François Roelandt','Ariel Bravo','Richard Kilroy','Gosling Lataille','Remus Iacob','Paul Brace','Victor Aslan']:
+    if player in scanner: errs.append(f'benchmark player leaked into production scanner: {player}')
 # Current roles / abilities / playstyles are not silently truncated.
 data=(ROOT/'js/data.js').read_text()
 if 'slice(0,2)' in players or 'specialAbilities.slice(0,2)' in js: errs.append('hard two-special-ability cap survives')
@@ -79,7 +85,7 @@ manifest=json.loads((ROOT/'manifest.json').read_text())
 if manifest.get('name')!='Top Eleven Tool' or manifest.get('short_name')!='Top Eleven Tool': errs.append('manifest app name is not Top Eleven Tool')
 if not soup.title or soup.title.get_text(strip=True)!='Top Eleven Tool': errs.append('page title is not Top Eleven Tool')
 if 'TOP ELEVEN <span>TOOL</span>' not in html: errs.append('in-app header branding is not Top Eleven Tool')
-if 'v5.2.19' not in html: errs.append('visible build label is not v5.2.19')
+if 'v5.2.20' not in html: errs.append('visible build label is not v5.2.20')
 bible_data=(ROOT/'js/bible-data.js').read_text(encoding='utf-8')
 if "tackling:[['balanced','Balanced',0,0,.50],['stay','Stay On Feet',1,7,.30],['aggressive','Aggressive',2,5,.80]]" not in bible_data:
     errs.append('tackling IDs do not match direct build-30527 provenance correction')

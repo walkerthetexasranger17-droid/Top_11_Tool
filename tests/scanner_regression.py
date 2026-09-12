@@ -2,13 +2,25 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 scanner=(ROOT/'js/scanner-engine.js').read_text()
 errs=[]
-for required in ['gemini-3.6-flash','core player data','DO NOT analyse, identify, locate or return playstyles','DO NOT analyse, identify, locate or return special abilities','while(true)','RETRY_DELAY_MS=2000']:
-    if required not in scanner: errs.append('missing scanner contract: '+required)
-for forbidden in ['gemini-3.8-flash','hogDescriptor','levelDescriptor','localVisualMatch','specialAbilityIcons','playstyleBadge','scanner-templates']:
-    if forbidden in scanner: errs.append('forbidden old scanner component present: '+forbidden)
-if (ROOT/'assets/scanner/reference-manifest.json').exists() or (ROOT/'assets/scanner/references').exists(): errs.append('obsolete scanner visual reference assets still packaged')
+required=[
+ 'const VERSION=4', 'gemini-3.1-flash-live-preview', "thinkingLevel:'HIGH'",
+ 'BidiGenerateContent', 'submit_core_scan', 'submit_playstyle_identity',
+ 'submit_playstyle_level_segments', 'submit_ability_slot_scan',
+ 'playstyles-index-final.png', 'playstyle-levels-index-final.png',
+ 'special-abilities-standard-index-final.png', 'special-abilities-boosted-index-final.png',
+ 'Free Kick Specialist / Defensive Wall', 'Corner Specialist / Dribbler'
+]
+for x in required:
+    if x not in scanner: errs.append('missing scanner contract: '+x)
+for forbidden in ['gemini-3.6-flash', 'gemini-3.8-flash', ':generateContent', 'scanner-templates']:
+    if forbidden in scanner: errs.append('forbidden superseded scanner component: '+forbidden)
+for rel in ['playstyles-index-final.png','playstyle-levels-index-final.png','special-abilities-standard-index-final.png','special-abilities-boosted-index-final.png']:
+    p=ROOT/'assets/scanner'/rel
+    if not p.is_file() or p.stat().st_size==0: errs.append('missing/empty scanner reference: '+rel)
+for player in ['David Andrews','François Roelandt','Ariel Bravo','Richard Kilroy','Gosling Lataille','Remus Iacob','Paul Brace','Victor Aslan']:
+    if player in scanner: errs.append('benchmark player leaked into production scanner: '+player)
 if errs:
-    print('FAIL Scanner v3 simplified contract')
+    print('FAIL Scanner v4 Live contract')
     [print(' -',e) for e in errs]
     raise SystemExit(1)
-print('PASS Scanner v3 simplified contract: Gemini 3.6 core data only + manual playstyle/abilities + fixed 2-second automatic retry')
+print('PASS Scanner v4 Live contract: HIGH-thinking Live pipeline + four visual indexes + no benchmark answers')

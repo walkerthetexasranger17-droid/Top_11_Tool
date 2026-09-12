@@ -1,27 +1,20 @@
-# Scanner v3 — Gemini Free API — v5.2.19
+# Scanner v4 — Gemini 3.1 Flash Live — v5.2.20
 
-## Scope
-The scanner reads only core player data from one Top Eleven player screenshot:
+This filename is retained for compatibility with earlier documentation links. The production implementation is Scanner v4.
 
-- player name
-- age
-- OVR
-- natural positions/roles
-- visible group totals
-- all 15 visible skill values
+## Transport and model
+- Model: `gemini-3.1-flash-live-preview`
+- Gemini Live WebSocket (`BidiGenerateContent`)
+- Thinking level: `HIGH`
+- API key stored locally in the browser as `te:scanner:geminiApiKey`
 
-Playstyle, playstyle level and Special Abilities are deliberately **not scanned**. They remain manual fields in Review.
+## Scan pipeline
+1. Build a coordinate-labelled core board from the standard 1536×695 Skills screenshot.
+2. Run a dedicated core-data Live pass.
+3. Run an independent playstyle-identity pass against the official playstyle reference.
+4. Run an independent playstyle-level pass against the user-approved level reference.
+5. Detect occupied Special Ability slots locally.
+6. Run one independent Live classification pass per occupied ability slot against exact-geometry standard and boosted references.
+7. Prefill the existing Review form; the user can correct any result before saving.
 
-## Recognition path
-The browser sends the original screenshot directly to `gemini-3.6-flash` through the Gemini Developer API. There is no Tesseract, digit-template OCR, Cloud Vision, Cloud Run, Vertex AI, playstyle matching or Special Ability matching in the production scanner.
-
-## Retry behaviour
-Each request has a 20-second timeout. Temporary API errors, rate limits, network errors, timeouts, malformed responses, missing required core fields, missing skill values, or arithmetic-inconsistent results are rejected and retried automatically. Every retry uses the same short 2-second delay. Temporary server load does not make later retries progressively slower. The retry loop continues until a valid result is returned or the user cancels/removes the queued scan.
-
-Authentication errors, invalid image input, unavailable model errors and exhausted daily free-tier quota stop immediately because retrying cannot repair them.
-
-## Validation
-A scan is accepted only when it contains a valid name, age, OVR, at least one natural role, every required skill value, required group totals, and the returned numbers satisfy the app's existing whole-number arithmetic checks. The scanner never alters numbers to make those checks pass.
-
-## Manual visual fields
-Review continues to expose the normal playstyle, level and Special Ability controls. The user selects those manually before saving.
+Benchmark answers are not shipped in the production scanner and are never sent to Gemini.

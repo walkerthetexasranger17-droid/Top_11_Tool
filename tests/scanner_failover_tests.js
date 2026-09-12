@@ -1,11 +1,18 @@
 const fs=require('fs'),path=require('path'),vm=require('vm');
-const ROOT=path.resolve(__dirname,'..');global.window=global;global.localStorage={getItem(){return null},setItem(){},removeItem(){}};global.fetch=async()=>({ok:true,json:async()=>({models:[{name:'models/gemini-3.6-flash',supportedGenerationMethods:['generateContent']}]})});
+const ROOT=path.resolve(__dirname,'..');global.window=global;global.localStorage={_m:new Map(),getItem(k){return this._m.get(k)||null},setItem(k,v){this._m.set(k,String(v))},removeItem(k){this._m.delete(k)}};
 for(const f of ['optimizer-data.js','bible-data.js','data.js','scanner-engine.js'])vm.runInThisContext(fs.readFileSync(path.join(ROOT,'js',f),'utf8'),{filename:f});
-const SC=global.TE5.Scanner;let n=0;function ok(v,m){if(!v)throw new Error(m);n++;}function response(status,headers={}){return{status,headers:{get:k=>headers[k]||null}};}
-let e=SC._classifyApiError(response(503),{error:{message:'Model overloaded. Please try again later.'}},'gemini-3.6-flash');ok(e.retryable&&e.kind==='temporary','503 is retryable');
-e=SC._classifyApiError(response(429),{error:{message:'Quota exceeded. Please retry in 17s.',details:[{'@type':'type.googleapis.com/google.rpc.RetryInfo',retryDelay:'17s'},{'@type':'type.googleapis.com/google.rpc.QuotaFailure',violations:[{quotaId:'GenerateRequestsPerMinutePerProjectPerModel-FreeTier'}]}]}},'gemini-3.6-flash');ok(e.retryable&&e.kind==='rate_limit'&&e.retryAfterMs>=17000,'per-minute quota retries');
-e=SC._classifyApiError(response(429),{error:{message:'Daily quota exhausted',details:[{'@type':'type.googleapis.com/google.rpc.QuotaFailure',violations:[{quotaId:'GenerateRequestsPerDayPerProjectPerModel-FreeTier'}]}]}},'gemini-3.6-flash');ok(!e.retryable&&e.kind==='quota_daily','daily quota stops');
-ok(JSON.stringify(SC.DOCUMENTED_MODELS)===JSON.stringify(['gemini-3.6-flash']),'Gemini 3.6 is the only scanner model');
-ok(SC._buildPrompt().includes('DO NOT analyse, identify, locate or return playstyles'),'playstyle recognition removed');
-ok(SC._buildPrompt().includes('DO NOT analyse, identify, locate or return special abilities'),'ability recognition removed');
-console.log(`PASS scanner simplified retry contract: ${n} assertions`);
+const SC=global.TE5.Scanner;let n=0;function ok(v,m){if(!v)throw new Error(m);n++;}
+const src=fs.readFileSync(path.join(ROOT,'js/scanner-engine.js'),'utf8');
+ok(SC.VERSION===4,'Scanner v4');
+ok(SC.MODEL==='gemini-3.1-flash-live-preview','Gemini 3.1 Flash Live only');
+ok(SC.REQUEST_TIMEOUT_MS===90000,'90s Live task timeout');
+ok(/thinkingLevel:'HIGH'/.test(src),'HIGH thinking configured');
+ok(/BidiGenerateContent/.test(src),'Live WebSocket transport configured');
+ok(/clientContent/.test(src)&&/turnComplete:true/.test(src),'static images sent as a complete Live client turn');
+ok(/submit_core_scan/.test(src),'core function pass');
+ok(/submit_playstyle_identity/.test(src),'playstyle identity function pass');
+ok(/submit_playstyle_level_segments/.test(src),'playstyle level function pass');
+ok(/submit_ability_slot_scan/.test(src),'per-slot ability function pass');
+ok(SC._canonicalPlaystyle('No Nonsense DC')==='No-Nonsense DC','canonical No-Nonsense mapping');
+ok(SC._playstyleFamily('Box To Box')==='midfield','Box To Box family');
+console.log(`PASS scanner v4 Live contract: ${n} assertions`);

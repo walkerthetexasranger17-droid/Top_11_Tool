@@ -1,12 +1,12 @@
-# Top Eleven Tool v5.2.19 — Build 30527 Test Matrix
+# Top Eleven Tool v5.2.20 — Build 30527 Test Matrix
 
 Implementation contract: `TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.md`.
 
 ## Automated release checks
 
 - `node tests/core-tests.js` — deterministic Build-30527 data, migration, formation, pitch, tactics/drain, mentor, Individual Training, Team Training, specialist and scanner safeguards.
-- `python tests/scanner_regression.py` — Scanner v3 offline contract: Gemini 3.8-only retry path, Locked/Potential playstyle state, reference assets, no paid fallback, and David Andrews multi-special-ability fixture.
-- `node tests/scanner_failover_tests.js` — temporary overload/rate-limit/daily-quota/request classification, RetryInfo delay parsing and Gemini 3.8-only model contract.
+- `python tests/scanner_regression.py` — Scanner v4 offline contract: Gemini 3.1 Flash Live, HIGH thinking, four production visual indexes, separate identity/level passes, and per-slot Special Ability classification.
+- `node tests/scanner_failover_tests.js` — Scanner v4 Live transport, HIGH-thinking setup, function-call stages, and canonical playstyle mapping contract.
 - `python tests/navigation_queue_contract.py` — swipe-delete, browser/PWA history, refresh state, drawer and persistent scanner queue/retry contract.
 - `python tests/static_checks.py` — duplicate IDs, navigation, Team Plan/Training information architecture, DOM references, required UI controls, stale-model removal, scanner save gates, product naming and static asset references.
 - `python tests/package_integrity.py` — service-worker runtime precache coverage, manifest name/icons and existence/non-empty checks for every runtime asset.
@@ -32,13 +32,13 @@ Implementation contract: `TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.md`.
 - Normal drill catalogue count is 29; Master/Campus count is 4; intensity XP/condition and drill-level effect data match Build 30527.
 - Individual Training uses natural-role white-skill union, mean(top 3) target, grey utility zero, multi-white accumulated utility, Master stock limits and six-slot beam width 250.
 - Team Training uses the actual players included in the selected group, each player's own natural-role white union/need, diminishing credits and six-slot beam width 250.
-- Scanner v3 aggregate/OVR checks flag unresolved differences; Gemini-returned values are never rewritten to fabricate agreement.
+- Scanner v4 aggregate/OVR checks flag unresolved differences; Gemini-returned values are never rewritten to fabricate agreement.
 - v5.2.4 user data migration is idempotent and preserves players, attributes, images/scanner metadata, drill levels/unlocks, Master stock, natural/related role data that remains current, full playstyle state and all abilities.
 
 ## Release result
 
 - Deterministic/core suite: **PASS — 254 assertions**.
-- Scanner v3 offline contract: **PASS**; optional live Gemini acceptance is covered by `tests/gemini_scanner_live.py` and requires `GEMINI_API_KEY`.
+- Scanner v4 offline contract: **PASS**; optional live Gemini acceptance is covered by `tests/gemini_scanner_live.py` and requires `GEMINI_API_KEY`.
 - Static/integrity checks: **PASS — 145 IDs, 9 pages, 135 direct DOM refs, 29 static paths**.
 - Service-worker/package integrity: **PASS — 70/70 required runtime files precached**.
 - JavaScript syntax (`node --check`): **PASS**.

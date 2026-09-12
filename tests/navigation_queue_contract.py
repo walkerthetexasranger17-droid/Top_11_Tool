@@ -8,7 +8,7 @@ checks=[
  ('drawer-backdrop',html+css,'left drawer'),('drawerNav',js+html,'drawer route generation'),('finishDrawerSwipe',js,'drawer swipe-away'),
  ('QUEUE_DB_NAME',js,'IndexedDB queue image persistence'),('SCAN_QUEUE_META_KEY',js,'queue metadata persistence'),('scanControllers=new Map()',js,'per-item scan cancellation controllers'),
  ('cancelScanForItem',js,'explicit rescan cancellation'),('Retry Scan',js,'manual retry action'),('SCAN FAILED',js,'failed scan status'),
- ('Arithmetic checks passed',js,'honest arithmetic verification label'),('Manual fields:',js,'manual playstyle/ability review label'),
+ ('Arithmetic checks passed',js,'honest arithmetic verification label'),('Review and correct any field before saving.',js,'editable scanner visual-review label'),
 ]
 for needle,src,label in checks:
     if needle not in src: errs.append(f'missing {label}: {needle}')

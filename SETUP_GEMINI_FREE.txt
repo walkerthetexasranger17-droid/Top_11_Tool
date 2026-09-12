@@ -1,18 +1,11 @@
-TOP ELEVEN TOOL v5.2.17 — GEMINI FREE-TIER SCANNER SETUP
+Top Eleven Tool v5.2.20 — Scanner v4 setup
 
-You do NOT need Cloud Run, Cloud Vision, Vertex AI, gcloud deployment, or an open Cloud Billing account for this build.
+1. Open Settings in the app.
+2. Paste your Google AI Studio API key into Gemini Scanner.
+3. Tap Save Key.
+4. Tap Test Connection.
+5. The scanner should report Gemini 3.1 Flash Live, HIGH thinking, and four visual indexes.
 
-1) Open Google AI Studio: https://aistudio.google.com/
-2) Open Dashboard -> Projects.
-3) If "top-eleven-scanner-shaun" is not visible, choose Import projects and import it.
-4) Open Dashboard -> API Keys.
-5) Create a new API key in project: top-eleven-scanner-shaun
-   New AI Studio keys are created for the Gemini API.
-6) DO NOT click "Set up billing" / upgrade the project if you want the scanner to remain £0.
-7) Copy the API key.
-8) Open Top Eleven Tool v5.2.17 -> More -> Settings -> Gemini Scanner · Free Tier.
-9) Paste the key -> Save Key -> Test Connection.
-10) Scan the David Andrews fixture first. It must recognise BOTH visible special abilities, not only the first.
+Scanner v4 reads the standard 1536×695 Top Eleven Skills screenshot and returns core data, playstyle identity, playstyle level, and Special Abilities. Each occupied Special Ability slot is classified independently. All results remain editable in Review before saving.
 
-The API key is stored only in that browser on that device. It is never included in the app ZIP or GitHub source.
-v5.2.17 uses Gemini 3.8 Flash only. Each request times out after 20 seconds and may retry twice more after short 3s/8s waits. After three failed attempts the item stops and shows Retry Scan. No paid fallback is used.
+The API key is stored only in this browser under te:scanner:geminiApiKey.

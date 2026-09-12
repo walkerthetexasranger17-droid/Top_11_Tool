@@ -1,11 +1,8 @@
-Top Eleven Tool v5.2.19 — Build 30527
+Top Eleven Tool v5.2.20 — Build 30527
 
-Targeted Scanner v3 asset-reference replacement from v5.2.15:
-- Gemini 3.6 Flash remains the only scanner model.
-- Removed the old 80 generated playstyle/tier reference images and old example workarounds.
-- Added the 20 exact playstyle identity PNGs from the finished user asset pack.
-- Added the 4 exact user-approved level references: Locked, Intermediate, Advanced, Master.
-- Scanner now classifies playstyle identity and level independently.
-- Existing 19 Special Ability references remain individual and labelled.
-- Existing queue, retries, validation, training, tactics, formation and storage logic remains intact.
-- No playstyle image generation, cropping, redraw or recolouring is performed by this build.
+Targeted Scanner v4 integration from the proven Gemini 3.1 Flash Live scanner lab:
+- HIGH-thinking Live WebSocket scanner.
+- Four visual reference indexes packaged in assets/scanner.
+- Core + playstyle identity + playstyle level + per-slot Special Ability passes.
+- Playstyle and ability detections prefill the existing editable review form.
+- Existing queue, persistence, training, tactics, team plan and storage logic preserved.
