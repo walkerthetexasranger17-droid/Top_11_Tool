@@ -83,7 +83,7 @@
 
   function cleanPlayer(data){
     const roles=normaliseRoles(data),legacy=legacyRoles(data),position=roles[0]||'';
-    const abilities=Array.isArray(data?.specialAbilities)?[...data.specialAbilities]:(data?.specialAbility?[data.specialAbility]:[]);
+    const abilities=(Array.isArray(data?.specialAbilities)?[...data.specialAbilities]:(data?.specialAbility?[data.specialAbility]:[])).map(a=>String(a||'').trim()==='Long Shots'?'Shadow Striker':a);
     const skills={...(data?.skills||data?.attributes||{})};
     return {
       ...data,

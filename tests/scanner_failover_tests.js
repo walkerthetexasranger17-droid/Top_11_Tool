@@ -3,7 +3,7 @@ const ROOT=path.resolve(__dirname,'..');global.window=global;global.localStorage
 for(const f of ['optimizer-data.js','bible-data.js','data.js','scanner-engine.js'])vm.runInThisContext(fs.readFileSync(path.join(ROOT,'js',f),'utf8'),{filename:f});
 const SC=global.TE5.Scanner;let n=0;function ok(v,m){if(!v)throw new Error(m);n++;}
 const src=fs.readFileSync(path.join(ROOT,'js/scanner-engine.js'),'utf8');
-ok(SC.VERSION===5,'Scanner v5');
+ok(SC.VERSION===6,'Scanner v6');
 ok(SC.MODEL==='gemini-3.1-flash-live-preview','Gemini 3.1 Flash Live only');
 ok(SC.REQUEST_TIMEOUT_MS===90000,'90s Live task timeout');
 ok(/thinkingLevel:'HIGH'/.test(src),'HIGH thinking configured');

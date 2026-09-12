@@ -1,4 +1,4 @@
-Top Eleven Tool v5.2.22 — Build 30527
+Top Eleven Tool v5.2.23 — Build 30527
 
 Targeted Scanner v4 integration from the proven Gemini 3.1 Flash Live scanner lab:
 - HIGH-thinking Live WebSocket scanner.

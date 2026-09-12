@@ -1,6 +1,6 @@
-# Top Eleven Tool v5.2.22 — Build 30527
+# Top Eleven Tool v5.2.23 — Build 30527
 
-Static GitHub Pages/PWA companion app. The canonical application contract remains `docs/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.md`. v5.2.22 is a targeted scanner replacement; training, tactics, formation, mentor and Build 30527 calculations are unchanged.
+Static GitHub Pages/PWA companion app. The canonical application contract remains `docs/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.md`. v5.2.23 is a targeted scanner replacement; training, tactics, formation, mentor and Build 30527 calculations are unchanged.
 
 ## Scanner v4 — Gemini 3.1 Flash Live
 

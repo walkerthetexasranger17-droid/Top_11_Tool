@@ -44,7 +44,7 @@ function inside(role,x,y){const r=B.ROLE_RECTS[role];return x>=r.minX&&x<r.maxX&
   eq(migrated.roles,['MC','AMC','DMC','ML'],'all current imported natural roles survive; DML removed only from current set');
   eq(migrated.relatedRoles,['ST'],'all current related roles survive; DMR relegated to legacy metadata');
   ok(migrated.legacyRoles.includes('DML')&&migrated.legacyRoles.includes('DMR'),'legacy DML/DMR warning metadata retained');
-  eq(migrated.specialAbilities,old.specialAbilities,'more than two abilities survive migration');
+  eq(migrated.specialAbilities,['Defensive Wall','Shadow Striker','Playmaker'],'legacy Long Shots migrates to current Shadow Striker display name without losing abilities');
   eq(migrated.playstyle.type,'BOX_TO_BOX','full playstyle type preserved');eq(migrated.playstyle.level,3,'full playstyle level preserved');eq(migrated.playstyle.points,1234,'full playstyle points preserved');eq(migrated.playstyle.boost,[11,4],'full playstyle boost preserved');ok(migrated.playstyle.opaqueServerField==='preserve-me','unknown playstyle fields preserved');
   ok(migrated.photo===old.photo&&migrated.scanner.version===2,'image/scanner metadata preserved');
   const migratedString=await P.get(oldStringKey);ok(P.playstyleName(migratedString)==='Poacher'&&migratedString.playstyle.level===0,'legacy playstyle string becomes object without invented level');
@@ -64,14 +64,15 @@ function inside(role,x,y){const r=B.ROLE_RECTS[role];return x>=r.minX&&x<r.maxX&
   ok(B.PLAYSTYLES.find(x=>x.id===19).offer===false,'Ball Playing GK enum remains recorded but not offered');
   ok(!D.PLAYSTYLES.includes('Ball Playing GK'),'Ball Playing GK not selectable');
   eq(D.playstylesForRoles(['MC']).sort(),['Box-to-Box','Mezzala','Regista'].sort(),'MC playstyle chooser exact');
+  ok(D.playstylesForRoles(['DL','DC']).includes('Ball Playing DC'),'DL/DC player can select Ball Playing DC when DC is a natural role');
   ok(D.SPECIAL_ABILITIES.length===19,'19 current special abilities');eq(B.SPECIAL_ABILITIES.map(x=>x.id),Array.from({length:19},(_,i)=>i+1),'special ability IDs 1..19 exact');
-  ok(!D.SPECIAL_ABILITIES.includes('Shadow Striker'),'Shadow Striker absent');
+  ok(D.SPECIAL_ABILITIES.includes('Shadow Striker'),'Shadow Striker present in current display list');ok(!D.SPECIAL_ABILITIES.includes('Long Shots'),'legacy Long Shots label hidden from current display list');ok(B.SPECIAL_ABILITIES.some(x=>x.name==='Long Shots'),'raw build enum retains Long Shots provenance');
   const abilityHeavy=P.cleanPlayer({name:'Abilities',position:'ST',roles:['ST'],skills:skills(),specialAbilities:D.SPECIAL_ABILITIES.slice(0,5)});ok(abilityHeavy.specialAbilities.length===5,'special ability storage is not capped at two');
 
   // ---------------------------------------------------------------------------
-  // Scanner v5 Gemini 3.1 Flash Live boundary: core + visual fields.
+  // Scanner v6 Gemini 3.1 Flash Live boundary: core + visual fields.
   // ---------------------------------------------------------------------------
-  ok(SC.VERSION===5,'Scanner v5 is the production scanner');
+  ok(SC.VERSION===6,'Scanner v6 is the production scanner');
   const scannerSource=fs.readFileSync(path.join(ROOT,'js','scanner-engine.js'),'utf8');
   ok(/Gemini Scanner is not configured/.test(scannerSource),'scanner requires a configured Gemini API key');
   ok(/gemini-3\.1-flash-live-preview/.test(scannerSource),'scanner uses Gemini 3.1 Flash Live');

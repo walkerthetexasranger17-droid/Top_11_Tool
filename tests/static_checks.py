@@ -43,9 +43,9 @@ for needle,label in [
 ]:
     if needle not in hay: errs.append(f'missing integrity hook: {label}')
 
-# Scanner v5: Gemini 3.1 Flash Live with visual indexes and independent passes.
+# Scanner v6: Gemini 3.1 Flash Live with visual indexes and independent passes.
 for needle,label,src in [
-    ("const VERSION=5", "Scanner v5 version marker", scanner),
+    ("const VERSION=6", "Scanner v6 version marker", scanner),
     ("gemini-3.1-flash-live-preview", "Gemini 3.1 Flash Live model", scanner),
     ("thinkingLevel:'HIGH'", "HIGH thinking configuration", scanner),
     ("BidiGenerateContent", "Gemini Live WebSocket transport", scanner),
@@ -64,6 +64,11 @@ for needle,label,src in [
     ("normaliseFrameMedia", "native screenshot normalisation", scanner),
     ("sourceWidth,sourceHeight", "source dimension measurement", scanner),
     ("SOURCE SCREENSHOT DIMENSIONS (measured by app code)", "dimension context sent to Gemini", scanner),
+    ("detectLayoutHint", "GK/outfield layout detector", scanner),
+    ("specialAbilityTraining", "ability-learning state separation", scanner),
+    ("darkFraction>.25", "ability-training widget detector", scanner),
+    ("data-detected-primary-role", "clickable detected primary roles", js),
+    ("scrollToScanReview", "scanner review auto-scroll", js),
 ]:
     if needle not in src: errs.append(f'missing scanner hook: {label}')
 for forbidden in ['scanner-templates.json','reconcileReadToTarget','classifyGlyph','readNumber(ctx','cloudScannerEndpoint','Cloud Run Service URL',
@@ -79,7 +84,8 @@ for player in ['David Andrews','François Roelandt','Ariel Bravo','Richard Kilro
 # Current roles / abilities / playstyles are not silently truncated.
 data=(ROOT/'js/data.js').read_text()
 if 'slice(0,2)' in players or 'specialAbilities.slice(0,2)' in js: errs.append('hard two-special-ability cap survives')
-if 'Shadow Striker' in data or 'Shadow Striker' in html: errs.append('stale Shadow Striker survives current UI/data')
+if 'Shadow Striker' not in data: errs.append('current Shadow Striker display alias missing')
+if "SPECIAL_ABILITY_DISPLAY_ALIASES={'Long Shots':'Shadow Striker'}" not in data: errs.append('legacy Long Shots -> Shadow Striker alias missing')
 if 'Ball Playing GK' not in data: errs.append('legacy Ball Playing GK preservation metadata unexpectedly missing')
 if re.search(r"const ALL_POSITIONS=.*DML|const ALL_POSITIONS=.*DMR",data): errs.append('DML/DMR survive in current position list')
 
@@ -88,7 +94,7 @@ manifest=json.loads((ROOT/'manifest.json').read_text())
 if manifest.get('name')!='Top Eleven Tool' or manifest.get('short_name')!='Top Eleven Tool': errs.append('manifest app name is not Top Eleven Tool')
 if not soup.title or soup.title.get_text(strip=True)!='Top Eleven Tool': errs.append('page title is not Top Eleven Tool')
 if 'TOP ELEVEN <span>TOOL</span>' not in html: errs.append('in-app header branding is not Top Eleven Tool')
-if 'v5.2.22' not in html: errs.append('visible build label is not v5.2.22')
+if 'v5.2.23' not in html: errs.append('visible build label is not v5.2.23')
 bible_data=(ROOT/'js/bible-data.js').read_text(encoding='utf-8')
 if "tackling:[['balanced','Balanced',0,0,.50],['stay','Stay On Feet',1,7,.30],['aggressive','Aggressive',2,5,.80]]" not in bible_data:
     errs.append('tackling IDs do not match direct build-30527 provenance correction')
