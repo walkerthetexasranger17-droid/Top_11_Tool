@@ -131,10 +131,11 @@
       state.app=m.initializeApp(state.config);
       state.auth=m.getAuth(state.app);
       await m.setPersistence(state.auth,m.browserLocalPersistence);
-      // Deliberately use Firestore's in-memory cache only. The app already owns its
-      // offline working copy in localStorage; a second persistent IndexedDB cache caused
-      // stale snapshots to race and overwrite valid player data during navigation.
-      state.db=m.initializeFirestore(state.app);
+      // Use Firestore's default in-memory instance. The app already owns its offline
+      // working copy in localStorage, so we intentionally do not enable persistent
+      // Firestore IndexedDB caching. getFirestore() also avoids the invalid no-settings
+      // initializeFirestore() call that can throw while reading cacheSizeBytes.
+      state.db=m.getFirestore(state.app);
       try{await m.getRedirectResult(state.auth)}catch(err){if(err?.code==='auth/multi-factor-auth-required')beginMfa(err);else console.warn('Redirect sign-in result',err)}
       await new Promise(resolve=>{
         let settled=false;
@@ -161,7 +162,7 @@
       state.status='ready';hideGate();updateCloudChrome();
       scheduleFlush(0);
       if(localReady)syncDown().then(()=>scheduleFlush(0)).catch(err=>console.warn('Background cloud hydration',err));
-      console.info('[Top Eleven Tool] Cloud sync ready',{runtime:'0.4.11-r5',source:state.lastSyncSource,records:state.syncCount,pending:state.pendingWrites,localFirst:localReady});
+      console.info('[Top Eleven Tool] Cloud sync ready',{runtime:'0.4.11-r6',source:state.lastSyncSource,records:state.syncCount,pending:state.pendingWrites,localFirst:localReady});
       return true;
     }catch(err){state.error=err;state.status='error';showGate('setup');setAuthMessage(`Firebase setup error: ${friendlyAuthError(err)}`,'err');return false;}
   }
