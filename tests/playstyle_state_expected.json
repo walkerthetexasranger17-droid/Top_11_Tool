@@ -1,0 +1,22 @@
+{
+  "fixtures": [
+    {
+      "fixture": "ariel-bravo-locked.jpg",
+      "name": "Ariel Bravo",
+      "playstyle": {
+        "name": "Winger",
+        "levelName": "Locked",
+        "level": 1
+      }
+    },
+    {
+      "fixture": "francois-roelandt-intermediate.jpg",
+      "name": "François Roelandt",
+      "playstyle": {
+        "name": "False Nine",
+        "levelName": "Intermediate",
+        "level": 3
+      }
+    }
+  ]
+}

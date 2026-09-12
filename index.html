@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#030913">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="application-name" content="Top Eleven Tool">
+  <meta name="apple-mobile-web-app-title" content="Top Eleven Tool">
+  <title>Top Eleven Tool</title>
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" href="./icon-192.png"><link rel="apple-touch-icon" href="./icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/app.css">
+</head>
+<body>
+<div class="auth-gate" id="authGate" hidden>
+  <div class="auth-shell">
+    <div class="auth-brand"><img src="./icon-192.png" alt=""><div><b>TOP ELEVEN <span>TOOL</span></b><small>Cloud account · v0.4.11</small></div></div>
+    <div class="auth-message" id="authMessage"></div>
+    <div data-auth-panel="setup">
+      <div class="section-kicker">One-time setup</div><h1>Connect Firebase</h1><p class="body-copy">Paste the <b>firebaseConfig</b> object from Firebase Console. This project configuration is not a private password; it identifies the Firebase project used by the app.</p>
+      <textarea class="input auth-config" id="firebaseConfigInput" rows="10" placeholder="const firebaseConfig = {&#10;  apiKey: &quot;...&quot;,&#10;  authDomain: &quot;...&quot;,&#10;  projectId: &quot;...&quot;,&#10;  storageBucket: &quot;...&quot;,&#10;  messagingSenderId: &quot;...&quot;,&#10;  appId: &quot;...&quot;&#10;};"></textarea>
+      <div class="btn-row spaced"><button class="btn primary" id="saveFirebaseConfig">Save Firebase Setup</button><button class="btn ghost" id="clearFirebaseConfig">Clear</button></div>
+      <p class="mini-note">After Firebase is configured, the normal sign-in screen appears. Firestore security rules and sign-in providers still need to be enabled in Firebase Console.</p>
+    </div>
+    <div data-auth-panel="signin" hidden>
+      <div class="section-kicker">Cloud account</div><h1>Sign in</h1><p class="body-copy">Your squad, mentor levels and team settings follow you across your phone, tablet and PC.</p>
+      <div class="auth-choice-stack">
+        <button class="auth-provider google" id="authGoogleBtn" type="button"><span class="auth-provider-icon"><img src="./assets/brands/google-g.svg" alt="Google"></span><span class="auth-provider-label">Continue with Google</span></button>
+        <div class="auth-divider"><span>OR</span></div>
+        <button class="auth-provider email" id="authEmailChoiceBtn" type="button"><span class="auth-provider-icon"><img src="./assets/brands/email.svg" alt=""></span><span class="auth-provider-label">Continue with Email &amp; Password</span></button>
+      </div>
+      <p class="auth-choice-note">Secure cloud sign-in for your Top Eleven Tool account.</p>
+    </div>
+    <div data-auth-panel="email" hidden>
+      <div class="section-kicker">Email account</div><h1>Welcome back</h1><p class="body-copy">Sign in with the email and password linked to your account.</p>
+      <label class="field wide spaced"><span>Email</span><input class="input" id="authEmail" type="email" autocomplete="email"></label>
+      <label class="field wide"><span>Password</span><span class="password-wrap"><input class="input" id="authPassword" type="password" autocomplete="current-password"><button class="password-toggle" type="button" data-password-toggle="authPassword" aria-label="Show password">Show</button></span></label>
+      <button class="btn primary auth-main" id="authEmailBtn" type="button">Sign in</button>
+      <div class="auth-links"><button type="button" id="authResetBtn">Forgot password?</button><button type="button" data-auth-tab="signup">Create account</button></div>
+      <div class="auth-back"><button type="button" data-auth-tab="signin">← Back to sign-in options</button></div>
+    </div>
+    <div data-auth-panel="signup" hidden>
+      <div class="section-kicker">New account</div><h1>Create account</h1>
+      <label class="field wide"><span>Display name</span><input class="input" id="signupName" autocomplete="name"></label>
+      <label class="field wide"><span>Email</span><input class="input" id="signupEmail" type="email" autocomplete="email"></label>
+      <label class="field wide"><span>Password</span><span class="password-wrap"><input class="input" id="signupPassword" type="password" autocomplete="new-password"><button class="password-toggle" type="button" data-password-toggle="signupPassword" aria-label="Show password">Show</button></span></label>
+      <label class="field wide"><span>Confirm password</span><span class="password-wrap"><input class="input" id="signupPasswordConfirm" type="password" autocomplete="new-password"><button class="password-toggle" type="button" data-password-toggle="signupPasswordConfirm" aria-label="Show password">Show</button></span></label>
+      <button class="btn primary auth-main" id="authCreateBtn" type="button">Create account</button>
+      <div class="auth-links"><button type="button" data-auth-tab="email">Already have an account? Sign in</button></div><div class="auth-back"><button type="button" data-auth-tab="signin">← Back to sign-in options</button></div>
+    </div>
+    <div data-auth-panel="mfa" hidden>
+      <div class="section-kicker">Two-step verification</div><h1>Verification code</h1><p class="body-copy" id="mfaHint">Enter the 6-digit code from your enrolled second factor.</p>
+      <label class="field wide"><span>6-digit code</span><input class="input auth-code" id="mfaCode" inputmode="numeric" autocomplete="one-time-code" maxlength="6"></label>
+      <button class="btn primary auth-main" id="mfaConfirmBtn" type="button">Verify &amp; continue</button>
+    </div>
+  </div>
+</div>
+<div class="app">
+  <header class="topbar">
+    <button class="brand-home" type="button" data-go="dashboard" aria-label="Go to Home" title="Home"><img class="brand-mark" src="./icon-192.png" alt="Top Eleven Tool"></button>
+    <div class="brand-copy"><div class="brand-title">TOP ELEVEN <span>TOOL</span></div><div class="brand-sub">v0.4.11</div></div>
+    <div class="topbar-actions"><div class="top-status"><i></i> Cloud</div><button class="account-button" id="accountButton" type="button" aria-label="Open Profile &amp; Security" title="Profile &amp; Security" hidden>?</button></div>
+  </header>
+
+  <main>
+    <section class="page active" id="page-dashboard" data-page="dashboard" data-nav-label="Home" data-nav-icon="assets/icons/home.svg">
+      <div class="hero hero-dashboard" style="--hero:url('assets/scenes/dashboard.webp')"><div class="hero-copy"><div class="eyebrow">Squad intelligence</div><h1>Your squad.<br><em>Your plan.</em><br>Your next win.</h1><p>Scan your players, find the weakest key attributes and build training around what actually needs improving.</p></div></div>
+      <div class="page-body pull-up dashboard-body">
+        <div class="squad-summary"><div class="summary-head"><img src="assets/icons/squad.svg"><div><b>Your Squad</b><span id="dashboardSquadLabel">Local squad data</span></div></div><div class="stats" id="dashboardStats"></div></div>
+        <button class="training-cta" data-go="training"><span class="cta-icon">ϟ</span><span><b>TRAINING OPTIMISER</b><small>Build a 6-slot session from your saved drill levels and Master cards.</small></span><strong>BUILD →</strong></button>
+        <div class="quick-grid dashboard-quick">
+          <button class="quick" data-go="team-plan"><img class="quick-icon" src="assets/icons/tactics.svg"><b>Team Plan</b><small>Formation, set pieces and tactics in one place.</small></button>
+          <button class="quick" data-go="my-drills"><img class="quick-icon" src="assets/icons/training.svg"><b>Drill Selection</b><small>Manage drill levels, unlocks and Master cards.</small></button>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="page-squad" data-page="squad" data-nav-label="Squad" data-nav-icon="assets/icons/squad.svg">
+      <div class="hero hero-compact" style="--hero:url('assets/scenes/squad.webp')"><div class="hero-copy"><div class="eyebrow">Your team</div><h1>My <em>Squad</em></h1><p>Add, update and manage the players you actually use.</p></div></div>
+      <div class="page-body pull-up">
+        <button class="squad-add-primary" data-go="add-player"><span class="plus-orb small">+</span><span><b>ADD PLAYER</b><small>Scan a screenshot or enter a player manually</small></span><strong>→</strong></button>
+        <div class="filter-chips squad-simple-filters" id="squadFilters"></div>
+        <div class="section-head"><div><div class="section-kicker">Squad</div><div class="section-title">Players</div></div></div>
+        <div class="player-list" id="squadList"></div><button class="sr-only" id="refreshSquadBtn">Refresh</button>
+      </div>
+    </section>
+
+    <section class="page" id="page-player" data-page="player">
+      <div class="profile-hero" id="profileHero"><div class="profile-hero-bg"></div><button class="profile-back" id="profileBackBtn" type="button" aria-label="Back to squad">←</button><img class="profile-role-art" id="profileRoleArt" alt=""><div class="profile-hero-copy"><div class="eyebrow" id="profileEyebrow">Player Profile</div><h1 id="profileName">Player</h1><div class="profile-meta" id="profileMeta"></div></div><div class="profile-ovr"><span>OVR</span><b id="profileOvr">—</b></div></div>
+      <div class="page-body pull-up profile-body"><div class="profile-actions"><button class="btn primary" id="profileTrainBtn">Train Player</button><button class="btn ghost" id="profileRescanBtn">Update by Scan</button><button class="btn ghost" id="profileEditBtn">Edit Player</button></div><div class="profile-badges" id="profileBadges"></div><div class="profile-facts" id="profileFacts"></div><div class="card profile-playstyle-card" id="profilePlaystyleCard"><div class="card-inner"><div class="section-kicker">Playstyle state</div><div id="profilePlaystyleState" class="profile-state-grid"></div></div></div>
+        <div class="section"><div class="section-head"><div><div class="section-kicker">Development profile</div><div class="section-title">Lowest key attributes</div></div></div><div class="profile-key-grid" id="profileKeySkills"></div></div>
+        <div class="section"><div class="section-head"><div><div class="section-kicker">Role intelligence</div><div class="section-title">Role scores</div></div></div><div class="profile-key-grid" id="profileRoleScores"></div></div><div class="section"><div class="section-head"><div><div class="section-kicker">Complete record</div><div class="section-title">Skills</div></div></div><div class="skill-groups" id="profileSkills"></div></div>
+        <div class="card profile-edit-card" id="profileEditCard" style="display:none"><div class="card-inner"><div class="section-head"><div><div class="section-kicker">Player record</div><div class="section-title">Edit profile</div></div></div><div class="field-grid">
+          <label class="field wide"><span>Name</span><input class="input" id="profileEditName"></label><label class="field"><span>Age</span><input class="input" id="profileEditAge" type="number" min="15" max="60"></label><label class="field"><span>OVR</span><input class="input" id="profileEditOvr" type="number" min="1" max="520"></label>
+          <label class="field"><span>Primary role</span><select class="select" id="profileEditRole1"></select></label><label class="field"><span>Second role</span><select class="select" id="profileEditRole2"></select></label><label class="field"><span>Third role</span><select class="select" id="profileEditRole3"></select></label><label class="field"><span>Playstyle</span><select class="select" id="profileEditPlaystyle"></select></label><label class="field"><span>Playstyle tier</span><select class="select" id="profileEditPlaystyleLevel"></select></label>
+        </div><div class="mini-note" id="profilePreservedRolesNote"></div><div class="section-kicker spaced">Related roles (optional)</div><div class="filter-chips" id="profileRelatedPicker"></div><div class="section-kicker spaced">Special abilities</div><div class="mini-note">Manual current-ability editor. Trainability is player-specific unless captured from the official client.</div><div class="filter-chips" id="profileAbilityPicker"></div><div class="btn-row spaced"><button class="btn primary" id="profileSaveBtn">Save Changes</button><button class="btn ghost" id="profileCancelEditBtn">Cancel</button></div><div class="divider"></div><button class="btn danger" id="profileDeleteBtn">Delete Player</button><div id="profileEditNote" class="mini-note"></div></div></div>
+      </div>
+    </section>
+
+    <section class="page" id="page-add-player" data-page="add-player">
+      <div class="hero hero-compact" style="--hero:url('assets/scenes/add-player.webp')"><div class="hero-copy"><div class="eyebrow">Add or update player</div><h1>Scan. <em>Review. Save.</em></h1><p>Use a Top Eleven Skills screenshot, check the result and save it to your squad.</p></div></div>
+      <div class="page-body scan-shell"><div class="scanner-card"><div class="scan-stage"><label class="scan-window" id="scanWindow" for="scanFile"><img class="scan-preview" id="scanPreview" alt="Screenshot preview"><div class="scan-placeholder"><div class="plus-orb">+</div><b>Choose Skills screenshots</b><span>Select one player or a whole batch</span><span class="scan-cta">ADD TO SCAN QUEUE</span></div><div class="scan-line"></div></label><input type="file" id="scanFile" accept="image/*" multiple hidden><div class="scan-progress"><i id="scanProgressBar"></i></div><div class="scan-status"><span id="scanProgressText">Waiting for screenshots</span><span id="scanPercent">0%</span></div><div id="scanQueue" class="scan-queue"></div><button class="btn ghost full spaced" id="manualAddPlayerBtn" type="button">Add Player Manually</button><div class="mini-note manual-entry-note">Free scan quota unavailable? Manual entry uses the same player form, including playstyle tier and multiple special abilities.</div></div></div>
+        <div id="scanReview" style="display:none"><div class="section"><div class="section-head"><div><div class="section-kicker">Verification</div><div class="section-title">Scan verification</div></div><div id="scanConfidence"></div></div><div class="verify-grid" id="scanChecks"></div><div class="mini-note verification-note">Top Eleven displays whole-number skills and totals. Small sub-point gaps can come from display precision; a green check means the value is inside the verified tolerance and is not a scanner error.</div></div>
+          <div class="card" id="scanReviewPlayerCard"><div class="card-inner"><div class="section-kicker">Review player</div><div class="field-grid spaced"><label class="field wide"><span>Name</span><input class="input" id="scanName"></label><label class="field"><span>Age</span><input class="input" id="scanAge" type="number" min="15" max="60"></label><label class="field"><span>OVR</span><input class="input" id="scanOvr" type="number" min="1" max="520"></label><label class="field"><span>Primary role</span><select class="select" id="scanRole"></select></label><label class="field"><span>Second role</span><select class="select" id="scanRole2"></select></label><label class="field"><span>Third role</span><select class="select" id="scanRole3"></select></label></div><div class="mini-note">Tap a detected role below to make it the primary role.</div><div id="detectedRoles" class="filter-chips"></div><div class="divider"></div><div class="field-grid"><label class="field"><span>Playstyle</span><select class="select" id="scanPlaystyle"></select></label><label class="field"><span>Playstyle tier</span><select class="select" id="scanPlaystyleLevel"></select></label></div><div class="section-kicker spaced">Related roles (optional)</div><div class="filter-chips" id="scanRelatedPicker"></div><div class="section-kicker spaced">Visual detection</div><div class="mini-note" id="scanDetectedVisuals">Local asset matches will appear here.</div><div class="section-kicker spaced">Special abilities</div><div class="mini-note">Gemini Flash Live scans each occupied unlocked ability slot independently against the standard and boosted exact-geometry reference indexes. A training/progress widget is not counted as an unlocked ability. You can correct any selection before saving.</div><div class="filter-chips" id="abilityPicker"></div><div id="scanManualVerify" class="manual-verify" style="display:none"><label><input type="checkbox" id="scanManualVerified"><span><b>I checked the screenshot manually</b><small>Use my corrected OVR and skill values even if the scanner aggregate still disagrees.</small></span></label></div></div></div>
+          <div class="section"><div class="section-head"><div><div class="section-kicker">Gemini result</div><div class="section-title">Attributes</div></div></div><div class="skill-groups" id="scanSkills"></div></div>
+          <div class="section scan-review-actions"><div id="scanSaveNote" class="mini-note"></div><div class="btn-row spaced"><button class="btn primary" id="saveScannedPlayer">Save Player</button><button class="btn ghost" id="nextQueuedPlayerBtn" type="button">Next Player</button><button class="btn ghost" id="rescanBtn" type="button">Rescan This</button></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="page-training" data-page="training" data-nav-label="Training" data-nav-icon="assets/icons/training.svg">
+      <div class="hero hero-compact training-hero" style="--hero:url('assets/scenes/training.webp')"><div class="hero-copy"><div class="eyebrow">Training</div><h1>Training <em>Optimiser</em></h1><p>Individual and team training together in one workspace.</p></div></div>
+      <div class="page-body pull-up training-builder">
+        <div class="mode-grid training-tabs"><button class="mode active" data-training-tab="individual"><img src="assets/icons/training.svg"><span>Individual</span></button><button class="mode" data-training-tab="team"><img src="assets/icons/team.svg"><span>Team</span></button></div>
+        <div id="individualTrainingPanel"><div class="builder-card"><div class="builder-step"><span>1</span><div><b>Select player</b><small>Uses the union of all natural-role white skills.</small></div></div><select class="select big-select" id="trainingPlayer"></select><div class="builder-step second"><span>2</span><div><b>Optimisation mode</b><small>Max Growth is the default Bible ranking; condition-efficient is optional.</small></div></div><select class="select" id="trainingMode"><option value="maxGrowth">Max Growth</option><option value="conditionEfficient">Condition Efficient</option></select><button class="btn ghost full spaced" data-go="my-drills">Manage My Drills</button><button class="btn primary build-btn" id="buildSessionBtn">BUILD 6-DRILL SESSION →</button><div id="trainingStatus" class="mini-note"></div></div>
+          <div class="training-intel"><div><b>06</b><span>DRILLS</span><small>beam search</small></div><div><b id="intelNormalCount">29</b><span>NORMAL</span><small>saved levels</small></div><div><b id="intelMasterCount">0</b><span>MASTER</span><small>cards owned</small></div></div>
+          <div class="section" id="trainingResults" style="display:none"><div class="section-head"><div><div class="section-kicker">Top Eleven Tool calculation</div><div class="section-title">Recommended 6</div></div><button class="section-link" id="rebuildBtn">Rebuild</button></div><div class="priority-strip" id="priorityAttributes"></div><div class="session-list" id="sessionList"></div><div class="session-summary" id="sessionSummary"></div><button class="btn primary full" id="completeSessionBtn">Mark Session Completed</button><div class="mini-note" id="sessionCompleteNote"></div></div>
+        </div>
+        <div id="teamTrainingPanel" style="display:none"><div class="section-head spaced"><div><div class="section-kicker">Actual squad players</div><div class="section-title">Team sessions</div></div><button class="section-link" data-go="my-drills">My Drills</button></div><div class="team-grid" id="teamTrainingCards"></div><p class="mini-note">This is the normal-drill team optimiser. Top Eleven TeamPlayTrainingDrill is a separate protocol system and is not fabricated here.</p></div>
+      </div>
+    </section>
+
+    <section class="page" id="page-my-drills" data-page="my-drills" data-nav-label="Drill Selection" data-nav-icon="assets/icons/training.svg">
+      <div class="hero hero-compact" style="--hero:url('assets/scenes/training.webp')"><div class="hero-copy"><div class="eyebrow">Drill library</div><h1>Drill <em>Selection</em></h1><p>Set the drills you own and their current levels.</p></div></div>
+      <div class="page-body pull-up"><div class="section"><div class="section-head"><div><div class="section-kicker">Normal drills</div><div class="section-title">Unlocked & level</div></div><button class="section-link" id="resetDrillsBtn">Reset snapshot</button></div><div class="drill-config-list" id="normalDrillConfig"></div></div>
+        <div class="section"><div class="section-head"><div><div class="section-kicker">Drill Lab / Campus</div><div class="section-title">Master card stock</div></div></div><div class="master-grid" id="masterStockConfig"></div><p class="mini-note">No artificial maximum. Enter the exact number of cards you currently own; each selected Master slot consumes one card only when you mark the session completed.</p></div>
+      </div>
+    </section>
+
+
+    <section class="page" id="page-team-plan" data-page="team-plan" data-nav-label="Team Plan" data-nav-icon="assets/icons/tactics.svg">
+      <div class="hero hero-compact" style="--hero:url('assets/scenes/tactics.webp')"><div class="hero-copy"><div class="eyebrow">Match setup</div><h1>Team <em>Plan</em></h1><p>Your formation, set pieces and tactics in one simple match screen.</p></div></div>
+      <div class="page-body pull-up">
+        <div class="mode-grid team-plan-tabs">
+          <button class="mode active" data-team-plan-tab="formation"><img src="assets/icons/team.svg"><span>Formation</span></button>
+          <button class="mode" data-team-plan-tab="set-pieces"><img src="assets/icons/playmakers.svg"><span>Set Pieces</span></button>
+          <button class="mode" data-team-plan-tab="tactics"><img src="assets/icons/tactics.svg"><span>Tactics</span></button>
+        </div>
+
+        <div id="teamPlanFormationPanel">
+          <div class="section"><div class="formation-head"><div><div class="section-kicker">Recommended XI</div><div class="section-title" id="formationName">Analyse squad</div><p id="formationSummary">Add at least 11 players to build a full XI.</p></div></div>
+            <div class="pitch" id="formationPitch"><div class="pitch-line pitch-mid"></div><div class="pitch-line pitch-circle"></div><div class="pitch-line pitch-box pitch-box-top"></div><div class="pitch-line pitch-box pitch-box-bottom"></div><div class="pitch-empty" id="formationEmpty"><img src="assets/icons/squad.svg" alt=""><b>0/11 PLAYERS</b><span>Build your squad before choosing a team plan.</span><button class="btn primary compact" data-go="add-player">+ Add Player</button></div></div>
+          </div>
+          <div class="card team-plan-input-card"><div class="card-inner"><div class="section-kicker">Plan inputs</div><div class="field-grid spaced"><label class="field"><span>Approach</span><select class="select" id="planApproach"><option value="hardDefending">Hard Defending</option><option value="defending">Defending</option><option value="balanced" selected>Balanced</option><option value="attacking">Attacking</option><option value="hardAttacking">Hard Attacking</option></select></label><label class="field"><span>Drain limit</span><select class="select" id="planDrain"><option>Low</option><option selected>Medium</option><option>High</option></select></label><label class="field"><span>XI mode</span><select class="select" id="planMode"><option value="bestXI">Best XI</option><option value="matchReadyXI">Match Ready XI</option></select></label><label class="field"><span>Min condition</span><input class="input" id="planMinCondition" type="number" min="0" max="100" value="60"></label></div><div class="btn-row spaced"><button class="btn primary" id="buildTeamPlanBtn">Build Best Formation</button><button class="btn ghost" id="refreshPlanTacticsBtn">Refresh Tactics</button></div><div class="mini-note" id="teamPlanNote">Formation is selected automatically from your squad. There is no manual formation input.</div></div></div>
+        </div>
+
+        <div id="teamPlanSetPiecesPanel" style="display:none">
+          <div class="section-head spaced"><div><div class="section-kicker">Match roles</div><div class="section-title">Set Pieces</div></div></div>
+          <div class="set-piece-mode" id="setPieceMode"></div>
+          <div class="pitch set-piece-pitch" id="setPiecePitch"><div class="pitch-line pitch-mid"></div><div class="pitch-line pitch-circle"></div><div class="pitch-line pitch-box pitch-box-top"></div><div class="pitch-line pitch-box pitch-box-bottom"></div><div class="pitch-empty" id="setPieceEmpty"><img src="assets/icons/squad.svg" alt=""><b>BUILD FORMATION FIRST</b><span>Set-piece assignments use the selected XI.</span></div></div>
+          <div class="mini-note spaced" id="setPieceNote">Choose an assignment above, then tap a player on the pitch. Suggested takers are pre-filled where the app has a transparent ranking; captain stays manual.</div>
+        </div>
+
+        <div id="teamPlanTacticsPanel" style="display:none">
+          <div class="tactic-phase-tabs" id="tacticPhaseTabs"><button class="active" data-tactic-phase="possession">In Possession</button><button data-tactic-phase="transition">In Transition</button><button data-tactic-phase="out">Out of Possession</button></div>
+          <div class="tactic-quick-head"><div><div class="section-kicker">What to select in Top Eleven</div><div class="section-title" id="tacticPhaseTitle">In Possession</div></div><div id="planDrainBadge" class="chip"></div></div>
+          <div class="tactic-simple-list" id="tacticPlan"></div><div class="mini-note spaced" id="tacticFitNote"></div>
+          <div class="section mentor-section"><div class="section-head"><div><div class="section-kicker">Mentor</div><div class="section-title">Recommended mentor</div></div></div><div class="mentor-strip" id="mentorStrip"></div><div class="mini-note" id="mentorReason"></div><div class="mentor-levels" id="mentorLevels"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="page-account" data-page="account">
+      <div class="hero hero-compact" style="--hero:url('assets/scenes/settings.webp')"><div class="hero-copy"><div class="eyebrow">Your account</div><h1>Profile & <em>Security</em></h1><p>Manage your cloud identity, linked sign-in methods and two-step verification.</p></div></div>
+      <div class="page-body pull-up">
+        <div class="card"><div class="card-inner"><div class="account-head"><div class="account-avatar" id="accountAvatar">A</div><div><div class="section-title" id="accountDisplayName">Top Eleven Manager</div><div class="body-copy" id="accountEmail">—</div><span class="verify-pill" id="accountVerified">—</span></div></div><div class="filter-chips spaced" id="accountProviders"></div><div class="sync-pill" id="accountSyncStatus"><i></i><span>Checking cloud sync…</span></div><div class="btn-row spaced"><button class="btn ghost" id="resendVerificationBtn">Resend verification email</button><button class="btn danger" id="accountSignOut">Sign out</button></div><div class="auth-message" id="accountMessage"></div></div></div>
+        <div class="section"><div class="card"><div class="card-inner"><div class="section-title">Profile</div><label class="field wide spaced"><span>Display name</span><input class="input" id="accountNameInput"></label><button class="btn primary" id="accountSaveName">Save profile</button><div class="divider"></div><div class="section-kicker">Linked sign-in methods</div><div class="btn-row spaced"><button class="btn ghost" id="linkGoogleBtn">Link Google</button></div></div></div></div>
+        <div class="section"><div class="card"><div class="card-inner"><div class="section-title">Security check</div><p class="body-copy">Changing your email or password requires a fresh sign-in <b>and</b> an enrolled second factor. Sensitive changes are blocked until two-step verification is enabled.</p><label class="field wide spaced"><span>Current password (email/password accounts)</span><input class="input" id="accountCurrentPassword" type="password" autocomplete="current-password"></label></div></div></div>
+        <div class="section"><div class="card"><div class="card-inner"><div class="section-title">Change email</div><label class="field wide spaced"><span>New email</span><input class="input" id="accountNewEmail" type="email" autocomplete="email"></label><button class="btn primary" id="accountChangeEmail">Verify & change email</button><p class="mini-note">Firebase sends verification to the new address before applying the change.</p></div></div></div>
+        <div class="section"><div class="card"><div class="card-inner"><div class="section-title">Change password</div><label class="field wide spaced"><span>New password</span><input class="input" id="accountNewPassword" type="password" autocomplete="new-password"></label><label class="field wide"><span>Confirm new password</span><input class="input" id="accountNewPasswordConfirm" type="password" autocomplete="new-password"></label><button class="btn primary spaced" id="accountChangePassword">Verify & change password</button></div></div></div>
+        <div class="section"><div class="card"><div class="card-inner"><div class="section-title">Two-step verification</div><p class="body-copy">Protect sensitive account changes with a free authenticator-app code.</p><div id="accountMfaStatus"></div><div class="security-method-grid spaced"><div class="security-method preferred"><div><span>Free security method</span><b>Authenticator app</b><small>Use Google Authenticator, Microsoft Authenticator, 1Password or another compatible authenticator app.</small></div><button class="btn primary compact" id="accountStartTotp" type="button">Set up</button></div></div><div class="totp-setup" id="totpSetupBox" hidden><div class="mini-note"><b>Manual setup key</b></div><code class="totp-secret" id="totpSecret"></code><label class="field wide spaced"><span>Authenticator URI (optional copy)</span><input class="input" id="totpUri" readonly></label><label class="field wide"><span>6-digit code</span><input class="input" id="totpConfirmCode" inputmode="numeric" maxlength="6" autocomplete="one-time-code"></label><button class="btn primary spaced" id="accountConfirmTotp">Enable two-step verification</button></div></div></div></div>
+      </div>
+    </section>
+
+    <section class="page" id="page-settings" data-page="settings" data-nav-label="Settings" data-nav-icon="assets/icons/settings.svg"><div class="hero hero-compact" style="--hero:url('assets/scenes/settings.webp')"><div class="hero-copy"><div class="eyebrow">App control</div><h1>Settings</h1><p>Scanner, data and account settings.</p></div></div><div class="page-body pull-up"><div class="card"><div class="card-inner"><div class="section-title">Gemini Scanner · Flash Live</div><p class="body-copy">Scanner v4 calls Gemini 3.1 Flash Live directly from this device using HIGH thinking. Your API key is stored only in this browser and is never packaged in the app or committed to GitHub. The scanner reads core player data, playstyle identity, playstyle level and Special Abilities using the tested visual reference indexes. No benchmark answers are sent to Gemini, and every result remains editable before saving.</p><label class="field wide spaced"><span>Gemini API key</span><input class="input" id="geminiScannerApiKey" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Paste your Google AI Studio API key"></label><div class="btn-row spaced"><button class="btn primary" id="saveGeminiScannerKey">Save Key</button><button class="btn ghost" id="testGeminiScannerKey">Test Connection</button><button class="btn ghost" id="clearGeminiScannerKey">Clear Key</button></div><div class="mini-note" id="geminiScannerStatus">Not configured yet. Create a Gemini API key in Google AI Studio, then test the Flash Live connection.</div><div class="mini-note spaced"><b>API usage:</b> the scanner uses your Google AI Studio project directly. Quotas and billing follow the settings on that Google project; this app does not route scans through a separate paid fallback.</div></div></div><div class="section"><div class="card"><div class="card-inner"><div class="section-title">Cloud data</div><p class="body-copy">Your signed-in Firebase account is now the source of truth. Firestore synchronises squad, training setup, mentor levels and team-plan data across your devices while the browser keeps an offline cache.</p><div class="mini-note" id="localSquadStatus">Checking cloud squad…</div><div class="btn-row spaced"><button class="btn ghost" data-go="account">Profile & security</button><button class="btn danger" id="clearDataBtn">Clear cloud squad data</button></div></div></div></div><div class="section"><div class="card"><div class="card-inner"><div class="section-title">App version</div><p class="body-copy">Top Eleven Tool <b>v0.4.11</b>. Internal game-data build references stay in the background and are no longer shown throughout the app.</p></div></div></div></div></section>
+  </main>
+
+  <nav class="bottom-nav bottom-nav-six"><button class="nav-btn active" data-go="dashboard"><img src="assets/icons/home.svg"><span>Home</span></button><button class="nav-btn" data-go="squad"><img src="assets/icons/squad.svg"><span>Squad</span></button><button class="nav-btn" data-go="training"><img src="assets/icons/training.svg"><span>Training</span></button><button class="nav-btn" data-go="team-plan"><img src="assets/icons/tactics.svg"><span>Team Plan</span></button><button class="nav-btn" data-go="my-drills"><img src="assets/icons/playmakers.svg"><span>Drills</span></button><button class="nav-btn" data-go="settings"><img src="assets/icons/settings.svg"><span>Settings</span></button></nav>
+  <div class="dialog-backdrop" id="confirmDialogBackdrop"><div class="confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="confirmDialogTitle"><div class="section-kicker">Squad</div><div class="section-title" id="confirmDialogTitle">Delete player?</div><p id="confirmDialogCopy">Are you sure you want to permanently remove this player from your squad?</p><div class="btn-row spaced"><button class="btn ghost" id="confirmCancelBtn" type="button">Cancel</button><button class="btn danger" id="confirmDeleteBtn" type="button">Delete</button></div></div></div>
+  <div class="toast" id="toast"></div>
+</div>
+<script src="./js/optimizer-data.js"></script><script src="./js/bible-data.js"></script><script src="./js/data.js"></script><script src="./js/cloud.js"></script><script src="./js/storage.js"></script><script src="./js/drill-profile.js"></script><script src="./js/players.js"></script><script src="./js/training-engine.js"></script><script src="./js/team-training-engine.js"></script><script src="./js/scanner-engine.js"></script><script src="./js/recommendations.js"></script><script src="./js/formation.js"></script><script src="./js/tactics-engine.js"></script><script src="./js/mentor-engine.js"></script><script src="./js/team-plan-engine.js"></script><script src="./js/app.js"></script>
+</body></html>
