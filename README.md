@@ -1,8 +1,8 @@
-# Top Eleven Tool v0.4.11
+# Top Eleven Tool v0.4.12
 
 Top Eleven Tool is a mobile-first PWA companion for managing a Top Eleven squad, scanning player cards, planning training, selecting a formation, assigning set pieces and presenting tactics in a simpler form.
 
-`v0.4.11` is the GitHub-testing cleanup build. It keeps the working `v0.4.10` application behaviour intact while making the repository easier to understand and maintain. Runtime logic was not reorganised simply for appearance: the proven scanner and the training/tactics/formation engines remain in their existing modules.
+`v0.4.12` is the first post-testing feature patch. It keeps the proven scanner and core training/tactics engines intact while applying the focused queue, drill-account, Tactic Calculator and Set Pieces changes requested after testing.
 
 ## Main navigation
 
@@ -107,3 +107,12 @@ The Firebase end-to-end sign-in/sync path still needs a real browser and the act
 - Legacy Firestore values stored as objects are normalised back to JSON strings before player parsing.
 - Auxiliary startup failures no longer block Squad/Profile from rendering.
 - Internal runtime/cache marker is `0.4.11-r4`; the public version remains **v0.4.11**.
+
+
+## v0.4.12
+
+- Saved scanner entries are removed from the queue immediately after a successful save.
+- Formation inputs were simplified: Approach and Drain Limit moved to a Tactic Calculator at the top of Tactics.
+- Normal drill levels are account-specific, user-selectable and cloud-synced; new accounts no longer inherit captured screenshot levels.
+- Set Pieces now uses dedicated Corner R/L, Free Kick R/L, Penalty 1-5 and Captain slots; only assigned set-piece players appear on the pitch.
+- Scanner identity/level recognition, icon assets and mentor recommendation logic were deliberately left unchanged for separate work.

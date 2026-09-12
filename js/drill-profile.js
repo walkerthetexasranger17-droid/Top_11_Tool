@@ -6,9 +6,15 @@
   const MASTER_KEY=`training:master-stock:${VERSION}`;
 
   function normalSeed(){
+    // Account-specific by design: captured reverse-engineering screenshots are evidence for
+    // level mechanics, not defaults for another user's drill library.
+    const byId={};for(const d of D.NORMAL_DRILLS)byId[d.drillId]={unlocked:false,level:0};
+    return {gameDataVersion:VERSION,profileSource:'user-account',updatedAt:new Date().toISOString(),drills:byId};
+  }
+  function capturedNormalSeed(){
     const rows=OD.seedNormalProfile.profile||[];const byId={};
     for(const d of D.NORMAL_DRILLS){const row=rows.find(x=>x.drill_id===d.drillId);byId[d.drillId]={unlocked:row?!!row.unlocked:!!d.capturedUnlocked,level:row?Number(row.level_id||0):Number(d.capturedLevelId||0)};}
-    return {gameDataVersion:VERSION,updatedAt:new Date().toISOString(),drills:byId};
+    return {gameDataVersion:VERSION,profileSource:'captured-test-fixture',updatedAt:new Date().toISOString(),drills:byId};
   }
   function masterSeed(){
     const rows=OD.seedMasterStock.stock||[];const byId={};
@@ -25,7 +31,7 @@
       const row=value.drills[d.drillId];
       if(!validObject(row)){changed=true;continue;}
       const unlocked=!!row.unlocked;let level=Math.trunc(Number(row.level)||0);
-      if(unlocked)level=Math.max(1,Math.min(3,level||1));else level=Math.max(0,Math.min(3,level));
+      if(unlocked)level=Math.max(0,Math.min(3,level));else level=0;
       drills[d.drillId]={unlocked,level};
       if(row.unlocked!==unlocked||Number(row.level)!==level)changed=true;
     }
@@ -53,7 +59,7 @@
   async function invalidateAllSessions(){const keys=await S.list('training:session:');for(const key of keys)await S.del(key);return keys.length;}
   async function setNormal(drillId,{unlocked,level}){
     const data=await getNormal();if(!D.NORMAL_DRILLS.some(d=>d.drillId===drillId))throw new Error('Unknown normal drill');
-    const isUnlocked=!!unlocked;let lv=Math.trunc(Number(level||0));if(isUnlocked)lv=Math.max(1,Math.min(3,lv||1));else lv=Math.max(0,Math.min(3,lv));
+    const isUnlocked=!!unlocked;let lv=Math.trunc(Number(level||0));if(isUnlocked)lv=Math.max(0,Math.min(3,lv));else lv=0;
     data.drills[drillId]={unlocked:isUnlocked,level:lv};data.updatedAt=new Date().toISOString();await S.set(NORMAL_KEY,JSON.stringify(data));await invalidateAllSessions();return data.drills[drillId];
   }
   async function setMasterStock(drillId,quantity){
@@ -63,8 +69,9 @@
   async function deductMasterUsage(usage){
     const data=await getMaster();for(const [id,countRaw] of Object.entries(usage||{})){const count=Math.max(0,Math.trunc(Number(countRaw)||0));data.stock[id]=Math.max(0,Math.trunc(Number(data.stock[id]||0))-count);}data.updatedAt=new Date().toISOString();await S.set(MASTER_KEY,JSON.stringify(data));await invalidateAllSessions();return data;
   }
-  async function resetToCapturedSnapshot(){const n=normalSeed(),m=masterSeed();await S.set(NORMAL_KEY,JSON.stringify(n));await S.set(MASTER_KEY,JSON.stringify(m));await invalidateAllSessions();return {normal:n,master:m};}
+  async function clearUserSetup(){const n=normalSeed(),m=await getMaster();await S.set(NORMAL_KEY,JSON.stringify(n));await invalidateAllSessions();return {normal:n,master:m};}
+  async function resetToCapturedSnapshot(){const n=capturedNormalSeed(),m=masterSeed();await S.set(NORMAL_KEY,JSON.stringify(n));await S.set(MASTER_KEY,JSON.stringify(m));await invalidateAllSessions();return {normal:n,master:m};}
   function effectPctForLevel(level){const lv=Math.trunc(Number(level)||0);const row=(D.DRILL_LEVELS.levels||[]).find(x=>Number(x.level_id)===lv);return row?Number(row.training_effect_percent):0;}
   function levelName(level){const row=(D.DRILL_LEVELS.levels||[]).find(x=>Number(x.level_id)===Number(level));return row?.name||'Locked';}
-  TE.DrillProfile={VERSION,NORMAL_KEY,MASTER_KEY,ensure,getNormal,getMaster,invalidateAllSessions,setNormal,setMasterStock,deductMasterUsage,resetToCapturedSnapshot,effectPctForLevel,levelName,normalSeed,masterSeed};
+  TE.DrillProfile={VERSION,NORMAL_KEY,MASTER_KEY,ensure,getNormal,getMaster,invalidateAllSessions,setNormal,setMasterStock,deductMasterUsage,clearUserSetup,resetToCapturedSnapshot,effectPctForLevel,levelName,normalSeed,capturedNormalSeed,masterSeed};
 })();

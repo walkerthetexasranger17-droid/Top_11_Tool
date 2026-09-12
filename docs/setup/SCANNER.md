@@ -1,4 +1,4 @@
-# Scanner setup — v0.4.11
+# Scanner setup — v0.4.12
 
 The production scanner is the already-tested scanner retained from the previous build. Repository cleanup must not replace or simplify its logic.
 

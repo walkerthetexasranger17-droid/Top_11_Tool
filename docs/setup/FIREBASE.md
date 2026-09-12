@@ -1,6 +1,6 @@
-# Top Eleven Tool v0.4.11 — Firebase setup
+# Top Eleven Tool v0.4.12 — Firebase setup
 
-v0.4.11 retains the cloud-account foundation while the repository is prepared for GitHub testing. The application remains a static PWA; Firebase Authentication and Cloud Firestore provide identity and synced account data.
+v0.4.12 retains the cloud-account foundation while the repository is prepared for GitHub testing. The application remains a static PWA; Firebase Authentication and Cloud Firestore provide identity and synced account data.
 
 ## 1. Create the Firebase project
 
@@ -46,7 +46,7 @@ After it is enabled, users can enrol an authenticator from **Profile & Security*
 - The Gemini scanner API key remains local to each device and is not synced to Firestore.
 - Scanner queue images remain local to the device that created them.
 
-## 6. Current v0.4.11 scope
+## 6. Current v0.4.12 scope
 
 Cloud-synced namespaces include squad/player data, drill setup, training sessions, mentor levels and team-plan/set-piece data.
 

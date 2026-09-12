@@ -22,6 +22,8 @@ This folder separates current operational documentation from historical developm
 
 ## Releases
 
+- [`releases/v0.4.12.md`](releases/v0.4.12.md) — focused post-testing feature patch.
+
 - [`releases/v0.4.11.md`](releases/v0.4.11.md) — GitHub-testing cleanup release.
 - [`releases/v0.4.10.md`](releases/v0.4.10.md) — free-only account/security release report.
 

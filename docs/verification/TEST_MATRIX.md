@@ -1,4 +1,4 @@
-# Top Eleven Tool v0.4.11 — Test Matrix
+# Top Eleven Tool v0.4.12 — Test Matrix
 
 This is the current release-test record for the GitHub-testing cleanup build.
 
@@ -18,7 +18,7 @@ python tests/package_integrity.py
 
 Also run `node --check` against every `js/*.js` file and `sw.js`.
 
-## v0.4.11 result
+## v0.4.12 result
 
 - Deterministic/core suite: **PASS — 264 assertions**.
 - Scanner Live/failover contract: **PASS — 12 assertions**.
@@ -31,7 +31,7 @@ Also run `node --check` against every `js/*.js` file and `sw.js`.
 
 ## Protected-engine check
 
-The following v0.4.11 files are byte-identical to v0.4.10:
+The following v0.4.12 files are byte-identical to v0.4.10:
 
 - `js/scanner-engine.js`
 - `js/training-engine.js`
@@ -46,7 +46,7 @@ The scanner-engine SHA-256 remains:
 
 ## Manual GitHub/browser smoke checklist
 
-1. Open the hosted build and confirm the visible version is **v0.4.11**.
+1. Open the hosted build and confirm the visible version is **v0.4.12**.
 2. Sign out and confirm the first auth screen shows only **Continue with Google** and **Continue with Email & Password**.
 3. Confirm there is no Facebook, phone/SMS MFA, Blaze or paid-authentication UI.
 4. Complete Google sign-in and confirm the account loads successfully.

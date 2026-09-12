@@ -1,8 +1,8 @@
-# Top Eleven Tool v0.4.11 — Build 30527 Compliance Record
+# Top Eleven Tool v0.4.12 — Build 30527 Compliance Record
 
 Canonical contract: [`../reference/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.md`](../reference/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.md).
 
-v0.4.11 is a repository-cleanup release. The verified game-data and recommendation engines carried from v0.4.10 remain unchanged.
+v0.4.12 is a repository-cleanup release. The verified game-data and recommendation engines carried from v0.4.10 remain unchanged.
 
 | Area | Current status |
 | --- | --- |
@@ -18,7 +18,7 @@ v0.4.11 is a repository-cleanup release. The verified game-data and recommendati
 | Account/cloud layer | PASS static contract — Google + Email/Password + TOTP only; per-user Firestore path/rules retained. Real Firebase round trip remains a manual hosted-browser test. |
 | Evidence boundary | PASS — unresolved private/server game logic is not invented. |
 
-## v0.4.11 regression result
+## v0.4.12 regression result
 
 - Core: **264 assertions passed**.
 - Scanner/failover/image contracts: **passed**.
