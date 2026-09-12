@@ -1,4 +1,5 @@
 (() => {
+  window.__TE_RUNTIME__='0.4.11-r3';
   const TE=window.TE5;const D=TE.Data,P=TE.Players,S=TE.Storage,DP=TE.DrillProfile,T=TE.Training,TT=TE.TeamTraining,SC=TE.Scanner,R=TE.Recommendations,F=TE.Formation,TP=TE.TeamPlan,TAC=TE.Tactics,M=TE.Mentor,B=TE.BibleData,C=TE.Cloud;
   const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
   const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -400,7 +401,17 @@
     await applyPage(target,{scroll:false});if(target==='training')setTrainingTab(state.trainingTab||'individual');if(target==='team-plan'){setTeamPlanTab(state.teamPlanTab||'formation');setTacticPhase(state.tacticPhase||'possession');}
     const nav=performance.getEntriesByType?.('navigation')?.[0];if(nav?.type==='reload')setTimeout(()=>toast('✓ Successfully refreshed'),180);
   }
-  let cloudRefreshTimer=0;window.addEventListener('te-cloud-data-changed',()=>{clearTimeout(cloudRefreshTimer);cloudRefreshTimer=setTimeout(async()=>{try{await renderDashboard();if(state.page==='squad')await renderSquad();else if(state.page==='player')await renderPlayerProfile();else if(state.page==='training')await renderTrainingPicker();else if(state.page==='team-plan')await renderTeamPlan();if($('#localSquadStatus')){const n=(await P.all()).length;$('#localSquadStatus').textContent=`${n} cloud player${n===1?'':'s'} in this account.`;}}catch(err){console.warn('Cloud UI refresh',err)}},180);});
-  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'}).catch(console.warn));
+  let cloudRefreshTimer=0,cloudUiRefreshSeq=0;
+  function scheduleCloudUiRefresh(){
+    clearTimeout(cloudRefreshTimer);const seq=++cloudUiRefreshSeq;
+    cloudRefreshTimer=setTimeout(async()=>{if(seq!==cloudUiRefreshSeq)return;try{
+      await renderDashboard();
+      if(state.page==='squad')await renderSquad();else if(state.page==='player')await renderPlayerProfile();else if(state.page==='training')await renderTrainingPicker();else if(state.page==='team-plan')await renderTeamPlan();
+      if($('#localSquadStatus')){const n=(await P.all()).length;$('#localSquadStatus').textContent=`${n} cloud player${n===1?'':'s'} in this account.`;}
+    }catch(err){console.warn('Cloud UI refresh',err)}},120);
+  }
+  window.addEventListener('te-cloud-synced',scheduleCloudUiRefresh);
+  window.addEventListener('te-cloud-data-changed',scheduleCloudUiRefresh);
+  if('serviceWorker'in navigator)window.addEventListener('load',async()=>{try{const reg=await navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'});await reg.update()}catch(err){console.warn('Service worker update',err)}});
   init().catch(async err=>{console.error('App initialisation failed',err);try{await applyPage(state.page||'dashboard',{scroll:false});}catch(renderErr){console.error('App recovery render failed',renderErr);}});
 })();

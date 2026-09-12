@@ -156,7 +156,7 @@ if '| Tackling | Stay On Feet | 1 | High | 7 |' not in packaged_bible or '| Tack
     errs.append('packaged Bible still contains stale tackling protocol IDs')
 
 # Runtime module ordering.
-scripts=[Path(x.get('src')).name for x in soup.find_all('script',src=True)]
+scripts=[Path(x.get('src').split('?')[0]).name for x in soup.find_all('script',src=True)]
 for req in ['bible-data.js','cloud.js','formation.js','tactics-engine.js','mentor-engine.js','team-plan-engine.js','training-engine.js','team-training-engine.js','scanner-engine.js','app.js']:
     if req not in scripts: errs.append(f'missing runtime script {req}')
 if scripts and scripts[-1]!='app.js': errs.append('app.js must load after dependency modules')

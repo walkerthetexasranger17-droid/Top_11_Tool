@@ -15,7 +15,7 @@
   };
   const SYNC_PREFIXES=['player:','squad:','training:normal-drills:','training:master-stock:','training:session:','teamplan:','mentor:'];
   const LOCAL_ONLY_PREFIXES=['scanner:queue:','migration:','schema:','squad:recovery:'];
-  const state={status:'idle',config:null,app:null,auth:null,db:null,user:null,error:null,mods:null,unsub:null,pendingMfa:null,pendingTotp:null,initialAuthResolved:false,syncCount:0,lastSyncAt:0};
+  const state={status:'idle',config:null,app:null,auth:null,db:null,user:null,error:null,mods:null,unsub:null,pendingMfa:null,pendingTotp:null,initialAuthResolved:false,syncCount:0,lastSyncAt:0,lastSyncSource:'none',serverSyncOk:false,localOwnerUid:(()=>{try{return localStorage.getItem(CLOUD_USER_KEY)||''}catch(_){return''}})()};
 
   function qs(sel){return document.querySelector(sel)}
   function qsa(sel){return [...document.querySelectorAll(sel)]}
@@ -101,10 +101,7 @@
         let settled=false;
         m.onAuthStateChanged(state.auth,async user=>{
           state.user=user||null;state.initialAuthResolved=true;updateCloudChrome();
-          if(user){
-            try{localStorage.setItem(CLOUD_USER_KEY,user.uid)}catch(_){}
-            await ensureUserProfile().catch(console.warn);
-          }
+          if(user){await ensureUserProfile().catch(console.warn);}
           if(!settled){settled=true;resolve()}
         },err=>{state.error=err;if(!settled){settled=true;resolve()}})
       });
@@ -124,23 +121,44 @@
   async function syncDown(){
     if(!state.user)return;
     const m=state.mods,col=m.collection(state.db,'users',state.user.uid,'kv');
-    const alreadyBound=!!localStorage.getItem(CLOUD_BOUND_PREFIX+state.user.uid);
-    const snap=alreadyBound?await m.getDocs(col):await m.getDocsFromServer(col);
-    const remote=new Map();snap.forEach(d=>{const x=d.data()||{},key=x.key||decodeKey(d.id);if(shouldSyncKey(key))remote.set(key,String(x.value??''))});
-    // Cloud is authoritative. Local-only scanner keys remain untouched.
-    for(const key of localSyncedKeys())if(!remote.has(key))localDelRaw(key);
+    let snap=null,authoritative=false,source='local';
+    try{
+      // A server snapshot is the only snapshot allowed to remove local cloud-backed keys.
+      // Using getDocs() here can legally fall back to Firestore's IndexedDB cache, which
+      // previously made a stale/empty cache look authoritative and caused squad records
+      // to disappear until a refresh or later live snapshot restored them.
+      snap=await m.getDocsFromServer(col);authoritative=true;source='server';
+    }catch(err){
+      console.warn('Cloud server hydration unavailable; preserving local cache',err);
+      try{snap=await m.getDocsFromCache(col);source='firestore-cache'}catch(_){snap=null;source='local'}
+    }
+    const remote=new Map();
+    snap?.forEach(d=>{const x=d.data()||{},key=x.key||decodeKey(d.id);if(shouldSyncKey(key))remote.set(key,String(x.value??''))});
+    // Only a successful server read may prove that a remote key no longer exists.
+    // If a different account signs in while offline, never expose the previous account's
+    // localStorage mirror; clear that mirror before applying this user's Firestore cache.
+    const ownerChanged=!!state.localOwnerUid&&state.localOwnerUid!==state.user.uid;
+    if(ownerChanged&&!authoritative)for(const key of localSyncedKeys())localDelRaw(key);
+    if(authoritative)for(const key of localSyncedKeys())if(!remote.has(key))localDelRaw(key);
     for(const [key,val] of remote)localSetRaw(key,val);
-    state.syncCount=remote.size;state.lastSyncAt=Date.now();
-    try{localStorage.setItem(CLOUD_BOUND_PREFIX+state.user.uid,new Date().toISOString())}catch(_){}
-    window.dispatchEvent(new CustomEvent('te-cloud-synced',{detail:{count:remote.size}}));
+    state.syncCount=remote.size;state.lastSyncAt=Date.now();state.lastSyncSource=source;state.serverSyncOk=authoritative;
+    try{localStorage.setItem(CLOUD_USER_KEY,state.user.uid);state.localOwnerUid=state.user.uid;if(authoritative)localStorage.setItem(CLOUD_BOUND_PREFIX+state.user.uid,new Date().toISOString())}catch(_){}
+    window.dispatchEvent(new CustomEvent('te-cloud-synced',{detail:{count:remote.size,authoritative,source}}));
   }
   function startLiveSync(){
     if(state.unsub)state.unsub();
     const m=state.mods,col=m.collection(state.db,'users',state.user.uid,'kv');
-    state.unsub=m.onSnapshot(col,snap=>{
-      let changed=false;
-      snap.docChanges().forEach(c=>{const x=c.doc.data()||{},key=x.key||decodeKey(c.doc.id);if(!shouldSyncKey(key))return;if(c.type==='removed')localDelRaw(key);else localSetRaw(key,String(x.value??''));changed=true});
-      if(changed){state.syncCount=snap.size;state.lastSyncAt=Date.now();window.dispatchEvent(new CustomEvent('te-cloud-data-changed'));renderAccountPage()}
+    state.unsub=m.onSnapshot(col,{includeMetadataChanges:true},snap=>{
+      const authoritative=!snap.metadata?.fromCache;let changed=false;
+      snap.docChanges().forEach(c=>{
+        const x=c.doc.data()||{},key=x.key||decodeKey(c.doc.id);if(!shouldSyncKey(key))return;
+        // Cached snapshots may populate/update local data, but must never delete it. A
+        // stale cached removal was another path that could temporarily empty the squad.
+        if(c.type==='removed'){if(authoritative){localDelRaw(key);changed=true}}
+        else{localSetRaw(key,String(x.value??''));changed=true}
+      });
+      if(authoritative){state.serverSyncOk=true;state.lastSyncSource='server-live'}
+      if(changed||authoritative){state.syncCount=snap.size;state.lastSyncAt=Date.now();window.dispatchEvent(new CustomEvent('te-cloud-data-changed',{detail:{count:snap.size,authoritative,source:authoritative?'server-live':'firestore-cache'}}));renderAccountPage()}
     },err=>console.warn('Cloud sync listener',err));
   }
   async function ensureUserProfile(){
