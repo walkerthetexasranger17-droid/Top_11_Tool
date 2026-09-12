@@ -16,9 +16,36 @@
     return {gameDataVersion:VERSION,updatedAt:new Date().toISOString(),stock:byId};
   }
   async function readJson(key){const raw=await S.get(key);if(!raw)return null;try{return JSON.parse(raw);}catch(_){return null;}}
+  function validObject(value){return !!value&&typeof value==='object'&&!Array.isArray(value);}
+  function repairNormal(value){
+    const seed=normalSeed();
+    if(!validObject(value)||value.gameDataVersion!==VERSION||!validObject(value.drills))return {data:seed,changed:true};
+    const drills={...seed.drills};let changed=false;
+    for(const d of D.NORMAL_DRILLS){
+      const row=value.drills[d.drillId];
+      if(!validObject(row)){changed=true;continue;}
+      const unlocked=!!row.unlocked;let level=Math.trunc(Number(row.level)||0);
+      if(unlocked)level=Math.max(1,Math.min(3,level||1));else level=Math.max(0,Math.min(3,level));
+      drills[d.drillId]={unlocked,level};
+      if(row.unlocked!==unlocked||Number(row.level)!==level)changed=true;
+    }
+    if(Object.keys(value.drills).some(id=>!Object.prototype.hasOwnProperty.call(drills,id)))changed=true;
+    return {data:{...value,gameDataVersion:VERSION,drills,updatedAt:value.updatedAt||seed.updatedAt},changed};
+  }
+  function repairMaster(value){
+    const seed=masterSeed();
+    if(!validObject(value)||value.gameDataVersion!==VERSION||!validObject(value.stock))return {data:seed,changed:true};
+    const stock={...seed.stock};let changed=false;
+    for(const d of D.MASTER_CAMPUS_DRILLS){
+      const raw=value.stock[d.drillId];const q=Math.max(0,Math.trunc(Number(raw)||0));stock[d.drillId]=q;
+      if(raw==null||Number(raw)!==q)changed=true;
+    }
+    if(Object.keys(value.stock).some(id=>!Object.prototype.hasOwnProperty.call(stock,id)))changed=true;
+    return {data:{...value,gameDataVersion:VERSION,stock,updatedAt:value.updatedAt||seed.updatedAt},changed};
+  }
   async function ensure(){
-    let n=await readJson(NORMAL_KEY);if(!n||n.gameDataVersion!==VERSION){n=normalSeed();await S.set(NORMAL_KEY,JSON.stringify(n));}
-    let m=await readJson(MASTER_KEY);if(!m||m.gameDataVersion!==VERSION){m=masterSeed();await S.set(MASTER_KEY,JSON.stringify(m));}
+    const nr=repairNormal(await readJson(NORMAL_KEY));let n=nr.data;if(nr.changed){n.updatedAt=new Date().toISOString();await S.set(NORMAL_KEY,JSON.stringify(n));}
+    const mr=repairMaster(await readJson(MASTER_KEY));let m=mr.data;if(mr.changed){m.updatedAt=new Date().toISOString();await S.set(MASTER_KEY,JSON.stringify(m));}
     return {normal:n,master:m};
   }
   async function getNormal(){return (await ensure()).normal;}

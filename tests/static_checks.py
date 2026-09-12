@@ -73,7 +73,8 @@ if not account_btn or account_btn.get('title')!='Profile & Security': errs.appen
 css_text=(ROOT/'css/app.css').read_text(encoding='utf-8')
 if '.account-button' not in css_text or 'cursor:pointer' not in css_text: errs.append('profile button does not advertise clickability with a pointer cursor')
 sw_text=(ROOT/'sw.js').read_text(encoding='utf-8')
-if "const CACHE='te-v0-4-11'" not in sw_text or "e.request.mode==='navigate'" not in sw_text: errs.append('v0.4.11 service-worker update/navigation freshness guard missing')
+if "const CACHE='te-v0-4-11" not in sw_text or "e.request.mode==='navigate'" not in sw_text or "cache:'no-store'" not in sw_text: errs.append('v0.4.11 service-worker update/navigation freshness guard missing')
+if "toast('App initialisation failed','err')" in js: errs.append('generic app-initialisation error toast survived GitHub testing hotfix')
 if not (ROOT/'firestore.rules').is_file(): errs.append('firestore.rules missing')
 rules=(ROOT/'firestore.rules').read_text(encoding='utf-8') if (ROOT/'firestore.rules').is_file() else ''
 if 'request.auth.uid == userId' not in rules: errs.append('Firestore rules do not restrict user data to matching auth uid')
