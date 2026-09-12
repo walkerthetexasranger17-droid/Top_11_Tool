@@ -4,6 +4,7 @@
   const CONFIG_KEY='te:firebase:config:v1';
   const CLOUD_USER_KEY='te:firebase:last-user:v1';
   const CLOUD_BOUND_PREFIX='te:firebase:bound:';
+  const POST_AUTH_HOME_KEY='te:post-auth:home';
   const LOCAL_PREFIX='te:';
   const DEFAULT_CONFIG={
     apiKey:'AIzaSyBHyS3QJz4MfDFyKeA1UuU9tANyBqYOAbY',
@@ -77,7 +78,7 @@
     qsa('[data-auth-tab]').forEach(el=>el.classList.toggle('active',el.dataset.authTab===mode));
     if(mode!=='mfa')setAuthMessage('');
   }
-  function showGate(mode){const gate=qs('#authGate');show(gate,true);document.body.classList.add('auth-locked');gateMode(mode||(!state.config?'setup':'signin'))}
+  function showGate(mode){const gate=qs('#authGate');show(gate,true);document.body.classList.add('auth-locked');document.body.classList.remove('booting');gateMode(mode||(!state.config?'setup':'signin'))}
   function hideGate(){show(qs('#authGate'),false);document.body.classList.remove('auth-locked')}
   function updateCloudChrome(){
     const status=qs('.top-status');
@@ -116,49 +117,103 @@
   async function ensureReady(){if(!bootPromise)bootPromise=initFirebase();return bootPromise}
 
   function kvRef(key){const m=state.mods;return m.doc(state.db,'users',state.user.uid,'kv',encodeKey(key))}
-  async function writeKey(key,value){if(!state.user||!state.db||!shouldSyncKey(key))return;const m=state.mods;await m.setDoc(kvRef(key),{key:String(key),value:String(value),deviceUpdatedAt:Date.now(),updatedAt:m.serverTimestamp()},{merge:true})}
-  async function deleteKey(key){if(!state.user||!state.db||!shouldSyncKey(key))return;await state.mods.deleteDoc(kvRef(key))}
+  async function writeKey(key,value){
+    if(!state.user||!state.db||!shouldSyncKey(key))return;
+    const m=state.mods;
+    await m.setDoc(kvRef(key),{key:String(key),value:String(value),deleted:false,deviceUpdatedAt:Date.now(),updatedAt:m.serverTimestamp()},{merge:true});
+  }
+  async function deleteKey(key){
+    if(!state.user||!state.db||!shouldSyncKey(key))return;
+    const m=state.mods;
+    // Keep an explicit tombstone so a missing/incomplete cloud snapshot can never be
+    // mistaken for permission to erase a valid local squad record.
+    await m.setDoc(kvRef(key),{key:String(key),value:'',deleted:true,deviceUpdatedAt:Date.now(),updatedAt:m.serverTimestamp()},{merge:true});
+  }
+  function snapshotEntries(snap){
+    const remote=new Map();
+    snap?.forEach(d=>{
+      const x=d.data()||{},key=x.key||decodeKey(d.id);
+      if(!shouldSyncKey(key))return;
+      const raw=x.value;let value='';if(raw!=null){value=typeof raw==='string'?raw:(()=>{try{return JSON.stringify(raw)}catch(_){return String(raw)}})();}
+      remote.set(key,{deleted:x.deleted===true,value});
+    });
+    return remote;
+  }
+  async function applyAuthoritativeSnapshot(snap,{source='server',migrateMissing=true}={}){
+    if(!state.user)return;
+    const remote=snapshotEntries(snap);
+    const previousOwner=state.localOwnerUid||'';
+    const ownerChanged=!!previousOwner&&previousOwner!==state.user.uid;
+
+    if(ownerChanged)for(const key of localSyncedKeys())localDelRaw(key);
+
+    for(const [key,entry] of remote){
+      if(entry.deleted)localDelRaw(key);
+      else localSetRaw(key,entry.value);
+    }
+
+    // Missing remote documents are not deletions. For this same user, preserve local
+    // records and upload them as recovery data. Explicit cloud deletions are represented
+    // by tombstones instead.
+    if(migrateMissing&&!ownerChanged){
+      const uploads=[];
+      for(const key of localSyncedKeys()){
+        if(remote.has(key))continue;
+        let value=null;try{value=localStorage.getItem(LOCAL_PREFIX+key)}catch(_){}
+        if(value!=null)uploads.push(writeKey(key,value).catch(err=>console.warn('Cloud recovery upload deferred',key,err)));
+      }
+      if(uploads.length)await Promise.all(uploads);
+    }
+
+    state.syncCount=localSyncedKeys().length;
+    state.lastSyncAt=Date.now();state.lastSyncSource=source;state.serverSyncOk=true;
+    try{localStorage.setItem(CLOUD_USER_KEY,state.user.uid);state.localOwnerUid=state.user.uid;localStorage.setItem(CLOUD_BOUND_PREFIX+state.user.uid,new Date().toISOString())}catch(_){}
+    window.dispatchEvent(new CustomEvent('te-cloud-synced',{detail:{count:state.syncCount,authoritative:true,source}}));
+  }
+  function applyCachedSnapshot(snap,{source='firestore-cache'}={}){
+    if(!state.user)return;
+    const previousOwner=state.localOwnerUid||'';
+    const ownerChanged=!!previousOwner&&previousOwner!==state.user.uid;
+    if(ownerChanged)for(const key of localSyncedKeys())localDelRaw(key);
+
+    const remote=snapshotEntries(snap);
+    for(const [key,entry] of remote){
+      if(entry.deleted)localDelRaw(key);
+      else localSetRaw(key,entry.value);
+    }
+
+    state.syncCount=localSyncedKeys().length;state.lastSyncAt=Date.now();state.lastSyncSource=source;
+    try{localStorage.setItem(CLOUD_USER_KEY,state.user.uid);state.localOwnerUid=state.user.uid}catch(_){}
+    window.dispatchEvent(new CustomEvent('te-cloud-synced',{detail:{count:state.syncCount,authoritative:false,source}}));
+  }
   async function syncDown(){
     if(!state.user)return;
     const m=state.mods,col=m.collection(state.db,'users',state.user.uid,'kv');
-    let snap=null,authoritative=false,source='local';
     try{
-      // A server snapshot is the only snapshot allowed to remove local cloud-backed keys.
-      // Using getDocs() here can legally fall back to Firestore's IndexedDB cache, which
-      // previously made a stale/empty cache look authoritative and caused squad records
-      // to disappear until a refresh or later live snapshot restored them.
-      snap=await m.getDocsFromServer(col);authoritative=true;source='server';
+      const snap=await m.getDocsFromServer(col);
+      await applyAuthoritativeSnapshot(snap,{source:'server',migrateMissing:true});
     }catch(err){
-      console.warn('Cloud server hydration unavailable; preserving local cache',err);
-      try{snap=await m.getDocsFromCache(col);source='firestore-cache'}catch(_){snap=null;source='local'}
+      console.warn('Cloud server hydration unavailable; preserving local data',err);
+      try{applyCachedSnapshot(await m.getDocsFromCache(col),{source:'firestore-cache'})}
+      catch(_){
+        state.syncCount=localSyncedKeys().length;state.lastSyncAt=Date.now();state.lastSyncSource='local';
+        window.dispatchEvent(new CustomEvent('te-cloud-synced',{detail:{count:state.syncCount,authoritative:false,source:'local'}}));
+      }
     }
-    const remote=new Map();
-    snap?.forEach(d=>{const x=d.data()||{},key=x.key||decodeKey(d.id);if(shouldSyncKey(key))remote.set(key,String(x.value??''))});
-    // Only a successful server read may prove that a remote key no longer exists.
-    // If a different account signs in while offline, never expose the previous account's
-    // localStorage mirror; clear that mirror before applying this user's Firestore cache.
-    const ownerChanged=!!state.localOwnerUid&&state.localOwnerUid!==state.user.uid;
-    if(ownerChanged&&!authoritative)for(const key of localSyncedKeys())localDelRaw(key);
-    if(authoritative)for(const key of localSyncedKeys())if(!remote.has(key))localDelRaw(key);
-    for(const [key,val] of remote)localSetRaw(key,val);
-    state.syncCount=remote.size;state.lastSyncAt=Date.now();state.lastSyncSource=source;state.serverSyncOk=authoritative;
-    try{localStorage.setItem(CLOUD_USER_KEY,state.user.uid);state.localOwnerUid=state.user.uid;if(authoritative)localStorage.setItem(CLOUD_BOUND_PREFIX+state.user.uid,new Date().toISOString())}catch(_){}
-    window.dispatchEvent(new CustomEvent('te-cloud-synced',{detail:{count:remote.size,authoritative,source}}));
   }
+  let liveApply=Promise.resolve();
   function startLiveSync(){
     if(state.unsub)state.unsub();
     const m=state.mods,col=m.collection(state.db,'users',state.user.uid,'kv');
     state.unsub=m.onSnapshot(col,{includeMetadataChanges:true},snap=>{
-      const authoritative=!snap.metadata?.fromCache;let changed=false;
-      snap.docChanges().forEach(c=>{
-        const x=c.doc.data()||{},key=x.key||decodeKey(c.doc.id);if(!shouldSyncKey(key))return;
-        // Cached snapshots may populate/update local data, but must never delete it. A
-        // stale cached removal was another path that could temporarily empty the squad.
-        if(c.type==='removed'){if(authoritative){localDelRaw(key);changed=true}}
-        else{localSetRaw(key,String(x.value??''));changed=true}
-      });
-      if(authoritative){state.serverSyncOk=true;state.lastSyncSource='server-live'}
-      if(changed||authoritative){state.syncCount=snap.size;state.lastSyncAt=Date.now();window.dispatchEvent(new CustomEvent('te-cloud-data-changed',{detail:{count:snap.size,authoritative,source:authoritative?'server-live':'firestore-cache'}}));renderAccountPage()}
+      liveApply=liveApply.then(async()=>{
+        const authoritative=!snap.metadata?.fromCache;
+        if(authoritative)await applyAuthoritativeSnapshot(snap,{source:'server-live',migrateMissing:true});
+        else applyCachedSnapshot(snap,{source:'firestore-cache-live'});
+        state.syncCount=localSyncedKeys().length;state.lastSyncAt=Date.now();
+        window.dispatchEvent(new CustomEvent('te-cloud-data-changed',{detail:{count:state.syncCount,authoritative,source:authoritative?'server-live':'firestore-cache-live'}}));
+        renderAccountPage();
+      }).catch(err=>console.warn('Cloud live apply',err));
     },err=>console.warn('Cloud sync listener',err));
   }
   async function ensureUserProfile(){
@@ -173,35 +228,36 @@
     const hint=resolver.hints.find(h=>h.factorId===state.mods.TotpMultiFactorGenerator.FACTOR_ID)||resolver.hints[0];
     const label=hint?.displayName||'Authenticator';text(qs('#mfaHint'),`Enter the 6-digit code from ${label}.`);showGate('mfa');
   }
+  function markPostAuthHome(){try{sessionStorage.setItem(POST_AUTH_HOME_KEY,'1')}catch(_){}}
   async function resolveMfa(code){
     const resolver=state.pendingMfa;if(!resolver)throw new Error('No two-step verification challenge is active.');
     const hint=resolver.hints.find(h=>h.factorId===state.mods.TotpMultiFactorGenerator.FACTOR_ID)||resolver.hints[0];
     if(!hint||hint.factorId!==state.mods.TotpMultiFactorGenerator.FACTOR_ID)throw new Error('This build currently supports authenticator-app MFA only.');
     const assertion=state.mods.TotpMultiFactorGenerator.assertionForSignIn(hint.uid,String(code).trim());
-    await resolver.resolveSignIn(assertion);state.pendingMfa=null;window.location.reload();
+    await resolver.resolveSignIn(assertion);state.pendingMfa=null;markPostAuthHome();window.location.reload();
   }
 
   async function signInEmail(email,password){
-    try{await state.mods.signInWithEmailAndPassword(state.auth,String(email).trim(),String(password));window.location.reload()}
+    try{await state.mods.signInWithEmailAndPassword(state.auth,String(email).trim(),String(password));markPostAuthHome();window.location.reload()}
     catch(err){if(await handleMfaError(err))return;throw err}
   }
   async function createAccount(name,email,password){
     const cred=await state.mods.createUserWithEmailAndPassword(state.auth,String(email).trim(),String(password));
     if(name?.trim())await state.mods.updateProfile(cred.user,{displayName:name.trim()});
     try{await state.mods.sendEmailVerification(cred.user)}catch(_){}
-    window.location.reload();
+    markPostAuthHome();window.location.reload();
   }
   async function socialSignIn(){
     const provider=new state.mods.GoogleAuthProvider();
-    try{await state.mods.signInWithPopup(state.auth,provider);window.location.reload()}
+    try{await state.mods.signInWithPopup(state.auth,provider);markPostAuthHome();window.location.reload()}
     catch(err){
       if(await handleMfaError(err))return;
-      if(['auth/popup-blocked','auth/operation-not-supported-in-this-environment'].includes(err?.code)){await state.mods.signInWithRedirect(state.auth,provider);return;}
+      if(['auth/popup-blocked','auth/operation-not-supported-in-this-environment'].includes(err?.code)){markPostAuthHome();await state.mods.signInWithRedirect(state.auth,provider);return;}
       throw err;
     }
   }
   async function sendPasswordReset(email){await state.mods.sendPasswordResetEmail(state.auth,String(email).trim())}
-  async function signOut(){if(state.unsub){state.unsub();state.unsub=null}await state.mods.signOut(state.auth);window.location.reload()}
+  async function signOut(){if(state.unsub){state.unsub();state.unsub=null}markPostAuthHome();await state.mods.signOut(state.auth);window.location.reload()}
 
   async function reauthenticate(currentPassword=''){
     const user=state.auth.currentUser;if(!user)throw new Error('You are signed out.');

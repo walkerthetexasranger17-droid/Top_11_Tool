@@ -1,5 +1,5 @@
 (() => {
-  window.__TE_RUNTIME__='0.4.11-r3';
+  window.__TE_RUNTIME__='0.4.11-r4';
   const TE=window.TE5;const D=TE.Data,P=TE.Players,S=TE.Storage,DP=TE.DrillProfile,T=TE.Training,TT=TE.TeamTraining,SC=TE.Scanner,R=TE.Recommendations,F=TE.Formation,TP=TE.TeamPlan,TAC=TE.Tactics,M=TE.Mentor,B=TE.BibleData,C=TE.Cloud;
   const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
   const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -392,13 +392,38 @@
     return result;
   }
   $('#clearDataBtn')?.addEventListener('click',async()=>{const b=$('#clearDataBtn');if(!b.dataset.armed){b.dataset.armed='1';b.textContent='Tap again to confirm';setTimeout(()=>{delete b.dataset.armed;b.textContent='Clear all squad data';},3500);return;}for(const k of await S.list('player:'))await P.remove(k);for(const k of await S.list('training:session:'))await S.del(k);delete b.dataset.armed;b.textContent='Clear all squad data';toast('Squad data cleared');renderDashboard();});
+  async function startupStep(label,fn){try{return await fn();}catch(err){console.warn(`Startup step failed: ${label}`,err);return null;}}
   async function init(){
+    // Restore the requested route immediately, but keep the app visually hidden until
+    // authentication + cloud hydration + the first real page render are complete. This
+    // prevents the static Home page from flashing during every refresh.
+    restoreUiState();
     const cloudReady=await C?.ensureReady?.();if(!cloudReady)return;
-    restoreUiState();await P.migrate();state.squadFilter='ALL';state.search='';state.squadRole='';state.squadAgeMin='';state.squadAgeMax='';state.squadOvrMin='';state.squadOvrMax='';state.squadPlaystyle='';state.squadAvailability='';persistUiState();await DP.ensure();await loadMentorLevels();if(!await S.get(UI_RESTRUCTURE_KEY)){await TP.invalidate();await S.set(UI_RESTRUCTURE_KEY,new Date().toISOString());}resetScanner();await renderGeminiScannerSettings();setTrainingTab(state.trainingTab||'individual');await updateTrainingIntel();await restoreScanQueueState();const cloudCount=(await P.all()).length;if($('#localSquadStatus'))$('#localSquadStatus').textContent=`${cloudCount} cloud player${cloudCount===1?'':'s'} in this account.`;
-    let target=state.page||'dashboard';const existing=history.state;
-    if(existing?.teTopEleven){target=existing.page||target;if(existing.playerKey!=null)state.playerKey=existing.playerKey;if(existing.trainingKey!=null)state.trainingKey=existing.trainingKey;if(existing.trainingTab)state.trainingTab=existing.trainingTab;history.replaceState(routeState(target),'');}
-    else{history.replaceState(routeState('dashboard'),'');if(target!=='dashboard')history.pushState(routeState(target),'');}
+
+    let forceHome=false;
+    try{forceHome=sessionStorage.getItem('te:post-auth:home')==='1';if(forceHome)sessionStorage.removeItem('te:post-auth:home');}catch(_){}
+    if(forceHome){state.page='dashboard';state.playerKey='';state.trainingKey='';state.trainingTab='individual';}
+
+    await P.migrate();
+    state.squadFilter='ALL';state.search='';state.squadRole='';state.squadAgeMin='';state.squadAgeMax='';state.squadOvrMin='';state.squadOvrMax='';state.squadPlaystyle='';state.squadAvailability='';persistUiState();
+
+    // Auxiliary startup work must never stop Squad/Profile from loading.
+    await startupStep('drill profile',()=>DP.ensure());
+    await startupStep('mentor levels',()=>loadMentorLevels());
+    await startupStep('UI restructure',async()=>{if(!await S.get(UI_RESTRUCTURE_KEY)){await TP.invalidate();await S.set(UI_RESTRUCTURE_KEY,new Date().toISOString());}});
+    try{resetScanner();}catch(err){console.warn('Startup step failed: scanner reset',err)}
+    await startupStep('scanner settings',()=>renderGeminiScannerSettings());
+    setTrainingTab(state.trainingTab||'individual');
+    await startupStep('training intelligence',()=>updateTrainingIntel());
+    await startupStep('scan queue',()=>restoreScanQueueState());
+
+    const cloudCount=(await P.all()).length;if($('#localSquadStatus'))$('#localSquadStatus').textContent=`${cloudCount} cloud player${cloudCount===1?'':'s'} in this account.`;
+    let target=forceHome?'dashboard':(state.page||'dashboard');const existing=history.state;
+    if(!forceHome&&existing?.teTopEleven){target=existing.page||target;if(existing.playerKey!=null)state.playerKey=existing.playerKey;if(existing.trainingKey!=null)state.trainingKey=existing.trainingKey;if(existing.trainingTab)state.trainingTab=existing.trainingTab;history.replaceState(routeState(target),'');}
+    else{history.replaceState(routeState(target),'');}
+
     await applyPage(target,{scroll:false});if(target==='training')setTrainingTab(state.trainingTab||'individual');if(target==='team-plan'){setTeamPlanTab(state.teamPlanTab||'formation');setTacticPhase(state.tacticPhase||'possession');}
+    document.body.classList.remove('booting');
     const nav=performance.getEntriesByType?.('navigation')?.[0];if(nav?.type==='reload')setTimeout(()=>toast('✓ Successfully refreshed'),180);
   }
   let cloudRefreshTimer=0,cloudUiRefreshSeq=0;
@@ -413,5 +438,5 @@
   window.addEventListener('te-cloud-synced',scheduleCloudUiRefresh);
   window.addEventListener('te-cloud-data-changed',scheduleCloudUiRefresh);
   if('serviceWorker'in navigator)window.addEventListener('load',async()=>{try{const reg=await navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'});await reg.update()}catch(err){console.warn('Service worker update',err)}});
-  init().catch(async err=>{console.error('App initialisation failed',err);try{await applyPage(state.page||'dashboard',{scroll:false});}catch(renderErr){console.error('App recovery render failed',renderErr);}});
+  init().catch(async err=>{console.error('App initialisation failed',err);try{await applyPage(state.page||'dashboard',{scroll:false});}catch(renderErr){console.error('App recovery render failed',renderErr);}finally{document.body.classList.remove('booting');}});
 })();

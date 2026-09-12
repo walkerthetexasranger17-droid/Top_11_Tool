@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-runtime="0.4.11-r3">
+<html lang="en" data-runtime="0.4.11-r4">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -10,13 +10,13 @@
   <meta name="application-name" content="Top Eleven Tool">
   <meta name="apple-mobile-web-app-title" content="Top Eleven Tool">
   <title>Top Eleven Tool</title>
-  <link rel="manifest" href="./manifest.json?r=0411r3">
+  <link rel="manifest" href="./manifest.json?r=0411r4">
   <link rel="icon" href="./icon-192.png"><link rel="apple-touch-icon" href="./icon-192.png">
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./css/app.css?r=0411r3">
+  <link rel="stylesheet" href="./css/app.css?r=0411r4">
 </head>
-<body>
+<body class="booting">
 <div class="auth-gate" id="authGate" hidden>
   <div class="auth-shell">
     <div class="auth-brand"><img src="./icon-192.png" alt=""><div><b>TOP ELEVEN <span>TOOL</span></b><small>Cloud account · v0.4.11</small></div></div>
@@ -184,6 +184,6 @@
   <div class="dialog-backdrop" id="confirmDialogBackdrop"><div class="confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="confirmDialogTitle"><div class="section-kicker">Squad</div><div class="section-title" id="confirmDialogTitle">Delete player?</div><p id="confirmDialogCopy">Are you sure you want to permanently remove this player from your squad?</p><div class="btn-row spaced"><button class="btn ghost" id="confirmCancelBtn" type="button">Cancel</button><button class="btn danger" id="confirmDeleteBtn" type="button">Delete</button></div></div></div>
   <div class="toast" id="toast"></div>
 </div>
-<script src="./js/optimizer-data.js?r=0411r3"></script><script src="./js/bible-data.js?r=0411r3"></script><script src="./js/data.js?r=0411r3"></script><script src="./js/cloud.js?r=0411r3"></script><script src="./js/storage.js?r=0411r3"></script><script src="./js/drill-profile.js?r=0411r3"></script><script src="./js/players.js?r=0411r3"></script><script src="./js/training-engine.js?r=0411r3"></script><script src="./js/team-training-engine.js?r=0411r3"></script><script src="./js/scanner-engine.js?r=0411r3"></script><script src="./js/recommendations.js?r=0411r3"></script><script src="./js/formation.js?r=0411r3"></script><script src="./js/tactics-engine.js?r=0411r3"></script><script src="./js/mentor-engine.js?r=0411r3"></script><script src="./js/team-plan-engine.js?r=0411r3"></script><script src="./js/app.js?r=0411r3"></script>
+<script src="./js/optimizer-data.js?r=0411r4"></script><script src="./js/bible-data.js?r=0411r4"></script><script src="./js/data.js?r=0411r4"></script><script src="./js/cloud.js?r=0411r4"></script><script src="./js/storage.js?r=0411r4"></script><script src="./js/drill-profile.js?r=0411r4"></script><script src="./js/players.js?r=0411r4"></script><script src="./js/training-engine.js?r=0411r4"></script><script src="./js/team-training-engine.js?r=0411r4"></script><script src="./js/scanner-engine.js?r=0411r4"></script><script src="./js/recommendations.js?r=0411r4"></script><script src="./js/formation.js?r=0411r4"></script><script src="./js/tactics-engine.js?r=0411r4"></script><script src="./js/mentor-engine.js?r=0411r4"></script><script src="./js/team-plan-engine.js?r=0411r4"></script><script src="./js/app.js?r=0411r4"></script>
 <script>(()=>{const expected=document.documentElement.dataset.runtime;if(window.__TE_RUNTIME__!==expected){console.error('Runtime build mismatch',{expected,loaded:window.__TE_RUNTIME__||'missing'});const k='te:runtime-reload:'+expected;if(!sessionStorage.getItem(k)){sessionStorage.setItem(k,'1');location.reload();}}else{sessionStorage.removeItem('te:runtime-reload:'+expected);}})();</script>
 </body></html>

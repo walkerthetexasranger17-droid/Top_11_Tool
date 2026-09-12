@@ -98,10 +98,12 @@ The Firebase end-to-end sign-in/sync path still needs a real browser and the act
 - Bumped the PWA/local-launch cache marker to v0.4.11.
 - **No scanner, training, tactics, formation or game-data engine behaviour was changed by this cleanup.**
 
-### GitHub testing hotfix r3 (still v0.4.11)
+### GitHub testing hotfix r4 (still v0.4.11)
 
-- Fixed cloud hydration so only a confirmed **server** snapshot may delete cloud-backed local records. Cached Firestore snapshots can no longer temporarily erase the Squad.
-- Cached live snapshots may add/update records but cannot process removals until the snapshot is server-authoritative.
-- Added a cloud-sync UI refresh on both initial hydration and live changes so Squad/Player views repaint after data arrives.
-- Added an internal `0.4.11-r3` runtime marker and cache-busted JS/CSS URLs to prevent GitHub/PWA clients from mixing an older runtime with the current HTML.
-- Service-worker cache moved to `te-v0-4-11-r3`. The public app version remains **v0.4.11**.
+- Added a boot visibility barrier so refreshes no longer flash Home before the authenticated route is restored.
+- Successful sign-in now intentionally lands on Home instead of reopening Profile & Security.
+- Reworked cloud reconciliation so a missing Firestore document is never treated as an implicit deletion. Local same-account records missing from the server are recovered upward instead of erased.
+- Cloud deletes now use explicit tombstones, preventing stale/incomplete snapshots from making players disappear.
+- Legacy Firestore values stored as objects are normalised back to JSON strings before player parsing.
+- Auxiliary startup failures no longer block Squad/Profile from rendering.
+- Internal runtime/cache marker is `0.4.11-r4`; the public version remains **v0.4.11**.
