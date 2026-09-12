@@ -1,4 +1,4 @@
-# Top Eleven Tool v5.2.21 — Build 30527 Release Report
+# Top Eleven Tool v5.2.22 — Build 30527 Release Report
 
 ## Scanner replacement
 
@@ -24,3 +24,11 @@ Training, tactics, team plan, formation, mentors, storage schema and Build 30527
 - Missing API keys, reference-load failures, network/auth errors, or Live WebSocket setup failures pause the queue instead of marking every screenshot as failed.
 - Failed/waiting rows display the real error message rather than a generic `SCAN FAILED` label.
 - A successful Settings → Test Connection automatically resumes screenshots paused by scanner setup.
+
+## v5.2.22 native screenshot compatibility
+
+- Accepts native phone Top Eleven Skills screenshots such as **2688×1216** when they use the same canonical layout/aspect.
+- Measures source dimensions in browser code, normalises to the proven **1536×695** scanner coordinate frame, and sends only the normalised frame/crops to Gemini.
+- Each Live pass receives factual source/normalised dimension context; Gemini is not asked to guess image size or rescale coordinates.
+- Preserves the proven v26 recognition flow and four visual reference indexes unchanged.
+- Service-worker cache bumped to `te-v5-2-22-30527` so phones do not retain the previous scanner bundle.

@@ -69,9 +69,9 @@ function inside(role,x,y){const r=B.ROLE_RECTS[role];return x>=r.minX&&x<r.maxX&
   const abilityHeavy=P.cleanPlayer({name:'Abilities',position:'ST',roles:['ST'],skills:skills(),specialAbilities:D.SPECIAL_ABILITIES.slice(0,5)});ok(abilityHeavy.specialAbilities.length===5,'special ability storage is not capped at two');
 
   // ---------------------------------------------------------------------------
-  // Scanner v4 Gemini 3.1 Flash Live boundary: core + visual fields.
+  // Scanner v5 Gemini 3.1 Flash Live boundary: core + visual fields.
   // ---------------------------------------------------------------------------
-  ok(SC.VERSION===4,'Scanner v4 is the production scanner');
+  ok(SC.VERSION===5,'Scanner v5 is the production scanner');
   const scannerSource=fs.readFileSync(path.join(ROOT,'js','scanner-engine.js'),'utf8');
   ok(/Gemini Scanner is not configured/.test(scannerSource),'scanner requires a configured Gemini API key');
   ok(/gemini-3\.1-flash-live-preview/.test(scannerSource),'scanner uses Gemini 3.1 Flash Live');

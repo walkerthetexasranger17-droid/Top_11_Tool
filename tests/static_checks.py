@@ -43,9 +43,9 @@ for needle,label in [
 ]:
     if needle not in hay: errs.append(f'missing integrity hook: {label}')
 
-# Scanner v4: Gemini 3.1 Flash Live with visual indexes and independent passes.
+# Scanner v5: Gemini 3.1 Flash Live with visual indexes and independent passes.
 for needle,label,src in [
-    ("const VERSION=4", "Scanner v4 version marker", scanner),
+    ("const VERSION=5", "Scanner v5 version marker", scanner),
     ("gemini-3.1-flash-live-preview", "Gemini 3.1 Flash Live model", scanner),
     ("thinkingLevel:'HIGH'", "HIGH thinking configuration", scanner),
     ("BidiGenerateContent", "Gemini Live WebSocket transport", scanner),
@@ -61,6 +61,9 @@ for needle,label,src in [
     ("scanPlaystyleLevel", "editable playstyle-tier editor", html),
     ("scanner:{version:SC.VERSION", "Scanner version provenance on save", js),
     ("save.disabled=false", "scanner mismatch does not dead-lock Save", js),
+    ("normaliseFrameMedia", "native screenshot normalisation", scanner),
+    ("sourceWidth,sourceHeight", "source dimension measurement", scanner),
+    ("SOURCE SCREENSHOT DIMENSIONS (measured by app code)", "dimension context sent to Gemini", scanner),
 ]:
     if needle not in src: errs.append(f'missing scanner hook: {label}')
 for forbidden in ['scanner-templates.json','reconcileReadToTarget','classifyGlyph','readNumber(ctx','cloudScannerEndpoint','Cloud Run Service URL',
@@ -85,7 +88,7 @@ manifest=json.loads((ROOT/'manifest.json').read_text())
 if manifest.get('name')!='Top Eleven Tool' or manifest.get('short_name')!='Top Eleven Tool': errs.append('manifest app name is not Top Eleven Tool')
 if not soup.title or soup.title.get_text(strip=True)!='Top Eleven Tool': errs.append('page title is not Top Eleven Tool')
 if 'TOP ELEVEN <span>TOOL</span>' not in html: errs.append('in-app header branding is not Top Eleven Tool')
-if 'v5.2.21' not in html: errs.append('visible build label is not v5.2.21')
+if 'v5.2.22' not in html: errs.append('visible build label is not v5.2.22')
 bible_data=(ROOT/'js/bible-data.js').read_text(encoding='utf-8')
 if "tackling:[['balanced','Balanced',0,0,.50],['stay','Stay On Feet',1,7,.30],['aggressive','Aggressive',2,5,.80]]" not in bible_data:
     errs.append('tackling IDs do not match direct build-30527 provenance correction')

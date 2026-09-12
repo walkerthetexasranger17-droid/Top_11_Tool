@@ -1,4 +1,4 @@
-"""Optional Scanner v4 model-access smoke test.
+"""Optional Scanner v5 model-access smoke test.
 Set GEMINI_API_KEY to a Google AI Studio key. The browser app itself exercises the Live WebSocket pipeline.
 """
 import json, os, sys, urllib.request, urllib.error
