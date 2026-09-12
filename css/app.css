@@ -42,3 +42,64 @@ body.drawer-open{overflow:hidden}.drawer-backdrop{position:fixed;z-index:72;inse
 .dialog-backdrop{position:fixed;z-index:82;inset:0;display:grid;place-items:center;padding:18px;background:rgba(0,0,0,.68);backdrop-filter:blur(6px);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .18s ease,visibility .18s ease}.dialog-backdrop.open{opacity:1;visibility:visible;pointer-events:auto}.confirm-dialog{width:min(100%,430px);border:1px solid rgba(255,101,116,.36);border-radius:18px;background:linear-gradient(155deg,#0b2030,#04101b);padding:18px;box-shadow:0 24px 70px rgba(0,0,0,.6)}.confirm-dialog p{margin:9px 0 2px;font-size:10px;line-height:1.5;color:#b9ccd7}.confirm-dialog .btn-row .btn{flex:1}
 .scan-queue-row.fallback{border-color:rgba(255,200,61,.36)}.scan-queue-row.fallback .queue-state{color:var(--gold)}.scan-queue-row.waiting{border-color:rgba(75,216,255,.30)}.scan-queue-row.waiting .queue-state{color:var(--cyan)}.scan-queue-row.failed{border-color:rgba(255,101,116,.46)}.scan-queue-row.failed .queue-state{color:var(--danger)}.scan-queue-row small{line-height:1.25}.scan-queue-summary span:last-child{text-align:right}
 #scanReviewPlayerCard{scroll-margin-top:92px}.scan-review-actions{padding-bottom:22px;scroll-margin-bottom:110px}.detected-role-chip{cursor:pointer}.detected-role-chip.active{box-shadow:0 0 0 1px rgba(182,255,37,.28) inset}.detected-role-chip:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+
+/* v0.4.5 product-structure refresh */
+.bottom-nav-six{grid-template-columns:repeat(6,minmax(0,1fr));gap:0;padding-left:max(4px,env(safe-area-inset-left));padding-right:max(4px,env(safe-area-inset-right))}
+.bottom-nav-six .nav-btn{min-width:0;padding:9px 2px 8px}
+.bottom-nav-six .nav-btn img{width:23px;height:23px}
+.bottom-nav-six .nav-btn span{font-size:10px;white-space:nowrap}
+@media(max-width:520px){.bottom-nav-six .nav-btn span{font-size:9px}.bottom-nav-six .nav-btn img{width:21px;height:21px}}
+
+.squad-add-primary{width:100%;display:flex;align-items:center;gap:13px;padding:15px 16px;margin:0 0 14px;border:1px solid rgba(121,214,255,.28);border-radius:18px;background:linear-gradient(135deg,rgba(13,47,71,.92),rgba(8,27,43,.95));color:#fff;text-align:left;box-shadow:0 12px 28px rgba(0,0,0,.16)}
+.squad-add-primary .plus-orb.small{width:42px;height:42px;font-size:29px;display:grid;place-items:center;flex:0 0 auto}
+.squad-add-primary span:nth-child(2){display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}
+.squad-add-primary b{font-family:'Barlow Condensed',sans-serif;font-size:24px;letter-spacing:.04em}
+.squad-add-primary small{color:var(--muted);font-size:12px}
+.squad-add-primary strong{font-size:24px;color:var(--lime)}
+.squad-simple-filters{margin:0 0 18px}
+
+.profile-actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+@media(max-width:520px){.profile-actions{grid-template-columns:1fr 1fr}.profile-actions .btn:first-child{grid-column:1/-1}}
+.profile-meta .profile-role-label{opacity:.7}
+.profile-role-chip{border:1px solid rgba(129,213,255,.22);background:rgba(4,20,32,.72);color:#d8e8f4;border-radius:999px;padding:5px 9px;font:700 12px 'DM Sans',sans-serif}
+.profile-role-chip.primary{border-color:rgba(164,255,28,.55);color:var(--lime);background:rgba(73,111,15,.19)}
+.profile-badges{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media(max-width:560px){.profile-badges{grid-template-columns:1fr}}
+.identity-card{display:flex;align-items:center;gap:12px;min-height:78px;padding:12px 14px;border:1px solid rgba(113,206,255,.20);border-radius:17px;background:linear-gradient(145deg,rgba(7,31,48,.92),rgba(5,18,29,.96))}
+.identity-card img{width:52px;height:52px;object-fit:contain;flex:0 0 auto}
+.identity-card>div{display:flex;flex-direction:column;min-width:0}
+.identity-card span{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#74caef}
+.identity-card b{font:800 19px 'Barlow Condensed',sans-serif;line-height:1.05;color:#fff}
+.identity-card small{color:#a9bac7;margin-top:3px}
+.identity-card.gold span{color:#ffd16e}.identity-card.learning span{color:#ffcf66}
+.learning-icon{width:52px;height:52px;display:grid!important;place-items:center;border-radius:50%;background:rgba(255,202,72,.14);border:1px solid rgba(255,202,72,.38);font-size:25px;color:#ffcc55}
+.role-score-card{padding:14px;border:1px solid rgba(92,190,240,.18);border-radius:17px;background:rgba(6,24,37,.8)}
+.role-score-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}.role-score-head span{font:800 20px 'Barlow Condensed',sans-serif}.role-score-head b{font-size:20px;color:var(--lime)}
+.role-score-split{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.role-score-split>div{display:flex;flex-direction:column;gap:5px;padding:10px;border-radius:12px;background:rgba(255,255,255,.035)}
+.role-score-split small{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:#7ab8d2}.role-score-split i{font-style:normal;font-size:12px;color:#c4d0d8;display:flex;justify-content:space-between;gap:8px}.role-score-split i b{color:#fff}
+
+.team-plan-tabs{grid-template-columns:repeat(3,1fr);margin-bottom:16px}
+.team-plan-tabs .mode{min-height:58px}
+.team-plan-input-card{margin-top:16px}
+.tactic-phase-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:14px;padding:5px;border-radius:15px;background:rgba(6,24,37,.75);border:1px solid rgba(100,198,245,.16)}
+.tactic-phase-tabs button{border:0;border-radius:11px;padding:12px 8px;background:transparent;color:#93aab8;font:800 14px 'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.03em}
+.tactic-phase-tabs button.active{background:linear-gradient(135deg,#2e7ee8,#8ef21d);color:#07111a}
+.tactic-quick-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:4px 0 12px}
+.tactic-simple-list{display:grid;gap:9px}
+.tactic-choice-card{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 16px;border-radius:15px;border:1px solid rgba(117,205,247,.18);background:rgba(6,26,40,.86)}
+.tactic-choice-card span{color:#a9bbc7;font-weight:600}.tactic-choice-card b{font:900 20px 'Barlow Condensed',sans-serif;color:#fff;text-align:right;text-transform:uppercase}
+.set-piece-mode{display:flex;gap:7px;overflow-x:auto;padding:2px 0 10px;scrollbar-width:none}.set-piece-mode::-webkit-scrollbar{display:none}.set-piece-mode .chip{flex:0 0 auto}
+.set-piece-pitch{margin-top:3px}
+.set-piece-player{overflow:visible}
+.set-piece-tags{position:absolute;left:50%;top:100%;transform:translate(-50%,5px);display:flex;flex-direction:column;gap:3px;min-width:max-content;z-index:9}
+.set-piece-tags i{font-style:normal;background:#fff;color:#182027;border:2px solid var(--lime);border-radius:8px;padding:2px 6px;font:800 10px 'Barlow Condensed',sans-serif;box-shadow:0 2px 7px rgba(0,0,0,.3)}
+.mentor-section{margin-top:22px}
+.mentor-best{max-width:100%;display:flex;align-items:center}.mentor-best img{width:78px;height:78px;object-fit:cover}
+.mentor-best .mentor-copy span{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--lime)}.mentor-best .mentor-copy b{font-size:21px}
+.mentor-levels{display:grid;gap:8px;margin-top:14px}.mentor-level-row{display:grid;grid-template-columns:44px 1fr auto;align-items:center;gap:10px;padding:9px 10px;border-radius:14px;border:1px solid rgba(107,196,239,.16);background:rgba(5,22,34,.76)}
+.mentor-level-row>img{width:42px;height:42px;object-fit:cover;border-radius:10px}.mentor-level-row>div:nth-child(2){display:flex;flex-direction:column}.mentor-level-row b{font-size:13px}.mentor-level-row small{font-size:10px;color:#8ea4b2}
+.mentor-level-control{display:grid!important;grid-template-columns:34px 46px 34px;align-items:center;gap:4px}.mentor-level-control button{height:34px;border-radius:9px;border:1px solid rgba(121,207,247,.22);background:#0b2538;color:#fff;font-size:20px}.mentor-level-control input{width:46px;height:34px;text-align:center;border-radius:9px;border:1px solid rgba(121,207,247,.22);background:#071a28;color:#fff;font-weight:800}
+
+/* Hide developer wording from normal product surfaces. */
+.scan-review-actions{padding-bottom:24px}

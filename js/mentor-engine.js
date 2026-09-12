@@ -1,7 +1,11 @@
 (() => {
   const TE=window.TE5=window.TE5||{};const B=TE.BibleData,D=TE.Data;
   if(!B||!D)throw new Error('bible-data.js and data.js must load before mentor-engine.js');
-  const MODEL_VERSION='30527-synergy-v1';
+  const MODEL_VERSION='mentor-synergy-v2';
+  let LEVEL_OVERRIDES={};
+  function setLevelOverrides(map={}){LEVEL_OVERRIDES={...map};}
+  function getLevelOverrides(){return {...LEVEL_OVERRIDES};}
+  function effectiveMentor(raw){const n=Number(LEVEL_OVERRIDES[raw.id]);return Number.isFinite(n)&&n>=1?{...raw,level:Math.round(n)}:{...raw};}
 
   function direct(m,tactics,approach,metrics,opponentPassing=null){
     const v=tactics.values||tactics;
@@ -49,7 +53,8 @@
   }
   function recommend(starters,tactics,{opponentPassing=null}={}){
     if(!starters?.length||!tactics?.values)return{error:'missing-plan'};
-    const rows=B.MENTORS.map((mentor,stableOrder)=>{
+    const rows=B.MENTORS.map((rawMentor,stableOrder)=>{
+      const mentor=effectiveMentor(rawMentor);
       const coverage=attributeCoverage(mentor,starters);
       return{
         mentor,stableOrder,
@@ -64,5 +69,5 @@
     const alternatives=rows.slice(1,3).map(r=>({...r,reason:whyBelow(r,bestRow)}));
     return{model:MODEL_VERSION,evidence:'TOP ELEVEN TOOL CALCULATION',best,alternatives,all:rows};
   }
-  TE.Mentor={MODEL_VERSION,recommend,attributeCoverage,direct,rawEffects,MENTORS:B.MENTORS};
+  TE.Mentor={MODEL_VERSION,recommend,attributeCoverage,direct,rawEffects,setLevelOverrides,getLevelOverrides,effectiveMentor,MENTORS:B.MENTORS};
 })();

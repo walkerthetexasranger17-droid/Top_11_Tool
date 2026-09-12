@@ -94,6 +94,7 @@
       legacyRoles:legacy,
       playstyle:normalisePlaystyle(data?.playstyle),
       specialAbilities:[...new Set(abilities.filter(Boolean))],
+      specialAbilityTraining:data?.specialAbilityTraining??data?.scanner?.raw?.specialAbilityTraining??null,
       availableTrainingAbilities:data?.availableTrainingAbilities??null,
       skills,attributes:{...skills},
       sourceMeta:{build:'30527',scannerVersion:data?.sourceMeta?.scannerVersion??data?.scanner?.version??null,importedAt:data?.sourceMeta?.importedAt??null,...(data?.sourceMeta||{})}
