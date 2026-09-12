@@ -1,5 +1,5 @@
 (() => {
-  window.__TE_RUNTIME__='0.4.11-r6';
+  window.__TE_RUNTIME__='0.4.11-r7';
   const TE=window.TE5;const D=TE.Data,P=TE.Players,S=TE.Storage,DP=TE.DrillProfile,T=TE.Training,TT=TE.TeamTraining,SC=TE.Scanner,R=TE.Recommendations,F=TE.Formation,TP=TE.TeamPlan,TAC=TE.Tactics,M=TE.Mentor,B=TE.BibleData,C=TE.Cloud;
   const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
   const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -23,7 +23,7 @@
   function restoreUiState(){try{const saved=JSON.parse(sessionStorage.getItem(UI_STATE_KEY)||'null');if(saved&&typeof saved==='object')for(const k of Object.keys(uiSnapshot()))if(saved[k]!=null)state[k]=saved[k];}catch(_){/* ignore corrupt UI state */}}
   function routeState(page=state.page,extra={}){return{teTopEleven:true,page,playerKey:state.playerKey||'',trainingKey:state.trainingKey||'',trainingTab:state.trainingTab||'individual',...extra};}
   function sameRoute(a,b){return!!(a&&b&&a.teTopEleven&&b.teTopEleven&&a.page===b.page&&String(a.playerKey||'')===String(b.playerKey||'')&&String(a.trainingKey||'')===String(b.trainingKey||'')&&String(a.trainingTab||'')===String(b.trainingTab||'')&&!a.overlay&&!b.overlay);}
-  async function applyPage(page,{scroll=true}={}){if(!document.getElementById('page-'+page))page='dashboard';state.page=page;$$('.page').forEach(p=>p.classList.toggle('active',p.dataset.page===page));$$('.nav-btn[data-go]').forEach(b=>b.classList.toggle('active',b.dataset.go===page));if(scroll)window.scrollTo({top:0,behavior:'instant'});persistUiState();updateDrawerActive();
+  async function applyPage(page,{scroll=true}={}){if(!document.getElementById('page-'+page))page='dashboard';state.page=page;$$('.page').forEach(p=>p.classList.toggle('active',p.dataset.page===page));$$('.nav-btn[data-go]').forEach(b=>b.classList.toggle('active',b.dataset.go===page));if(scroll)window.scrollTo({top:0,behavior:'instant'});persistUiState();
     if(page==='dashboard')await renderDashboard();else if(page==='squad')await renderSquad();else if(page==='player')await renderPlayerProfile();else if(page==='training')await renderTrainingPicker();else if(page==='my-drills')await renderMyDrills();else if(page==='team-plan')await renderTeamPlan();else if(page==='account')C?.renderAccountPage?.();}
   async function go(page,{historyMode='push',scroll=true}={}){if(!document.getElementById('page-'+page))page='dashboard';const next=routeState(page),current=history.state;if(historyMode==='replace')history.replaceState(next,'');else if(historyMode==='push'&&!sameRoute(current,next))history.pushState(next,'');await applyPage(page,{scroll});}
   TE.AppNav={go,applyPage,state};
