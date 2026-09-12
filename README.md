@@ -23,7 +23,7 @@ Firebase provides:
 - Email/password account creation and sign-in.
 - Password reset email.
 - Per-user Firestore data under `/users/{uid}`.
-- Cloud sync between signed-in devices with browser/offline caching.
+- Local-first device storage with Firestore background sync between signed-in devices.
 - Profile display-name editing.
 - Verified email-change and password-change flows with fresh authentication.
 - Authenticator-app TOTP as the supported second factor for protected account changes.

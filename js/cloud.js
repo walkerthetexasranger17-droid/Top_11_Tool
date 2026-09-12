@@ -4,6 +4,7 @@
   const CONFIG_KEY='te:firebase:config:v1';
   const CLOUD_USER_KEY='te:firebase:last-user:v1';
   const CLOUD_BOUND_PREFIX='te:firebase:bound:';
+  const OUTBOX_PREFIX='te:cloud:outbox:';
   const POST_AUTH_HOME_KEY='te:post-auth:home';
   const LOCAL_PREFIX='te:';
   const DEFAULT_CONFIG={
@@ -16,7 +17,7 @@
   };
   const SYNC_PREFIXES=['player:','squad:','training:normal-drills:','training:master-stock:','training:session:','teamplan:','mentor:'];
   const LOCAL_ONLY_PREFIXES=['scanner:queue:','migration:','schema:','squad:recovery:'];
-  const state={status:'idle',config:null,app:null,auth:null,db:null,user:null,error:null,mods:null,unsub:null,pendingMfa:null,pendingTotp:null,initialAuthResolved:false,syncCount:0,lastSyncAt:0,lastSyncSource:'none',serverSyncOk:false,localOwnerUid:(()=>{try{return localStorage.getItem(CLOUD_USER_KEY)||''}catch(_){return''}})()};
+  const state={status:'idle',config:null,app:null,auth:null,db:null,user:null,error:null,mods:null,unsub:null,pendingMfa:null,pendingTotp:null,initialAuthResolved:false,syncCount:0,lastSyncAt:0,lastSyncSource:'none',serverSyncOk:false,pendingWrites:0,ownerChangedOnBoot:false,localOwnerUid:(()=>{try{return localStorage.getItem(CLOUD_USER_KEY)||''}catch(_){return''}})()};
 
   function qs(sel){return document.querySelector(sel)}
   function qsa(sel){return [...document.querySelectorAll(sel)]}
@@ -87,6 +88,40 @@
     if(account){account.hidden=!state.user;const initial=(state.user?.displayName||state.user?.email||'?').trim().slice(0,1).toUpperCase();text(account,initial)}
   }
 
+  function outboxStorageKey(uid=state.user?.uid){return uid?`${OUTBOX_PREFIX}${uid}:v1`:''}
+  function readOutbox(uid=state.user?.uid){
+    if(!uid)return{};
+    try{const raw=localStorage.getItem(outboxStorageKey(uid));const parsed=raw?JSON.parse(raw):{};return parsed&&typeof parsed==='object'&&!Array.isArray(parsed)?parsed:{}}catch(_){return{}}
+  }
+  function saveOutbox(box,uid=state.user?.uid){
+    if(!uid)return;
+    try{const key=outboxStorageKey(uid),keys=Object.keys(box||{});if(keys.length)localStorage.setItem(key,JSON.stringify(box));else localStorage.removeItem(key);state.pendingWrites=keys.length}catch(_){}
+  }
+  function pendingOp(key,uid=state.user?.uid){const box=readOutbox(uid);return box[String(key)]||null}
+  let flushTimer=0,flushPromise=Promise.resolve();
+  function queueSet(key,value){
+    if(!state.user||!shouldSyncKey(key))return;
+    const box=readOutbox();box[String(key)]={op:'set',value:String(value),at:Date.now()};saveOutbox(box);scheduleFlush();
+  }
+  function queueDelete(key){
+    if(!state.user||!shouldSyncKey(key))return;
+    const box=readOutbox();box[String(key)]={op:'delete',at:Date.now()};saveOutbox(box);scheduleFlush();
+  }
+  function scheduleFlush(delay=30){clearTimeout(flushTimer);flushTimer=setTimeout(()=>{flushOutbox().catch(err=>console.warn('Cloud outbox flush',err))},delay)}
+  function prepareLocalOwner(){
+    if(!state.user)return;
+    const previous=state.localOwnerUid||'';state.ownerChangedOnBoot=!!previous&&previous!==state.user.uid;
+    if(state.ownerChangedOnBoot){for(const key of localSyncedKeys())localDelRaw(key)}
+    try{localStorage.setItem(CLOUD_USER_KEY,state.user.uid);state.localOwnerUid=state.user.uid}catch(_){}
+  }
+
+  function hasUsableLocalPlayer(){
+    for(const key of localSyncedKeys()){
+      if(!key.startsWith('player:'))continue;
+      try{const raw=localStorage.getItem(LOCAL_PREFIX+key),obj=raw?JSON.parse(raw):null;if(obj&&typeof obj==='object'&&String(obj.name||'').trim())return true}catch(_){}
+    }
+    return false;
+  }
   async function initFirebase(){
     state.config=loadConfig();
     if(!state.config){state.status='needs-config';showGate('setup');return false;}
@@ -96,21 +131,38 @@
       state.app=m.initializeApp(state.config);
       state.auth=m.getAuth(state.app);
       await m.setPersistence(state.auth,m.browserLocalPersistence);
-      state.db=m.initializeFirestore(state.app,{localCache:m.persistentLocalCache({tabManager:m.persistentMultipleTabManager()})});
+      // Deliberately use Firestore's in-memory cache only. The app already owns its
+      // offline working copy in localStorage; a second persistent IndexedDB cache caused
+      // stale snapshots to race and overwrite valid player data during navigation.
+      state.db=m.initializeFirestore(state.app);
       try{await m.getRedirectResult(state.auth)}catch(err){if(err?.code==='auth/multi-factor-auth-required')beginMfa(err);else console.warn('Redirect sign-in result',err)}
       await new Promise(resolve=>{
         let settled=false;
-        m.onAuthStateChanged(state.auth,async user=>{
+        m.onAuthStateChanged(state.auth,user=>{
           state.user=user||null;state.initialAuthResolved=true;updateCloudChrome();
-          if(user){await ensureUserProfile().catch(console.warn);}
+          if(user)ensureUserProfile().catch(console.warn);
           if(!settled){settled=true;resolve()}
         },err=>{state.error=err;if(!settled){settled=true;resolve()}})
       });
       if(!state.user){state.status='signed-out';showGate('signin');return false;}
+      prepareLocalOwner();
       state.status='syncing';
-      await syncDown();
+      const localReady=hasUsableLocalPlayer();
+      if(!localReady){
+        // First use on this device (or recovery after a bad/empty local mirror): wait for
+        // one server snapshot so Squad cannot open empty when the cloud already has players.
+        await syncDown();
+      }else{
+        // Normal launches are local-first. Navigation can render immediately; server
+        // reconciliation happens in the background and repaints only if confirmed data changes.
+        state.syncCount=localSyncedKeys().length;state.lastSyncAt=Date.now();state.lastSyncSource='local-first';
+      }
       startLiveSync();
-      state.status='ready';hideGate();updateCloudChrome();return true;
+      state.status='ready';hideGate();updateCloudChrome();
+      scheduleFlush(0);
+      if(localReady)syncDown().then(()=>scheduleFlush(0)).catch(err=>console.warn('Background cloud hydration',err));
+      console.info('[Top Eleven Tool] Cloud sync ready',{runtime:'0.4.11-r5',source:state.lastSyncSource,records:state.syncCount,pending:state.pendingWrites,localFirst:localReady});
+      return true;
     }catch(err){state.error=err;state.status='error';showGate('setup');setAuthMessage(`Firebase setup error: ${friendlyAuthError(err)}`,'err');return false;}
   }
   let bootPromise=null;
@@ -125,9 +177,23 @@
   async function deleteKey(key){
     if(!state.user||!state.db||!shouldSyncKey(key))return;
     const m=state.mods;
-    // Keep an explicit tombstone so a missing/incomplete cloud snapshot can never be
-    // mistaken for permission to erase a valid local squad record.
     await m.setDoc(kvRef(key),{key:String(key),value:'',deleted:true,deviceUpdatedAt:Date.now(),updatedAt:m.serverTimestamp()},{merge:true});
+  }
+  async function flushOutbox(){
+    if(!state.user||!state.db||!['syncing','ready'].includes(state.status))return;
+    flushPromise=flushPromise.then(async()=>{
+      const uid=state.user?.uid;if(!uid)return;
+      const box=readOutbox(uid),entries=Object.entries(box);state.pendingWrites=entries.length;
+      for(const [key,op] of entries){
+        try{
+          if(op?.op==='delete')await deleteKey(key);else if(op?.op==='set')await writeKey(key,op.value??'');else continue;
+          const latest=readOutbox(uid),current=latest[key];
+          if(current&&current.at===op.at&&current.op===op.op){delete latest[key];saveOutbox(latest,uid)}
+        }catch(err){console.warn('Cloud write deferred',key,err)}
+      }
+      state.pendingWrites=Object.keys(readOutbox(uid)).length;renderAccountPage();
+    });
+    return flushPromise;
   }
   function snapshotEntries(snap){
     const remote=new Map();
@@ -139,79 +205,64 @@
     });
     return remote;
   }
-  async function applyAuthoritativeSnapshot(snap,{source='server',migrateMissing=true}={}){
-    if(!state.user)return;
-    const remote=snapshotEntries(snap);
-    const previousOwner=state.localOwnerUid||'';
-    const ownerChanged=!!previousOwner&&previousOwner!==state.user.uid;
-
-    if(ownerChanged)for(const key of localSyncedKeys())localDelRaw(key);
-
-    for(const [key,entry] of remote){
-      if(entry.deleted)localDelRaw(key);
-      else localSetRaw(key,entry.value);
-    }
-
-    // Missing remote documents are not deletions. For this same user, preserve local
-    // records and upload them as recovery data. Explicit cloud deletions are represented
-    // by tombstones instead.
-    if(migrateMissing&&!ownerChanged){
-      const uploads=[];
-      for(const key of localSyncedKeys()){
-        if(remote.has(key))continue;
-        let value=null;try{value=localStorage.getItem(LOCAL_PREFIX+key)}catch(_){}
-        if(value!=null)uploads.push(writeKey(key,value).catch(err=>console.warn('Cloud recovery upload deferred',key,err)));
-      }
-      if(uploads.length)await Promise.all(uploads);
-    }
-
-    state.syncCount=localSyncedKeys().length;
-    state.lastSyncAt=Date.now();state.lastSyncSource=source;state.serverSyncOk=true;
-    try{localStorage.setItem(CLOUD_USER_KEY,state.user.uid);state.localOwnerUid=state.user.uid;localStorage.setItem(CLOUD_BOUND_PREFIX+state.user.uid,new Date().toISOString())}catch(_){}
-    window.dispatchEvent(new CustomEvent('te-cloud-synced',{detail:{count:state.syncCount,authoritative:true,source}}));
+  function applyRemoteEntry(key,entry){
+    // A local pending write/delete always wins until Firestore confirms it. This makes
+    // refresh/navigation safe even if the network drops between the local edit and upload.
+    if(pendingOp(key))return false;
+    if(entry.deleted)localDelRaw(key);else localSetRaw(key,entry.value);
+    return true;
   }
-  function applyCachedSnapshot(snap,{source='firestore-cache'}={}){
+  async function applyServerSnapshot(snap,{source='server',recoverMissing=true}={}){
     if(!state.user)return;
-    const previousOwner=state.localOwnerUid||'';
-    const ownerChanged=!!previousOwner&&previousOwner!==state.user.uid;
-    if(ownerChanged)for(const key of localSyncedKeys())localDelRaw(key);
+    const remote=snapshotEntries(snap);let changed=false;
+    for(const [key,entry] of remote)changed=applyRemoteEntry(key,entry)||changed;
 
-    const remote=snapshotEntries(snap);
-    for(const [key,entry] of remote){
-      if(entry.deleted)localDelRaw(key);
-      else localSetRaw(key,entry.value);
+    // A missing document is not a deletion. Actual deletes are explicit tombstones.
+    // Existing same-account local records that are absent remotely are queued upward.
+    if(recoverMissing&&!state.ownerChangedOnBoot){
+      for(const key of localSyncedKeys()){
+        if(remote.has(key)||pendingOp(key))continue;
+        let value=null;try{value=localStorage.getItem(LOCAL_PREFIX+key)}catch(_){}
+        if(value!=null)queueSet(key,value);
+      }
     }
 
-    state.syncCount=localSyncedKeys().length;state.lastSyncAt=Date.now();state.lastSyncSource=source;
-    try{localStorage.setItem(CLOUD_USER_KEY,state.user.uid);state.localOwnerUid=state.user.uid}catch(_){}
-    window.dispatchEvent(new CustomEvent('te-cloud-synced',{detail:{count:state.syncCount,authoritative:false,source}}));
+    state.syncCount=localSyncedKeys().length;state.lastSyncAt=Date.now();state.lastSyncSource=source;state.serverSyncOk=true;
+    try{localStorage.setItem(CLOUD_BOUND_PREFIX+state.user.uid,new Date().toISOString())}catch(_){}
+    window.dispatchEvent(new CustomEvent('te-cloud-synced',{detail:{count:state.syncCount,authoritative:true,source,changed}}));
   }
   async function syncDown(){
     if(!state.user)return;
     const m=state.mods,col=m.collection(state.db,'users',state.user.uid,'kv');
     try{
       const snap=await m.getDocsFromServer(col);
-      await applyAuthoritativeSnapshot(snap,{source:'server',migrateMissing:true});
+      await applyServerSnapshot(snap,{source:'server',recoverMissing:true});
     }catch(err){
-      console.warn('Cloud server hydration unavailable; preserving local data',err);
-      try{applyCachedSnapshot(await m.getDocsFromCache(col),{source:'firestore-cache'})}
-      catch(_){
-        state.syncCount=localSyncedKeys().length;state.lastSyncAt=Date.now();state.lastSyncSource='local';
-        window.dispatchEvent(new CustomEvent('te-cloud-synced',{detail:{count:state.syncCount,authoritative:false,source:'local'}}));
-      }
+      // Never substitute Firestore's browser cache here. localStorage is the app's only
+      // offline runtime store; using both caches was the source of intermittent blank Squad/Profile views.
+      console.warn('Cloud server hydration unavailable; using local device data',err);
+      state.syncCount=localSyncedKeys().length;state.lastSyncAt=Date.now();state.lastSyncSource='local-offline';state.serverSyncOk=false;
+      window.dispatchEvent(new CustomEvent('te-cloud-synced',{detail:{count:state.syncCount,authoritative:false,source:'local-offline',changed:false}}));
     }
   }
   let liveApply=Promise.resolve();
   function startLiveSync(){
     if(state.unsub)state.unsub();
     const m=state.mods,col=m.collection(state.db,'users',state.user.uid,'kv');
-    state.unsub=m.onSnapshot(col,{includeMetadataChanges:true},snap=>{
+    state.unsub=m.onSnapshot(col,snap=>{
+      // Ignore cache/pending-write snapshots completely. The UI already uses localStorage.
+      // Only server-confirmed snapshots are allowed to modify the device working copy.
+      if(snap.metadata?.fromCache||snap.metadata?.hasPendingWrites)return;
       liveApply=liveApply.then(async()=>{
-        const authoritative=!snap.metadata?.fromCache;
-        if(authoritative)await applyAuthoritativeSnapshot(snap,{source:'server-live',migrateMissing:true});
-        else applyCachedSnapshot(snap,{source:'firestore-cache-live'});
-        state.syncCount=localSyncedKeys().length;state.lastSyncAt=Date.now();
-        window.dispatchEvent(new CustomEvent('te-cloud-data-changed',{detail:{count:state.syncCount,authoritative,source:authoritative?'server-live':'firestore-cache-live'}}));
+        let changed=false;
+        for(const change of snap.docChanges()){
+          if(change.type==='removed')continue; // deletes are represented by explicit tombstones
+          const x=change.doc.data()||{},key=x.key||decodeKey(change.doc.id);if(!shouldSyncKey(key)||pendingOp(key))continue;
+          const raw=x.value;const value=raw==null?'':(typeof raw==='string'?raw:(()=>{try{return JSON.stringify(raw)}catch(_){return String(raw)}})());
+          changed=applyRemoteEntry(key,{deleted:x.deleted===true,value})||changed;
+        }
+        state.syncCount=localSyncedKeys().length;state.lastSyncAt=Date.now();state.lastSyncSource='server-live';state.serverSyncOk=true;
+        if(changed)window.dispatchEvent(new CustomEvent('te-cloud-data-changed',{detail:{count:state.syncCount,authoritative:true,source:'server-live'}}));
         renderAccountPage();
       }).catch(err=>console.warn('Cloud live apply',err));
     },err=>console.warn('Cloud sync listener',err));
@@ -295,7 +346,7 @@
     const verified=qs('#accountVerified');if(verified){text(verified,user.emailVerified?'Verified':'Not verified');verified.classList.toggle('ok',!!user.emailVerified)}
     const providerBox=qs('#accountProviders');if(providerBox)providerBox.innerHTML=providerIds(user).map(p=>`<span class="provider-pill">${p==='google.com'?'Google':p==='password'?'Email + password':p}</span>`).join('');
     const factorBox=qs('#accountMfaStatus');const fs=factors();if(factorBox)factorBox.innerHTML=fs.length?fs.map(f=>`<div class="account-factor"><span><b>Authenticator app</b><small>${f.displayName}</small></span><button class="btn ghost compact" data-remove-mfa="${f.uid}">Remove</button></div>`).join(''):'<span class="mini-note security-warning">No authenticator app is enrolled. Email and password changes are locked until two-step verification is enabled.</span>';
-    const sync=qs('#accountSyncStatus');if(sync){sync.classList.toggle('ok',state.status==='ready');const label=sync.querySelector('span');text(label,state.status==='ready'?`Cloud synced · ${state.syncCount} records`:'Cloud sync connecting…')}
+    const sync=qs('#accountSyncStatus');if(sync){sync.classList.toggle('ok',state.status==='ready');const label=sync.querySelector('span');text(label,state.status==='ready'?`Cloud sync active · ${state.syncCount} records${state.pendingWrites?` · ${state.pendingWrites} pending`:''}`:'Cloud sync connecting…')}
     const nameInput=qs('#accountNameInput');if(nameInput)nameInput.value=user.displayName||'';
     const emailInput=qs('#accountNewEmail');if(emailInput)emailInput.value=user.email||'';
     const linkGoogle=qs('#linkGoogleBtn');if(linkGoogle)linkGoogle.hidden=providerIds(user).includes('google.com');
@@ -329,5 +380,5 @@
   }
 
   document.addEventListener('DOMContentLoaded',()=>{bindUi();state.config=loadConfig();if(!state.config)showGate('setup')});
-  TE.Cloud={SDK_VERSION,state,ensureReady,loadConfig,saveConfig,clearConfig,shouldSyncKey,writeKey,deleteKey,syncDown,signInEmail,createAccount,socialSignIn,sendPasswordReset,signOut,currentUser:()=>state.auth?.currentUser||null,providerIds,factors,renderAccountPage,friendlyAuthError};
+  TE.Cloud={SDK_VERSION,state,ensureReady,loadConfig,saveConfig,clearConfig,shouldSyncKey,writeKey,deleteKey,queueSet,queueDelete,flushOutbox,syncDown,signInEmail,createAccount,socialSignIn,sendPasswordReset,signOut,currentUser:()=>state.auth?.currentUser||null,providerIds,factors,renderAccountPage,friendlyAuthError};
 })();

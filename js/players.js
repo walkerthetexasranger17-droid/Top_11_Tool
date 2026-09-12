@@ -175,13 +175,18 @@
     await S.set(MIGRATION_KEY,JSON.stringify({schemaVersion:SCHEMA_VERSION,gameDataVersion:D.GAME_DATA_VERSION,migratedAt:new Date().toISOString(),players:changed}));
     return true;
   }
+  function parseStoredPlayer(raw,key=''){
+    if(!raw)return null;
+    try{const obj=JSON.parse(raw);if(!validPlayerShape(obj))throw new Error('record does not contain a valid player shape');return {...cleanPlayer(obj),key};}
+    catch(err){console.warn('Player record could not be parsed',key,err);return null;}
+  }
   async function all(){
     await migrate();const keys=await S.list('player:'),rows=[];
-    for(const key of keys){try{const raw=await S.get(key);if(raw)rows.push({...cleanPlayer(JSON.parse(raw)),key});}catch(_){}}
+    for(const key of keys){const p=parseStoredPlayer(await S.get(key),key);if(p)rows.push(p);}
     rows.sort((a,b)=>(D.POSITION_ORDER[a.position]||99)-(D.POSITION_ORDER[b.position]||99)||String(a.name||'').localeCompare(String(b.name||'')));
     return rows;
   }
-  async function get(key){await migrate();const raw=await S.get(key);return raw?{...cleanPlayer(JSON.parse(raw)),key}:null;}
+  async function get(key){await migrate();return parseStoredPlayer(await S.get(key),key);}
   function slug(s){return String(s||'player').toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'')||'player';}
   async function invalidateTeamPlan(){for(const key of await S.list('teamplan:'))await S.del(key);}
   async function save(data,key=null){

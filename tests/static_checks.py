@@ -61,9 +61,11 @@ for needle,label in [
     ('TotpMultiFactorGenerator','TOTP MFA flow'),
     ('requireSecondFactorForSensitiveChange','mandatory MFA for sensitive account changes'),
     ("collection(state.db,'users',state.user.uid,'kv')",'per-user Firestore data tree'),
-    ('persistentMultipleTabManager','persistent Firestore web cache'),
+    ('queueSet','local-first background cloud write queue'),
+    ('flushOutbox','durable cloud outbox flush'),
 ]:
     if needle not in cloud: errs.append(f'missing cloud/account hook: {label}')
+if 'persistentLocalCache' in cloud or 'getDocsFromCache' in cloud: errs.append('persistent Firestore cache must not compete with the app localStorage working copy')
 if not soup.select_one('[data-auth-panel="email"]'): errs.append('email/password sign-in is not separated behind its own auth choice')
 if not soup.select_one('#authEmailChoiceBtn.auth-provider.email'): errs.append('branded email/password choice button missing')
 if not soup.select_one('#authGoogleBtn img[src*="google-g.svg"]'): errs.append('official Google G asset is not used on sign-in')
