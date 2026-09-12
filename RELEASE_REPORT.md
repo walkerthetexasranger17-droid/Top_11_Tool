@@ -1,4 +1,4 @@
-# Top Eleven Tool v5.2.20 — Build 30527 Release Report
+# Top Eleven Tool v5.2.21 — Build 30527 Release Report
 
 ## Scanner replacement
 
@@ -17,3 +17,10 @@
 ## Unchanged
 
 Training, tactics, team plan, formation, mentors, storage schema and Build 30527 optimiser logic were not redesigned.
+
+## Scanner queue setup guard
+
+- The batch scanner now performs one Gemini Flash Live health check before scanning any queued screenshot.
+- Missing API keys, reference-load failures, network/auth errors, or Live WebSocket setup failures pause the queue instead of marking every screenshot as failed.
+- Failed/waiting rows display the real error message rather than a generic `SCAN FAILED` label.
+- A successful Settings → Test Connection automatically resumes screenshots paused by scanner setup.

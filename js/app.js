@@ -177,6 +177,36 @@
   async function restoreScanQueueState(){const saved=await S.getJSON(SCAN_QUEUE_META_KEY,null);if(!saved?.items?.length)return;const rows=[];for(const raw of saved.items){const item={...raw,dataUrl:null,nextRetryAt:0};if(item.imageStored)item.dataUrl=await queueImageGet(item.id);if(['scanning','fallback','waiting'].includes(item.status)&&item.dataUrl){item.status='error';item.error='A previous scan was interrupted. Tap Retry Scan when you want to try again.';item.statusText='NEEDS RETRY · previous request stopped';}if(!item.manual&&!item.dataUrl&&item.status!=='saved'){item.status='error';item.statusText='NEEDS RETRY · screenshot could not be restored';item.error='The queued screenshot could not be restored. Remove it and add the screenshot again.';}rows.push(item);}state.scanQueue=rows;state.scanQueueSeq=Math.max(Number(saved.seq)||0,...rows.map(x=>Number(x.id)||0),0);const reviewIndex=rows.findIndex(x=>x.id===saved.reviewId&&['ready','saved'].includes(x.status));state.scanQueueReviewIndex=reviewIndex;renderScanQueue();if(reviewIndex>=0)loadQueueReview(reviewIndex);if(rows.some(x=>x.status==='queued'))runScanQueue();}
 
   // ---------- Scanner v4 · Gemini 3.1 Flash Live · batch review queue ----------
+  let scannerHealthOkAt=0;
+  const SCANNER_HEALTH_TTL_MS=5*60*1000;
+  function scannerSetupFailure(err){return ['NOT_CONFIGURED','REFERENCE_LOAD','NETWORK','GEMINI_API_ERROR','GEMINI_LIVE_ERROR','GEMINI_LIVE_CLOSED'].includes(String(err?.code||''));}
+  function scannerSetupMessage(err){
+    if(err?.code==='NOT_CONFIGURED')return 'Gemini API key is not saved on this device. Open More → Settings → Gemini Scanner, paste the key, then Test Connection.';
+    if(err?.code==='REFERENCE_LOAD')return `Scanner reference files could not be loaded: ${err.message||'reference load failed'}`;
+    if(err?.code==='NETWORK')return `Gemini could not be reached from this device: ${err.message||'network error'}`;
+    return err?.message||'Gemini Flash Live setup failed.';
+  }
+  function pauseQueueForScannerSetup(err){
+    const message=scannerSetupMessage(err),code=String(err?.code||'SCANNER_SETUP');
+    state.scanQueue.forEach(item=>{
+      if(item.manual||!['queued','scanning'].includes(item.status))return;
+      item.status='waiting';item.error=message;item.statusText='SCANNER SETUP REQUIRED';item.setupBlocked=true;item.setupErrorCode=code;item.nextRetryAt=0;
+    });
+    progress({progress:0,label:message});renderScanQueue();schedulePersistScanQueue();toast(message,'err');
+  }
+  function resumeSetupBlockedQueue(){
+    let resumed=0;
+    state.scanQueue.forEach(item=>{if(item.setupBlocked&&item.status==='waiting'&&item.dataUrl){item.status='queued';item.statusText='QUEUED · scanner connection restored';item.error='';item.setupBlocked=false;item.setupErrorCode='';resumed++;}});
+    if(resumed){renderScanQueue();schedulePersistScanQueue();runScanQueue();}
+    return resumed;
+  }
+  async function ensureScannerQueueHealth(){
+    const key=await SC.getApiKey();
+    if(!key){const e=new Error('Gemini Scanner is not configured on this device.');e.code='NOT_CONFIGURED';throw e;}
+    if(Date.now()-scannerHealthOkAt<SCANNER_HEALTH_TTL_MS)return true;
+    progress({progress:.01,label:'Checking Gemini 3.1 Flash Live connection…'});
+    await SC.health();scannerHealthOkAt=Date.now();return true;
+  }
   function resetScanner(){state.scan=null;state.scanAbilities=[];state.scanRelatedRoles=[];state.scanDuplicateKey='';state.scanPreservedRoles=[];state.scanManualVerified=false;state.scanQueueReviewIndex=-1;if($('#scanReview'))$('#scanReview').style.display='none';if($('#scanPreview'))$('#scanPreview').removeAttribute('src');$('#scanWindow')?.classList.remove('has-image','scanning');if($('#scanProgressBar'))$('#scanProgressBar').style.width='0%';if($('#scanProgressText'))$('#scanProgressText').textContent='Choose one or more player screenshots';if($('#scanPercent'))$('#scanPercent').textContent='0%';}
   function clearScannerReview(){state.scan=null;state.scanAbilities=[];state.scanRelatedRoles=[];state.scanPreservedRoles=[];state.scanDuplicateKey='';state.scanManualVerified=false;state.scanQueueReviewIndex=-1;$('#scanReview').style.display='none';$('#scanSaveNote').textContent='';if($('#scanManualVerified'))$('#scanManualVerified').checked=false;if($('#scanManualVerify'))$('#scanManualVerify').style.display='none';updateQueueReviewButtons();renderScanQueue();schedulePersistScanQueue();}
   function progress(p){const pct=Math.round((p.progress||0)*100);$('#scanProgressBar').style.width=pct+'%';$('#scanProgressText').textContent=p.label||'Scanning';$('#scanPercent').textContent=pct+'%';}
@@ -189,7 +219,7 @@
     if(!state.scanQueue.length){el.innerHTML='';return;}
     const counts={queued:0,scanning:0,ready:0,saved:0,error:0,failed:0};state.scanQueue.forEach(x=>counts[x.status]=(counts[x.status]||0)+1);
     const retryCount=(counts.error||0)+(counts.failed||0)+(counts.waiting||0)+(counts.fallback||0);
-    el.innerHTML=`<div class="scan-queue-summary"><span>${state.scanQueue.length} player${state.scanQueue.length===1?'':'s'} in queue</span><span>${counts.ready} ready · ${counts.saved} saved${retryCount?` · ${retryCount} retry`:''}</span></div>`+state.scanQueue.map((item,i)=>{const detail=item.statusText||item.error||queueStatusLabel(item);const canOpen=item.status==='ready'||item.status==='saved';const canRetry=['error','failed','waiting','fallback'].includes(item.status);return `<div class="scan-queue-row ${esc(item.status)} ${i===state.scanQueueReviewIndex?'reviewing':''}" ${canOpen?`data-queue-open="${i}" role="button" tabindex="0"`:''}><span class="queue-no">${i+1}</span><span class="queue-copy"><b>${esc(item.scan?.name||item.fileName||'Manual player')}</b><small>${esc(detail)}</small></span><span><span class="queue-state">${esc(queueStatusLabel(item))}</span>${canRetry?`<button type="button" class="scan-queue-retry" data-queue-retry="${i}">Retry Scan</button>`:''}<button type="button" class="scan-queue-remove" data-queue-remove="${i}" aria-label="Remove from queue">×</button></span></div>`}).join('');
+    el.innerHTML=`<div class="scan-queue-summary"><span>${state.scanQueue.length} player${state.scanQueue.length===1?'':'s'} in queue</span><span>${counts.ready} ready · ${counts.saved} saved${retryCount?` · ${retryCount} retry`:''}</span></div>`+state.scanQueue.map((item,i)=>{const detail=['error','failed','waiting','fallback'].includes(item.status)?(item.error||item.statusText||queueStatusLabel(item)):(item.statusText||item.error||queueStatusLabel(item));const canOpen=item.status==='ready'||item.status==='saved';const canRetry=['error','failed','waiting','fallback'].includes(item.status);return `<div class="scan-queue-row ${esc(item.status)} ${i===state.scanQueueReviewIndex?'reviewing':''}" ${canOpen?`data-queue-open="${i}" role="button" tabindex="0"`:''}><span class="queue-no">${i+1}</span><span class="queue-copy"><b>${esc(item.scan?.name||item.fileName||'Manual player')}</b><small>${esc(detail)}</small></span><span><span class="queue-state">${esc(queueStatusLabel(item))}</span>${canRetry?`<button type="button" class="scan-queue-retry" data-queue-retry="${i}">Retry Scan</button>`:''}<button type="button" class="scan-queue-remove" data-queue-remove="${i}" aria-label="Remove from queue">×</button></span></div>`}).join('');
   }
   function reviewableIndices(){return state.scanQueue.map((x,i)=>x.status==='ready'?i:-1).filter(i=>i>=0);}
   function persistCurrentQueueDraft(){
@@ -247,7 +277,9 @@
     const controller=scanControllers.get(Number(itemId));if(controller){controller.abort();scanControllers.delete(Number(itemId));}
   }
   async function runScanQueue(){
-    if(state.scanQueueScanning)return;state.scanQueueScanning=true;renderScanQueue();schedulePersistScanQueue();
+    if(state.scanQueueScanning)return;
+    try{await ensureScannerQueueHealth();}catch(err){pauseQueueForScannerSetup(err);return;}
+    state.scanQueueScanning=true;renderScanQueue();schedulePersistScanQueue();
     try{
       while(true){
         const idx=state.scanQueue.findIndex(x=>x.status==='queued');if(idx<0)break;const item=state.scanQueue[idx];
@@ -265,7 +297,13 @@
           item.scan=scan;item.status='ready';item.statusText=`READY TO REVIEW · ${String(scan.raw?.model||scan.model||'Gemini').replace(/^gemini-/,'')} · visuals detected`;item.fileName=scan.name||item.fileName;item.nextRetryAt=0;item.error='';renderScanQueue();schedulePersistScanQueue();
         }catch(err){
           if(err?.code==='SCAN_CANCELLED'){item.status='error';item.error='Scan cancelled. Tap Retry Scan when you want to run it again.';item.statusText='NEEDS RETRY · scan cancelled';}
-          else{item.status='failed';item.nextRetryAt=0;item.error=err?.message||'Scan failed';item.statusText=err?.kind==='quota_daily'?'SCAN FAILED · free quota exhausted':'SCAN FAILED · tap Retry Scan';}
+          else if(scannerSetupFailure(err)){
+            item.status='queued';
+            pauseQueueForScannerSetup(err);
+            break;
+          }else{
+            item.status='failed';item.nextRetryAt=0;item.error=err?.message||'Scan failed';item.statusText=err?.kind==='quota_daily'?'SCAN FAILED · free quota exhausted':'SCAN FAILED';
+          }
           renderScanQueue();schedulePersistScanQueue();
         }finally{
           if(scanControllers.get(Number(item.id))===controller)scanControllers.delete(Number(item.id));
@@ -290,7 +328,7 @@
   $('#scanFile')?.addEventListener('change',e=>addFilesToQueue(e.target.files||[]));
   function blankManualScan(){return{version:4,provider:'manual-entry',model:null,manualEntry:true,name:'',age:null,ovr:null,roles:[],position:null,layout:'outfield',skills:{},playstyle:null,specialAbilities:[],confidence:{overall:0,text:0,numbers:0,roles:0,playstyle:0,specialAbilities:0},raw:{totals:{def:null,att:null,phys:null},model:null,warnings:[],providerResponseVersion:3},repairNotes:[],validation:{resolved:false,unresolvedChecks:[]}};}
   $('#manualAddPlayerBtn')?.addEventListener('click',()=>{persistCurrentQueueDraft();const scan=blankManualScan();state.scanQueue.push({id:++state.scanQueueSeq,fileName:'Manual player',dataUrl:null,status:'ready',statusText:'READY TO REVIEW · manual entry',scan,error:'',manual:true,reviewState:null,imageStored:false,autoAttempts:0,nextRetryAt:0});schedulePersistScanQueue();loadQueueReview(state.scanQueue.length-1);toast('Manual player added to review queue');});
-  document.addEventListener('click',async e=>{const open=e.target.closest('[data-queue-open]');if(open&&!e.target.closest('[data-queue-remove]')){const i=Number(open.dataset.queueOpen);if(Number.isInteger(i))loadQueueReview(i);return;}const retry=e.target.closest('[data-queue-retry]');if(retry){e.stopPropagation();const i=Number(retry.dataset.queueRetry),item=state.scanQueue[i];if(item){cancelScanForItem(item.id);item.status='queued';item.statusText='QUEUED · Retry Scan requested';item.error='';item.scan=null;item.reviewState=null;item.autoAttempts=0;item.nextRetryAt=0;renderScanQueue();schedulePersistScanQueue();runScanQueue();}return;}const remove=e.target.closest('[data-queue-remove]');if(remove){e.stopPropagation();const i=Number(remove.dataset.queueRemove);if(!Number.isInteger(i)||!state.scanQueue[i])return;const removed=state.scanQueue[i],wasCurrent=i===state.scanQueueReviewIndex;cancelScanForItem(removed.id);state.scanQueue.splice(i,1);await queueImageDelete(removed.id);if(state.scanQueueReviewIndex>i)state.scanQueueReviewIndex--;else if(wasCurrent)clearScannerReview();renderScanQueue();schedulePersistScanQueue();if(wasCurrent){const n=reviewableIndices()[0];if(n!=null)loadQueueReview(n);}return;}});
+  document.addEventListener('click',async e=>{const open=e.target.closest('[data-queue-open]');if(open&&!e.target.closest('[data-queue-remove]')){const i=Number(open.dataset.queueOpen);if(Number.isInteger(i))loadQueueReview(i);return;}const retry=e.target.closest('[data-queue-retry]');if(retry){e.stopPropagation();const i=Number(retry.dataset.queueRetry),item=state.scanQueue[i];if(item){cancelScanForItem(item.id);item.status='queued';item.statusText='QUEUED · Retry Scan requested';item.error='';item.scan=null;item.reviewState=null;item.autoAttempts=0;item.nextRetryAt=0;item.setupBlocked=false;item.setupErrorCode='';renderScanQueue();schedulePersistScanQueue();runScanQueue();}return;}const remove=e.target.closest('[data-queue-remove]');if(remove){e.stopPropagation();const i=Number(remove.dataset.queueRemove);if(!Number.isInteger(i)||!state.scanQueue[i])return;const removed=state.scanQueue[i],wasCurrent=i===state.scanQueueReviewIndex;cancelScanForItem(removed.id);state.scanQueue.splice(i,1);await queueImageDelete(removed.id);if(state.scanQueueReviewIndex>i)state.scanQueueReviewIndex--;else if(wasCurrent)clearScannerReview();renderScanQueue();schedulePersistScanQueue();if(wasCurrent){const n=reviewableIndices()[0];if(n!=null)loadQueueReview(n);}return;}});
   $('#nextQueuedPlayerBtn')?.addEventListener('click',()=>{persistCurrentQueueDraft();const n=nextReadyIndex();if(n>=0&&n!==state.scanQueueReviewIndex)loadQueueReview(n);});
   $('#rescanBtn')?.addEventListener('click',()=>{const item=currentQueueItem();if(!item||item.manual)return;persistCurrentQueueDraft();cancelScanForItem(item.id);item.status='queued';item.statusText='QUEUED · fresh rescan requested';item.scan=null;item.error='';item.reviewState=null;item.autoAttempts=0;item.nextRetryAt=0;state.scanQueueReviewIndex=-1;$('#scanReview').style.display='none';renderScanQueue();schedulePersistScanQueue();runScanQueue();});
   function scanFormData(){const name=$('#scanName').value.trim(),age=Number($('#scanAge').value),ovr=Number($('#scanOvr').value),position=$('#scanRole').value,roles=[position,$('#scanRole2').value,$('#scanRole3').value].filter((r,i,a)=>r&&a.indexOf(r)===i),relatedRoles=state.scanRelatedRoles.filter(r=>!roles.includes(r));return{name,age,ovr,position,roles,relatedRoles};}
@@ -314,9 +352,9 @@
 
   // ---------- Gemini Scanner settings ----------
   async function renderGeminiScannerSettings(){const el=$('#geminiScannerApiKey');if(!el)return;const key=await SC.getApiKey();el.value=key;const status=$('#geminiScannerStatus');if(status)status.textContent=key?`API key saved on this device · Gemini 3.1 Flash Live scanner · HIGH thinking · core + playstyle + abilities. Test the connection before scanning.`:'Not configured yet. Create a Gemini API key in Google AI Studio, then test the Flash Live connection.';}
-  $('#saveGeminiScannerKey')?.addEventListener('click',async()=>{const key=await SC.setApiKey($('#geminiScannerApiKey').value);$('#geminiScannerApiKey').value=key;$('#geminiScannerStatus').textContent=key?`API key saved on this device · Gemini 3.1 Flash Live · HIGH thinking.`:'API key cleared.';toast(key?'Gemini scanner key saved':'Gemini scanner key cleared');});
-  $('#clearGeminiScannerKey')?.addEventListener('click',async()=>{await SC.clearApiKey();$('#geminiScannerApiKey').value='';$('#geminiScannerStatus').textContent='API key cleared. Scanner is disabled until a free Gemini key is added.';toast('Gemini scanner key cleared');});
-  $('#testGeminiScannerKey')?.addEventListener('click',async()=>{const input=$('#geminiScannerApiKey').value.trim();if(input)await SC.setApiKey(input);const status=$('#geminiScannerStatus');status.textContent='Testing Gemini 3.1 Flash Live connection and loading visual indexes…';try{const h=await SC.health();status.textContent=`Connected · ${h.provider} · HIGH thinking · ${h.visualReferences} visual indexes · core + playstyle + level + Special Abilities`;toast('Gemini Flash Live scanner connected');}catch(err){status.textContent=err.message||'Connection failed';toast(err.message||'Connection failed','err');}});
+  $('#saveGeminiScannerKey')?.addEventListener('click',async()=>{const key=await SC.setApiKey($('#geminiScannerApiKey').value);scannerHealthOkAt=0;$('#geminiScannerApiKey').value=key;$('#geminiScannerStatus').textContent=key?`API key saved on this device · Gemini 3.1 Flash Live · HIGH thinking.`:'API key cleared.';toast(key?'Gemini scanner key saved':'Gemini scanner key cleared');});
+  $('#clearGeminiScannerKey')?.addEventListener('click',async()=>{await SC.clearApiKey();scannerHealthOkAt=0;$('#geminiScannerApiKey').value='';$('#geminiScannerStatus').textContent='API key cleared. Scanner is disabled until a free Gemini key is added.';toast('Gemini scanner key cleared');});
+  $('#testGeminiScannerKey')?.addEventListener('click',async()=>{const input=$('#geminiScannerApiKey').value.trim();if(input)await SC.setApiKey(input);const status=$('#geminiScannerStatus');status.textContent='Testing Gemini 3.1 Flash Live connection and loading visual indexes…';try{const h=await SC.health();scannerHealthOkAt=Date.now();status.textContent=`Connected · ${h.provider} · HIGH thinking · ${h.visualReferences} visual indexes · core + playstyle + level + Special Abilities`;toast('Gemini Flash Live scanner connected');resumeSetupBlockedQueue();}catch(err){status.textContent=err.message||'Connection failed';toast(err.message||'Connection failed','err');}});
 
   // ---------- Drill profile ----------
   async function renderMyDrills(){const {normal,master}=await DP.ensure();$('#normalDrillConfig').innerHTML=D.NORMAL_DRILLS.map(d=>{const s=normal.drills[d.drillId]||{unlocked:false,level:0};return `<div class="drill-config-row" data-drill-id="${esc(d.drillId)}"><div class="drill-config-main"><img src="${drillAsset(d.name,d.cat)}"><div><b>${esc(d.name)}</b><span>${esc(d.diff)} · ${fmt(d.conditionDrop,2)}% condition · +${esc(d.xpPerPlayer)} XP</span></div></div><label class="unlock-control"><input type="checkbox" data-normal-unlock="${esc(d.drillId)}" ${s.unlocked?'checked':''}><i></i></label><select class="level-select" data-normal-level="${esc(d.drillId)}" ${s.unlocked?'':'disabled'}><option value="1" ${Number(s.level)===1?'selected':''}>Semi-pro +10%</option><option value="2" ${Number(s.level)===2?'selected':''}>Pro +20%</option><option value="3" ${Number(s.level)===3?'selected':''}>World-class +30%</option></select></div>`;}).join('');$('#masterStockConfig').innerHTML=D.MASTER_CAMPUS_DRILLS.map(d=>`<div class="master-card"><img src="${drillAsset(d.name,d.cat)}"><div class="master-card-copy"><span class="master-badge">MASTER +${esc(d.additionalTrainingEffectPercent)}%</span><b>${esc(d.name)}</b><small>${esc(d.diff)} · ${fmt(d.conditionDrop,2)}% condition · +${esc(d.xpPerPlayer)} XP</small><small>${esc(d.skills.join(' · '))}</small></div><label><span>CARDS OWNED</span><input type="number" min="0" step="1" inputmode="numeric" data-master-stock="${esc(d.drillId)}" value="${Math.max(0,Number(master.stock[d.drillId]||0))}"></label></div>`).join('');}
