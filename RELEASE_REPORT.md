@@ -1,4 +1,14 @@
-# Top Eleven Tool v0.4.5 — Restructure Report
+
+## v0.4.6 local squad recovery patch
+
+- Keeps the existing `te:player:*` records as the primary squad source.
+- Automatically scans legacy/migration backup player records on startup and restores any missing canonical player records without duplicating names.
+- Resets obsolete/hidden squad filters to `ALL` after the restructure so saved players cannot remain hidden behind a stale filter state.
+- Adds **Settings → Recover existing squad** for a manual recovery pass.
+- Shows how many player records are currently found on the device.
+- Does not clear or overwrite healthy player records.
+
+# Top Eleven Tool v0.4.6 — Restructure Report
 
 ## Why the version reset
 
@@ -55,13 +65,13 @@ The previous 5.x numbering overstated product maturity. The public version line 
 
 ## Public vs internal versioning
 
-- Visible app version: **v0.4.5**.
+- Visible app version: **v0.4.6**.
 - Internal game-data/reverse-engineering provenance remains packaged for calculations and audits but is not shown throughout normal app screens.
 
 ## Deferred intentionally
 
 ### Cloud login/sync
-A cross-device account system needs a real backend and credentials. v0.4.5 therefore keeps local storage rather than shipping a fake login. The next architecture step is an authenticated cloud database plus local-to-cloud migration and offline caching.
+A cross-device account system needs a real backend and credentials. v0.4.6 therefore keeps local storage rather than shipping a fake login. The next architecture step is an authenticated cloud database plus local-to-cloud migration and offline caching.
 
 ### Broader formation-meta ingestion
 Recent community research was used to expand the formation candidate pool conservatively. More shapes/tactic presets should only be added after they are evaluated against current game behaviour and the existing deterministic optimiser.

@@ -5,6 +5,57 @@
   const SCHEMA_VERSION=3;
   const MIGRATION_KEY='schema:players:v525';
   const SQUAD_REVISION_KEY='squad:revision';
+
+  const RECOVERY_KEY='squad:recovery:v046';
+  function validPlayerShape(x){
+    return !!(x&&typeof x==='object'&&!Array.isArray(x)&&String(x.name||'').trim()&&(Array.isArray(x.roles)||Array.isArray(x.positions)||x.position||x.skills||x.attributes));
+  }
+  function storageCandidateKeys(){
+    const out=[];
+    try{
+      for(let i=0;i<localStorage.length;i++){
+        const k=localStorage.key(i);if(!k)continue;
+        if(k.startsWith('te:player:')||k.startsWith('player:')||k.startsWith('te5:player:')||k.startsWith('top-eleven:player:')||k.includes('migration:v525:backup:player:'))out.push(k);
+      }
+    }catch(_){/* localStorage enumeration is best effort */}
+    return out;
+  }
+  function bareCanonicalKey(storageKey){
+    if(storageKey.startsWith('te:player:'))return storageKey.slice(3);
+    const marker='migration:v525:backup:';const i=storageKey.indexOf(marker);
+    if(i>=0){const tail=storageKey.slice(i+marker.length);if(tail.startsWith('player:'))return tail;}
+    if(storageKey.startsWith('player:'))return storageKey;
+    if(storageKey.startsWith('te5:player:'))return storageKey.slice(4);
+    if(storageKey.startsWith('top-eleven:player:'))return storageKey.slice('top-eleven:'.length);
+    return '';
+  }
+  async function recoverLocalSquad({force=false}={}){
+    const before=await S.list('player:'),existingByName=new Set(),existingByKey=new Set(before);
+    for(const key of before){try{const raw=await S.get(key),obj=raw?JSON.parse(raw):null;if(validPlayerShape(obj))existingByName.add(String(obj.name||'').trim().toLowerCase());}catch(_){}}
+    let recovered=0,repaired=0,seen=0;
+    for(const storageKey of storageCandidateKeys()){
+      let raw=null;try{raw=localStorage.getItem(storageKey);}catch(_){continue;}if(!raw)continue;
+      let obj=null;try{obj=JSON.parse(raw);}catch(_){continue;}if(!validPlayerShape(obj))continue;seen++;
+      const name=String(obj.name||'').trim(),nameKey=name.toLowerCase(),canonical=bareCanonicalKey(storageKey)||`player:${slug(name)}_recovered`;
+      if(!canonical.startsWith('player:'))continue;
+      const existingRaw=await S.get(canonical);
+      if(existingRaw){
+        try{const existing=JSON.parse(existingRaw);const cleaned=cleanPlayer(existing);if(!cleaned.name||!cleaned.position){const backupClean=cleanPlayer(obj);if(backupClean.name&&backupClean.position){await S.set(canonical,JSON.stringify({...backupClean,updatedAt:existing.updatedAt||obj.updatedAt||new Date().toISOString()}));repaired++;existingByName.add(nameKey);}}}catch(_){
+          const backupClean=cleanPlayer(obj);if(backupClean.name){await S.set(canonical,JSON.stringify({...backupClean,updatedAt:obj.updatedAt||new Date().toISOString()}));repaired++;existingByName.add(nameKey);}
+        }
+        continue;
+      }
+      if(!force&&existingByName.has(nameKey))continue;
+      const cleaned=cleanPlayer(obj);if(!cleaned.name)continue;
+      const outKey=existingByKey.has(canonical)?`player:${slug(name)}_${Date.now().toString(36)}`:canonical;
+      await S.set(outKey,JSON.stringify({...cleaned,updatedAt:obj.updatedAt||new Date().toISOString()}));
+      existingByKey.add(outKey);existingByName.add(nameKey);recovered++;
+    }
+    const after=(await S.list('player:')).length;
+    await S.set(RECOVERY_KEY,JSON.stringify({checkedAt:new Date().toISOString(),seen,recovered,repaired,before:before.length,after}));
+    if(recovered||repaired){await bumpRevision();await invalidateTeamPlan();}
+    return {seen,recovered,repaired,before:before.length,after};
+  }
   const LEGACY_CURRENT_ROLES=['DML','DMR'];
 
   function normPos(p){return String(p||'').toUpperCase().trim();}
@@ -145,5 +196,5 @@
   async function remove(key){await S.del(key);await S.del(`training:session:${key}`);await bumpRevision();await invalidateTeamPlan();}
   function roleGroup(pos){if(pos==='GK')return'gk';if(pos==='ST')return'st';if(['AML','AMC','AMR'].includes(pos))return'am';if(pos==='DMC')return'dm';if(['DL','DC','DR'].includes(pos))return'd';return'm';}
 
-  TE.Players={SCHEMA_VERSION,MIGRATION_KEY,all,get,save,remove,cleanPlayer,normaliseRoles,normaliseRelatedRoles,normalisePlaystyle,mergePlaystyleState,mergeVisibleNaturalRoles,playstyleName,roleGroup,migrate,revision};
+  TE.Players={SCHEMA_VERSION,MIGRATION_KEY,RECOVERY_KEY,all,get,save,remove,cleanPlayer,normaliseRoles,normaliseRelatedRoles,normalisePlaystyle,mergePlaystyleState,mergeVisibleNaturalRoles,playstyleName,roleGroup,migrate,revision,recoverLocalSquad};
 })();

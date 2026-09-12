@@ -20,16 +20,16 @@ refs=set(re.findall(r"\$\(['\"]#([A-Za-z0-9_-]+)['\"]\)",js))
 missing=sorted(refs-set(ids))
 if missing: errs.append('missing DOM ids: '+', '.join(missing))
 
-# v0.4.5 product information architecture.
+# v0.4.6 product information architecture.
 nav=[x.get_text(' ',strip=True) for x in soup.select('.bottom-nav .nav-btn')]
 expected_nav=['Home','Squad','Training','Team Plan','Drills','Settings']
-if nav!=expected_nav: errs.append(f'bottom nav does not match v0.4.5 product structure: {nav}')
+if nav!=expected_nav: errs.append(f'bottom nav does not match v0.4.6 product structure: {nav}')
 if len(soup.select('.bottom-nav .nav-btn'))!=6: errs.append('bottom navigation must expose exactly six destinations')
 for rid in [
     'formationPitch','setPiecePitch','setPieceMode','tacticPlan','mentorLevels','profilePlaystyleState',
     'profileRelatedPicker','scanRelatedPicker','profileRescanBtn','scanReviewPlayerCard','scanSkills','squadList'
 ]:
-    if rid not in ids: errs.append(f'missing v0.4.5 UI control: {rid}')
+    if rid not in ids: errs.append(f'missing v0.4.6 UI control: {rid}')
 for forbidden_id in ['squadSearch','squadRoleFilter','squadPlaystyleFilter','squadAvailabilityFilter','squadAgeMin','squadAgeMax','squadOvrMin','squadOvrMax','planTemplate','formationXIList','formationBench','mentorAlternatives']:
     if forbidden_id in ids: errs.append(f'removed/clutter UI control survived: {forbidden_id}')
 if not soup.select_one('#page-squad .squad-add-primary[data-go="add-player"]'): errs.append('Squad page missing primary Add Player action')
@@ -42,7 +42,7 @@ for phase in ['possession','transition','out']:
     if not soup.select_one(f'[data-tactic-phase="{phase}"]'): errs.append(f'Tactics missing {phase} phase')
 if not soup.select_one('[data-training-tab="individual"]') or not soup.select_one('[data-training-tab="team"]'):
     errs.append('Training does not expose Individual | Team tabs on one page')
-if 'v0.4.5' not in html: errs.append('visible version is not v0.4.5')
+if 'v0.4.6' not in html: errs.append('visible version is not v0.4.6')
 if re.search(r'BUILD\s*30527|Build\s*30527',html): errs.append('internal build 30527 is still visible in product HTML')
 if 'Scanner v6' in html or 'verified scanner' in html.lower(): errs.append('technical scanner provenance is exposed in normal UI')
 

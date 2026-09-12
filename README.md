@@ -1,8 +1,8 @@
-# Top Eleven Tool v0.4.5
+# Top Eleven Tool v0.4.6
 
 Top Eleven Tool is a local-first PWA companion for managing a Top Eleven squad, scanning player cards, planning training, selecting an XI, assigning set pieces and turning the tactics engine into simple in-game selections.
 
-`v0.4.5` is the first product-structure build after resetting the public version line. Internal reverse-engineered game-data provenance remains in the packaged code/docs where required, but it is no longer plastered across the normal app UI.
+`v0.4.6` is the first product-structure build after resetting the public version line. Internal reverse-engineered game-data provenance remains in the packaged code/docs where required, but it is no longer plastered across the normal app UI.
 
 ## Product structure
 
@@ -43,7 +43,7 @@ Benchmark answers are not supplied to Gemini in production.
 
 Formation selection is automatic. The user no longer types a formation or sees a redundant Starting XI/Bench text list beside the pitch.
 
-The formation engine scores legal assignments against the actual squad. In addition to the internal verified baseline shapes, v0.4.5 adds a small set of **community-informed 2026 candidate shapes** (4-1-4-1, 3-1-4-1-1 and 3-1-2-1-3). They are candidates only: the app does not claim one universal meta formation, and the user's own role means/floors still decide the winner.
+The formation engine scores legal assignments against the actual squad. In addition to the internal verified baseline shapes, v0.4.6 adds a small set of **community-informed 2026 candidate shapes** (4-1-4-1, 3-1-4-1-1 and 3-1-2-1-3). They are candidates only: the app does not claim one universal meta formation, and the user's own role means/floors still decide the winner.
 
 Set Pieces uses the same football-pitch interaction with assignment modes for captain, penalty, left/right free kick and left/right corner.
 
@@ -61,7 +61,7 @@ Mentor levels are user-settable and stored locally. The app no longer assumes th
 
 ## Cloud sync
 
-Cross-device account sync is **not implemented in v0.4.5**. Current squad data remains local to each browser/device. The planned architecture is authenticated cloud storage (for example Supabase) with migration of the existing local squad and an offline cache. A real backend project and credentials are required before this can be shipped honestly.
+Cross-device account sync is **not implemented in v0.4.6**. Current squad data remains local to each browser/device. The planned architecture is authenticated cloud storage (for example Supabase) with migration of the existing local squad and an offline cache. A real backend project and credentials are required before this can be shipped honestly.
 
 ## Development / validation
 
@@ -78,3 +78,8 @@ python tests/package_integrity.py
 ```
 
 The app remains a static PWA suitable for GitHub Pages/local hosting. The Gemini API key is stored only in the user's browser.
+
+## Local squad recovery
+
+If a restructuring update leaves previously saved players hidden, v0.4.6 automatically checks the existing local player records and migration backups. A manual **Recover existing squad** control is also available in Settings. Healthy current records are preserved; recovery only restores missing/corrupt canonical copies and resets stale squad filters.
+

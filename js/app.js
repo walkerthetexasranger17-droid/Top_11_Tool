@@ -3,7 +3,7 @@
   const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
   const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const state={page:'dashboard',squadFilter:'ALL',search:'',squadRole:'',squadAgeMin:'',squadAgeMax:'',squadOvrMin:'',squadOvrMax:'',squadPlaystyle:'',squadAvailability:'',scan:null,scanAbilities:[],scanRelatedRoles:[],scanDuplicateKey:'',scanPreservedRoles:[],scanUpdateKey:'',scanQueue:[],scanQueueReviewIndex:-1,scanQueueScanning:false,scanQueueSeq:0,scanManualVerified:false,playerKey:'',profileAbilities:[],profileRelatedRoles:[],profilePreservedRoles:[],trainingKey:'',trainingTab:'individual',session:null,approach:'balanced',drainLimit:'Medium',teamPlanTab:'formation',tacticPhase:'possession',setPieceMode:'penalty'};
-  const UI_STATE_KEY='te:ui:state:v045',SCAN_QUEUE_META_KEY='scanner:queue:v1',QUEUE_DB_NAME='te-scanner-queue-v1',QUEUE_STORE='images';
+  const UI_STATE_KEY='te:ui:state:v046',SCAN_QUEUE_META_KEY='scanner:queue:v1',QUEUE_DB_NAME='te-scanner-queue-v1',QUEUE_STORE='images';
   const scanControllers=new Map();
   let deleteTarget=null,openSquadSwipeKey='',suppressSquadClickUntil=0;
 
@@ -38,9 +38,13 @@
   async function renderDashboard(){const players=await P.all(),avg=players.length?players.reduce((a,p)=>a+Number(p.ovr||0),0)/players.length:0,high=players.length?Math.max(...players.map(p=>Number(p.ovr||0))):0;$('#dashboardStats').innerHTML=`<div class="stat lime"><b>${players.length}</b><span>Players</span></div><div class="stat"><b>${players.length?Math.round(avg):'—'}</b><span>Avg OVR</span></div><div class="stat"><b>${players.length?high:'—'}</b><span>Highest</span></div>`;$('#dashboardSquadLabel').textContent=players.length?`${players.length} saved player${players.length===1?'':'s'}`:'Add your first player';}
   function category(pos){if(pos==='GK')return'GK';if(['DL','DC','DR','DMC'].includes(pos))return'DEF';if(['ML','MC','MR'].includes(pos))return'MID';return'ATT';}
   async function renderSquad(){
-    const players=await P.all(),counts={ALL:players.length,GK:0,DEF:0,MID:0,ATT:0};players.forEach(p=>counts[category(p.position)]++);
+    let players=await P.all();
+    const validFilters=new Set(['ALL','GK','DEF','MID','ATT']);
+    if(!validFilters.has(state.squadFilter))state.squadFilter='ALL';
+    let counts={ALL:players.length,GK:0,DEF:0,MID:0,ATT:0};players.forEach(p=>counts[category(p.position)]++);
+    let filtered=players.filter(p=>state.squadFilter==='ALL'||category(p.position)===state.squadFilter);
+    if(players.length&&!filtered.length&&state.squadFilter!=='ALL'){state.squadFilter='ALL';persistUiState();filtered=[...players];}
     $('#squadFilters').innerHTML=['ALL','GK','DEF','MID','ATT'].map(x=>`<button class="chip ${state.squadFilter===x?'active':''}" data-squad-filter="${x}">${x}<small>${counts[x]}</small></button>`).join('');
-    const filtered=players.filter(p=>state.squadFilter==='ALL'||category(p.position)===state.squadFilter);
     $('#squadList').innerHTML=filtered.length?filtered.map((p,i)=>`<div class="player-swipe ${openSquadSwipeKey===p.key?'open':''}" data-swipe-key="${esc(p.key)}"><div class="player-delete-rail"><button type="button" class="player-delete-action" data-squad-delete="${esc(p.key)}" data-player-name="${esc(p.name||'Unnamed Player')}">Delete</button></div><button class="player-row player-swipe-content" data-player-open="${esc(p.key)}"><div class="squad-rank">${i+1}</div><img class="player-art" src="${roleAsset(p.position)}"><div class="player-copy"><div class="player-name">${esc(p.name||'Unnamed Player')}</div><div class="player-meta"><span class="pos-tag">${esc(p.position||'?')}</span>${esc(P.normaliseRoles(p).slice(1).join(' · '))}${p.age?` · Age ${esc(p.age)}`:''}${psLabel(p)?` · ${esc(psLabel(p))}`:''}</div></div><div class="ovr"><span>OVR</span><b>${esc(p.ovr||'—')}</b></div><div class="row-arrow">›</div></button></div>`).join(''):`<div class="empty"><b>No players here</b>${players.length?'Choose another squad group.':'Tap Add Player to build your squad.'}</div>`;
   }
   function psLabel(p){return P.playstyleName(p)||'';}
@@ -375,9 +379,19 @@
   document.addEventListener('change',async e=>{if(e.target.matches('[data-mentor-level]')){e.target.value=await setMentorLevel(e.target.dataset.mentorLevel,e.target.value);await updatePlanOnly();}});
 
   // ---------- Settings / startup ----------
+  async function recoverSquadNow({silent=false}={}){
+    const result=await P.recoverLocalSquad({force:false});
+    state.squadFilter='ALL';state.search='';state.squadRole='';state.squadAgeMin='';state.squadAgeMax='';state.squadOvrMin='';state.squadOvrMax='';state.squadPlaystyle='';state.squadAvailability='';persistUiState();
+    await renderDashboard();if(state.page==='squad')await renderSquad();
+    const count=(await P.all()).length;
+    const note=$('#localSquadStatus');if(note)note.textContent=`${count} player${count===1?'':'s'} found on this device${result.recovered||result.repaired?` · restored ${result.recovered+result.repaired}`:''}.`;
+    if(!silent)toast(result.recovered||result.repaired?`Recovered ${result.recovered+result.repaired} player record${result.recovered+result.repaired===1?'':'s'}`:`${count} existing player${count===1?'':'s'} found`);
+    return result;
+  }
+  $('#recoverSquadBtn')?.addEventListener('click',()=>recoverSquadNow({silent:false}));
   $('#clearDataBtn')?.addEventListener('click',async()=>{const b=$('#clearDataBtn');if(!b.dataset.armed){b.dataset.armed='1';b.textContent='Tap again to confirm';setTimeout(()=>{delete b.dataset.armed;b.textContent='Clear all squad data';},3500);return;}for(const k of await S.list('player:'))await P.remove(k);for(const k of await S.list('training:session:'))await S.del(k);delete b.dataset.armed;b.textContent='Clear all squad data';toast('Squad data cleared');renderDashboard();});
   async function init(){
-    restoreUiState();await P.migrate();await DP.ensure();await loadMentorLevels();if(!await S.get(UI_RESTRUCTURE_KEY)){await TP.invalidate();await S.set(UI_RESTRUCTURE_KEY,new Date().toISOString());}resetScanner();await renderGeminiScannerSettings();setTrainingTab(state.trainingTab||'individual');await updateTrainingIntel();await restoreScanQueueState();
+    restoreUiState();await P.migrate();await P.recoverLocalSquad({force:false});state.squadFilter='ALL';state.search='';state.squadRole='';state.squadAgeMin='';state.squadAgeMax='';state.squadOvrMin='';state.squadOvrMax='';state.squadPlaystyle='';state.squadAvailability='';persistUiState();await DP.ensure();await loadMentorLevels();if(!await S.get(UI_RESTRUCTURE_KEY)){await TP.invalidate();await S.set(UI_RESTRUCTURE_KEY,new Date().toISOString());}resetScanner();await renderGeminiScannerSettings();setTrainingTab(state.trainingTab||'individual');await updateTrainingIntel();await restoreScanQueueState();const localCount=(await P.all()).length;if($('#localSquadStatus'))$('#localSquadStatus').textContent=`${localCount} player${localCount===1?'':'s'} found on this device.`;
     let target=state.page||'dashboard';const existing=history.state;
     if(existing?.teTopEleven){target=existing.page||target;if(existing.playerKey!=null)state.playerKey=existing.playerKey;if(existing.trainingKey!=null)state.trainingKey=existing.trainingKey;if(existing.trainingTab)state.trainingTab=existing.trainingTab;history.replaceState(routeState(target),'');}
     else{history.replaceState(routeState('dashboard'),'');if(target!=='dashboard')history.pushState(routeState(target),'');}

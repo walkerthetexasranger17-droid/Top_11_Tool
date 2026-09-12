@@ -105,7 +105,7 @@ function inside(role,x,y){const r=B.ROLE_RECTS[role];return x>=r.minX&&x<r.maxX&
   const m1=player('m1','M1',['MC'],Object.fromEntries(D.POSITION_WHITE.MC.map(a=>[a,179]))),m2=player('m2','M2',['MC'],Object.fromEntries(D.POSITION_WHITE.MC.map(a=>[a,178]))),s1=player('s1','S1',['ST'],Object.fromEntries(D.POSITION_WHITE.ST.map(a=>[a,100]))),s2=player('s2','S2',['ST'],Object.fromEntries(D.POSITION_WHITE.ST.map(a=>[a,90])));
   const crafted=[...fixed,versatile,m1,m2,s1,s2],form=F.FORMATIONS.find(x=>x.id==='442'),globalAssign=F.assign(crafted,form),greedy=greedyScore(crafted,form);ok(!globalAssign.error,'global assignment completes');ok(globalAssign.chosen.length===11&&new Set(globalAssign.chosen.map(x=>x.player.key)).size===11,'global assignment cannot assign one player twice');ok(globalAssign.sumMean>=greedy,'global assignment beats/equals greedy baseline');
   eq(B.FORMATION_TEMPLATES.map(x=>x.id),['442','433','4231','352','41212'],'internal proven baseline formation templates remain unchanged');
-  eq(F.COMMUNITY_FORMATIONS.map(x=>x.id),['4141','31411','31213'],'v0.4.5 adds only the three provenance-labelled 2026 community candidate shapes');
+  eq(F.COMMUNITY_FORMATIONS.map(x=>x.id),['4141','31411','31213'],'v0.4.6 retains only the three provenance-labelled 2026 community candidate shapes');
   eq(F.FORMATIONS.map(x=>x.id),['442','433','4231','352','41212','4141','31411','31213'],'formation optimiser evaluates proven baseline plus current community candidates');
 
   // ---------------------------------------------------------------------------

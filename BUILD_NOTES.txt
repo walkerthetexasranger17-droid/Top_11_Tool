@@ -1,4 +1,4 @@
-Top Eleven Tool v0.4.5
+Top Eleven Tool v0.4.6
 
 Public product version reset for the pre-release functional-development phase.
 
