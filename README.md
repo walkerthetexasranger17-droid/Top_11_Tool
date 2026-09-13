@@ -1,8 +1,8 @@
-# Top Eleven Tool v0.4.15
+# Top Eleven Tool v0.4.18
 
 Top Eleven Tool is a mobile-first PWA companion for managing a Top Eleven squad, scanning player cards, planning training, selecting a formation, assigning set pieces and presenting tactics in a simpler form.
 
-`v0.4.15` keeps the approved HQ playstyle display pack and coloured-only Special Ability pack unchanged, but moves scanner recognition to the game's exact compact `PlaystyleSmallAtlas` renderer used beside player names. Every detected playstyle is checked against its five single compact level images, independently confirmed a second time, and tie-broken when the two reads disagree. The max-XP Ready arrow is treated as a separate overlay and masked from the level decision. Core training/tactics engines remain unchanged.
+`v0.4.18` keeps every approved HQ playstyle display image, compact scanner reference and coloured-only Special Ability image unchanged. Scanner v12 removes destructive whole-frame resizing completely. A real 2688×1216 upload now stays 2688×1216 for the entire scan: name, OVR, age, roles, all skills, playstyle and Special Abilities are cropped directly from the original pixels. The native 2688×1216 Top Eleven layout is the scanner baseline. Matching-layout screenshots at other resolutions are handled by proportional ROI scaling; the source image itself is never resized. Playstyle level detection continues to use the compact-renderer references, context-matched pixel guard and Ready-arrow mask. The max-XP Ready arrow remains masked from the level comparison. Core training/tactics engines remain unchanged.
 
 ## Main navigation
 
@@ -83,6 +83,8 @@ python tests/scanner_regression.py
 python tests/scanner_image_contract.py
 python tests/v0414_scanner_level_contract.py
 python tests/v0414_badge_locator_fixtures.py
+python tests/v0416_pixel_level_guard_contract.py
+python tests/v0417_native_source_playstyle_contract.py
 python tests/navigation_queue_contract.py
 python tests/static_checks.py
 python tests/package_integrity.py
@@ -120,7 +122,7 @@ The Firebase end-to-end sign-in/sync path still needs a real browser and the act
 - Scanner identity/level recognition, icon assets and mentor recommendation logic were deliberately left unchanged for separate work.
 
 
-## v0.4.15
+## v0.4.16
 
 - Rechecked the approved playstyle reference labels after real-device failures; the PNG mapping was correct and the image pack is unchanged.
 - Added automatic isolation of the small playstyle badge from the name strip before identity/level analysis.

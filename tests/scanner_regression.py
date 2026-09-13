@@ -4,17 +4,17 @@ ROOT=Path(__file__).resolve().parents[1]
 scanner=(ROOT/'js/scanner-engine.js').read_text()
 errs=[]
 required=[
- 'const VERSION=9', 'gemini-3.1-flash-live-preview', "thinkingLevel:'HIGH'",
+ 'const VERSION=12', 'gemini-3.1-flash-live-preview', "thinkingLevel:'HIGH'",
  'BidiGenerateContent', 'submit_core_scan', 'submit_playstyle_identity',
  'submit_playstyle_level', 'submit_playstyle_overlay', 'submit_playstyle_pair', 'submit_ability_slot_scan',
  'reference-manifest.json', 'buildPlaystyleIdentityReference', 'compactPlaystyleStateMedia', 'buildPlaystyleLevelEvidence', 'locateBadgeComponent', 'buildAbilityReference',
- 'COMPACT_REFERENCE_MANIFEST_URL', 'PlaystyleSmallAtlas', 'submit_playstyle_level_confirmation', 'playstyleLevelConfirmationPrompt', 'READY-ARROW ZONE MASKED', 'IMPORTANT FOR YELLOW/MIDFIELD BADGES', 'rightSegmentDark', 'bottomSegmentDark', 'leftSegmentDark', 'Intermediate=1 (RIGHT)', 'EXACT COLOURED SPECIAL ABILITY REFERENCES',
+ 'COMPACT_REFERENCE_MANIFEST_URL', 'PlaystyleSmallAtlas', 'submit_playstyle_level_confirmation', 'playstyleLevelConfirmationPrompt', 'READY-ARROW ZONE MASKED', 'IMPORTANT FOR YELLOW/MIDFIELD BADGES', 'rightSegmentPresent', 'bottomSegmentPresent', 'leftSegmentPresent', 'Intermediate=1 (RIGHT)', 'EXACT COLOURED SPECIAL ABILITY REFERENCES',
  'gold SA references disabled' if False else 'gold/boosted reference path',
  'normaliseFrameMedia', 'SOURCE SCREENSHOT DIMENSIONS (measured by app code)',
  'detectLayoutHint', 'GOALKEEPER core', 'specialAbilityTraining', 'Shadow Striker', 'darkFraction>.25'
 ]
 for x in required:
-    if x not in scanner: errs.append('missing scanner v9 contract: '+x)
+    if x not in scanner: errs.append('missing scanner v12 contract: '+x)
 for forbidden in [
  'gemini-3.6-flash','gemini-3.8-flash',':generateContent','scanner-templates',
  'playstyles-index-final.png','playstyle-levels-index-final.png',
@@ -43,7 +43,7 @@ if (ROOT/'assets/abilities').exists(): errs.append('legacy assets/abilities dire
 for player in ['David Andrews','François Roelandt','Ariel Bravo','Richard Kilroy','Gosling Lataille','Remus Iacob','Paul Brace','Victor Aslan']:
     if player in scanner: errs.append('benchmark player leaked into production scanner: '+player)
 if errs:
-    print('FAIL Scanner v9 compact-reference contract')
+    print('FAIL Scanner v12 compact-reference contract')
     [print(' -',e) for e in errs]
     raise SystemExit(1)
-print('PASS Scanner v9 compact-reference contract: PlaystyleSmallAtlas levels + mandatory confirmation + separate overlays + 19 coloured SA refs')
+print('PASS Scanner v12 compact-reference contract: PlaystyleSmallAtlas levels + mandatory confirmation + separate overlays + 19 coloured SA refs')

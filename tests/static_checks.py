@@ -42,7 +42,7 @@ for phase in ['possession','transition','out']:
     if not soup.select_one(f'[data-tactic-phase="{phase}"]'): errs.append(f'Tactics missing {phase} phase')
 if not soup.select_one('[data-training-tab="individual"]') or not soup.select_one('[data-training-tab="team"]'):
     errs.append('Training does not expose Individual | Team tabs on one page')
-if 'v0.4.15' not in html: errs.append('visible version is not v0.4.15')
+if 'v0.4.18' not in html: errs.append('visible version is not v0.4.18')
 if re.search(r'BUILD\s*30527|Build\s*30527',html): errs.append('internal build 30527 is still visible in product HTML')
 if 'verified scanner' in html.lower(): errs.append('technical scanner provenance is exposed in normal UI')
 
@@ -85,7 +85,7 @@ if not account_btn or account_btn.get('title')!='Profile & Security': errs.appen
 css_text=(ROOT/'css/app.css').read_text(encoding='utf-8')
 if '.account-button' not in css_text or 'cursor:pointer' not in css_text: errs.append('profile button does not advertise clickability with a pointer cursor')
 sw_text=(ROOT/'sw.js').read_text(encoding='utf-8')
-if "const CACHE='te-v0-4-15" not in sw_text or "e.request.mode==='navigate'" not in sw_text or "cache:'no-store'" not in sw_text: errs.append('v0.4.12 service-worker update/navigation freshness guard missing')
+if "const CACHE='te-v0-4-18" not in sw_text or "e.request.mode==='navigate'" not in sw_text or "cache:'no-store'" not in sw_text: errs.append('v0.4.12 service-worker update/navigation freshness guard missing')
 if "toast('App initialisation failed','err')" in js: errs.append('generic app-initialisation error toast survived GitHub testing hotfix')
 if not (ROOT/'firestore.rules').is_file(): errs.append('firestore.rules missing')
 rules=(ROOT/'firestore.rules').read_text(encoding='utf-8') if (ROOT/'firestore.rules').is_file() else ''
@@ -107,9 +107,9 @@ for needle,label in [
 ]:
     if needle not in hay: errs.append(f'missing integrity hook: {label}')
 
-# Scanner v9 compact-reference contract.
+# Scanner v12 compact-reference contract.
 for needle,label,src in [
-    ("const VERSION=9", "Scanner v9 version marker", scanner),
+    ("const VERSION=12", "Scanner v12 version marker", scanner),
     ("gemini-3.1-flash-live-preview", "Gemini 3.1 Flash Live model", scanner),
     ("thinkingLevel:'HIGH'", "HIGH thinking configuration", scanner),
     ("BidiGenerateContent", "Gemini Live WebSocket transport", scanner),
@@ -117,10 +117,10 @@ for needle,label,src in [
     ("submit_playstyle_level", "exact same-emblem level-ring pass", scanner),
     ("submit_playstyle_overlay", "separate playstyle overlay pass", scanner),
     ("buildPlaystyleLevelEvidence", "isolated badge level evidence", scanner),
-    ("darkSegmentCount", "explicit level segment count", scanner),
-    ("rightSegmentDark", "right level-ring segment inspection", scanner),
-    ("bottomSegmentDark", "bottom level-ring segment inspection", scanner),
-    ("leftSegmentDark", "left level-ring segment inspection", scanner),
+    ("segmentCount", "explicit level segment count", scanner),
+    ("rightSegmentPresent", "right level-ring segment inspection", scanner),
+    ("bottomSegmentPresent", "bottom level-ring segment inspection", scanner),
+    ("leftSegmentPresent", "left level-ring segment inspection", scanner),
     ("locateBadgeComponent", "automatic tight playstyle badge locator", scanner),
     ("submit_ability_slot_scan", "per-slot Special Ability pass", scanner),
     ("reference-manifest.json", "exact HQ reference manifest", scanner),
@@ -150,7 +150,7 @@ if not manifest_path.is_file(): errs.append('exact scanner reference manifest mi
 else:
     ref=json.loads(manifest_path.read_text())
     if ref.get('counts',{}).get('totalReferenceImages')!=279: errs.append('exact scanner reference count is not 279')
-if (ROOT/'assets/playstyles').exists() or (ROOT/'assets/abilities').exists(): errs.append('legacy playstyle/ability asset folders survived v0.4.15')
+if (ROOT/'assets/playstyles').exists() or (ROOT/'assets/abilities').exists(): errs.append('legacy playstyle/ability asset folders survived v0.4.18')
 if "B.PLAYSTYLE_LEVELS.filter(x=>x.id>=1);" not in js: errs.append('Standard playstyle tier is not selectable')
 for player in ['David Andrews','François Roelandt','Ariel Bravo','Richard Kilroy','Gosling Lataille','Remus Iacob','Paul Brace','Victor Aslan']:
     if player in scanner: errs.append(f'benchmark player leaked into production scanner: {player}')

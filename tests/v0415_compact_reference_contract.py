@@ -28,10 +28,10 @@ for ps in hq.get('playstyles',[]):
 for ab in hq.get('specialAbilities',[]):
  p=ROOT/ab['path']
  if hashlib.sha256(p.read_bytes()).hexdigest()!=ab['sha256']:errs.append('SA changed '+ab['name'])
-for needle in ['const VERSION=9','COMPACT_REFERENCE_MANIFEST_URL','PlaystyleSmallAtlas','compactPlaystyleStateMedia','submit_playstyle_level_confirmation','playstyleLevelConfirmationPrompt','submit_playstyle_level_tiebreak','READY-ARROW ZONE MASKED','IMPORTANT FOR YELLOW/MIDFIELD BADGES','indicator_levelup','compact-playstylesmallatlas-double-confirm-v9']:
- if needle not in scanner:errs.append('missing scanner v9 hook '+needle)
+for needle in ['const VERSION=12','COMPACT_REFERENCE_MANIFEST_URL','PlaystyleSmallAtlas','compactPlaystyleStateMedia','buildContextMatchedCompactReference','compactLevelPixelCompare','submit_playstyle_level_confirmation','playstyleLevelConfirmationPrompt','submit_playstyle_level_tiebreak','READY-ARROW ZONE MASKED','IMPORTANT FOR YELLOW/MIDFIELD BADGES','rightSegmentPresent','indicator_levelup','all-fields-native-resolution-v12']:
+ if needle not in scanner:errs.append('missing scanner v12 hook '+needle)
 for player in ['Kilroy','Sergey','Luiu','Andrews','Aslan','Remus','Stanek','James Hughes','Paul Brace','Stefano Luiu','Jiri Stanek']:
  if player in scanner:errs.append('benchmark player leaked into scanner: '+player)
 if errs:
- print('FAIL v0.4.15 compact reference contract');[print(' -',e) for e in errs];sys.exit(1)
-print('PASS v0.4.15 compact reference contract: 100 compact level refs + 6 overlays + double confirmation + unchanged HQ/SA assets')
+ print('FAIL v0.4.18 compact reference contract');[print(' -',e) for e in errs];sys.exit(1)
+print('PASS v0.4.18 compact reference contract: 100 compact level refs + 6 overlays + double confirmation + unchanged HQ/SA assets')
