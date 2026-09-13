@@ -1,8 +1,8 @@
-# Top Eleven Tool v0.4.13
+# Top Eleven Tool v0.4.14
 
 Top Eleven Tool is a mobile-first PWA companion for managing a Top Eleven squad, scanning player cards, planning training, selecting a formation, assigning set pieces and presenting tactics in a simpler form.
 
-`v0.4.13` replaces the scanner visual-reference layer with the approved exact playstyle state pack and the new coloured-only Special Ability reference pack. The old playstyle/level composite indexes and gold Special Ability reference path have been removed. Core training/tactics engines remain unchanged.
+`v0.4.14` keeps the approved exact playstyle/Special Ability image packs from v0.4.13 and tightens scanner recognition after real-device testing. Playstyle levels are now read from an isolated badge crop using individual exact level references and the explicit `000 / 100 / 110 / 111` ring-segment pattern; Ready/Boosted/Wrong Position are checked in a separate overlay pass. The coloured-only Special Ability path remains unchanged. Core training/tactics engines remain unchanged.
 
 ## Main navigation
 
@@ -34,7 +34,7 @@ See [`docs/setup/FIREBASE.md`](docs/setup/FIREBASE.md) for project setup and Git
 
 ## Scanner
 
-The proven scanner is intentionally preserved. It uses Gemini 3.1 Flash Live with HIGH thinking and separate passes for core data, playstyle identity, playstyle level and Special Abilities. Native phone screenshots are normalised internally and goalkeeper layouts use their own attribute schema.
+The scanner uses Gemini 3.1 Flash Live with HIGH thinking and separate passes for core data, playstyle identity, exact level-ring counting, visual overlays and Special Abilities. The app automatically isolates the playstyle badge before the level pass, maps the right/bottom/left ring pattern `000 / 100 / 110 / 111` to Standard / Intermediate / Advanced / Master, and keeps Ready/Boosted/Wrong Position out of that decision. Native phone screenshots are normalised internally and goalkeeper layouts use their own attribute schema.
 
 See [`docs/setup/SCANNER.md`](docs/setup/SCANNER.md).
 
@@ -81,6 +81,8 @@ node tests/core-tests.js
 node tests/scanner_failover_tests.js
 python tests/scanner_regression.py
 python tests/scanner_image_contract.py
+python tests/v0414_scanner_level_contract.py
+python tests/v0414_badge_locator_fixtures.py
 python tests/navigation_queue_contract.py
 python tests/static_checks.py
 python tests/package_integrity.py
@@ -116,3 +118,14 @@ The Firebase end-to-end sign-in/sync path still needs a real browser and the act
 - Normal drill levels are account-specific, user-selectable and cloud-synced; new accounts no longer inherit captured screenshot levels.
 - Set Pieces now uses dedicated Corner R/L, Free Kick R/L, Penalty 1-5 and Captain slots; only assigned set-piece players appear on the pitch.
 - Scanner identity/level recognition, icon assets and mentor recommendation logic were deliberately left unchanged for separate work.
+
+
+## v0.4.14
+
+- Rechecked the approved playstyle reference labels after real-device failures; the PNG mapping was correct and the image pack is unchanged.
+- Added automatic isolation of the small playstyle badge from the name strip before identity/level analysis.
+- Replaced the 13-state level collage with direct full-size Standard / Intermediate / Advanced / Master / Locked references for the selected playstyle.
+- Level recognition now reports the three outer ring segments individually and the app resolves `000 / 100 / 110 / 111` as Standard / Intermediate / Advanced / Master.
+- Ready / Boosted / Wrong Position moved to a separate overlay-only pass.
+- Added a direct Ball Playing DC versus No-Nonsense DC confirmation pass.
+- The 260 playstyle PNGs and 19 coloured Special Ability PNGs are byte-for-byte unchanged from v0.4.13.

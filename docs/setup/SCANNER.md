@@ -1,6 +1,6 @@
-# Scanner setup — v0.4.13
+# Scanner setup — v0.4.14
 
-v0.4.13 uses the approved exact visual reference packs supplied for this build. The legacy composite playstyle/level indexes and the gold/boosted Special Ability reference path have been removed.
+v0.4.14 uses the approved exact visual reference packs supplied for this build. The legacy composite playstyle/level indexes and the gold/boosted Special Ability reference path have been removed.
 
 ## Configure it
 
@@ -20,9 +20,12 @@ The key is stored only in the browser under `te:scanner:geminiApiKey`; it is not
 - Dedicated goalkeeper/outfield layout handling.
 - Separate core-data pass.
 - Playstyle identity is matched against a runtime board built from the 20 exact **Standard** reference PNGs.
-- After identity is known, playstyle level/state is matched against all 13 exact PNG states for that exact same playstyle.
-- **Standard is a valid playstyle level** and is not treated as Locked.
-- Ready, Boosted and Wrong Position are classified as visual layers separately from the underlying level.
+- The app then automatically isolates the tiny playstyle badge from the player-name strip and supplies both raw-pixel and smoothed enlargements to the level pass.
+- Level classification uses five **individual full-size exact references** for that same playstyle instead of the old 13-state collage.
+- The model must judge the three real outer level-ring segments separately in **right / bottom / left** order: **000 = Standard, 100 = Intermediate, 110 = Advanced, 111 = Master**. Locked requires the real padlock.
+- The app independently maps those three segment booleans to the level, so a contradictory text label or count cannot silently override the ring pattern.
+- Ready, Boosted and Wrong Position are checked in a separate exact-reference overlay pass and cannot alter the already-resolved underlying level.
+- Ball Playing DC versus No-Nonsense DC gets an additional exact two-reference confirmation when that lookalike pair is selected.
 - Each occupied Special Ability slot is classified independently against the 19 **coloured** exact references only.
 - Gold/boosted Special Ability references are intentionally disabled.
 - Special Ability learning/progress (for example `3/50`) remains distinct from an unlocked ability.

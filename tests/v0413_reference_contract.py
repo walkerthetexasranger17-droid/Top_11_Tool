@@ -22,9 +22,9 @@ html=(ROOT/'index.html').read_text()
 for old in ['playstyles-index-final.png','playstyle-levels-index-final.png','special-abilities-standard-index-final.png','special-abilities-boosted-index-final.png','assets/playstyles/','assets/abilities/']:
     if old in scanner+app+html: errs.append('legacy visual path survived: '+old)
 if 'gold/boosted reference path' not in scanner or 'There is intentionally NO gold/boosted reference path' not in scanner: errs.append('coloured-only SA policy missing from AI command')
-if 'Standard is a real level' not in scanner: errs.append('Standard playstyle level command missing')
+if 'Standard = RIGHT pale, BOTTOM pale, LEFT pale = 000' not in scanner: errs.append('Standard 000 playstyle level command missing')
 if "B.PLAYSTYLE_LEVELS.filter(x=>x.id>=1);" not in app: errs.append('Standard is still excluded from manual playstyle tier chooser')
-if 'submit_playstyle_state' not in scanner: errs.append('exact same-emblem playstyle state pass missing')
+if 'submit_playstyle_level' not in scanner or 'submit_playstyle_overlay' not in scanner: errs.append('exact same-emblem level/overlay passes missing')
 if errs:
     print('FAIL v0.4.13 reference contract')
     for e in errs: print('-',e)
