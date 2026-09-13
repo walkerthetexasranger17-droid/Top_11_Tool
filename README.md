@@ -1,8 +1,8 @@
-# Top Eleven Tool v0.4.12
+# Top Eleven Tool v0.4.13
 
 Top Eleven Tool is a mobile-first PWA companion for managing a Top Eleven squad, scanning player cards, planning training, selecting a formation, assigning set pieces and presenting tactics in a simpler form.
 
-`v0.4.12` is the first post-testing feature patch. It keeps the proven scanner and core training/tactics engines intact while applying the focused queue, drill-account, Tactic Calculator and Set Pieces changes requested after testing.
+`v0.4.13` replaces the scanner visual-reference layer with the approved exact playstyle state pack and the new coloured-only Special Ability reference pack. The old playstyle/level composite indexes and gold Special Ability reference path have been removed. Core training/tactics engines remain unchanged.
 
 ## Main navigation
 

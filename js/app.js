@@ -1,5 +1,5 @@
 (() => {
-  window.__TE_RUNTIME__='0.4.12-r1';
+  window.__TE_RUNTIME__='0.4.13-r1';
   const TE=window.TE5;const D=TE.Data,P=TE.Players,S=TE.Storage,DP=TE.DrillProfile,T=TE.Training,TT=TE.TeamTraining,SC=TE.Scanner,R=TE.Recommendations,F=TE.Formation,TP=TE.TeamPlan,TAC=TE.Tactics,M=TE.Mentor,B=TE.BibleData,C=TE.Cloud;
   const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
   const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -11,8 +11,9 @@
   function toast(msg,type='ok'){const el=$('#toast');if(!el)return;el.textContent=msg;el.className='toast show'+(type==='err'?' err':'');clearTimeout(toast.t);toast.t=setTimeout(()=>el.className='toast',2800);}
   function roleAsset(pos){return `assets/roles/${P.roleGroup(pos)}.webp`;}
   function assetSlug(value){return String(value||'').toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');}
-  function playstyleIcon(name){return name?`assets/playstyles/${assetSlug(name)}.png`:'';}
-  function abilityIcon(name){return name?`assets/abilities/${assetSlug(name)}.png`:'';}
+  function playstyleStateAsset(playstyle){const level=Number(playstyle?.level)||2;return({1:'locked',2:'standard',3:'intermediate',4:'advanced',5:'master'})[level]||'standard';}
+  function playstyleIcon(name,playstyle=null){return name?`assets/scanner/playstyles/${assetSlug(name)}/${playstyleStateAsset(playstyle)}.png`:'';}
+  function abilityIcon(name){return name?`assets/scanner/special-abilities/${assetSlug(name)}.png`:'';}
   function drillAsset(name='',cat=''){const n=String(name).toLowerCase(),c=String(cat).toLowerCase();if(/one[- ]?on[- ]?one|1v1|attacker|defender/.test(n))return'assets/drills/one-v-one.webp';if(/shoot|finish|free kick|penalt|set[- ]?piece|attack.*master/.test(n))return'assets/drills/shoot.webp';if(/pass|possession|piggy|video analysis|midfield.*master/.test(n))return'assets/drills/pass.webp';if(/head|aerial|cross|corner|press the play|defend.*master/.test(n))return'assets/drills/aerial.webp';if(/sprint|agility|fitness|stretch|warm|condition|shuttle|gym|fast|physical.*master/.test(n)||c.includes('physical'))return'assets/drills/agility.webp';return'assets/drills/dribble.webp';}
   function diffClass(d){return String(d||'').replace(/\s+/g,'');}
   function fmt(n,d=1){return Number.isFinite(Number(n))?Number(n).toFixed(d):'—';}
@@ -75,7 +76,7 @@
   }
   function playstyleLevelOptions(current=0,hasPlaystyle=true){
     const n=Number(current)||0;
-    const rows=B.PLAYSTYLE_LEVELS.filter(x=>x.id>=1&&x.name!=='Standard');
+    const rows=B.PLAYSTYLE_LEVELS.filter(x=>x.id>=1);
     return `<option value="">${hasPlaystyle?'Tier not captured':'No playstyle'}</option>`+rows.map(x=>`<option value="${x.id}" ${x.id===n?'selected':''}>${esc(x.name)}</option>`).join('');
   }
   function renderPlaystyleState(p){
@@ -98,7 +99,7 @@
     $('#profileRoleArt').src=roleAsset(p.position);$('#profileRoleArt').alt=`${P.roleGroup(p.position).toUpperCase()} role artwork`;
     $('#profileMeta').innerHTML=`<span class="profile-role-label">Roles</span>${roles.map((r,i)=>`<button type="button" class="profile-role-chip ${i===0?'primary':''}" data-profile-primary-role="${esc(r)}">${esc(r)}${i===0?' · primary':''}</button>`).join('')}${related.length?`<span>Related ${esc(related.join('/'))}</span>`:''}${p.age?`<span>Age ${esc(p.age)}</span>`:''}`;
     const badgeCards=[],ps=P.playstyleName(p);
-    if(ps)badgeCards.push(`<div class="identity-card"><img src="${playstyleIcon(ps)}" alt=""><div><span>Playstyle</span><b>${esc(ps)}</b><small>${esc(playstyleLevelLabel(p.playstyle))}</small></div></div>`);
+    if(ps)badgeCards.push(`<div class="identity-card"><img src="${playstyleIcon(ps,p.playstyle)}" alt=""><div><span>Playstyle</span><b>${esc(ps)}</b><small>${esc(playstyleLevelLabel(p.playstyle))}</small></div></div>`);
     for(const a of p.specialAbilities||[])badgeCards.push(`<div class="identity-card gold"><img src="${abilityIcon(a)}" alt=""><div><span>Special Ability</span><b>${esc(a)}</b></div></div>`);
     if(p.specialAbilityTraining?.active)badgeCards.push(`<div class="identity-card learning"><div class="learning-icon">↗</div><div><span>Special Ability</span><b>Training in progress</b><small>Not counted as unlocked</small></div></div>`);
     $('#profileBadges').innerHTML=badgeCards.join('')||'<div class="profile-badge">No playstyle or Special Ability selected</div>';
@@ -146,7 +147,7 @@
   function schedulePersistScanQueue(){clearTimeout(schedulePersistScanQueue.t);schedulePersistScanQueue.t=setTimeout(()=>persistScanQueueState(),40);}
   async function restoreScanQueueState(){const saved=await S.getJSON(SCAN_QUEUE_META_KEY,null);if(!saved?.items?.length)return;const rows=[];for(const raw of saved.items){const item={...raw,dataUrl:null,nextRetryAt:0};if(item.imageStored)item.dataUrl=await queueImageGet(item.id);if(['scanning','fallback','waiting'].includes(item.status)&&item.dataUrl){item.status='error';item.error='A previous scan was interrupted. Tap Retry Scan when you want to try again.';item.statusText='NEEDS RETRY · previous request stopped';}if(!item.manual&&!item.dataUrl&&item.status!=='saved'){item.status='error';item.statusText='NEEDS RETRY · screenshot could not be restored';item.error='The queued screenshot could not be restored. Remove it and add the screenshot again.';}rows.push(item);}state.scanQueue=rows;state.scanQueueSeq=Math.max(Number(saved.seq)||0,...rows.map(x=>Number(x.id)||0),0);const reviewIndex=rows.findIndex(x=>x.id===saved.reviewId&&['ready','saved'].includes(x.status));state.scanQueueReviewIndex=reviewIndex;renderScanQueue();if(reviewIndex>=0)loadQueueReview(reviewIndex);if(rows.some(x=>x.status==='queued'))runScanQueue();}
 
-  // ---------- Scanner v4 · Gemini 3.1 Flash Live · batch review queue ----------
+  // ---------- Scanner v7 · Gemini 3.1 Flash Live · exact-reference batch review queue ----------
   let scannerHealthOkAt=0;
   const SCANNER_HEALTH_TTL_MS=5*60*1000;
   function scannerSetupFailure(err){return ['NOT_CONFIGURED','REFERENCE_LOAD','NETWORK','GEMINI_API_ERROR','GEMINI_LIVE_ERROR','GEMINI_LIVE_CLOSED'].includes(String(err?.code||''));}
@@ -338,10 +339,10 @@
 
 
   // ---------- Gemini Scanner settings ----------
-  async function renderGeminiScannerSettings(){const el=$('#geminiScannerApiKey');if(!el)return;const key=await SC.getApiKey();el.value=key;const status=$('#geminiScannerStatus');if(status)status.textContent=key?`API key saved on this device · Gemini 3.1 Flash Live scanner · HIGH thinking · core + playstyle + abilities. Test the connection before scanning.`:'Not configured yet. Create a Gemini API key in Google AI Studio, then test the Flash Live connection.';}
+  async function renderGeminiScannerSettings(){const el=$('#geminiScannerApiKey');if(!el)return;const key=await SC.getApiKey();el.value=key;const status=$('#geminiScannerStatus');if(status)status.textContent=key?`API key saved on this device · Gemini 3.1 Flash Live scanner · HIGH thinking · 260 exact playstyle states + 19 coloured Special Ability references. Test the connection before scanning.`:'Not configured yet. Create a Gemini API key in Google AI Studio, then test the Flash Live connection.';}
   $('#saveGeminiScannerKey')?.addEventListener('click',async()=>{const key=await SC.setApiKey($('#geminiScannerApiKey').value);scannerHealthOkAt=0;$('#geminiScannerApiKey').value=key;$('#geminiScannerStatus').textContent=key?`API key saved on this device · Gemini 3.1 Flash Live · HIGH thinking.`:'API key cleared.';toast(key?'Gemini scanner key saved':'Gemini scanner key cleared');});
   $('#clearGeminiScannerKey')?.addEventListener('click',async()=>{await SC.clearApiKey();scannerHealthOkAt=0;$('#geminiScannerApiKey').value='';$('#geminiScannerStatus').textContent='API key cleared. Scanner is disabled until a free Gemini key is added.';toast('Gemini scanner key cleared');});
-  $('#testGeminiScannerKey')?.addEventListener('click',async()=>{const input=$('#geminiScannerApiKey').value.trim();if(input)await SC.setApiKey(input);const status=$('#geminiScannerStatus');status.textContent='Testing Gemini 3.1 Flash Live connection and loading visual indexes…';try{const h=await SC.health();scannerHealthOkAt=Date.now();status.textContent=`Connected · ${h.provider} · HIGH thinking · ${h.visualReferences} visual indexes · core + playstyle + level + Special Abilities`;toast('Gemini Flash Live scanner connected');resumeSetupBlockedQueue();}catch(err){status.textContent=err.message||'Connection failed';toast(err.message||'Connection failed','err');}});
+  $('#testGeminiScannerKey')?.addEventListener('click',async()=>{const input=$('#geminiScannerApiKey').value.trim();if(input)await SC.setApiKey(input);const status=$('#geminiScannerStatus');status.textContent='Testing Gemini 3.1 Flash Live connection and loading 279 exact visual references…';try{const h=await SC.health();scannerHealthOkAt=Date.now();status.textContent=`Connected · ${h.provider} · HIGH thinking · ${h.playstyleReferences} exact playstyle states + ${h.colouredSpecialAbilityReferences} coloured Special Ability icons · gold SA references disabled`;toast('Gemini Flash Live scanner connected');resumeSetupBlockedQueue();}catch(err){status.textContent=err.message||'Connection failed';toast(err.message||'Connection failed','err');}});
 
   // ---------- Drill profile ----------
   async function renderMyDrills(){const {normal,master}=await DP.ensure();$('#normalDrillConfig').innerHTML=D.NORMAL_DRILLS.map(d=>{const s=normal.drills[d.drillId]||{unlocked:false,level:0};const options=(D.DRILL_LEVELS.levels||[]).map(l=>`<option value="${Number(l.level_id)}" ${Number(s.level)===Number(l.level_id)?'selected':''}>${esc(l.name)} +${esc(l.training_effect_percent)}%</option>`).join('');return `<div class="drill-config-row" data-drill-id="${esc(d.drillId)}"><div class="drill-config-main"><img src="${drillAsset(d.name,d.cat)}"><div><b>${esc(d.name)}</b><span>${esc(d.diff)} · ${fmt(d.conditionDrop,2)}% condition · +${esc(d.xpPerPlayer)} XP</span></div></div><label class="unlock-control" title="I have this drill unlocked"><input type="checkbox" data-normal-unlock="${esc(d.drillId)}" ${s.unlocked?'checked':''}><i></i></label><select class="level-select" data-normal-level="${esc(d.drillId)}" ${s.unlocked?'':'disabled'}><option value="0" ${Number(s.level)===0?'selected':''}>Choose level</option>${options}</select></div>`;}).join('');$('#masterStockConfig').innerHTML=D.MASTER_CAMPUS_DRILLS.map(d=>`<div class="master-card"><img src="${drillAsset(d.name,d.cat)}"><div class="master-card-copy"><span class="master-badge">MASTER +${esc(d.additionalTrainingEffectPercent)}%</span><b>${esc(d.name)}</b><small>${esc(d.diff)} · ${fmt(d.conditionDrop,2)}% condition · +${esc(d.xpPerPlayer)} XP</small><small>${esc(d.skills.join(' · '))}</small></div><label><span>CARDS OWNED</span><input type="number" min="0" step="1" inputmode="numeric" data-master-stock="${esc(d.drillId)}" value="${Math.max(0,Number(master.stock[d.drillId]||0))}"></label></div>`).join('');}

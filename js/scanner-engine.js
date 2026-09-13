@@ -4,7 +4,7 @@
   const D=TE.Data,B=TE.BibleData;
   if(!D||!B) throw new Error('data.js and bible-data.js must load before scanner-engine.js');
 
-  const VERSION=6;
+  const VERSION=7;
   const MODEL='gemini-3.1-flash-live-preview';
   const MODELS=[MODEL],DOCUMENTED_MODELS=[MODEL];
   const API_KEY_STORAGE='te:scanner:geminiApiKey';
@@ -13,29 +13,19 @@
   const REQUEST_TIMEOUT_MS=90000;
   const RETRY_DELAY_MS=2000;
   const FRAME_W=1536,FRAME_H=695;
-  const referenceMedia={};
+  const REFERENCE_MANIFEST_URL='assets/scanner/reference-manifest.json';
+  const referenceMedia={manifest:null,playstyles:null,abilities:null,stateBoards:new Map(),raw:new Map()};
 
-  const PLAYSTYLES=['Poacher','False Nine','Target Man','Enganche','Inside Forward','Winger','False Winger','Mezzala','Box To Box','Regista','Ball Winner','Anchor Man','No Nonsense DC','Stopper','Ball Playing DC','Full Back','Wing Back','Ball Playing GK','Sweeper Keeper','Box Commander'];
-  const PLAYSTYLE_FAMILIES={
-    attacking:new Set(['Poacher','False Nine','Target Man','Enganche','Inside Forward','Winger']),
-    midfield:new Set(['False Winger','Mezzala','Box To Box','Regista','Ball Winner','Anchor Man']),
-    defending:new Set(['No Nonsense DC','Stopper','Ball Playing DC','Full Back','Wing Back','Ball Playing GK','Sweeper Keeper','Box Commander'])
-  };
+  const PLAYSTYLES=B.PLAYSTYLES.filter(x=>x.id!==1).map(x=>x.name);
+  const PLAYSTYLE_LEVELS=['Locked','Standard','Intermediate','Advanced','Master'];
+  const PLAYSTYLE_STATE_LABELS=['Locked','Standard','Standard Ready','Intermediate','Intermediate Ready','Advanced','Advanced Ready','Master','Standard Boosted','Intermediate Boosted','Advanced Boosted','Master Boosted','Wrong Position'];
   const ABILITIES=[...D.SPECIAL_ABILITIES];
   const SKILLS=['tackling','marking','positioning','heading','bravery','passing','dribbling','crossing','shooting','finishing','fitness','strength','aggression','speed','creativity'];
   const GK_CORE_SKILLS=['reflexes','agility','anticipation','rushingOut','communication','throwing','kicking','punching','aerialReach','concentration','fitness','strength','aggression','speed','creativity'];
 
-  const PLAYSTYLE_CONFUSION_GROUPS=[
-    {name:'Inside Forward / Poacher',rule:'Inside Forward has one tall central upward arrow plus TWO narrow vertical side bars (three upright elements). Poacher has a broad roof/chevron above ONE shorter upward arrow and no two tall side bars.'},
-    {name:'False Winger / Winger',rule:'False Winger has a winged-ball style emblem with a distinct central crossed/X-like detail. Winger has the cleaner winged-ball emblem without that crossed centre.'},
-    {name:'Defensive badge family',rule:'Ball Playing DC = shield containing a football/ball motif. Full Back = TWO overlapping shield outlines. No Nonsense DC = shield with a clear exclamation mark. Stopper = shield containing a prohibition/circle-slash motif. Wing Back = central shield with distinct wing/feather bars extending on BOTH sides.'},
-    {name:'Goalkeeper hand family',rule:'Ball Playing GK = glove/hand visibly controlling a football. Box Commander = glove/hand with a STAR above it. Sweeper Keeper = glove/hand with a prominent CURVED ARROW around/beside it.'},
-    {name:'Enganche / False Nine',rule:'Enganche has two linked/interlocking rounded shapes. False Nine has the longer bent tactical-route emblem with a separate X/cross mark.'},
-    {name:'Mezzala / Regista',rule:'Mezzala is a single winding S/snake-like path ending at a small ball. Regista is a network of separate connected nodes/dots joined by short lines.'}
-  ];
   const ABILITY_CONFUSION_GROUPS=[
     {name:'Corner Specialist / Dribbler',rule:'Corner Specialist has a distinct STRAIGHT vertical corner-flag pole/flag beside the ball. Dribbler has a continuous sweeping curved ribbon/trail and NO straight flag pole.'},
-    {name:'Free Kick Specialist / Defensive Wall',rule:'Free Kick Specialist has the grouped-player/free-kick emblem PLUS a curved/upward directional arrow or sweep on the right side. On tiny player cards this arrow may be small or faint. Defensive Wall is the grouped wall/players with a ball and has NO curved/upward directional arrow.'}
+    {name:'Free Kick Specialist / Defensive Wall',rule:'Free Kick Specialist has the grouped-player/free-kick emblem PLUS a curved/upward directional arrow or sweep on the right side. Defensive Wall is the grouped wall/players with a ball and has NO curved/upward directional arrow.'}
   ];
 
   const ROI={
@@ -64,9 +54,8 @@
   function assertNotAborted(signal){if(signal?.aborted)throw abortError()}
   function clamp01(v){return Math.max(0,Math.min(1,Number(v)||0))}
   function normaliseText(v){return String(v??'').trim().replace(/[–—]/g,'-').replace(/\s+/g,' ')}
-  function playstyleConfusionGuide(){return PLAYSTYLE_CONFUSION_GROUPS.map((g,i)=>`${i+1}. ${g.name}: ${g.rule}`).join('\n')}
+  function assetSlug(value){return String(value||'').toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')}
   function abilityConfusionGuide(){return ABILITY_CONFUSION_GROUPS.map((g,i)=>`${i+1}. ${g.name}: ${g.rule}`).join('\n')}
-  function playstyleFamily(name){const n=normaliseText(name);for(const [family,set] of Object.entries(PLAYSTYLE_FAMILIES))if(set.has(n))return family;return null}
   function canonicalPlaystyle(name){const n=normaliseText(name);if(/^box[ -]?to[ -]?box$/i.test(n))return'Box-to-Box';if(/^no[ -]?nonsense dc$/i.test(n))return'No-Nonsense DC';const hit=B.PLAYSTYLES.find(x=>x.name.toLowerCase()===n.toLowerCase());return hit?.name||n}
   function levelId(name){const hit=B.PLAYSTYLE_LEVELS.find(x=>x.name.toLowerCase()===normaliseText(name).toLowerCase());return hit?.id||0}
   function canonicalAbility(name){const n=normaliseText(name);if(/^long shots$/i.test(n))return'Shadow Striker';const hit=D.SPECIAL_ABILITIES.find(x=>x.toLowerCase()===n.toLowerCase());return hit||n}
@@ -113,24 +102,50 @@
   async function detectAbilityOccupancy(playerMedia){const player=await requireFrame(playerMedia),out=[];for(let i=0;i<ROI.abilitySlots.length;i++){const r=ROI.abilitySlots[i],c=document.createElement('canvas');c.width=r.w;c.height=r.h;const ctx=c.getContext('2d',{alpha:false});ctx.drawImage(player,r.x,r.y,r.w,r.h,0,0,r.w,r.h);const d=ctx.getImageData(0,0,r.w,r.h).data,rr=[],gg=[],bb=[],bw=4;for(let y=0;y<r.h;y++)for(let x=0;x<r.w;x++){if(x>=bw&&x<r.w-bw&&y>=bw&&y<r.h-bw)continue;const k=(y*r.w+x)*4;rr.push(d[k]);gg.push(d[k+1]);bb.push(d[k+2])}const bg=[median(rr),median(gg),median(bb)];let fg=0,total=r.w*r.h,sum=0,dark=0;for(let y=0;y<r.h;y++)for(let x=0;x<r.w;x++){const k=(y*r.w+x)*4,R=d[k],G=d[k+1],B=d[k+2],dr=R-bg[0],dg=G-bg[1],db=B-bg[2],dist=Math.sqrt(dr*dr+dg*dg+db*db);sum+=dist;if(dist>35)fg++;if((R+G+B)/3<85)dark++}const fraction=fg/total,darkFraction=dark/total;out.push({slot:i+1,occupied:fraction>.03,learning:darkFraction>.25,foregroundFraction:fraction,darkFraction,meanDistance:sum/total})}return out}
   async function buildPlaystyleEvidence(playerMedia){const player=await requireFrame(playerMedia),c=document.createElement('canvas');c.width=1200;c.height=430;const ctx=c.getContext('2d',{alpha:false});ctx.fillStyle='#fff';ctx.fillRect(0,0,c.width,c.height);ctx.fillStyle='#111827';ctx.font='bold 28px Arial';ctx.fillText('CURRENT PLAYER — PLAYSTYLE BADGE STRIP',24,42);drawCropPixels(ctx,player,ROI.playstyleStrip,24,70,1152,330);return canvasToJpegMedia(c,.99)}
   function rgbToHsv01(r,g,b){r/=255;g/=255;b/=255;const mx=Math.max(r,g,b),mn=Math.min(r,g,b),d=mx-mn;let h=0;if(d){if(mx===r)h=((g-b)/d)%6;else if(mx===g)h=(b-r)/d+2;else h=(r-g)/d+4;h*=60;if(h<0)h+=360}return{h,s:mx===0?0:d/mx,v:mx}}
-  function hueMatchesFamily(h,family){if(family==='attacking')return h<=24||h>=336;if(family==='midfield')return h>=28&&h<=78;if(family==='defending')return h>=72&&h<=165;return false}
-  function locatePlaystyleBadgeInStrip(player,family){const r=ROI.playstyleStrip,c=document.createElement('canvas');c.width=r.w;c.height=r.h;const ctx=c.getContext('2d',{alpha:false});ctx.drawImage(player,r.x,r.y,r.w,r.h,0,0,r.w,r.h);const data=ctx.getImageData(0,0,r.w,r.h).data,W=r.w,H=r.h,gray=new Float32Array(W*H);for(let y=0;y<H;y++)for(let x=0;x<W;x++){const k=(y*W+x)*4;gray[y*W+x]=.299*data[k]+.587*data[k+1]+.114*data[k+2]}const edge=new Uint8Array(W*H);for(let y=8;y<Math.min(H-9,58);y++)for(let x=1;x<W-1;x++){const gx=Math.abs(gray[y*W+x+1]-gray[y*W+x-1]),gy=Math.abs(gray[(y+1)*W+x]-gray[(y-1)*W+x]);if(gx+gy>70)edge[y*W+x]=1}const dil=new Uint8Array(edge);for(let y=1;y<H-1;y++)for(let x=1;x<W-1;x++)if(edge[y*W+x])for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++)dil[(y+dy)*W+x+dx]=1;const seen=new Uint8Array(W*H),cands=[];for(let y=8;y<58;y++)for(let x=0;x<W;x++){const idx=y*W+x;if(!dil[idx]||seen[idx])continue;const stack=[idx];seen[idx]=1;let minX=x,maxX=x,minY=y,maxY=y,n=0;while(stack.length){const q=stack.pop(),qy=Math.floor(q/W),qx=q-qy*W;n++;if(qx<minX)minX=qx;if(qx>maxX)maxX=qx;if(qy<minY)minY=qy;if(qy>maxY)maxY=qy;for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){if(!dx&&!dy)continue;const nx=qx+dx,ny=qy+dy;if(nx<0||nx>=W||ny<0||ny>=H)continue;const ni=ny*W+nx;if(dil[ni]&&!seen[ni]){seen[ni]=1;stack.push(ni)}}}const bw=maxX-minX+1,bh=maxY-minY+1;if(bw>=26&&bw<=40&&bh>=30&&bh<=42&&minY>=10&&minY<=22&&n>=80){const score=n-Math.abs(bw-32)*3-Math.abs(bh-36)*3-Math.abs(minY-15)*2;cands.push({score,x:minX+bw/2,y:minY+bh/2})}}if(cands.length){cands.sort((a,b)=>b.score-a.score);return cands[0]}const col=new Int32Array(W);for(let y=4;y<H-4;y++)for(let x=0;x<W;x++){const k=(y*W+x)*4,hsv=rgbToHsv01(data[k],data[k+1],data[k+2]);if(hsv.s>=.12&&hsv.v>=.28&&hueMatchesFamily(hsv.h,family))col[x]++}const prefix=new Int32Array(W+1);for(let x=0;x<W;x++)prefix[x+1]=prefix[x]+col[x];let bestX=Math.floor(W/2),best=-1;for(let cx=24;cx<W-24;cx++){const n=prefix[Math.min(W,cx+24)]-prefix[Math.max(0,cx-24)];if(n>best){best=n;bestX=cx}}return{x:bestX,y:31,score:best}}
-  async function buildLevelRingOnlyEvidence(playerMedia,family){const player=await requireFrame(playerMedia),loc=locatePlaystyleBadgeInStrip(player,family),r=ROI.playstyleStrip,cropSize=50,half=cropSize/2,srcX=Math.max(r.x,Math.min(r.x+r.w-cropSize,r.x+loc.x-half)),srcY=Math.max(r.y,Math.min(r.y+r.h-cropSize,r.y+loc.y-half)),W=980,H=980,c=document.createElement('canvas');c.width=W;c.height=H;const ctx=c.getContext('2d',{alpha:false});ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);ctx.fillStyle='#111827';ctx.font='bold 31px Arial';ctx.fillText('CURRENT PLAYER — RING ONLY (CENTRE MASKED)',24,44);ctx.font='21px Arial';ctx.fillText('Use ONLY the three outer ring segments below for level. Ignore the central fill/symbol.',24,78);const pad=70,boxY=110,boxW=W-pad*2,boxH=H-boxY-55;ctx.fillStyle='#f8fafc';ctx.fillRect(pad,boxY,boxW,boxH);ctx.strokeStyle='#94a3b8';ctx.lineWidth=3;ctx.strokeRect(pad,boxY,boxW,boxH);const drawSize=Math.min(boxW-80,boxH-80),dx=pad+(boxW-drawSize)/2,dy=boxY+(boxH-drawSize)/2;ctx.imageSmoothingEnabled=false;ctx.drawImage(player,srcX,srcY,cropSize,cropSize,dx,dy,drawSize,drawSize);const cx=dx+drawSize/2,cy=dy+drawSize/2,radius=drawSize*.29,verts=[];for(let i=0;i<6;i++){const a=(-90+i*60)*Math.PI/180;verts.push([cx+Math.cos(a)*radius,cy+Math.sin(a)*radius])}ctx.beginPath();ctx.moveTo(verts[0][0],verts[0][1]);for(let i=1;i<verts.length;i++)ctx.lineTo(verts[i][0],verts[i][1]);ctx.closePath();ctx.fillStyle='#fff';ctx.fill();ctx.strokeStyle='#d1d5db';ctx.lineWidth=2;ctx.stroke();ctx.fillStyle='#475569';ctx.font='19px Arial';ctx.fillText(`Badge locator score: ${loc.score}. Centre masked programmatically; no expected level used.`,24,H-20);return canvasToJpegMedia(c,.995)}
-  async function buildLevelFamilyReference(family){const img=await mediaToImage(referenceMedia.levels),rows={attacking:{x:250,y:105,w:1165,h:290},midfield:{x:250,y:400,w:1165,h:290},defending:{x:250,y:690,w:1165,h:310}},roi=rows[family];if(!roi)throw new Error(`Unknown playstyle family: ${family}`);const c=document.createElement('canvas');c.width=1500;c.height=430;const ctx=c.getContext('2d',{alpha:false});ctx.fillStyle='#fff';ctx.fillRect(0,0,c.width,c.height);ctx.fillStyle='#111827';ctx.font='bold 30px Arial';ctx.fillText(`${family.toUpperCase()} LEVEL REFERENCES`,24,42);ctx.font='21px Arial';ctx.fillText('Locked | Intermediate | Advanced | Master — compare level appearance only.',24,72);ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';ctx.drawImage(img,roi.x,roi.y,roi.w,roi.h,24,94,1452,312);return canvasToJpegMedia(c,.995)}
+  async function loadReferenceManifest(){
+    if(referenceMedia.manifest)return referenceMedia.manifest;
+    let r;try{r=await fetch(REFERENCE_MANIFEST_URL,{cache:'no-store'})}catch(e){throw scannerError('REFERENCE_LOAD',`Could not load exact scanner reference manifest: ${e.message||e}`,{scanFailure:true})}
+    if(!r.ok)throw scannerError('REFERENCE_LOAD',`Could not load exact scanner reference manifest (HTTP ${r.status}).`,{scanFailure:true});
+    const m=await r.json();
+    if(m?.counts?.playstyles!==20||m?.counts?.statesPerPlaystyle!==13||m?.counts?.playstyleImages!==260||m?.counts?.specialAbilityImages!==19||m?.counts?.totalReferenceImages!==279)throw scannerError('REFERENCE_LOAD','Exact scanner reference manifest failed integrity counts (expected 20 playstyles × 13 states + 19 coloured Special Abilities = 279 images).',{scanFailure:true});
+    for(const ps of m.playstyles||[])for(const state of PLAYSTYLE_STATE_LABELS)if(!ps.states?.[state]?.path)throw scannerError('REFERENCE_LOAD',`Exact scanner reference manifest is missing ${ps.name} / ${state}.`,{scanFailure:true});
+    const abilityNames=new Set((m.specialAbilities||[]).map(x=>x.name));for(const name of ABILITIES)if(!abilityNames.has(name))throw scannerError('REFERENCE_LOAD',`Exact scanner reference manifest is missing coloured Special Ability ${name}.`,{scanFailure:true});
+    referenceMedia.manifest=m;return m;
+  }
+  async function cachedReference(path){
+    if(referenceMedia.raw.has(path))return referenceMedia.raw.get(path);
+    const media=await urlToMedia(path);referenceMedia.raw.set(path,media);return media;
+  }
+  function fitText(ctx,text,maxWidth,fontSize=22){let size=fontSize;while(size>14){ctx.font=`bold ${size}px Arial`;if(ctx.measureText(text).width<=maxWidth)break;size--}return size}
+  async function drawReferenceBoard(title,subtitle,entries,{cols=5,cellW=320,cellH=290,imageW=220,imageH=205}={}){
+    const rows=Math.ceil(entries.length/cols),headerH=105,W=cols*cellW,H=headerH+rows*cellH,c=document.createElement('canvas');c.width=W;c.height=H;const ctx=c.getContext('2d',{alpha:false});ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);ctx.fillStyle='#0f172a';ctx.font='bold 30px Arial';ctx.textAlign='center';ctx.fillText(title,W/2,38);ctx.font='18px Arial';ctx.fillStyle='#475569';ctx.fillText(subtitle,W/2,70);ctx.textAlign='left';
+    for(let i=0;i<entries.length;i++){const e=entries[i],row=Math.floor(i/cols),col=i%cols,x=col*cellW,y=headerH+row*cellH;ctx.fillStyle='#f8fafc';ctx.fillRect(x+8,y+8,cellW-16,cellH-16);ctx.strokeStyle='#cbd5e1';ctx.lineWidth=2;ctx.strokeRect(x+8,y+8,cellW-16,cellH-16);const media=await cachedReference(e.path),img=await mediaToImage(media),maxW=imageW,maxH=imageH,scale=Math.min(maxW/img.width,maxH/img.height),dw=Math.round(img.width*scale),dh=Math.round(img.height*scale),dx=x+(cellW-dw)/2,dy=y+18+(imageH-dh)/2;ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';ctx.drawImage(img,dx,dy,dw,dh);const labelY=y+26+imageH;ctx.fillStyle='#111827';const fs=fitText(ctx,e.label,cellW-30,21);ctx.font=`bold ${fs}px Arial`;ctx.textAlign='center';ctx.fillText(e.label,x+cellW/2,labelY+25);ctx.textAlign='left';}
+    return canvasToJpegMedia(c,.995);
+  }
+  async function buildPlaystyleIdentityReference(){
+    if(referenceMedia.playstyles)return referenceMedia.playstyles;const m=await loadReferenceManifest();const entries=m.playstyles.map(ps=>({label:ps.name,path:ps.states.Standard.path}));referenceMedia.playstyles=await drawReferenceBoard('EXACT PLAYSTYLE IDENTITY REFERENCES','20 approved atlas/code-derived Standard badges — match the INNER EMBLEM only.',entries,{cols:5,cellW:330,cellH:315,imageW:225,imageH:225});return referenceMedia.playstyles;
+  }
+  async function buildPlaystyleStateReference(playstyleName){
+    const canonical=canonicalPlaystyle(playstyleName);if(referenceMedia.stateBoards.has(canonical))return referenceMedia.stateBoards.get(canonical);const m=await loadReferenceManifest(),ps=m.playstyles.find(x=>x.name===canonical);if(!ps)throw scannerError('REFERENCE_LOAD',`No exact playstyle state references exist for ${canonical}.`,{scanFailure:true});const entries=PLAYSTYLE_STATE_LABELS.map(label=>({label,path:ps.states[label].path}));const board=await drawReferenceBoard(`${canonical.toUpperCase()} — EXACT STATE REFERENCES`,'13 approved states for this exact playstyle. Match level segments and notification/boost layers directly.',entries,{cols:4,cellW:390,cellH:335,imageW:270,imageH:245});referenceMedia.stateBoards.set(canonical,board);return board;
+  }
+  async function buildAbilityReference(){
+    if(referenceMedia.abilities)return referenceMedia.abilities;const m=await loadReferenceManifest();const entries=m.specialAbilities.map(a=>({label:a.name,path:a.path}));referenceMedia.abilities=await drawReferenceBoard('EXACT COLOURED SPECIAL ABILITY REFERENCES','19 approved coloured icons only. Gold/boosted ability references are intentionally not used.',entries,{cols:5,cellW:320,cellH:245,imageW:150,imageH:150});return referenceMedia.abilities;
+  }
+
   async function buildAbilitySlotEvidence(playerMedia,slotIndex){const player=await requireFrame(playerMedia),roi=ROI.abilitySlots[slotIndex],make=(smooth,label)=>{const W=1100,H=620,c=document.createElement('canvas');c.width=W;c.height=H;const ctx=c.getContext('2d',{alpha:false});ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);ctx.fillStyle='#111827';ctx.font='bold 30px Arial';ctx.fillText(`SPECIAL ABILITY SLOT ${slotIndex+1} — ${label}`,24,42);ctx.fillStyle='#f8fafc';ctx.fillRect(24,70,W-48,H-94);ctx.strokeStyle='#94a3b8';ctx.lineWidth=2;ctx.strokeRect(24,70,W-48,H-94);const pad=26,x=24+pad,y=70+pad,w=W-48-pad*2,h=H-94-pad*2,scale=Math.min(w/roi.w,h/roi.h),dw=Math.round(roi.w*scale),dh=Math.round(roi.h*scale);ctx.imageSmoothingEnabled=smooth;if(smooth)ctx.imageSmoothingQuality='high';ctx.drawImage(player,roi.x,roi.y,roi.w,roi.h,x+(w-dw)/2,y+(h-dh)/2,dw,dh);return canvasToJpegMedia(c,.995)};return{raw:make(false,'RAW PIXELS'),smooth:make(true,'SMOOTH ENLARGEMENT')}}
 
   function coreResponseSchema(layout='outfield'){const keys=layout==='gk'?GK_CORE_SKILLS:SKILLS,skillProps={};for(const skill of keys)skillProps[skill]={type:'integer'};const totals=layout==='gk'?{type:'object',properties:{goalkeeping:{type:'integer'},physical:{type:'integer'}},required:['goalkeeping','physical']}:{type:'object',properties:{defence:{type:'integer'},attack:{type:'integer'},physical:{type:'integer'}},required:['defence','attack','physical']};return{type:'object',properties:{name:{type:'string'},age:{type:'integer'},ovr:{type:'integer'},roles:{type:'array',items:{type:'string'}},totals,skills:{type:'object',properties:skillProps,required:keys},uncertainFields:{type:'array',items:{type:'string'}},notes:{type:'string'}},required:['name','age','ovr','roles','totals','skills','uncertainFields','notes']}}
   function playstyleIdentityResponseSchema(){return {type:'object',properties:{
-    playstyle:{type:'string',description:`Use one of: ${[...PLAYSTYLES,'Not visible'].join(', ')}`},
+    playstyle:{type:'string',description:`Use exactly one of these approved names: ${[...PLAYSTYLES,'Not visible'].join(', ')}`},
     uncertainFields:{type:'array',items:{type:'string'}},notes:{type:'string'}
   },required:['playstyle','uncertainFields','notes']};}
-  function playstyleLevelResponseSchema(){return {type:'object',properties:{
-    lockVisible:{type:'boolean',description:'True only if a padlock is visibly present on the current player badge.'},
-    leftSolid:{type:'boolean',description:'Whether the single LEFT logical segment (upper-left side + left side together) is solid rather than faded.'},
-    upperRightSolid:{type:'boolean',description:'Whether the single UPPER-RIGHT logical segment (upper-right side + right side together) is solid rather than faded.'},
-    bottomSolid:{type:'boolean',description:'Whether the single BOTTOM logical segment (both bottom sides together) is solid rather than faded.'},
+  function playstyleStateResponseSchema(){return {type:'object',properties:{
+    level:{type:'string',description:`Underlying playstyle level. Use exactly one of: ${PLAYSTYLE_LEVELS.join(', ')}, Not visible`},
+    ready:{type:'boolean',description:'True only when the real level-up arrow notification is visible.'},
+    boosted:{type:'boolean',description:'True only when the real boosted shell/wings are visible.'},
+    wrongPosition:{type:'boolean',description:'True only when the real red wrong-position notification is visible.'},
     uncertainFields:{type:'array',items:{type:'string'}},notes:{type:'string'}
-  },required:['lockVisible','leftSolid','upperRightSolid','bottomSolid','uncertainFields','notes']};}
+  },required:['level','ready','boosted','wrongPosition','uncertainFields','notes']};}
   function abilitySlotResponseSchema(){return {type:'object',properties:{
     ability:{type:'string',description:`Exactly ONE Special Ability identity for this single occupied slot. Use only: ${ABILITIES.join(', ')}`},
     uncertainFields:{type:'array',items:{type:'string'}},notes:{type:'string'}
@@ -141,8 +156,10 @@
   function baseSystemInstruction(){return `
 You are a dedicated Top Eleven visual scanner running inside Gemini 3.1 Flash Live.
 Accuracy is more important than speed. Think carefully before selecting a visual match.
-CRITICAL INDEPENDENCE RULE: you are never given benchmark answers, expected player data, or test ground truth. Do not guess from a player name. Derive every result from the CURRENT screenshot and the supplied reference indexes only.
+CRITICAL REFERENCE RULE: the supplied exact reference boards are the authority for Playstyle and Special Ability identity. They are built at runtime from the approved atlas/code-derived PNG reference pack bundled with this app.
+CRITICAL INDEPENDENCE RULE: you are never given benchmark answers, expected player data, or test ground truth. Do not guess from a player name. Derive every result from the CURRENT screenshot and the supplied exact references only.
 Never infer a playstyle or Special Ability from position, role, stats, OVR, player name, or football semantics. Match the actual emblem geometry.
+Never invent a visual symbol, substitute a similar football icon, or use an identity that is not present on the supplied board.
 When the evidence is genuinely ambiguous, mark the relevant field uncertain instead of inventing certainty.
 Call the requested submit function exactly once. Do not output prose instead of the function call.
 `;}
@@ -165,81 +182,64 @@ When complete call submit_core_scan exactly once.`}
 TASK: identify PLAYSTYLE IDENTITY only.
 IMAGE A = full current player card.
 IMAGE B = enlarged playstyle badge strip from this same player.
-IMAGE C = official playstyle identity index.
+IMAGE C = EXACT PLAYSTYLE IDENTITY REFERENCES built from the newly approved atlas/code-derived PNG pack.
 
-IDENTITY RULES:
-- Compare the player's INNER EMBLEM in IMAGE B against IMAGE C.
-- Do not use name, role, position, stats, OVR, or expected/test data as clues.
-- Match emblem geometry only.
-- First choose the closest visual candidate, then apply every relevant global lookalike check below.
-${playstyleConfusionGuide()}
-- Defensive family reminder: Wing Back has a central shield with wing/feather bars on BOTH sides; Stopper uses the prohibition/circle-slash emblem; Ball Playing DC has the ball/football inside the shield; Full Back shows two overlapping shields; No Nonsense DC shows an exclamation mark.
-- If no playstyle badge is genuinely visible, return Not visible.
+MANDATORY MATCH PROCESS:
+1. Find the actual playstyle badge in IMAGE B.
+2. Ignore its level ring, lock, ready arrow, wrong-position notification and boosted shell. Those are state layers, not identity.
+3. Compare only the INNER EMBLEM geometry against all 20 labelled candidates in IMAGE C.
+4. The IMAGE C labels are authoritative. Return the label of the exact geometry match; do not rename it and do not use a synonym.
+5. Do not use player name, role, position, stats, OVR, category colour or football semantics.
+6. If no playstyle badge is genuinely visible, return Not visible.
+
+The reference board contains these exact approved identities:
+${PLAYSTYLES.join(' | ')}
 
 Call submit_playstyle_identity exactly once.`;}
-  function playstyleLevelPrompt(family){
-    const familyName=family?family.toUpperCase():'UNKNOWN';
-    return `
-TASK: inspect PLAYSTYLE LEVEL RING SEGMENTS only.
-The independent identity pass placed this badge in the ${familyName} colour family. This routing comes from the badge identity only, never benchmark/test truth.
-IMAGE A = enlarged CURRENT PLAYER playstyle badge strip for context only.
-IMAGE B = RING-ONLY crop of the SAME current player badge. The central playstyle symbol and centre fill have been masked out programmatically. IMAGE B is AUTHORITATIVE for deciding solid/faded segment states.
-IMAGE C = ONLY the matching ${familyName} family level reference examples.
+  function playstyleStatePrompt(playstyleName){return `
+TASK: identify the PLAYSTYLE VISUAL STATE for ${playstyleName} only.
+IMAGE A = enlarged CURRENT PLAYER playstyle badge strip.
+IMAGE B = the 13 EXACT approved state references for this SAME ${playstyleName} emblem.
 
-CRITICAL GEOMETRY: THERE ARE EXACTLY THREE LOGICAL COLOURED RING SEGMENTS, NOT SIX SIDES.
-- LEFT = upper-left side + left side together as ONE continuous segment.
-- UPPER-RIGHT = top-right side + right side together as ONE continuous segment.
-- BOTTOM = both bottom sides together as ONE continuous segment.
+IMAGE B IS THE AUTHORITY. It contains:
+${PLAYSTYLE_STATE_LABELS.join(' | ')}
 
-REFERENCE PATTERN:
-- Locked: padlock present; all three segments faded.
-- Intermediate: ONLY UPPER-RIGHT is solid. LEFT and BOTTOM are faded.
-- Advanced: UPPER-RIGHT and BOTTOM are solid. LEFT is faded.
-- Master: LEFT, UPPER-RIGHT and BOTTOM are all solid.
+MANDATORY MATCH PROCESS:
+1. Compare the current badge directly with IMAGE B. Do not use generic colour-family rules and do not compare against another playstyle.
+2. Determine the underlying LEVEL from the real ring/segment geometry: Locked, Standard, Intermediate, Advanced or Master.
+3. Standard is a real level. A badge with no darkened progression segments and no padlock is Standard, NOT Locked.
+4. Locked requires the real padlock notification. Never call an unlocked Standard badge Locked just because its level segments are pale.
+5. Intermediate, Advanced and Master must follow the exact progressive segment pattern shown in IMAGE B.
+6. Set ready=true only for the real level-up arrow. Master Ready is not a valid reference state and must not be invented.
+7. Set boosted=true only when the exact boosted shell/wings shown in IMAGE B are present. Do not use colour alone.
+8. Set wrongPosition=true only when the exact red wrong-position notification shown in IMAGE B is present. If it is present, ignore that red notification when determining the underlying level from the ring.
+9. Compare geometry, placement and layer shape. Do not invent symbols or approximate missing states.
+10. If the state is genuinely unclear, choose the closest underlying level but add "playstyleState" to uncertainFields and explain the mismatch briefly.
 
-MANDATORY HIGH-THINKING PROCESS:
-1. Use IMAGE A only to confirm that IMAGE B is the same badge. Do NOT use IMAGE A's centre fill to judge level.
-2. Use IMAGE B as the authoritative evidence for LEFT, UPPER-RIGHT and BOTTOM. The centre has deliberately been removed so it cannot bleed into the ring.
-3. Check for a visible padlock using IMAGE A and IMAGE B.
-3a. IMPORTANT FOR MIDFIELD/YELLOW BADGES: the surrounding Rare/player header may also be gold/yellow. Ignore the header/background completely. IMAGE B is centred by hex-edge detection; compare only the badge ring. Solid gold segments are deeper/more saturated than pale cream faded segments.
-4. Deliberately inspect LEFT in IMAGE B and decide solid/faded.
-5. Deliberately inspect UPPER-RIGHT in IMAGE B and decide solid/faded.
-6. Deliberately inspect BOTTOM in IMAGE B and decide solid/faded.
-7. Compare each whole logical segment in IMAGE B with the matching family examples in IMAGE C.
-8. Do NOT count hexagon sides. Two adjacent sides can belong to one logical segment.
-9. Do NOT infer a segment from the colour of the central playstyle fill; it is irrelevant and masked in IMAGE B.
-10. Do NOT use player identity, role, stats, or benchmark knowledge.
-11. Only after inspecting all three segments, call submit_playstyle_level_segments exactly once with the four booleans and concise notes explaining what you saw in IMAGE B.
-`;
-  }
-  function abilitySlotPrompt(slot){
-    return `
-TASK: identify exactly ONE SPECIAL ABILITY from exactly ONE code-confirmed occupied slot.
+Call submit_playstyle_state exactly once.`;}
+  function abilitySlotPrompt(slot){return `
+TASK: identify exactly ONE COLOURED SPECIAL ABILITY from exactly ONE code-confirmed occupied slot.
 This request contains NO other player ability slots. Treat this slot independently.
 IMAGE A = RAW pixel-preserving enlargement of occupied slot ${slot}.
 IMAGE B = SMOOTH enlargement of the SAME occupied slot ${slot}.
-IMAGE C = standard/unlocked Special Ability index.
-IMAGE D = boosted gold/orange Special Ability index.
+IMAGE C = EXACT COLOURED SPECIAL ABILITY REFERENCES built from the newly supplied 19-image reference pack.
 
-RULES:
-- Return exactly ONE ability name for this slot.
-- A black progress/training widget such as 3/50 is NOT an unlocked Special Ability. The app excludes training/progress slots before this call, so only classify the supplied unlocked icon.
-- Match the slot independently against BOTH indexes. The two indexes use the SAME underlying icon geometry; the boosted sheet is an exact recolour of the standard sheet. Use emblem geometry first; colour/state is secondary.
+CRITICAL RULES:
+- The user will capture the coloured/unboosted Special Ability version from now on. There is intentionally NO gold/boosted reference path in this scanner.
+- Return exactly ONE ability name from IMAGE C.
+- IMAGE C is authoritative. Match the icon geometry directly to its labelled exact reference; do not invent, redraw, recolour or infer an ability.
+- A black progress/training widget such as 3/50 is NOT an unlocked Special Ability. The app excludes training/progress slots before this call.
 - Do NOT infer from player identity, role, stats, OVR, or any other slot.
-- Compare the candidate against every visually similar ability before committing. Do not reject a match just because a tiny line/arrow is faint in the player-card crop; compare the whole silhouette against the exact-geometry references.
-- The RAW image preserves tiny straight lines and poles; use it to distinguish fine geometry. The SMOOTH image provides the overall silhouette.
+- Use IMAGE A for tiny straight lines/poles and IMAGE B for overall silhouette.
+- Compare the candidate against every visually similar exact reference before committing.
 
-GLOBAL LOOKALIKE CHECKS:
+LOOKALIKE CHECKS (secondary to the exact board):
 ${abilityConfusionGuide()}
 
-MANDATORY DETAILS:
-- Corner Specialist: ball + clearly STRAIGHT corner-flag pole/flag. Dribbler: curved/sweeping trail, NO straight pole.
-- Free Kick Specialist: grouped-player/free-kick emblem WITH a curved/upward arrow or sweep on the right; on tiny cards it may be subtle. Defensive Wall: grouped wall/players + ball with NO curved/upward arrow.
+If genuinely ambiguous, still choose the closest exact board identity but include "specialAbilitySlot${slot}" in uncertainFields.
+Call submit_ability_slot_scan exactly once.`;}
+  async function preloadReferences(){await loadReferenceManifest();await Promise.all([buildPlaystyleIdentityReference(),buildAbilityReference()]);}
 
-If genuinely ambiguous, still choose the closest visual identity but include "specialAbilitySlot${slot}" in uncertainFields.
-Call submit_ability_slot_scan exactly once.`;
-  }
-  async function preloadReferences(){if(referenceMedia.playstyles&&referenceMedia.levels&&referenceMedia.abilitiesStandard&&referenceMedia.abilitiesBoosted)return;const urls={playstyles:'assets/scanner/playstyles-index-final.png',levels:'assets/scanner/playstyle-levels-index-final.png',abilitiesStandard:'assets/scanner/special-abilities-standard-index-final.png',abilitiesBoosted:'assets/scanner/special-abilities-boosted-index-final.png'};for(const[k,u]of Object.entries(urls))referenceMedia[k]=await urlToMedia(u)}
   async function readWsMessageData(data){if(typeof data==='string')return data;if(data instanceof Blob)return await data.text();if(data instanceof ArrayBuffer)return new TextDecoder().decode(data);return String(data??'')}
   async function preflightKeyAndModel(key,model,signal){assertNotAborted(signal);let r;try{r=await fetch(`${API_BASE}/models/${encodeURIComponent(model)}?key=${encodeURIComponent(key)}`,{cache:'no-store',signal})}catch(e){if(signal?.aborted)throw abortError();throw scannerError('NETWORK','Could not reach Gemini model endpoint.',{kind:'network',retryable:true})}let body={};try{body=await r.json()}catch{}if(!r.ok){const msg=body?.error?.message||`Model check failed HTTP ${r.status}`;const kind=r.status===401||r.status===403?'auth':r.status===429?'rate_limit':'request';throw scannerError('GEMINI_API_ERROR',msg,{status:r.status,kind,retryable:r.status===429})}return body}
   function liveSetup(model,systemText,toolDeclaration){const setup={model:`models/${model}`,generationConfig:{responseModalities:['AUDIO'],temperature:0,thinkingConfig:{thinkingLevel:'HIGH'}},systemInstruction:{parts:[{text:systemText||baseSystemInstruction()}]}};if(toolDeclaration)setup.tools=[{functionDeclarations:[toolDeclaration]}];return setup}
@@ -254,7 +254,7 @@ Call submit_ability_slot_scan exactly once.`;
     const pName=ps&&normaliseText(ps)!=='Not visible'?canonicalPlaystyle(ps):'';const lvl=pName?levelId(levelResult):0;
     const abilities=[...new Set((specialAbilities||[]).map(canonicalAbility).filter(x=>D.SPECIAL_ABILITIES.includes(x)))];
     const allUncertain=[...new Set(uncertain||[])];const conf=allUncertain.length?Math.max(.65,.95-allUncertain.length*.05):.96,resolvedLayout=layoutHint==='gk'?'gk':(roles.includes('GK')?'gk':'outfield');
-    const result={version:VERSION,provider:'google-gemini-live',model,name:normaliseText(core.name),age:Number(core.age),ovr:Number(core.ovr),roles,position:roles[0]||(resolvedLayout==='gk'?'GK':null),layout:resolvedLayout,skills,playstyle:pName?{name:pName,level:lvl,levelName:levelResult}:null,specialAbilities:abilities,confidence:{overall:clamp01(conf),text:clamp01(conf),numbers:clamp01(conf),roles:clamp01(conf),playstyle:pName?clamp01(conf):0,specialAbilities:abilities.length?clamp01(conf):1},raw:{totals:rawTotals,model,warnings:allUncertain,providerResponseVersion:7,scannerScope:'full-player-live-visual',specialAbilityTraining:abilityTraining||{active:false}},repairNotes:notes?[notes]:[],validation:{resolved:false,unresolvedChecks:[]}};
+    const result={version:VERSION,provider:'google-gemini-live',model,name:normaliseText(core.name),age:Number(core.age),ovr:Number(core.ovr),roles,position:roles[0]||(resolvedLayout==='gk'?'GK':null),layout:resolvedLayout,skills,playstyle:pName?{name:pName,level:lvl,levelName:levelResult}:null,specialAbilities:abilities,confidence:{overall:clamp01(conf),text:clamp01(conf),numbers:clamp01(conf),roles:clamp01(conf),playstyle:pName?clamp01(conf):0,specialAbilities:abilities.length?clamp01(conf):1},raw:{totals:rawTotals,model,warnings:allUncertain,providerResponseVersion:8,scannerScope:'full-player-live-visual',specialAbilityTraining:abilityTraining||{active:false}},repairNotes:notes?[notes]:[],validation:{resolved:false,unresolvedChecks:[]}};
     const required=result.layout==='gk'?[...D.GK_SKILLS,...D.GK_PHYSICAL]:[...D.OUTFIELD_SKILLS],missing=required.filter(s=>!Number.isFinite(Number(result.skills[s]))),problems=[];if(!result.name)problems.push('name missing');if(!Number.isFinite(result.age))problems.push('age missing');if(!Number.isFinite(result.ovr))problems.push('OVR missing');if(!roles.length)problems.push('role missing');if(missing.length)problems.push(`${missing.length} skill values missing`);const checks={};if(!missing.length){if(result.layout==='gk'){checks.goalkeeping=checkAggregate(D.GK_SKILLS.map(s=>result.skills[s]),rawTotals.att);checks.physical=checkAggregate(D.GK_PHYSICAL.map(s=>result.skills[s]),rawTotals.phys)}else{checks.defence=checkAggregate(D.GROUPS_OUTFIELD.Defence.map(s=>result.skills[s]),rawTotals.def);checks.attack=checkAggregate(D.GROUPS_OUTFIELD.Attack.map(s=>result.skills[s]),rawTotals.att);checks.physical=checkAggregate(D.GROUPS_OUTFIELD.Physical.map(s=>result.skills[s]),rawTotals.phys)}checks.ovr=checkAggregate(required.map(s=>result.skills[s]),result.ovr)}result.checks=checks;result.validation={resolved:problems.length===0,unresolvedChecks:problems.map(name=>({name}))};return result
   }
 
@@ -264,15 +264,19 @@ Call submit_ability_slot_scan exactly once.`;
     const sizeContext=frameSizeContext(playerMedia),sizeLabel=playerMedia.wasNormalised?`${playerMedia.sourceWidth}×${playerMedia.sourceHeight} → ${FRAME_W}×${FRAME_H}`:`${FRAME_W}×${FRAME_H}`;
     emit(.03,`Preparing scanner evidence · ${sizeLabel}`);const layoutHint=await detectLayoutHint(playerMedia),occupancy=await detectAbilityOccupancy(playerMedia),firstLearning=occupancy.find(x=>x.learning)?.slot||null,abilityTraining=firstLearning?{active:true,firstLearningSlot:firstLearning,detail:'Special Ability learning/progress UI detected; learning slots are not treated as unlocked abilities.'}:{active:false};const[coreBoard,playstyleEvidence]=await Promise.all([buildCoreEvidenceBoard(playerMedia,layoutHint),buildPlaystyleEvidence(playerMedia)]);
     assertNotAborted(signal);emit(.12,`${layoutHint==='gk'?'Goalkeeper':'Outfield'} core data · HIGH thinking`);const core=await runLiveFunctionTask({key,model,purpose:'Core scan',toolName:'submit_core_scan',toolDeclaration:toolDecl('submit_core_scan','Submit core text and numerical fields for the current player only.',coreResponseSchema(layoutHint)),parts:[{text:sizeContext+'\n'+corePrompt(layoutHint)+'\nIMAGE A — FULL PLAYER CARD'},inlinePart(playerMedia),{text:`IMAGE B — LABELLED ${layoutHint==='gk'?'GOALKEEPER':'OUTFIELD'} CORE BOARD`},inlinePart(coreBoard)],signal});
-    assertNotAborted(signal);emit(.40,'Playstyle identity · HIGH thinking');const ps=await runLiveFunctionTask({key,model,purpose:'Playstyle identity scan',toolName:'submit_playstyle_identity',toolDeclaration:toolDecl('submit_playstyle_identity','Submit only the visual playstyle identity.',playstyleIdentityResponseSchema()),parts:[{text:sizeContext+'\n'+playstyleIdentityPrompt()+'\nIMAGE A — FULL PLAYER CARD'},inlinePart(playerMedia),{text:'IMAGE B — ENLARGED PLAYSTYLE BADGE STRIP'},inlinePart(playstyleEvidence),{text:'IMAGE C — OFFICIAL PLAYSTYLE IDENTITY INDEX'},inlinePart(referenceMedia.playstyles)],signal});
-    let levelName='Not visible',levelUncertain=[],levelNotes='';if(ps?.playstyle&&!/^not visible$/i.test(ps.playstyle)){const family=playstyleFamily(ps.playstyle);if(family){emit(.57,'Playstyle level · HIGH thinking');const[familyRef,ringOnly]=await Promise.all([buildLevelFamilyReference(family),buildLevelRingOnlyEvidence(playerMedia,family)]);const seg=await runLiveFunctionTask({key,model,purpose:'Playstyle level scan',toolName:'submit_playstyle_level_segments',toolDeclaration:toolDecl('submit_playstyle_level_segments','Inspect the current badge level against the matching family references.',playstyleLevelResponseSchema()),parts:[{text:sizeContext+'\n'+playstyleLevelPrompt(family)+'\nIMAGE A — CURRENT PLAYER BADGE STRIP'},inlinePart(playstyleEvidence),{text:'IMAGE B — CURRENT PLAYER RING ONLY (CENTRE MASKED)'},inlinePart(ringOnly),{text:`IMAGE C — ${family.toUpperCase()} LEVEL REFERENCES ONLY`},inlinePart(familyRef)],signal});const solidCount=[seg.leftSolid,seg.upperRightSolid,seg.bottomSolid].filter(Boolean).length;levelName=seg.lockVisible?'Locked':solidCount===1?'Intermediate':solidCount===2?'Advanced':solidCount===3?'Master':'Locked';levelUncertain=seg.uncertainFields||[];levelNotes=`Level read: LEFT=${seg.leftSolid?'solid':'faded'}, UPPER-RIGHT=${seg.upperRightSolid?'solid':'faded'}, BOTTOM=${seg.bottomSolid?'solid':'faded'}, lock=${seg.lockVisible?'yes':'no'} => ${levelName}. ${seg.notes||''}`}}
-    const occupied=occupancy.filter(x=>x.occupied&&(!firstLearning||x.slot<firstLearning)),specialAbilities=[],abilityUncertain=[],abilityNotes=[];if(firstLearning)abilityNotes.push(`Special Ability learning/progress UI detected from slot ${firstLearning}; it is not counted as an unlocked ability.`);for(let i=0;i<occupied.length;i++){assertNotAborted(signal);const slot=occupied[i].slot,slotIndex=slot-1;emit(.70+(.24*Math.max(i,0)/Math.max(occupied.length,1)),`Special Ability ${i+1}/${occupied.length} · HIGH thinking`);const evidence=await buildAbilitySlotEvidence(playerMedia,slotIndex),ab=await runLiveFunctionTask({key,model,purpose:`Ability slot ${slot} scan`,toolName:'submit_ability_slot_scan',toolDeclaration:toolDecl('submit_ability_slot_scan','Submit exactly one unlocked Special Ability identity for the single occupied slot.',abilitySlotResponseSchema()),parts:[{text:sizeContext+'\n'+abilitySlotPrompt(slot)+'\nIMAGE A — RAW PIXEL SLOT'},inlinePart(evidence.raw),{text:'IMAGE B — SMOOTH SLOT'},inlinePart(evidence.smooth),{text:'IMAGE C — STANDARD SPECIAL ABILITY INDEX'},inlinePart(referenceMedia.abilitiesStandard),{text:'IMAGE D — BOOSTED GOLD SPECIAL ABILITY INDEX'},inlinePart(referenceMedia.abilitiesBoosted)],signal});if(ab?.ability)specialAbilities.push(ab.ability);abilityUncertain.push(...(ab?.uncertainFields||[]));if(ab?.notes)abilityNotes.push(`slot ${slot}: ${ab.notes}`)}
-    const uncertain=[...(core.uncertainFields||[]),...(ps.uncertainFields||[]),...levelUncertain,...abilityUncertain],notes=[core.notes,ps.notes,levelNotes,...abilityNotes].filter(Boolean).join(' | '),result=normaliseResult(core,ps.playstyle,levelName,specialAbilities,model,uncertain,notes,layoutHint,abilityTraining);result.raw.sourceDimensions={width:playerMedia.sourceWidth||FRAME_W,height:playerMedia.sourceHeight||FRAME_H};result.raw.normalisedDimensions={width:FRAME_W,height:FRAME_H};result.raw.wasNormalised=!!playerMedia.wasNormalised;emit(1,'Player ready · core + playstyle + level + abilities','complete');return result
+    assertNotAborted(signal);emit(.40,'Playstyle identity · exact references · HIGH thinking');const ps=await runLiveFunctionTask({key,model,purpose:'Playstyle identity scan',toolName:'submit_playstyle_identity',toolDeclaration:toolDecl('submit_playstyle_identity','Submit only the visual playstyle identity from the exact approved reference board.',playstyleIdentityResponseSchema()),parts:[{text:sizeContext+'\n'+playstyleIdentityPrompt()+'\nIMAGE A — FULL PLAYER CARD'},inlinePart(playerMedia),{text:'IMAGE B — ENLARGED CURRENT PLAYSTYLE BADGE STRIP'},inlinePart(playstyleEvidence),{text:'IMAGE C — EXACT APPROVED PLAYSTYLE IDENTITY REFERENCES'},inlinePart(referenceMedia.playstyles)],signal});
+    let levelName='Not visible',levelUncertain=[],levelNotes='',playstyleVisualState=null;
+    if(ps?.playstyle&&!/^not visible$/i.test(ps.playstyle)){
+      const canonical=canonicalPlaystyle(ps.playstyle);emit(.57,'Playstyle state · exact same-emblem references · HIGH thinking');const stateRef=await buildPlaystyleStateReference(canonical);const state=await runLiveFunctionTask({key,model,purpose:'Playstyle state scan',toolName:'submit_playstyle_state',toolDeclaration:toolDecl('submit_playstyle_state','Submit the underlying playstyle level and visible state layers by direct comparison with the exact same-playstyle references.',playstyleStateResponseSchema()),parts:[{text:sizeContext+'\n'+playstyleStatePrompt(canonical)+'\nIMAGE A — CURRENT PLAYER BADGE STRIP'},inlinePart(playstyleEvidence),{text:`IMAGE B — EXACT ${canonical.toUpperCase()} STATE REFERENCES`},inlinePart(stateRef)],signal});
+      levelName=PLAYSTYLE_LEVELS.includes(normaliseText(state?.level))?normaliseText(state.level):'Not visible';levelUncertain=state?.uncertainFields||[];playstyleVisualState={level:levelName,ready:!!state?.ready,boosted:!!state?.boosted,wrongPosition:!!state?.wrongPosition};levelNotes=`Exact-state read: level=${levelName}, ready=${playstyleVisualState.ready?'yes':'no'}, boosted=${playstyleVisualState.boosted?'yes':'no'}, wrongPosition=${playstyleVisualState.wrongPosition?'yes':'no'}. ${state?.notes||''}`;
+    }
+    const occupied=occupancy.filter(x=>x.occupied&&(!firstLearning||x.slot<firstLearning)),specialAbilities=[],abilityUncertain=[],abilityNotes=[];if(firstLearning)abilityNotes.push(`Special Ability learning/progress UI detected from slot ${firstLearning}; it is not counted as an unlocked ability.`);for(let i=0;i<occupied.length;i++){assertNotAborted(signal);const slot=occupied[i].slot,slotIndex=slot-1;emit(.70+(.24*Math.max(i,0)/Math.max(occupied.length,1)),`Special Ability ${i+1}/${occupied.length} · exact coloured references · HIGH thinking`);const evidence=await buildAbilitySlotEvidence(playerMedia,slotIndex),ab=await runLiveFunctionTask({key,model,purpose:`Ability slot ${slot} scan`,toolName:'submit_ability_slot_scan',toolDeclaration:toolDecl('submit_ability_slot_scan','Submit exactly one unlocked coloured Special Ability identity from the exact approved reference board.',abilitySlotResponseSchema()),parts:[{text:sizeContext+'\n'+abilitySlotPrompt(slot)+'\nIMAGE A — RAW PIXEL SLOT'},inlinePart(evidence.raw),{text:'IMAGE B — SMOOTH SLOT'},inlinePart(evidence.smooth),{text:'IMAGE C — EXACT COLOURED SPECIAL ABILITY REFERENCES'},inlinePart(referenceMedia.abilities)],signal});if(ab?.ability)specialAbilities.push(ab.ability);abilityUncertain.push(...(ab?.uncertainFields||[]));if(ab?.notes)abilityNotes.push(`slot ${slot}: ${ab.notes}`)}
+    const uncertain=[...(core.uncertainFields||[]),...(ps.uncertainFields||[]),...levelUncertain,...abilityUncertain],notes=[core.notes,ps.notes,levelNotes,...abilityNotes].filter(Boolean).join(' | '),result=normaliseResult(core,ps.playstyle,levelName,specialAbilities,model,uncertain,notes,layoutHint,abilityTraining);result.raw.sourceDimensions={width:playerMedia.sourceWidth||FRAME_W,height:playerMedia.sourceHeight||FRAME_H};result.raw.normalisedDimensions={width:FRAME_W,height:FRAME_H};result.raw.wasNormalised=!!playerMedia.wasNormalised;result.raw.playstyleVisualState=playstyleVisualState;result.raw.referencePack={playstyles:260,colouredSpecialAbilities:19,goldSpecialAbilities:0,total:279};emit(1,'Player ready · exact playstyle + coloured ability references','complete');return result
   }
 
-  async function health(){const key=await getApiKey();if(!key)throw scannerError('NOT_CONFIGURED','Gemini Scanner is not configured. Paste your Google AI Studio API key first.');await preloadReferences();await preflightKeyAndModel(key,MODEL,null);const ws=await openLiveSocket(key,MODEL,'Live scanner probe',null,null);try{ws.close(1000,'Probe complete')}catch{}return{ok:true,provider:'Gemini 3.1 Flash Live',model:MODEL,models:[MODEL],orderedModels:[MODEL],freeTierOnly:true,requestTimeoutMs:REQUEST_TIMEOUT_MS,thinkingLevel:'HIGH',visualReferences:4}}
+  async function health(){const key=await getApiKey();if(!key)throw scannerError('NOT_CONFIGURED','Gemini Scanner is not configured. Paste your Google AI Studio API key first.');await preloadReferences();await preflightKeyAndModel(key,MODEL,null);const ws=await openLiveSocket(key,MODEL,'Live scanner probe',null,null);try{ws.close(1000,'Probe complete')}catch{}const m=await loadReferenceManifest();return{ok:true,provider:'Gemini 3.1 Flash Live',model:MODEL,models:[MODEL],orderedModels:[MODEL],freeTierOnly:true,requestTimeoutMs:REQUEST_TIMEOUT_MS,thinkingLevel:'HIGH',visualReferences:m.counts.totalReferenceImages,playstyleReferences:m.counts.playstyleImages,colouredSpecialAbilityReferences:m.counts.specialAbilityImages,goldSpecialAbilityReferences:0,referenceMode:'exact-png-pack'}}
   async function discoverModels(){return[MODEL]}
   async function modelOrder(){return{ready:[MODEL],cooling:[],all:[MODEL]}}
 
-  TE.Scanner={VERSION,MODEL,MODELS,DOCUMENTED_MODELS,REQUEST_TIMEOUT_MS,RETRY_DELAY_MS,scan,health,discoverModels,modelOrder,getApiKey,setApiKey,clearApiKey,checkAggregate,_canonicalPlaystyle:canonicalPlaystyle,_playstyleFamily:playstyleFamily,_baseSystemInstruction:baseSystemInstruction};
+  TE.Scanner={VERSION,MODEL,MODELS,DOCUMENTED_MODELS,REQUEST_TIMEOUT_MS,RETRY_DELAY_MS,scan,health,discoverModels,modelOrder,getApiKey,setApiKey,clearApiKey,checkAggregate,_canonicalPlaystyle:canonicalPlaystyle,_baseSystemInstruction:baseSystemInstruction,_loadReferenceManifest:loadReferenceManifest};
 })();

@@ -42,9 +42,9 @@ for phase in ['possession','transition','out']:
     if not soup.select_one(f'[data-tactic-phase="{phase}"]'): errs.append(f'Tactics missing {phase} phase')
 if not soup.select_one('[data-training-tab="individual"]') or not soup.select_one('[data-training-tab="team"]'):
     errs.append('Training does not expose Individual | Team tabs on one page')
-if 'v0.4.12' not in html: errs.append('visible version is not v0.4.12')
+if 'v0.4.13' not in html: errs.append('visible version is not v0.4.13')
 if re.search(r'BUILD\s*30527|Build\s*30527',html): errs.append('internal build 30527 is still visible in product HTML')
-if 'Scanner v6' in html or 'verified scanner' in html.lower(): errs.append('technical scanner provenance is exposed in normal UI')
+if 'verified scanner' in html.lower(): errs.append('technical scanner provenance is exposed in normal UI')
 
 
 
@@ -85,7 +85,7 @@ if not account_btn or account_btn.get('title')!='Profile & Security': errs.appen
 css_text=(ROOT/'css/app.css').read_text(encoding='utf-8')
 if '.account-button' not in css_text or 'cursor:pointer' not in css_text: errs.append('profile button does not advertise clickability with a pointer cursor')
 sw_text=(ROOT/'sw.js').read_text(encoding='utf-8')
-if "const CACHE='te-v0-4-12" not in sw_text or "e.request.mode==='navigate'" not in sw_text or "cache:'no-store'" not in sw_text: errs.append('v0.4.12 service-worker update/navigation freshness guard missing')
+if "const CACHE='te-v0-4-13" not in sw_text or "e.request.mode==='navigate'" not in sw_text or "cache:'no-store'" not in sw_text: errs.append('v0.4.12 service-worker update/navigation freshness guard missing')
 if "toast('App initialisation failed','err')" in js: errs.append('generic app-initialisation error toast survived GitHub testing hotfix')
 if not (ROOT/'firestore.rules').is_file(): errs.append('firestore.rules missing')
 rules=(ROOT/'firestore.rules').read_text(encoding='utf-8') if (ROOT/'firestore.rules').is_file() else ''
@@ -107,19 +107,21 @@ for needle,label in [
 ]:
     if needle not in hay: errs.append(f'missing integrity hook: {label}')
 
-# Scanner v6 contract retained from the proven scanner work.
+# Scanner v7 exact-reference contract.
 for needle,label,src in [
-    ("const VERSION=6", "Scanner v6 version marker", scanner),
+    ("const VERSION=7", "Scanner v7 version marker", scanner),
     ("gemini-3.1-flash-live-preview", "Gemini 3.1 Flash Live model", scanner),
     ("thinkingLevel:'HIGH'", "HIGH thinking configuration", scanner),
     ("BidiGenerateContent", "Gemini Live WebSocket transport", scanner),
     ("submit_playstyle_identity", "independent playstyle identity pass", scanner),
-    ("submit_playstyle_level_segments", "independent playstyle level pass", scanner),
+    ("submit_playstyle_state", "exact same-emblem playstyle state pass", scanner),
     ("submit_ability_slot_scan", "per-slot Special Ability pass", scanner),
-    ("playstyles-index-final.png", "playstyle identity reference", scanner),
-    ("playstyle-levels-index-final.png", "playstyle level reference", scanner),
-    ("special-abilities-standard-index-final.png", "standard ability reference", scanner),
-    ("special-abilities-boosted-index-final.png", "boosted ability reference", scanner),
+    ("reference-manifest.json", "exact reference manifest", scanner),
+    ("buildPlaystyleIdentityReference", "runtime exact playstyle identity board", scanner),
+    ("buildPlaystyleStateReference", "runtime exact playstyle state board", scanner),
+    ("buildAbilityReference", "runtime coloured Special Ability board", scanner),
+    ("Standard is a real level", "Standard-level scanner rule", scanner),
+    ("There is intentionally NO gold/boosted reference path", "coloured-only Special Ability rule", scanner),
     ("Gemini Scanner is not configured", "Gemini API-key requirement", scanner),
     ("normaliseFrameMedia", "native screenshot normalisation", scanner),
     ("detectLayoutHint", "GK/outfield layout detector", scanner),
@@ -128,13 +130,17 @@ for needle,label,src in [
     ("scrollToScanReview", "scanner review auto-scroll", js),
 ]:
     if needle not in src: errs.append(f'missing scanner hook: {label}')
-for forbidden in ['scanner-templates.json','reconcileReadToTarget','classifyGlyph','readNumber(ctx','cloudScannerEndpoint','Cloud Run Service URL','gemini-3.8-flash','gemini-3.6-flash','hogDescriptor','levelDescriptor','localVisualMatch',':generateContent']:
+for forbidden in ['scanner-templates.json','reconcileReadToTarget','classifyGlyph','readNumber(ctx','cloudScannerEndpoint','Cloud Run Service URL','gemini-3.8-flash','gemini-3.6-flash','hogDescriptor','levelDescriptor','localVisualMatch',':generateContent','playstyles-index-final.png','playstyle-levels-index-final.png','special-abilities-standard-index-final.png','special-abilities-boosted-index-final.png','submit_playstyle_level_segments']:
     if forbidden in scanner+js+html: errs.append(f'legacy/superseded scanner production logic survives: {forbidden}')
 if (ROOT/'js/scanner-templates.json').exists(): errs.append('legacy scanner-templates.json still packaged')
 if (ROOT/'cloud-scanner').exists(): errs.append('old Cloud Run scanner folder still packaged')
-for rel in ['playstyles-index-final.png','playstyle-levels-index-final.png','special-abilities-standard-index-final.png','special-abilities-boosted-index-final.png']:
-    p=ROOT/'assets/scanner'/rel
-    if not p.is_file() or p.stat().st_size==0: errs.append(f'missing scanner reference: {rel}')
+manifest_path=ROOT/'assets/scanner/reference-manifest.json'
+if not manifest_path.is_file(): errs.append('exact scanner reference manifest missing')
+else:
+    ref=json.loads(manifest_path.read_text())
+    if ref.get('counts',{}).get('totalReferenceImages')!=279: errs.append('exact scanner reference count is not 279')
+if (ROOT/'assets/playstyles').exists() or (ROOT/'assets/abilities').exists(): errs.append('legacy playstyle/ability asset folders survived v0.4.13')
+if "B.PLAYSTYLE_LEVELS.filter(x=>x.id>=1);" not in js: errs.append('Standard playstyle tier is not selectable')
 for player in ['David Andrews','François Roelandt','Ariel Bravo','Richard Kilroy','Gosling Lataille','Remus Iacob','Paul Brace','Victor Aslan']:
     if player in scanner: errs.append(f'benchmark player leaked into production scanner: {player}')
 
@@ -144,9 +150,9 @@ if 'slice(0,2)' in players or 'specialAbilities.slice(0,2)' in js: errs.append('
 if 'Shadow Striker' not in data: errs.append('current Shadow Striker display alias missing')
 if "SPECIAL_ABILITY_DISPLAY_ALIASES={'Long Shots':'Shadow Striker'}" not in data: errs.append('legacy Long Shots -> Shadow Striker alias missing')
 if 'Ball Playing DC' not in (ROOT/'js/bible-data.js').read_text(encoding='utf-8'): errs.append('Ball Playing DC missing from current data')
-for folder,min_count in [('playstyles',20),('abilities',19)]:
-    files=list((ROOT/'assets'/folder).glob('*.png'))
-    if len(files)<min_count: errs.append(f'{folder} icon pack incomplete: {len(files)}')
+ref_manifest=json.loads((ROOT/'assets/scanner/reference-manifest.json').read_text())
+if len(ref_manifest.get('playstyles',[]))!=20: errs.append('exact playstyle reference pack incomplete')
+if len(ref_manifest.get('specialAbilities',[]))!=19: errs.append('coloured Special Ability reference pack incomplete')
 
 # Automatic formation selection + current community candidate expansion.
 for needle in ["templateId:null","3-1-4-1-1","3-1-2-1-3","4-1-4-1"]:

@@ -1,0 +1,1289 @@
+{
+  "version": 1,
+  "source": "Top_Eleven_Playstyle_Reference_Pack_EXACT + Special Abilities Reference",
+  "playstyles": [
+    {
+      "name": "Poacher",
+      "slug": "poacher",
+      "states": {
+        "Locked": {
+          "path": "assets/scanner/playstyles/poacher/locked.png",
+          "sha256": "80577da661042134a8fad23d5bae2dfededc2b23a7efc9b135aa0c31485efea1"
+        },
+        "Standard": {
+          "path": "assets/scanner/playstyles/poacher/standard.png",
+          "sha256": "2cd910e142a47feae2e14871918bc453bf63f9af36dd4bfa28a2e0fa5141d0c7"
+        },
+        "Standard Ready": {
+          "path": "assets/scanner/playstyles/poacher/standard_ready.png",
+          "sha256": "c4191e626420ee3296ea370d07a4bf94cb7fc6d352a68506b14689bf48eb4440"
+        },
+        "Intermediate": {
+          "path": "assets/scanner/playstyles/poacher/intermediate.png",
+          "sha256": "5cde35a3a4abb9845751f8a706936c3be2f6e4313e13a5c3801dac0bc61274f5"
+        },
+        "Intermediate Ready": {
+          "path": "assets/scanner/playstyles/poacher/intermediate_ready.png",
+          "sha256": "86ec9528da80111e71ac7a50e54296003463aa8b9ada7a95d259b2326a270dff"
+        },
+        "Advanced": {
+          "path": "assets/scanner/playstyles/poacher/advanced.png",
+          "sha256": "b2636515174ea8d247af0fcc55c915b81d627c635a2e6acd780141af7d3ef86a"
+        },
+        "Advanced Ready": {
+          "path": "assets/scanner/playstyles/poacher/advanced_ready.png",
+          "sha256": "a488cc105e46559f0efea2c84c1cb33f062d9d89210ff1ab8a220a27a6e949dd"
+        },
+        "Master": {
+          "path": "assets/scanner/playstyles/poacher/master.png",
+          "sha256": "b0e7df62a9613e249ac5af3e76d7ac8b2f556efcb6cfc51f44a5d1da665969b8"
+        },
+        "Standard Boosted": {
+          "path": "assets/scanner/playstyles/poacher/standard_boosted.png",
+          "sha256": "236a20b49e4ce3d64e6e24ea40b5ddc0359ab46d8578da3048c966bdde3b2ebf"
+        },
+        "Intermediate Boosted": {
+          "path": "assets/scanner/playstyles/poacher/intermediate_boosted.png",
+          "sha256": "942be2c84cfb1eabf2b119e9231d776c17ca26095f414d3b1458e458565b48b4"
+        },
+        "Advanced Boosted": {
+          "path": "assets/scanner/playstyles/poacher/advanced_boosted.png",
+          "sha256": "ccdc555d534ad54ac8ce813598bc63eda9e1b8d2577dcfb92ab11098cb24ae22"
+        },
+        "Master Boosted": {
+          "path": "assets/scanner/playstyles/poacher/master_boosted.png",
+          "sha256": "55488f3a720a8834863e8aa2e3bbf72f4e1e30bc7b60a39db7239b23efd83036"
+        },
+        "Wrong Position": {
+          "path": "assets/scanner/playstyles/poacher/wrong_position.png",
+          "sha256": "29bd32776befd9a45d22c373f25b3dae88bc17d3311d1f1dc8d9b2779fe33c5f"
+        }
+      }
+    },
+    {
+      "name": "False Nine",
+      "slug": "false-nine",
+      "states": {
+        "Locked": {
+          "path": "assets/scanner/playstyles/false-nine/locked.png",
+          "sha256": "bebf6026599d43c37ee84edcb6c0bd8b790cd6645867995ae55c7c98b3befe01"
+        },
+        "Standard": {
+          "path": "assets/scanner/playstyles/false-nine/standard.png",
+          "sha256": "21d0b79d8fb36e90406bad282b316cd6e0deccf22af76038c8d1d7c91ee07d37"
+        },
+        "Standard Ready": {
+          "path": "assets/scanner/playstyles/false-nine/standard_ready.png",
+          "sha256": "af72f8540f06fa797e5b32551e817fb7845f256106f9a02d406678895dc48daa"
+        },
+        "Intermediate": {
+          "path": "assets/scanner/playstyles/false-nine/intermediate.png",
+          "sha256": "b9ce29b3e62a3894efc841f7714f4233ca71bd3a3dc1204477fe87fb6872d1d1"
+        },
+        "Intermediate Ready": {
+          "path": "assets/scanner/playstyles/false-nine/intermediate_ready.png",
+          "sha256": "84f33088ed365baba7855cd3b2dfeaf588bf088bc1a886848d9d6122e7686178"
+        },
+        "Advanced": {
+          "path": "assets/scanner/playstyles/false-nine/advanced.png",
+          "sha256": "42665a3489fae5054b2de240ce0716131eb7905274acd6b218c499ded785bc54"
+        },
+        "Advanced Ready": {
+          "path": "assets/scanner/playstyles/false-nine/advanced_ready.png",
+          "sha256": "83b3243f450cf8674cd1dcb51bba845738dc9eb4c0d0db0fe6b4047d4c3f06f5"
+        },
+        "Master": {
+          "path": "assets/scanner/playstyles/false-nine/master.png",
+          "sha256": "7b942d0eb19a1a4c7a22e275b15d23cb0baf28e9b5277eb325879a71065216b1"
+        },
+        "Standard Boosted": {
+          "path": "assets/scanner/playstyles/false-nine/standard_boosted.png",
+          "sha256": "f5784bd7679b4643bfb4f58d227c1d8716783e7e717cff1cba33a4e9ff499283"
+        },
+        "Intermediate Boosted": {
+          "path": "assets/scanner/playstyles/false-nine/intermediate_boosted.png",
+          "sha256": "7b85306d983112606160c41936dfca7b4e90c99b5da0865c78d8cb79e90aa2cb"
+        },
+        "Advanced Boosted": {
+          "path": "assets/scanner/playstyles/false-nine/advanced_boosted.png",
+          "sha256": "d7180540710ce28c1f7a964adb1c264aa4c7579e76855d52136aa6aa6ac9d57d"
+        },
+        "Master Boosted": {
+          "path": "assets/scanner/playstyles/false-nine/master_boosted.png",
+          "sha256": "f33b7fdba305e5a9fb21250b8f23ccbd31eaa7bd1c6c395cfa71eda5dd9241c8"
+        },
+        "Wrong Position": {
+          "path": "assets/scanner/playstyles/false-nine/wrong_position.png",
+          "sha256": "b196a27692638209a1f197d41abfdb5164aee6bb811742122536e9c0de20cea6"
+        }
+      }
+    },
+    {
+      "name": "Target Man",
+      "slug": "target-man",
+      "states": {
+        "Locked": {
+          "path": "assets/scanner/playstyles/target-man/locked.png",
+          "sha256": "0f5bdcfde624c13c59a1a1f999d74dbf70be9ec64b71eb6147a23c88edbdfe9f"
+        },
+        "Standard": {
+          "path": "assets/scanner/playstyles/target-man/standard.png",
+          "sha256": "7dbe6fb080d9d6583bf2644cfabb283d90e3432bd91c77d5ae72dd4949272984"
+        },
+        "Standard Ready": {
+          "path": "assets/scanner/playstyles/target-man/standard_ready.png",
+          "sha256": "9eb3bf58eb8a1f7257e351734e5e708c92ad479de227f2ce3152ff853b7dabce"
+        },
+        "Intermediate": {
+          "path": "assets/scanner/playstyles/target-man/intermediate.png",
+          "sha256": "b4c4ace8f135817a37e932733103fb62bf8f48f36cbd847dadadb47dde79b777"
+        },
+        "Intermediate Ready": {
+          "path": "assets/scanner/playstyles/target-man/intermediate_ready.png",
+          "sha256": "8c38f8e9f39618e4ace8780e533a506f4ced9a91bcc3fc8fd9d260581e523cec"
+        },
+        "Advanced": {
+          "path": "assets/scanner/playstyles/target-man/advanced.png",
+          "sha256": "96e543e1fa610242aaadf87c52addb46b1fe5e5894b058af456d61442f93a661"
+        },
+        "Advanced Ready": {
+          "path": "assets/scanner/playstyles/target-man/advanced_ready.png",
+          "sha256": "ba4b9481f21c8d6cc9ae17ca17e8b810ba546d15b01866746de54094a09e149b"
+        },
+        "Master": {
+          "path": "assets/scanner/playstyles/target-man/master.png",
+          "sha256": "61043e3690ee3e8c9b2fabbc5f4d342192bdb4c1a00b379e96c983c182c326cd"
+        },
+        "Standard Boosted": {
+          "path": "assets/scanner/playstyles/target-man/standard_boosted.png",
+          "sha256": "e26ec0c9a4e4dd759ef4f603f5c264937544a7ae2c0d35f47d97e1d3cf967cdb"
+        },
+        "Intermediate Boosted": {
+          "path": "assets/scanner/playstyles/target-man/intermediate_boosted.png",
+          "sha256": "6bd520d27d1ba51a6d46a5b1abf7bb44b452a7f80bcdfb4a59ae75abb53e8633"
+        },
+        "Advanced Boosted": {
+          "path": "assets/scanner/playstyles/target-man/advanced_boosted.png",
+          "sha256": "b1e63787da3d9662f095e7db7b4b0e05977573ff09b97631f474673d472ab64e"
+        },
+        "Master Boosted": {
+          "path": "assets/scanner/playstyles/target-man/master_boosted.png",
+          "sha256": "4a973ba6afad9e7e63fb4fa0a57e43ae0cccc1932bf997a46d32b9b7af630171"
+        },
+        "Wrong Position": {
+          "path": "assets/scanner/playstyles/target-man/wrong_position.png",
+          "sha256": "f6fa44d4c2b7be00593554d7ec09a46b4ec31c7263b8702e0f4050a095c512dc"
+        }
+      }
+    },
+    {
+      "name": "Enganche",
+      "slug": "enganche",
+      "states": {
+        "Locked": {
+          "path": "assets/scanner/playstyles/enganche/locked.png",
+          "sha256": "ec2b5e006fc0fad9011d050e2e0182720de81c9be51adbf8db0616f96f67278f"
+        },
+        "Standard": {
+          "path": "assets/scanner/playstyles/enganche/standard.png",
+          "sha256": "e2883342b369aff6318c346b838a4d12822ff09e89f0d1cafb6050d476d56647"
+        },
+        "Standard Ready": {
+          "path": "assets/scanner/playstyles/enganche/standard_ready.png",
+          "sha256": "9b9a4c9fc0a0bf320c9a09dcf28d68e3e34bc8b1792f0532762f743469c82654"
+        },
+        "Intermediate": {
+          "path": "assets/scanner/playstyles/enganche/intermediate.png",
+          "sha256": "2a07722705352a8f24ec01d02009e8db0e08a42ef1f990ef253a0213c3578f1d"
+        },
+        "Intermediate Ready": {
+          "path": "assets/scanner/playstyles/enganche/intermediate_ready.png",
+          "sha256": "578d3291611f82a016fd6341f6f079489f63fb44c7928a3d3e099eebac271729"
+        },
+        "Advanced": {
+          "path": "assets/scanner/playstyles/enganche/advanced.png",
+          "sha256": "ef4afce9dd87bd9ac7c46e036d3c70ac6e7c091e1cab0467f42889b143b7ab3b"
+        },
+        "Advanced Ready": {
+          "path": "assets/scanner/playstyles/enganche/advanced_ready.png",
+          "sha256": "3993c81296ba6bca342734b7cacdb7b7c264a319aa19331e2b33d5a466134780"
+        },
+        "Master": {
+          "path": "assets/scanner/playstyles/enganche/master.png",
+          "sha256": "333ab23f9a8872e79ddeb091eb8e0a931569436cd53b8ce7d98c1281ff5e9bdb"
+        },
+        "Standard Boosted": {
+          "path": "assets/scanner/playstyles/enganche/standard_boosted.png",
+          "sha256": "a20e5955ebd951a3d7d6c52c13837cf507c378b0c2a06adf4a41add2d7ed6baa"
+        },
+        "Intermediate Boosted": {
+          "path": "assets/scanner/playstyles/enganche/intermediate_boosted.png",
+          "sha256": "3e7fd358531b96ac0f0ac3c962a91f6b6ad2c8cc73f6caa04192d9caa85d86d6"
+        },
+        "Advanced Boosted": {
+          "path": "assets/scanner/playstyles/enganche/advanced_boosted.png",
+          "sha256": "1bb5a35806edd3c80b03d6054c0d42c09ba6efbe8ee01ddf81b7d7e0e1b65e41"
+        },
+        "Master Boosted": {
+          "path": "assets/scanner/playstyles/enganche/master_boosted.png",
+          "sha256": "cff79d7f393f1bd1f1db6029d7e4703b7e46c1962d233b4868eb36f0ee27147e"
+        },
+        "Wrong Position": {
+          "path": "assets/scanner/playstyles/enganche/wrong_position.png",
+          "sha256": "c842864ca8555fcccf71018e6267b0863d768a66e04103084228ac2ded53ae5b"
+        }
+      }
+    },
+    {
+      "name": "Inside Forward",
+      "slug": "inside-forward",
+      "states": {
+        "Locked": {
+          "path": "assets/scanner/playstyles/inside-forward/locked.png",
+          "sha256": "58488e7743f5bfe380194836f930d50be7cba2bea5e7080fd74a78cc9c46b530"
+        },
+        "Standard": {
+          "path": "assets/scanner/playstyles/inside-forward/standard.png",
+          "sha256": "684d21e52ec17f7cddd108a4a117aeb12089e741c3cc118e344dc48b1822d5b6"
+        },
+        "Standard Ready": {
+          "path": "assets/scanner/playstyles/inside-forward/standard_ready.png",
+          "sha256": "8a1969c128c9d653f0cc5fa2a5b8599efa6723d0572cf62988be03d492c855c4"
+        },
+        "Intermediate": {
+          "path": "assets/scanner/playstyles/inside-forward/intermediate.png",
+          "sha256": "3ce1a649ec17789b0a5d45b927a766144727393ad4ed8d154627cbf4e7fc6a49"
+        },
+        "Intermediate Ready": {
+          "path": "assets/scanner/playstyles/inside-forward/intermediate_ready.png",
+          "sha256": "64dddc1ca065fb67af4e4966a617a7e8c2126159e0dc82d9d9111ec452e7e815"
+        },
+        "Advanced": {
+          "path": "assets/scanner/playstyles/inside-forward/advanced.png",
+          "sha256": "50ef6e2fec0180202b7a771bd2b1a021027328dad92260244109e3ce26e2fc84"
+        },
+        "Advanced Ready": {
+          "path": "assets/scanner/playstyles/inside-forward/advanced_ready.png",
+          "sha256": "1238cae8dd7ee777270f42ce28e86ee1c1ad9dc9eeeef3dacf79ab7211bee318"
+        },
+        "Master": {
+          "path": "assets/scanner/playstyles/inside-forward/master.png",
+          "sha256": "deafe86ec088ec0ecb7a92953940dd2d9973082bc35388b82bf5647993af293c"
+        },
+        "Standard Boosted": {
+          "path": "assets/scanner/playstyles/inside-forward/standard_boosted.png",
+          "sha256": "83cf3324b2579cd4c41a54ab6d896483da00a34d919884b298382f9ae80180ec"
+        },
+        "Intermediate Boosted": {
+          "path": "assets/scanner/playstyles/inside-forward/intermediate_boosted.png",
+          "sha256": "87ba7ca07658e4882c80322411edef841de1e8a3cc4dda3676f11c92aa43131f"
+        },
+        "Advanced Boosted": {
+          "path": "assets/scanner/playstyles/inside-forward/advanced_boosted.png",
+          "sha256": "c8a51c4d324d249f14b4cfba294481872eeac388a91c6787f9f7736dd935cb40"
+        },
+        "Master Boosted": {
+          "path": "assets/scanner/playstyles/inside-forward/master_boosted.png",
+          "sha256": "980b5dc0a56fe947adf8ab07674326930a1cf42f04b6f7f83ec48383d1ba2789"
+        },
+        "Wrong Position": {
+          "path": "assets/scanner/playstyles/inside-forward/wrong_position.png",
+          "sha256": "4d595c96e85353a21b9d4f4c539689622764f489dad89ff85744fb7ec84bffe8"
+        }
+      }
+    },
+    {
+      "name": "Winger",
+      "slug": "winger",
+      "states": {
+        "Locked": {
+          "path": "assets/scanner/playstyles/winger/locked.png",
+          "sha256": "2907eadf1ff830b4e799d912ed557849a8e4251137582b1ca7a4c880a5f3470c"
+        },
+        "Standard": {
+          "path": "assets/scanner/playstyles/winger/standard.png",
+          "sha256": "0c29ea9a212c07bc1b36f3a0aee7ae66e3592e0b4ff9a1b1f22c59ae38f33ab5"
+        },
+        "Standard Ready": {
+          "path": "assets/scanner/playstyles/winger/standard_ready.png",
+          "sha256": "0d3a8c8872d45da6b309220eda3efcf31431859d00f50054d81b0116ae94b4f9"
+        },
+        "Intermediate": {
+          "path": "assets/scanner/playstyles/winger/intermediate.png",
+          "sha256": "f274008b46b65951a56b34263148347e357171ef73670ca930af706f9b2df3f4"
+        },
+        "Intermediate Ready": {
+          "path": "assets/scanner/playstyles/winger/intermediate_ready.png",
+          "sha256": "9e3ccf908d04258c0be31e99b76153bfaa438604cd28e9a711a676a0ab705b55"
+        },
+        "Advanced": {
+          "path": "assets/scanner/playstyles/winger/advanced.png",
+          "sha256": "08b806a89a654e638a7db663a442dc48ae397a8c8a1138a602371b66fe7f705d"
+        },
+        "Advanced Ready": {
+          "path": "assets/scanner/playstyles/winger/advanced_ready.png",
+          "sha256": "8e730d8fea8bd79040e6922f3d25a40686885c0d03b05816a6dd9bf8aed9231a"
+        },
+        "Master": {
+          "path": "assets/scanner/playstyles/winger/master.png",
+          "sha256": "e77b33715006b459eb56640dcff474d425bd98c48d21186f731c2eab46830303"
+        },
+        "Standard Boosted": {
+          "path": "assets/scanner/playstyles/winger/standard_boosted.png",
+          "sha256": "4e9786fc47fc632928d589c20cbd317983c76f87d4762f0cd5562f5e1426511b"
+        },
+        "Intermediate Boosted": {
+          "path": "assets/scanner/playstyles/winger/intermediate_boosted.png",
+          "sha256": "e09f57245b1728954863924e637d63d6ac8ac0577edf84d4f706d33c0ca4a680"
+        },
+        "Advanced Boosted": {
+          "path": "assets/scanner/playstyles/winger/advanced_boosted.png",
+          "sha256": "c05f36dd8eb9ad947420b81b3589395e798adb2352eb9c6a93f743e73ced0fec"
+        },
+        "Master Boosted": {
+          "path": "assets/scanner/playstyles/winger/master_boosted.png",
+          "sha256": "9c1bec92dec5100d64607fd1b36f201ade674ad104464624fc2988c11c5f6164"
+        },
+        "Wrong Position": {
+          "path": "assets/scanner/playstyles/winger/wrong_position.png",
+          "sha256": "81e302369ed3acfeccf29c5521d38720605309e8bc203b299e2c4971533d7ab5"
+        }
+      }
+    },
+    {
+      "name": "False Winger",
+      "slug": "false-winger",
+      "states": {
+        "Locked": {
+          "path": "assets/scanner/playstyles/false-winger/locked.png",
+          "sha256": "fcce73b646f32a39714f8208803dc76aaf832e8d85f1747cba41ee0dbb315a1f"
+        },
+        "Standard": {
+          "path": "assets/scanner/playstyles/false-winger/standard.png",
+          "sha256": "c948ff447089c29db8bc11b46d91ff0b930c1dd8177a177b696c3f94f3294b89"
+        },
+        "Standard Ready": {
+          "path": "assets/scanner/playstyles/false-winger/standard_ready.png",
+          "sha256": "3a27579f4715adc2311ebe811b5a8c2580eade148dd4689f1256b0b8bf9aeda0"
+        },
+        "Intermediate": {
+          "path": "assets/scanner/playstyles/false-winger/intermediate.png",
+          "sha256": "ca3fb42fcddd30b0766ba77c2d3a1eb87732bb6fe06b1d963475f0a5c149bfaa"
+        },
+        "Intermediate Ready": {
+          "path": "assets/scanner/playstyles/false-winger/intermediate_ready.png",
+          "sha256": "3be8ae77cdd0161bfc51576f45b6ba3c422367b4c5c8dde45125b097bff7c81d"
+        },
+        "Advanced": {
+          "path": "assets/scanner/playstyles/false-winger/advanced.png",
+          "sha256": "b68163576bbc9154fa7c25a846140309dcb97b38f8dd90d643d81efa17c31edd"
+        },
+        "Advanced Ready": {
+          "path": "assets/scanner/playstyles/false-winger/advanced_ready.png",
+          "sha256": "55f0a7dcc67457b023d9a3d8d94d0ad5acc47da7e2e81a701cb82d419a6b0844"
+        },
+        "Master": {
+          "path": "assets/scanner/playstyles/false-winger/master.png",
+          "sha256": "301f978b36a8390cd93d86b78b7c84d759676f5888f0d29c5a7cb5e6a72cc768"
+        },
+        "Standard Boosted": {
+          "path": "assets/scanner/playstyles/false-winger/standard_boosted.png",
+          "sha256": "2be2e4946d315cdd737c59619fbf2f824a0510e1e644f3af97e2e421bdfd3884"
+        },
+        "Intermediate Boosted": {
+          "path": "assets/scanner/playstyles/false-winger/intermediate_boosted.png",
+          "sha256": "73e82b3b39f1ac55ea61ce5f73567014ee87a492e217baf80ec42136a31cc68a"
+        },
+        "Advanced Boosted": {
+          "path": "assets/scanner/playstyles/false-winger/advanced_boosted.png",
+          "sha256": "4247855f59ebd0e33e58b38fda3de9b9ceb8748aee1991ce98207fa53483cec6"
+        },
+        "Master Boosted": {
+          "path": "assets/scanner/playstyles/false-winger/master_boosted.png",
+          "sha256": "0e317c698eb9f2af339cf0303fbbdd5127d2737eef8d87099b7753a8ede31992"
+        },
+        "Wrong Position": {
+          "path": "assets/scanner/playstyles/false-winger/wrong_position.png",
+          "sha256": "9a70b396d3b64b574734bd139b2c8853a265eef2adade49470d87ceffc4f729a"
+        }
+      }
+    },
+    {
+      "name": "Mezzala",
+      "slug": "mezzala",
+      "states": {
+        "Locked": {
+          "path": "assets/scanner/playstyles/mezzala/locked.png",
+          "sha256": "f965b983aa3238e0090b19326893d10cec04383d59637ca4cabb9ed56bd841a1"
+        },
+        "Standard": {
+          "path": "assets/scanner/playstyles/mezzala/standard.png",
+          "sha256": "ade54d544e561f5847e3a3542074730a00891acadeca5b6b3c699ec9d8ac884e"
+        },
+        "Standard Ready": {
+          "path": "assets/scanner/playstyles/mezzala/standard_ready.png",
+          "sha256": "fd9e8ac7c4882ffa40a21930af4eed143082927be969d9475770edd72f8744aa"
+        },
+        "Intermediate": {
+          "path": "assets/scanner/playstyles/mezzala/intermediate.png",
+          "sha256": "c4b9dad5e65639efe731b60893da8ed3413ce68787f94b627478bdb0c32ebb9f"
+        },
+        "Intermediate Ready": {
+          "path": "assets/scanner/playstyles/mezzala/intermediate_ready.png",
+          "sha256": "7ffd1786475d4d3f304d1117079955e357f5f7a57991dbcbbb472156ab921896"
+        },
+        "Advanced": {
+          "path": "assets/scanner/playstyles/mezzala/advanced.png",
+          "sha256": "9ebb7a3753f715c8688833dd9b443cbf53440bb50da4e7d946ebc437c9953044"
+        },
+        "Advanced Ready": {
+          "path": "assets/scanner/playstyles/mezzala/advanced_ready.png",
+          "sha256": "a30e60084b37c8c4319e74e41d40cf3813ed0bf985042caf94f0dec94d1dd91b"
+        },
+        "Master": {
+          "path": "assets/scanner/playstyles/mezzala/master.png",
+          "sha256": "702f137e11ede40c814780e0b398afce4d61873c1a30e4efb796f23d54f41137"
+        },
+        "Standard Boosted": {
+          "path": "assets/scanner/playstyles/mezzala/standard_boosted.png",
+          "sha256": "b67658f54beb1510c290b1245ae3bffa2f9baf81df10c3511a72e7585de8a846"
+        },
+        "Intermediate Boosted": {
+          "path": "assets/scanner/playstyles/mezzala/intermediate_boosted.png",
+          "sha256": "45c42dcf5fccb84355a3e916470625477f5db63f33b43fea83bc5a464ed0c272"
+        },
+        "Advanced Boosted": {
+          "path": "assets/scanner/playstyles/mezzala/advanced_boosted.png",
+          "sha256": "dadbc3848978654f5ad5bd1f43ad7120d33eba7433ca1b259f0bbf0e599947e9"
+        },
+        "Master Boosted": {
+          "path": "assets/scanner/playstyles/mezzala/master_boosted.png",
+          "sha256": "dd80ae54c4bcd981cb83f4ee5373e441dfa34040c6a87fed6705e65f320af3c7"
+        },
+        "Wrong Position": {
+          "path": "assets/scanner/playstyles/mezzala/wrong_position.png",
+          "sha256": "67f10667d09542236bc32b3123f2be4352b7ee4f6c7c2497d64a2d6aa2bfe4d3"
+        }
+      }
+    },
+    {
+      "name": "Box-to-Box",
+      "slug": "box-to-box",
+      "states": {
+        "Locked": {
+          "path": "assets/scanner/playstyles/box-to-box/locked.png",
+          "sha256": "2ad5e110c0438e0e8ac617d3ca635164ec17ea5723f78494392a4beb74d5f1ce"
+        },
+        "Standard": {
+          "path": "assets/scanner/playstyles/box-to-box/standard.png",
+          "sha256": "a7a3a5902129ea131196088f262cd0f8d0629b6db17b57c551871fe61688fe47"
+        },
+        "Standard Ready": {
+          "path": "assets/scanner/playstyles/box-to-box/standard_ready.png",
+          "sha256": "b8bc0f8b9daba0f729f5bf58068693c15a64c9c09fe88caa872f31624287df06"
+        },
+        "Intermediate": {
+          "path": "assets/scanner/playstyles/box-to-box/intermediate.png",
+          "sha256": "e84e6d40a6e328bd4e8458bf7bb052156f0c0a65bd02d4342d378e49be18aa10"
+        },
+        "Intermediate Ready": {
+          "path": "assets/scanner/playstyles/box-to-box/intermediate_ready.png",
+          "sha256": "aa9169ae63c961d59ce0d44dc305b669b385d4f8ce111a08f7ad017b21f82e3e"
+        },
+        "Advanced": {
+          "path": "assets/scanner/playstyles/box-to-box/advanced.png",
+          "sha256": "cfb5c1741d25af4e40ea5d3b7e48750caf118b0fc52368c2bfbb38f0ea4e4267"
+        },
+        "Advanced Ready": {
+          "path": "assets/scanner/playstyles/box-to-box/advanced_ready.png",
+          "sha256": "7ce15272e3287c51e893fd2bc080878b1f390e5abe716115c699fb4bbe0fb20f"
+        },
+        "Master": {
+          "path": "assets/scanner/playstyles/box-to-box/master.png",
+          "sha256": "6000f3c70e692aa61c217730c9630f07d231cb6b3d99bf4ddfc53c70dde10455"
+        },
+        "Standard Boosted": {
+          "path": "assets/scanner/playstyles/box-to-box/standard_boosted.png",
+          "sha256": "a736043ebac019422e016b6f99f91eb31f114acd859adb27211bcad38437bbb7"
+        },
+        "Intermediate Boosted": {
+          "path": "assets/scanner/playstyles/box-to-box/intermediate_boosted.png",
+          "sha256": "3fe75054ac2f634c9ec9daf1019ac3c3738fb3b30cc996ee9bd080805ad92492"
+        },
+        "Advanced Boosted": {
+          "path": "assets/scanner/playstyles/box-to-box/advanced_boosted.png",
+          "sha256": "a922d3822f2dd0733910aff473729d8e430e218d1bb17769d462d4d1d9dfc781"
+        },
+        "Master Boosted": {
+          "path": "assets/scanner/playstyles/box-to-box/master_boosted.png",
+          "sha256": "7e27004eb2f8585e35aadac36e1d5ee15ee889c99e0f8b84d2fe814f4d851374"
+        },
+        "Wrong Position": {
+          "path": "assets/scanner/playstyles/box-to-box/wrong_position.png",
+          "sha256": "ec2dba74d011522c3145db108ef7cc09efbdd20df01de95f7a185d2c6dc3b35a"
+        }
+      }
+    },
+    {
+      "name": "Regista",
+      "slug": "regista",
+      "states": {
+        "Locked": {
+          "path": "assets/scanner/playstyles/regista/locked.png",
+          "sha256": "2190432adc0003aa84a8c50c85d61bef735136dd137f1fdec190dc92b3381b72"
+        },
+        "Standard": {
+          "path": "assets/scanner/playstyles/regista/standard.png",
+          "sha256": "cd851ef4171455f9bce88859dfe68c5f946c38121263b81b9009622b93eea398"
+        },
+        "Standard Ready": {
+          "path": "assets/scanner/playstyles/regista/standard_ready.png",
+          "sha256": "42fbfa0abf7457a55bc44e74ebefcdbc274dfa7f53beeb77d734b19c62c0aa42"
+        },
+        "Intermediate": {
+          "path": "assets/scanner/playstyles/regista/intermediate.png",
+          "sha256": "22071b4cff02ffdc24de45c9d0b5a29d51934162931c6833ad11c4434c984f0e"
+        },
+        "Intermediate Ready": {
+          "path": "assets/scanner/playstyles/regista/intermediate_ready.png",
+          "sha256": "2c6fdd5e0633e699753c2db7955d7f051306274ab59c08220d647017adf366a3"
+        },
+        "Advanced": {
+          "path": "assets/scanner/playstyles/regista/advanced.png",
+          "sha256": "99af161e5d5a70980dd3286fdd83f937fbe2f9a310d8e37e32dfd1c60b57019e"
+        },
+        "Advanced Ready": {
+          "path": "assets/scanner/playstyles/regista/advanced_ready.png",
+          "sha256": "215bfed9b3790f8f0802648ccba2929d5633fbc08a680eb3e90e2e574e446803"
+        },
+        "Master": {
+          "path": "assets/scanner/playstyles/regista/master.png",
+          "sha256": "d0c69d9a5a5988d0ee8b2ff0044d0216e2b2f7162a55af617f090be1fdde3e69"
+        },
+        "Standard Boosted": {
+          "path": "assets/scanner/playstyles/regista/standard_boosted.png",
+          "sha256": "f13294a5203753ea8b487b35e0ea28f0e1a50666227056304a9fd88c5aee16a8"
+        },
+        "Intermediate Boosted": {
+          "path": "assets/scanner/playstyles/regista/intermediate_boosted.png",
+          "sha256": "15c6f6ee34543e1cce371cc02efe769ea240fc6d4b2bbc00915888fa166c905a"
+        },
+        "Advanced Boosted": {
+          "path": "assets/scanner/playstyles/regista/advanced_boosted.png",
+          "sha256": "3e4e6000ecd9d9d1bbd390a1f20508f681e87ad6e66cdfb27d37c550f90103bc"
+        },
+        "Master Boosted": {
+          "path": "assets/scanner/playstyles/regista/master_boosted.png",
+          "sha256": "7e7673806df7ef9e8be0bbd5655c0eba4aec2477da56ccb2b0853fcaa068780e"
+        },
+        "Wrong Position": {
+          "path": "assets/scanner/playstyles/regista/wrong_position.png",
+          "sha256": "e94c4547ddaedcf16f3a84a2687b976d238334c17ee6542743d92370ff054257"
+        }
+      }
+    },
+    {
+      "name": "Ball Winner",
+      "slug": "ball-winner",
+      "states": {
+        "Locked": {
+          "path": "assets/scanner/playstyles/ball-winner/locked.png",
+          "sha256": "09fd3fe677b3b19e99a9de71fa3bd2ffedfc096d7d767a820d402df30534de15"
+        },
+        "Standard": {
+          "path": "assets/scanner/playstyles/ball-winner/standard.png",
+          "sha256": "f292e5085ee716d9295ea0b07ee00a9a112b516d34bd5a179784df5d4f6cce9a"
+        },
+        "Standard Ready": {
+          "path": "assets/scanner/playstyles/ball-winner/standard_ready.png",
+          "sha256": "2b16caa5141c158e7d59ee1fd3a0f31718e55741242c243eec5c6ef0c40ca5ac"
+        },
+        "Intermediate": {
+          "path": "assets/scanner/playstyles/ball-winner/intermediate.png",
+          "sha256": "8886f75573e9aed8285632ab85958074beda784e706c237151eb97d1a460839e"
+        },
+        "Intermediate Ready": {
+          "path": "assets/scanner/playstyles/ball-winner/intermediate_ready.png",
+          "sha256": "3148ef7bf0be34ebe7b402c9ac0743ecfaa46318c42f52fc58301a11d501524e"
+        },
+        "Advanced": {
+          "path": "assets/scanner/playstyles/ball-winner/advanced.png",
+          "sha256": "0105dd2538ad76eb493cfddfbf6c9fd6ed30e0b908c50ce54c90aa08656389e1"
+        },
+        "Advanced Ready": {
+          "path": "assets/scanner/playstyles/ball-winner/advanced_ready.png",
+          "sha256": "60f5ed31bf945e170e2914c54a314ddf54ee204d77413fb5bbaba2d0627119c2"
+        },
+        "Master": {
+          "path": "assets/scanner/playstyles/ball-winner/master.png",
+          "sha256": "d164bf4c4c36b624bc1bbb3a9e9fa06924befa51855b32e3650d0287d6d82bac"
+        },
+        "Standard Boosted": {
+          "path": "assets/scanner/playstyles/ball-winner/standard_boosted.png",
+          "sha256": "0d2aab35886e549d09a5cbcb65c7c5692d63c1fa776924961b56c3271e233410"
+        },
+        "Intermediate Boosted": {
+          "path": "assets/scanner/playstyles/ball-winner/intermediate_boosted.png",
+          "sha256": "db84c5cff1a4b4e431f53e9b5cfb875576d4c588106b8442e57babd2e2170978"
+        },
+        "Advanced Boosted": {
+          "path": "assets/scanner/playstyles/ball-winner/advanced_boosted.png",
+          "sha256": "66394b8907cb22ee3a618e83ad3b9b9b03810511f30af4cabf18023041baaa7f"
+        },
+        "Master Boosted": {
+          "path": "assets/scanner/playstyles/ball-winner/master_boosted.png",
+          "sha256": "72181748105243dec6dc5559a5b44ec05d3df04003fb0bda5522047d7912d70b"
+        },
+        "Wrong Position": {
+          "path": "assets/scanner/playstyles/ball-winner/wrong_position.png",
+          "sha256": "e8039251e6ab5f6341d2976f1a0144fa83db4834d3e3c98ab96f16a521de07a5"
+        }
+      }
+    },
+    {
+      "name": "Anchor Man",
+      "slug": "anchor-man",
+      "states": {
+        "Locked": {
+          "path": "assets/scanner/playstyles/anchor-man/locked.png",
+          "sha256": "58a7eaf82b90decc97669913033bee87586ef130b59c2b525e38d82972f73bc3"
+        },
+        "Standard": {
+          "path": "assets/scanner/playstyles/anchor-man/standard.png",
+          "sha256": "2cc1ae01e02c844e040d04412649c817e98acf7aeed468d8fb722f7fc0bec042"
+        },
+        "Standard Ready": {
+          "path": "assets/scanner/playstyles/anchor-man/standard_ready.png",
+          "sha256": "8ec6d01e3c3aa828eee36cc759732790604155ed5badfcb586b3cf1a0a1ba436"
+        },
+        "Intermediate": {
+          "path": "assets/scanner/playstyles/anchor-man/intermediate.png",
+          "sha256": "10366f4b37048b05c64e5a8a222bb48eaf0d0deee1c132d7ab2c67f8437d27d9"
+        },
+        "Intermediate Ready": {
+          "path": "assets/scanner/playstyles/anchor-man/intermediate_ready.png",
+          "sha256": "deba0a036c12e3decc8dda42fe5ae6088ee457ccb6a5e80b12bdb7623997bfc6"
+        },
+        "Advanced": {
+          "path": "assets/scanner/playstyles/anchor-man/advanced.png",
+          "sha256": "abf691333f59e1b9bee1a25f8ddf65a6ea9e99cdbd0ce54bb180ab2a550fee78"
+        },
+        "Advanced Ready": {
+          "path": "assets/scanner/playstyles/anchor-man/advanced_ready.png",
+          "sha256": "f128a3c2cf2eb5ef13e40168f0b7554c86557402807f179c750d8fbbe1d134be"
+        },
+        "Master": {
+          "path": "assets/scanner/playstyles/anchor-man/master.png",
+          "sha256": "0130eddfcd95147130fb06e7aa22ecd8263438670762f9326e8c03033d21afa7"
+        },
+        "Standard Boosted": {
+          "path": "assets/scanner/playstyles/anchor-man/standard_boosted.png",
+          "sha256": "b3e877bc69184edac8eeeb894669e63a180e59eb78b22875ef46bf0f6103bc37"
+        },
+        "Intermediate Boosted": {
+          "path": "assets/scanner/playstyles/anchor-man/intermediate_boosted.png",
+          "sha256": "f2ce1b7eb09f29690c6d56cd9a81d308e8e02fd0538f0975829d5eaac1056940"
+        },
+        "Advanced Boosted": {
+          "path": "assets/scanner/playstyles/anchor-man/advanced_boosted.png",
+          "sha256": "247da0ec2addb3ca825a586e9fb4f6f154b6a2b85da88be22937eeb81cd75628"
+        },
+        "Master Boosted": {
+          "path": "assets/scanner/playstyles/anchor-man/master_boosted.png",
+          "sha256": "6261f3998981ea72c5720582a6662ed5306b975f722e1302665a10af105f4f02"
+        },
+        "Wrong Position": {
+          "path": "assets/scanner/playstyles/anchor-man/wrong_position.png",
+          "sha256": "890db8936105537ffe8e3bd9c2abcfce7c4782b2145771106e3c7e76018563bd"
+        }
+      }
+    },
+    {
+      "name": "No-Nonsense DC",
+      "slug": "no-nonsense-dc",
+      "states": {
+        "Locked": {
+          "path": "assets/scanner/playstyles/no-nonsense-dc/locked.png",
+          "sha256": "bd3e3b1087542f9f01b36120b1b6cc32d1c5ae556a089352476180bc2f40cf54"
+        },
+        "Standard": {
+          "path": "assets/scanner/playstyles/no-nonsense-dc/standard.png",
+          "sha256": "13e332fca18b7bf6e25a8f350c322d4dfdcd9e374d88db6305ae20bd6ba7f122"
+        },
+        "Standard Ready": {
+          "path": "assets/scanner/playstyles/no-nonsense-dc/standard_ready.png",
+          "sha256": "25bb6067e5892000fdacf61174eca383b3d1622df9891c931df553e2f1ad4f32"
+        },
+        "Intermediate": {
+          "path": "assets/scanner/playstyles/no-nonsense-dc/intermediate.png",
+          "sha256": "dab5af2a458893b23f114d532213f096be363c88aad0e41584dda0b2b999803f"
+        },
+        "Intermediate Ready": {
+          "path": "assets/scanner/playstyles/no-nonsense-dc/intermediate_ready.png",
+          "sha256": "5361a2bb1e935570e71ea1e2357e92bf14e20ec3017b23da89efb4d281c4bbb0"
+        },
+        "Advanced": {
+          "path": "assets/scanner/playstyles/no-nonsense-dc/advanced.png",
+          "sha256": "dd21f41e44a66507083b29da3ed2183f632379e6adc22d89a3c5446789172448"
+        },
+        "Advanced Ready": {
+          "path": "assets/scanner/playstyles/no-nonsense-dc/advanced_ready.png",
+          "sha256": "6b5c90062a8d63001f162af7709fe91cbd25695df13c4082c10db9235df626e5"
+        },
+        "Master": {
+          "path": "assets/scanner/playstyles/no-nonsense-dc/master.png",
+          "sha256": "9d703559cad4c79d79278ebd278b734483869509d52c92e47733d0e9ca7fe07c"
+        },
+        "Standard Boosted": {
+          "path": "assets/scanner/playstyles/no-nonsense-dc/standard_boosted.png",
+          "sha256": "93dfa9111901b5c1837a8fd78ed820d025bad94cc79e3ef5fdd96301f2a00883"
+        },
+        "Intermediate Boosted": {
+          "path": "assets/scanner/playstyles/no-nonsense-dc/intermediate_boosted.png",
+          "sha256": "9731665ff0d476a2fb42f075d4e8398eb06b3390108d6dd364f0a73b0de3b4cd"
+        },
+        "Advanced Boosted": {
+          "path": "assets/scanner/playstyles/no-nonsense-dc/advanced_boosted.png",
+          "sha256": "96799a10753714a2ec9916f684d79108e43be2b583c204cb956cde81441789b8"
+        },
+        "Master Boosted": {
+          "path": "assets/scanner/playstyles/no-nonsense-dc/master_boosted.png",
+          "sha256": "ed1c633a4ab10ce385c95c43ece3fcf1bb84a5fda9918cb4bbefd55d7b3109c7"
+        },
+        "Wrong Position": {
+          "path": "assets/scanner/playstyles/no-nonsense-dc/wrong_position.png",
+          "sha256": "263c4e3a6efcb0d1f2d98c83ed718b9dc26ae1d41f90c561a3d9388fc24d24bb"
+        }
+      }
+    },
+    {
+      "name": "Stopper",
+      "slug": "stopper",
+      "states": {
+        "Locked": {
+          "path": "assets/scanner/playstyles/stopper/locked.png",
+          "sha256": "477f86a81718fb9dcfc82bf4a638e359da3fb81dfe705ad523270938083cc8f1"
+        },
+        "Standard": {
+          "path": "assets/scanner/playstyles/stopper/standard.png",
+          "sha256": "8ceb4f6ed066dbab51d883ebcd46b799ef620b13506725e271331dbcc41c254d"
+        },
+        "Standard Ready": {
+          "path": "assets/scanner/playstyles/stopper/standard_ready.png",
+          "sha256": "ac3ca3d76cd59705781c023dac5d35cf3fd6fa5d9636d5b3ade1b780a01fa007"
+        },
+        "Intermediate": {
+          "path": "assets/scanner/playstyles/stopper/intermediate.png",
+          "sha256": "32215d28b8bc814496b7f1ebf66692ac38e467eccf7394ab62ecf3a5713e0a99"
+        },
+        "Intermediate Ready": {
+          "path": "assets/scanner/playstyles/stopper/intermediate_ready.png",
+          "sha256": "1d7f52724d792d5a0e729e74eb91df3da3dd87fc948a15e92ee819f13395d540"
+        },
+        "Advanced": {
+          "path": "assets/scanner/playstyles/stopper/advanced.png",
+          "sha256": "787fa5856e3839d039ae8bf23a3b2557033799a5ee978640529924de38b47f7f"
+        },
+        "Advanced Ready": {
+          "path": "assets/scanner/playstyles/stopper/advanced_ready.png",
+          "sha256": "d97dfee7391a57313fa6a6d2e393353092255d1e72829f0d0323a830a7ca9f59"
+        },
+        "Master": {
+          "path": "assets/scanner/playstyles/stopper/master.png",
+          "sha256": "40d994eb82f623f3ad3c8812d7128b3f39f2d3258b77c5b888b2ec47e5ae6174"
+        },
+        "Standard Boosted": {
+          "path": "assets/scanner/playstyles/stopper/standard_boosted.png",
+          "sha256": "b3e8410ed95738d6a8cc1f3d3258d77d994b5a39d180c064f3c4913a7a007e2d"
+        },
+        "Intermediate Boosted": {
+          "path": "assets/scanner/playstyles/stopper/intermediate_boosted.png",
+          "sha256": "81e65172343af7711b3031be6521b67ded812ef6e4478a117e7523750f71f9a3"
+        },
+        "Advanced Boosted": {
+          "path": "assets/scanner/playstyles/stopper/advanced_boosted.png",
+          "sha256": "36f5642990f20f0cb120d5be62fe6335f967fc5e2a75c10c042009fb7ad0debb"
+        },
+        "Master Boosted": {
+          "path": "assets/scanner/playstyles/stopper/master_boosted.png",
+          "sha256": "fc6a2708a566b80a61782eb5ae9e363a1b0c3378d200f5c357e9dcae873517a5"
+        },
+        "Wrong Position": {
+          "path": "assets/scanner/playstyles/stopper/wrong_position.png",
+          "sha256": "c57cfc146282a7c62a61ebe057a6963c44845f262f3aca8cdbe0fce4d02959d9"
+        }
+      }
+    },
+    {
+      "name": "Ball Playing DC",
+      "slug": "ball-playing-dc",
+      "states": {
+        "Locked": {
+          "path": "assets/scanner/playstyles/ball-playing-dc/locked.png",
+          "sha256": "c48ed116deb948c1d0af765e8c7066fa41c9e069a7f70730e9e83a44ae1f743c"
+        },
+        "Standard": {
+          "path": "assets/scanner/playstyles/ball-playing-dc/standard.png",
+          "sha256": "7996d9b119884b7d218b21b053b4a9ee8d9863be3258559cac4599ac95962f01"
+        },
+        "Standard Ready": {
+          "path": "assets/scanner/playstyles/ball-playing-dc/standard_ready.png",
+          "sha256": "941c2dd098a518bc7c0db2b731c956ed4bd0081431d01e869825ba030f38e62c"
+        },
+        "Intermediate": {
+          "path": "assets/scanner/playstyles/ball-playing-dc/intermediate.png",
+          "sha256": "beeb18dad1639c215d00c17789b7d5c7fbbf4c25ee06eebe3dbd0e12cb22ce6c"
+        },
+        "Intermediate Ready": {
+          "path": "assets/scanner/playstyles/ball-playing-dc/intermediate_ready.png",
+          "sha256": "84408e5787cd75f80dce4de18b33b78347c6b78332d5d9c7f0f46a09f12824f7"
+        },
+        "Advanced": {
+          "path": "assets/scanner/playstyles/ball-playing-dc/advanced.png",
+          "sha256": "1191bdd9a6909da3ea0b328115c76a8d8e0eb5f92afb34f4fa551e6b65432b34"
+        },
+        "Advanced Ready": {
+          "path": "assets/scanner/playstyles/ball-playing-dc/advanced_ready.png",
+          "sha256": "400136801b5a2d4f2b4c988eda7e2ca4ac55ada57b67db5fb9662fa6966f8e04"
+        },
+        "Master": {
+          "path": "assets/scanner/playstyles/ball-playing-dc/master.png",
+          "sha256": "e68acc95bc3ee35b559302a8ac3b0cc5b8cc7c0d36ee2ac4356e1e75e4bf191b"
+        },
+        "Standard Boosted": {
+          "path": "assets/scanner/playstyles/ball-playing-dc/standard_boosted.png",
+          "sha256": "ddf43b7ec75812e6ed4f17e36ba2c020c36858fc6735e26c97c7241bbf0c7f0f"
+        },
+        "Intermediate Boosted": {
+          "path": "assets/scanner/playstyles/ball-playing-dc/intermediate_boosted.png",
+          "sha256": "23961d88d17296641078720f6da8592e5cba57b41a97cc3c55524ac4aef6df56"
+        },
+        "Advanced Boosted": {
+          "path": "assets/scanner/playstyles/ball-playing-dc/advanced_boosted.png",
+          "sha256": "907a707020596c26a5a614ac9ff7656a5615d5d00d2bc522e6db58ed770aaa5e"
+        },
+        "Master Boosted": {
+          "path": "assets/scanner/playstyles/ball-playing-dc/master_boosted.png",
+          "sha256": "bc1c2320f1ab62d1a773279b0b3db4d74fcbc2a8fbf024e097f6f788738b8ed5"
+        },
+        "Wrong Position": {
+          "path": "assets/scanner/playstyles/ball-playing-dc/wrong_position.png",
+          "sha256": "ad8028130aa49e34303a39efd7cdfab812ff971cee92e2275f8a91435e7f31ed"
+        }
+      }
+    },
+    {
+      "name": "Full Back",
+      "slug": "full-back",
+      "states": {
+        "Locked": {
+          "path": "assets/scanner/playstyles/full-back/locked.png",
+          "sha256": "e0cae2bf236ceb19dd159543146310e2501514bc47940946e4c421f2a9e27f18"
+        },
+        "Standard": {
+          "path": "assets/scanner/playstyles/full-back/standard.png",
+          "sha256": "e59e4b62411bc0fc3372b9a92015c370809cb64c3d18e4cedf6c1fea9a3c0773"
+        },
+        "Standard Ready": {
+          "path": "assets/scanner/playstyles/full-back/standard_ready.png",
+          "sha256": "7bc247331f3389230c57fd444293101a6fbc6d31017f4742677a702188d12690"
+        },
+        "Intermediate": {
+          "path": "assets/scanner/playstyles/full-back/intermediate.png",
+          "sha256": "f599ee3e99724879a163ca052ea59384b71d51341066d39d4d17f944153f0024"
+        },
+        "Intermediate Ready": {
+          "path": "assets/scanner/playstyles/full-back/intermediate_ready.png",
+          "sha256": "176d294291b196e349104f928d7d133550cb8fdb2331503cd83678cdf76de22b"
+        },
+        "Advanced": {
+          "path": "assets/scanner/playstyles/full-back/advanced.png",
+          "sha256": "998ac0001379f5bcd5bd5fa88a842676490cae95f5deacdd1ed7149429aba95f"
+        },
+        "Advanced Ready": {
+          "path": "assets/scanner/playstyles/full-back/advanced_ready.png",
+          "sha256": "fc79820c065b6013ef867fcf79ce64f8c1896685efd01305cc17076cb902a98f"
+        },
+        "Master": {
+          "path": "assets/scanner/playstyles/full-back/master.png",
+          "sha256": "f867be3dad3a3209e42c20b49f6abd4b7d2fb100a8e3e925b548ceb8175272f6"
+        },
+        "Standard Boosted": {
+          "path": "assets/scanner/playstyles/full-back/standard_boosted.png",
+          "sha256": "faf027c189bc806fba5eed2685258c7012c51aa898d15e576edb83959eb7c7f5"
+        },
+        "Intermediate Boosted": {
+          "path": "assets/scanner/playstyles/full-back/intermediate_boosted.png",
+          "sha256": "775770b5f156a6932d8f5fdc9d62a48928cf86b83d46dcd71c12c5e01bd50664"
+        },
+        "Advanced Boosted": {
+          "path": "assets/scanner/playstyles/full-back/advanced_boosted.png",
+          "sha256": "daa0608664d64ea48eb45774005256386e8d6f89c35f0b2d2b974335e320c57f"
+        },
+        "Master Boosted": {
+          "path": "assets/scanner/playstyles/full-back/master_boosted.png",
+          "sha256": "42ab171dc275b5bffc132c41680c66ed9a66558861287b0b98ea04ff75d2aec4"
+        },
+        "Wrong Position": {
+          "path": "assets/scanner/playstyles/full-back/wrong_position.png",
+          "sha256": "2ace9cc9d0468f8fc6c780640926cbf5665e8b8325aeaa16841ac41cec164074"
+        }
+      }
+    },
+    {
+      "name": "Wing Back",
+      "slug": "wing-back",
+      "states": {
+        "Locked": {
+          "path": "assets/scanner/playstyles/wing-back/locked.png",
+          "sha256": "fa3516d3b99a83662d455e1af0d99b55c889120ea6eabec1321114e1544d8db0"
+        },
+        "Standard": {
+          "path": "assets/scanner/playstyles/wing-back/standard.png",
+          "sha256": "816115f59ace922e9c2e674b6410ac033a2eac1211e7f7015ca3fb62df2fe8a9"
+        },
+        "Standard Ready": {
+          "path": "assets/scanner/playstyles/wing-back/standard_ready.png",
+          "sha256": "a24e6201866210671095ea23204cb354a7b9403a676c224b2c77cc92d43841b6"
+        },
+        "Intermediate": {
+          "path": "assets/scanner/playstyles/wing-back/intermediate.png",
+          "sha256": "a65fd37cf6acb5e2c66cb4907cbf06f403baaabf959ee0607c6cd3ada5c5730c"
+        },
+        "Intermediate Ready": {
+          "path": "assets/scanner/playstyles/wing-back/intermediate_ready.png",
+          "sha256": "e3892fd733f0979e65edc7fe1e140f0b84a9ff2716e98f8cad7ff4afd31bfb58"
+        },
+        "Advanced": {
+          "path": "assets/scanner/playstyles/wing-back/advanced.png",
+          "sha256": "570cefd138f0e9c3cf9352d9271ae817995ea9d50beae6a103f9b8af146fe7ab"
+        },
+        "Advanced Ready": {
+          "path": "assets/scanner/playstyles/wing-back/advanced_ready.png",
+          "sha256": "e8ae9fb394905b0e1d7f22dc673b5c544adf73d683756220d0685d46f348ebdb"
+        },
+        "Master": {
+          "path": "assets/scanner/playstyles/wing-back/master.png",
+          "sha256": "936b6a7af55fdee3c8886c2270f66ce72a3e1a119217f80df987794d9617ec96"
+        },
+        "Standard Boosted": {
+          "path": "assets/scanner/playstyles/wing-back/standard_boosted.png",
+          "sha256": "1f5c75fc007428126129e9815c0f30386266e2412f3adb26da7f39bf3f1960aa"
+        },
+        "Intermediate Boosted": {
+          "path": "assets/scanner/playstyles/wing-back/intermediate_boosted.png",
+          "sha256": "12a21ee034f65641e98d19ae769179660c8e58112598f16d953b15e4bad39849"
+        },
+        "Advanced Boosted": {
+          "path": "assets/scanner/playstyles/wing-back/advanced_boosted.png",
+          "sha256": "c90c0b1024d80c3b93e6a30f3ab1d46437e997b88dbc739cf02302831e710d3e"
+        },
+        "Master Boosted": {
+          "path": "assets/scanner/playstyles/wing-back/master_boosted.png",
+          "sha256": "dd601ff44cc30ed275ef1ed6487544d169a8a47e21f5ae0302ff5dbbf95f90da"
+        },
+        "Wrong Position": {
+          "path": "assets/scanner/playstyles/wing-back/wrong_position.png",
+          "sha256": "96ba86f44b472d19285bba6f47717d866f3188695fb13b467443d7bdbe0a8b21"
+        }
+      }
+    },
+    {
+      "name": "Ball Playing GK",
+      "slug": "ball-playing-gk",
+      "states": {
+        "Locked": {
+          "path": "assets/scanner/playstyles/ball-playing-gk/locked.png",
+          "sha256": "74f1b2312929fb85f24eb24fecb5458bf9ddb6fb14ee05f6bbf8d8f71971d097"
+        },
+        "Standard": {
+          "path": "assets/scanner/playstyles/ball-playing-gk/standard.png",
+          "sha256": "3f4d7e8a0385ec6d09656cee2401a0c9756d9bedf13ab5e4c4c4d6844492720d"
+        },
+        "Standard Ready": {
+          "path": "assets/scanner/playstyles/ball-playing-gk/standard_ready.png",
+          "sha256": "dcbfc996026e83479a2d68a7545597eee9f1cd482207f3814e986b523f098a57"
+        },
+        "Intermediate": {
+          "path": "assets/scanner/playstyles/ball-playing-gk/intermediate.png",
+          "sha256": "2f79a1d5721d75674a3d83559ae6d28c5cbf1c66c1bf8e3909235e547b521600"
+        },
+        "Intermediate Ready": {
+          "path": "assets/scanner/playstyles/ball-playing-gk/intermediate_ready.png",
+          "sha256": "94989cb1f84539feec1da1cb19d7abb40500302c748370c01cb31bcdd01fdffa"
+        },
+        "Advanced": {
+          "path": "assets/scanner/playstyles/ball-playing-gk/advanced.png",
+          "sha256": "2daedb1436bdece375b75f7376effa76fe90e6239ff6c47776944c6cb447c313"
+        },
+        "Advanced Ready": {
+          "path": "assets/scanner/playstyles/ball-playing-gk/advanced_ready.png",
+          "sha256": "5f13d83aa29f8b9930846afe262c26816fad53e9290a9ed0a13d2d8e4a84b063"
+        },
+        "Master": {
+          "path": "assets/scanner/playstyles/ball-playing-gk/master.png",
+          "sha256": "e132b4ea2ec0ea97991aa5ee80b8171ef4799a0bd8d930409f99e5d07a241cfc"
+        },
+        "Standard Boosted": {
+          "path": "assets/scanner/playstyles/ball-playing-gk/standard_boosted.png",
+          "sha256": "f07c30ec7f641a605ff3a024812ab250352f7ab8404f04b332de8b925fb32fe0"
+        },
+        "Intermediate Boosted": {
+          "path": "assets/scanner/playstyles/ball-playing-gk/intermediate_boosted.png",
+          "sha256": "db9d5ca1137444294e96ed5fce09257218fd23b3f3b387a510b16b6e3c80647e"
+        },
+        "Advanced Boosted": {
+          "path": "assets/scanner/playstyles/ball-playing-gk/advanced_boosted.png",
+          "sha256": "8a07211bced4a2d399e4eaeabba0f81acf9f918ce7b7783ed6535dd6edb2791c"
+        },
+        "Master Boosted": {
+          "path": "assets/scanner/playstyles/ball-playing-gk/master_boosted.png",
+          "sha256": "1588e12243edaec676709d2c4946b0c3bdf4b093230f4b6762014145ea3936c6"
+        },
+        "Wrong Position": {
+          "path": "assets/scanner/playstyles/ball-playing-gk/wrong_position.png",
+          "sha256": "61071eb38203bdd83a70ce763aca3b20697c6a29dc5b48e12043da0bc27ba36d"
+        }
+      }
+    },
+    {
+      "name": "Sweeper Keeper",
+      "slug": "sweeper-keeper",
+      "states": {
+        "Locked": {
+          "path": "assets/scanner/playstyles/sweeper-keeper/locked.png",
+          "sha256": "edb78e369c7ec39a24412e2eebdc65fd4abd1c4f862bc65fbbdceaf649f361e1"
+        },
+        "Standard": {
+          "path": "assets/scanner/playstyles/sweeper-keeper/standard.png",
+          "sha256": "cfa3f39e940f386d7057bf2ee7ae54996fc5ba97597824ce5ffa0a2e787c6bba"
+        },
+        "Standard Ready": {
+          "path": "assets/scanner/playstyles/sweeper-keeper/standard_ready.png",
+          "sha256": "a9b2bd7b27ef1b67b221ba4f393430dea8374eca02798b4e7d45364e6ac10d3e"
+        },
+        "Intermediate": {
+          "path": "assets/scanner/playstyles/sweeper-keeper/intermediate.png",
+          "sha256": "0901c148706b7df9c066b6ec1eb7a8df3efde7d7f1c70f6c35f59a08d70e7857"
+        },
+        "Intermediate Ready": {
+          "path": "assets/scanner/playstyles/sweeper-keeper/intermediate_ready.png",
+          "sha256": "287ab8eeb6fb71c1cbccc19df458de350e7f6f82072627aae35da44cfad2c449"
+        },
+        "Advanced": {
+          "path": "assets/scanner/playstyles/sweeper-keeper/advanced.png",
+          "sha256": "4241d04b36a663c856f3439c8634128d62b5b7617a6f580cffee5fe5facfde3f"
+        },
+        "Advanced Ready": {
+          "path": "assets/scanner/playstyles/sweeper-keeper/advanced_ready.png",
+          "sha256": "0a7474c85f3b8e6f2d5c76c48a6abcec67f9a3cfc30bbdd9164b7baf6835d4a5"
+        },
+        "Master": {
+          "path": "assets/scanner/playstyles/sweeper-keeper/master.png",
+          "sha256": "e922c872475de262e22c72917b6552fb298f272b13af2446878205beddd55091"
+        },
+        "Standard Boosted": {
+          "path": "assets/scanner/playstyles/sweeper-keeper/standard_boosted.png",
+          "sha256": "fa5344fb57795a2b072d533f7c370b6094f013fea55024044c066d0588f29b24"
+        },
+        "Intermediate Boosted": {
+          "path": "assets/scanner/playstyles/sweeper-keeper/intermediate_boosted.png",
+          "sha256": "6cdb5059e51c1ae798608fce09aecde3433cdb8c77e11989467d2c4a1362bc57"
+        },
+        "Advanced Boosted": {
+          "path": "assets/scanner/playstyles/sweeper-keeper/advanced_boosted.png",
+          "sha256": "5bbddcb9a5bae3e0763ef87a12bb984aa65326318ef067972cb2d0c15791feaf"
+        },
+        "Master Boosted": {
+          "path": "assets/scanner/playstyles/sweeper-keeper/master_boosted.png",
+          "sha256": "087db6dff22be9d75a7e3088bbac51df8a5a3231db3bf36ebad2eb0679e72f27"
+        },
+        "Wrong Position": {
+          "path": "assets/scanner/playstyles/sweeper-keeper/wrong_position.png",
+          "sha256": "71e1a453fd629f190335c654d96237f94198a4ee176587fa89020c0ab699a472"
+        }
+      }
+    },
+    {
+      "name": "Box Commander",
+      "slug": "box-commander",
+      "states": {
+        "Locked": {
+          "path": "assets/scanner/playstyles/box-commander/locked.png",
+          "sha256": "a31e59a8101451e239bb06ed1a0b4432319053b58afff28c066fb7fe6c3646e4"
+        },
+        "Standard": {
+          "path": "assets/scanner/playstyles/box-commander/standard.png",
+          "sha256": "b655d43ad8dd15e21059b2796fb9a8c1c3fe874c111a063ba589ed9c64c9b1f0"
+        },
+        "Standard Ready": {
+          "path": "assets/scanner/playstyles/box-commander/standard_ready.png",
+          "sha256": "9174e1bbaa3e1795e787a3f26164673d0ad32cb3f11296567eb11ad89eb1b468"
+        },
+        "Intermediate": {
+          "path": "assets/scanner/playstyles/box-commander/intermediate.png",
+          "sha256": "f16e5a124e9dad8db2c9e2ec017f1f3af295c6163c09288f13bab99e22b9e668"
+        },
+        "Intermediate Ready": {
+          "path": "assets/scanner/playstyles/box-commander/intermediate_ready.png",
+          "sha256": "3e6c929f6d1ef356ffa0317d78296b03ae7a4b4fd088240ae5340bf4b50b83d2"
+        },
+        "Advanced": {
+          "path": "assets/scanner/playstyles/box-commander/advanced.png",
+          "sha256": "b3c38b0347b425987dc5756f6d5934730d9525caa81c3ce22d28cdfdb309424a"
+        },
+        "Advanced Ready": {
+          "path": "assets/scanner/playstyles/box-commander/advanced_ready.png",
+          "sha256": "11a01f1e93a82f061a77910695e24b895bade6301f4932070293ec026c4ef892"
+        },
+        "Master": {
+          "path": "assets/scanner/playstyles/box-commander/master.png",
+          "sha256": "04c378d0b7f8347896f62079181686de8563c98c37a14358587dc254e632782a"
+        },
+        "Standard Boosted": {
+          "path": "assets/scanner/playstyles/box-commander/standard_boosted.png",
+          "sha256": "ff60fd48e6b0425eafafb2d35ea030d3375690d4ae602c641f67a1b3e3da54f2"
+        },
+        "Intermediate Boosted": {
+          "path": "assets/scanner/playstyles/box-commander/intermediate_boosted.png",
+          "sha256": "bd442b9d03c73e00313d064e6a1b59503ccd32b3886bba886b30203610724a4a"
+        },
+        "Advanced Boosted": {
+          "path": "assets/scanner/playstyles/box-commander/advanced_boosted.png",
+          "sha256": "5a32bcc084f64cbe8a7bb3ee603831ab3c1e6c88b210a0a005a36a0406d2d941"
+        },
+        "Master Boosted": {
+          "path": "assets/scanner/playstyles/box-commander/master_boosted.png",
+          "sha256": "8a8613af560d451b96ee7c9702f1552342f1a87931ab564a5dc3e8058bcac2cd"
+        },
+        "Wrong Position": {
+          "path": "assets/scanner/playstyles/box-commander/wrong_position.png",
+          "sha256": "6467c43434a354a6011476b004849fe4ee9aa8aaf216983daa7097c5a1bbc769"
+        }
+      }
+    }
+  ],
+  "specialAbilities": [
+    {
+      "name": "Penalty Kick Stopper",
+      "slug": "penalty-kick-stopper",
+      "path": "assets/scanner/special-abilities/penalty-kick-stopper.png",
+      "sha256": "69d620f54d39e2604cf9f904c96c9ff4df7ed5643ccc3633b5f077b77f1aa599"
+    },
+    {
+      "name": "One-on-One Stopper",
+      "slug": "one-on-one-stopper",
+      "path": "assets/scanner/special-abilities/one-on-one-stopper.png",
+      "sha256": "894b571047bbffcffa7c42a01a59fac33407b0a82803aaa8241ded26f2122978"
+    },
+    {
+      "name": "Aerial Defender",
+      "slug": "aerial-defender",
+      "path": "assets/scanner/special-abilities/aerial-defender.png",
+      "sha256": "9c090403c0fbdcbd9496c3b5acb61c5444d05d3faee38c446196d7655c744cea"
+    },
+    {
+      "name": "Defensive Wall",
+      "slug": "defensive-wall",
+      "path": "assets/scanner/special-abilities/defensive-wall.png",
+      "sha256": "770f757ac52e695fa955e628788da4ff13dd40c326d47d354348289eeeda5b0d"
+    },
+    {
+      "name": "Playmaker",
+      "slug": "playmaker",
+      "path": "assets/scanner/special-abilities/playmaker.png",
+      "sha256": "242c96fd0e37985245030a92469caea006c8c05a98ed9a4badfbb7e0d74f080b"
+    },
+    {
+      "name": "One-on-One Scorer",
+      "slug": "one-on-one-scorer",
+      "path": "assets/scanner/special-abilities/one-on-one-scorer.png",
+      "sha256": "8806263b92d9d4c6f87e05cac736c65724a9de53581f0553dfe1dbff6dcf8f35"
+    },
+    {
+      "name": "Shadow Striker",
+      "slug": "shadow-striker",
+      "path": "assets/scanner/special-abilities/shadow-striker.png",
+      "sha256": "ec0fb40705639908cec518739262bd8dc15bfafe4b9aac086803bd0f241bf490"
+    },
+    {
+      "name": "Dribbler",
+      "slug": "dribbler",
+      "path": "assets/scanner/special-abilities/dribbler.png",
+      "sha256": "552f8f43a20325cd7143705eb5362bf9f6b6406c1cf291b2f9ac8c48424488a3"
+    },
+    {
+      "name": "Penalty Kick Specialist",
+      "slug": "penalty-kick-specialist",
+      "path": "assets/scanner/special-abilities/penalty-kick-specialist.png",
+      "sha256": "531ca3973e588af0142e55dbefd678e9b064ab095fc73f4ac4672686aac553e2"
+    },
+    {
+      "name": "Free Kick Specialist",
+      "slug": "free-kick-specialist",
+      "path": "assets/scanner/special-abilities/free-kick-specialist.png",
+      "sha256": "8a9ee8b6822503395b0f4e89604f89731c4a1eb27c869367c0db4c2716544ce3"
+    },
+    {
+      "name": "Corner Specialist",
+      "slug": "corner-specialist",
+      "path": "assets/scanner/special-abilities/corner-specialist.png",
+      "sha256": "bc25bd9ebafb9f6519534be2d4382418d51de607e693a925657777b9dc6a3f62"
+    },
+    {
+      "name": "Set Piece Taker",
+      "slug": "set-piece-taker",
+      "path": "assets/scanner/special-abilities/set-piece-taker.png",
+      "sha256": "febed642fdf9401cac102934c660262c0cd001321bf813a5e3217dd046d850c3"
+    },
+    {
+      "name": "Versatile Attacker",
+      "slug": "versatile-attacker",
+      "path": "assets/scanner/special-abilities/versatile-attacker.png",
+      "sha256": "730bc7a6c7e3b310c9537bbdbaa8c7a54985cdedb03f47518e3f3c33d68cc9b1"
+    },
+    {
+      "name": "Intercepting Specialist",
+      "slug": "intercepting-specialist",
+      "path": "assets/scanner/special-abilities/intercepting-specialist.png",
+      "sha256": "cad8efa62fc07dd0eb6d9aece2a3d5ea225e6d084490ec97cc134e83e20d6440"
+    },
+    {
+      "name": "Set Piece Stopper",
+      "slug": "set-piece-stopper",
+      "path": "assets/scanner/special-abilities/set-piece-stopper.png",
+      "sha256": "e2c03a9a611f7c555bda33ff248ce0bc8fa0934ad4790f5b48a2895350b62b2e"
+    },
+    {
+      "name": "Blocker",
+      "slug": "blocker",
+      "path": "assets/scanner/special-abilities/blocker.png",
+      "sha256": "d4823fae25e47505ef8d170ebc42b7b05166215508456e787c745e58c7aa8eb8"
+    },
+    {
+      "name": "Rebound Specialist",
+      "slug": "rebound-specialist",
+      "path": "assets/scanner/special-abilities/rebound-specialist.png",
+      "sha256": "ff1d0255966af18626fead27d7c47b2cb9679209ac52e8d2bde2c02f6306c063"
+    },
+    {
+      "name": "Cross Expert",
+      "slug": "cross-expert",
+      "path": "assets/scanner/special-abilities/cross-expert.png",
+      "sha256": "f2990926a4db2955720a0359f0b73b40a92f55e25742100036a1da2bf7c03257"
+    },
+    {
+      "name": "Counter Attack Stopper",
+      "slug": "counter-attack-stopper",
+      "path": "assets/scanner/special-abilities/counter-attack-stopper.png",
+      "sha256": "a3c538018f7fe080e953a7f530d88336b131086d741696b9faba50cb9ecd72cf"
+    }
+  ],
+  "counts": {
+    "playstyles": 20,
+    "statesPerPlaystyle": 13,
+    "playstyleImages": 260,
+    "specialAbilityImages": 19,
+    "totalReferenceImages": 279
+  }
+}
