@@ -4,17 +4,17 @@ ROOT=Path(__file__).resolve().parents[1]
 scanner=(ROOT/'js/scanner-engine.js').read_text(encoding='utf-8')
 errs=[]
 for needle,label in [
-    ('const VERSION=8','scanner v8 marker'),
+    ('const VERSION=9','scanner v9 marker'),
     ('locateBadgeComponent','tight badge locator'),
-    ('RAW pixel-preserving enlargement of the isolated current playstyle badge','raw isolated badge evidence'),
-    ('SMOOTH enlargement of the same isolated current playstyle badge','smooth isolated badge evidence'),
+    ('CURRENT COMPACT BADGE · RAW','raw compact badge evidence'),
+    ('CURRENT COMPACT BADGE · SMOOTH','smooth compact badge evidence'),
     ('rightSegmentDark','right segment boolean'),
     ('bottomSegmentDark','bottom segment boolean'),
     ('leftSegmentDark','left segment boolean'),
-    ('Standard = RIGHT pale, BOTTOM pale, LEFT pale = 000','Standard 000 rule'),
-    ('Intermediate = RIGHT dark, BOTTOM pale, LEFT pale = 100','Intermediate 100 rule'),
-    ('Advanced = RIGHT dark, BOTTOM dark, LEFT pale = 110','Advanced 110 rule'),
-    ('Master = RIGHT dark, BOTTOM dark, LEFT dark = 111','Master 111 rule'),
+    ('PlaystyleSmallAtlas','compact renderer source'),
+    ('submit_playstyle_level_confirmation','mandatory second level confirmation'),
+    ('READY-ARROW ZONE MASKED','ready-arrow masking'),
+    ('IMPORTANT FOR YELLOW/MIDFIELD BADGES','yellow level disambiguation'),
     ('levelFromSegmentFlags','app-side segment-pattern resolver'),
     ('submit_playstyle_overlay','separate overlay pass'),
     ('defenderIdentityConfirmationPrompt','Ball Playing DC / No-Nonsense DC confirmer'),
@@ -37,7 +37,7 @@ for ab in m.get('specialAbilities',[]):
 for player in ['Kilroy','Sergey','Luiu','Andrews','Aslan','Remus','Stanek','Richard Kilroy','David Andrews','Victor Aslan']:
     if player in scanner: errs.append('benchmark identity leaked into production scanner: '+player)
 if errs:
-    print('FAIL v0.4.14 scanner level contract')
+    print('FAIL v0.4.15 scanner level contract')
     for e in errs: print(' -',e)
     sys.exit(1)
-print('PASS v0.4.14 scanner level contract: isolated badge + 000/100/110/111 ring resolver + unchanged exact assets')
+print('PASS v0.4.15 scanner level contract: compact renderer + double-confirm + unchanged HQ assets')

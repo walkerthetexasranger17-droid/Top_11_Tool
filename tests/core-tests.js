@@ -70,16 +70,16 @@ function inside(role,x,y){const r=B.ROLE_RECTS[role];return x>=r.minX&&x<r.maxX&
   const abilityHeavy=P.cleanPlayer({name:'Abilities',position:'ST',roles:['ST'],skills:skills(),specialAbilities:D.SPECIAL_ABILITIES.slice(0,5)});ok(abilityHeavy.specialAbilities.length===5,'special ability storage is not capped at two');
 
   // ---------------------------------------------------------------------------
-  // Scanner v8 Gemini 3.1 Flash Live boundary: isolated badge level-ring count + coloured SA refs.
+  // Scanner v9 Gemini 3.1 Flash Live boundary: compact renderer double-confirm + coloured SA refs.
   // ---------------------------------------------------------------------------
-  ok(SC.VERSION===8,'Scanner v8 is the production scanner');
+  ok(SC.VERSION===9,'Scanner v9 is the production scanner');
   const scannerSource=fs.readFileSync(path.join(ROOT,'js','scanner-engine.js'),'utf8');
   ok(/Gemini Scanner is not configured/.test(scannerSource),'scanner requires a configured Gemini API key');
   ok(/gemini-3\.1-flash-live-preview/.test(scannerSource),'scanner uses Gemini 3.1 Flash Live');
   ok(/thinkingLevel:'HIGH'/.test(scannerSource),'scanner uses HIGH thinking');
-  ok(/reference-manifest\.json/.test(scannerSource)&&/exactPlaystyleStateMedia/.test(scannerSource)&&/buildPlaystyleLevelEvidence/.test(scannerSource),'scanner uses exact reference manifest, direct state PNGs and isolated level evidence');
+  ok(/compact-reference-manifest\.json/.test(scannerSource)&&/compactPlaystyleStateMedia/.test(scannerSource)&&/buildPlaystyleLevelEvidence/.test(scannerSource),'scanner uses compact renderer manifest, direct compact level PNGs and isolated level evidence');
   ok(/buildAbilityReference/.test(scannerSource)&&/NO gold\/boosted reference path/.test(scannerSource),'scanner uses coloured-only exact Special Ability references');
-  ok(/submit_playstyle_identity/.test(scannerSource)&&/submit_playstyle_level/.test(scannerSource)&&/submit_playstyle_overlay/.test(scannerSource),'playstyle identity, exact ring level and overlays are separate Live passes');
+  ok(/submit_playstyle_identity/.test(scannerSource)&&/submit_playstyle_level/.test(scannerSource)&&/submit_playstyle_level_confirmation/.test(scannerSource)&&/submit_playstyle_overlay/.test(scannerSource),'playstyle identity, compact level, mandatory confirmation and overlays are separate Live passes');
   ok(/submit_ability_slot_scan/.test(scannerSource)&&/Ability slot/.test(scannerSource),'Special Abilities are classified per occupied slot');
   ok(SC.REQUEST_TIMEOUT_MS===90000,'scanner Live task timeout is 90 seconds');
   ok(SC._canonicalPlaystyle('Box To Box')==='Box-to-Box','scanner maps visual Box To Box to app canonical playstyle');

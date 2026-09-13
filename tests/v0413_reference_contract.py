@@ -22,7 +22,7 @@ html=(ROOT/'index.html').read_text()
 for old in ['playstyles-index-final.png','playstyle-levels-index-final.png','special-abilities-standard-index-final.png','special-abilities-boosted-index-final.png','assets/playstyles/','assets/abilities/']:
     if old in scanner+app+html: errs.append('legacy visual path survived: '+old)
 if 'gold/boosted reference path' not in scanner or 'There is intentionally NO gold/boosted reference path' not in scanner: errs.append('coloured-only SA policy missing from AI command')
-if 'Standard = RIGHT pale, BOTTOM pale, LEFT pale = 000' not in scanner: errs.append('Standard 000 playstyle level command missing')
+if 'Standard=0 category-coloured ring segments' not in scanner: errs.append('Standard compact level command missing')
 if "B.PLAYSTYLE_LEVELS.filter(x=>x.id>=1);" not in app: errs.append('Standard is still excluded from manual playstyle tier chooser')
 if 'submit_playstyle_level' not in scanner or 'submit_playstyle_overlay' not in scanner: errs.append('exact same-emblem level/overlay passes missing')
 if errs:

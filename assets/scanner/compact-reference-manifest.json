@@ -1,0 +1,605 @@
+{
+  "version": 1,
+  "renderer": "compact / PlaystyleSmallAtlas",
+  "source": "authoritative Windows game PlaystyleSmallAtlas",
+  "atlas": {
+    "width": 1024,
+    "height": 444,
+    "spriteCount": 77
+  },
+  "playstyles": [
+    {
+      "name": "Poacher",
+      "slug": "poacher",
+      "category": "attacker",
+      "colour": "#E62B2A",
+      "states": {
+        "Locked": {
+          "path": "assets/scanner/compact-playstyles/poacher/locked.png",
+          "sha256": "8c89831dbe0ce32575e28a9224e704349e79541196d652b414634fb1a2fe2b9f"
+        },
+        "Standard": {
+          "path": "assets/scanner/compact-playstyles/poacher/standard.png",
+          "sha256": "5225f8f23b20215ba6ab28b7cee75973b83f167783942ae68d026252e238edfe"
+        },
+        "Intermediate": {
+          "path": "assets/scanner/compact-playstyles/poacher/intermediate.png",
+          "sha256": "cac9c28aafd45933b062b20ed8ad51a74c8e65fc89d629ed4f502de25f997f08"
+        },
+        "Advanced": {
+          "path": "assets/scanner/compact-playstyles/poacher/advanced.png",
+          "sha256": "6d5a7641f313734ce884373a7f7f41b267b29c423dbabc702ae3e02ea9e94803"
+        },
+        "Master": {
+          "path": "assets/scanner/compact-playstyles/poacher/master.png",
+          "sha256": "5168318f715ee15964d737cfc99cfece047fefd7c2a878d8fc39462bed66076a"
+        }
+      }
+    },
+    {
+      "name": "False Nine",
+      "slug": "false-nine",
+      "category": "attacker",
+      "colour": "#E62B2A",
+      "states": {
+        "Locked": {
+          "path": "assets/scanner/compact-playstyles/false-nine/locked.png",
+          "sha256": "2998c33e650251e161e3b80dbe63e34c2cf58918cde351bc6caac8ec4ac74b79"
+        },
+        "Standard": {
+          "path": "assets/scanner/compact-playstyles/false-nine/standard.png",
+          "sha256": "ab1ee0b5e806314fe438affa6ca4fb09e9291f45e72c718fedccd850589a614c"
+        },
+        "Intermediate": {
+          "path": "assets/scanner/compact-playstyles/false-nine/intermediate.png",
+          "sha256": "e216f3eeb5552ea8ac98a8bd8b1d64cbb44e0ba6d569d89b1f300ce77405fe3c"
+        },
+        "Advanced": {
+          "path": "assets/scanner/compact-playstyles/false-nine/advanced.png",
+          "sha256": "3867c001e2b7f9a84bc4435f4c47c4314a54666742ccada379b486b7cfb339b3"
+        },
+        "Master": {
+          "path": "assets/scanner/compact-playstyles/false-nine/master.png",
+          "sha256": "af385e4231fe1f2e1abfcb23cb34f10654364671f35c05147390ae240e2c7d53"
+        }
+      }
+    },
+    {
+      "name": "Target Man",
+      "slug": "target-man",
+      "category": "attacker",
+      "colour": "#E62B2A",
+      "states": {
+        "Locked": {
+          "path": "assets/scanner/compact-playstyles/target-man/locked.png",
+          "sha256": "7b72f46dd0d9bb05a7394efad42bb7030efc2387be45aea1f73b5c81d66d5eb7"
+        },
+        "Standard": {
+          "path": "assets/scanner/compact-playstyles/target-man/standard.png",
+          "sha256": "93c7d2de845d8a4a1b42a00ec4b675e76ba999920c9c8a37035a0aa80c97ad53"
+        },
+        "Intermediate": {
+          "path": "assets/scanner/compact-playstyles/target-man/intermediate.png",
+          "sha256": "49ddb08c65ffa27d92ff828b054ac76c5dc28de625f75019cddd90f63017a0c0"
+        },
+        "Advanced": {
+          "path": "assets/scanner/compact-playstyles/target-man/advanced.png",
+          "sha256": "ab934bae0e8f421c2e92072c7cde18e951ca7a0622427933549a976fc6d98349"
+        },
+        "Master": {
+          "path": "assets/scanner/compact-playstyles/target-man/master.png",
+          "sha256": "ca963a197a3a913628242cb63d1d280ca777285538fa3ea61670ab5aeb67915a"
+        }
+      }
+    },
+    {
+      "name": "Enganche",
+      "slug": "enganche",
+      "category": "attacker",
+      "colour": "#E62B2A",
+      "states": {
+        "Locked": {
+          "path": "assets/scanner/compact-playstyles/enganche/locked.png",
+          "sha256": "0e8b9796638f5a71261e4b8406d81ac96e39ffc80ca53cdd384612e7fb090c73"
+        },
+        "Standard": {
+          "path": "assets/scanner/compact-playstyles/enganche/standard.png",
+          "sha256": "d18345029c9a5845c5c8293b5d975de3b18913e3e27f39f82bc45e16d9088f77"
+        },
+        "Intermediate": {
+          "path": "assets/scanner/compact-playstyles/enganche/intermediate.png",
+          "sha256": "698df0ed51803f6e6241519b3b7c586bf36d6af400ca7580153aa88ed994bd0a"
+        },
+        "Advanced": {
+          "path": "assets/scanner/compact-playstyles/enganche/advanced.png",
+          "sha256": "143e01f9898afd2ef754252e3612755143161b619314b29d73c9e804f43ac356"
+        },
+        "Master": {
+          "path": "assets/scanner/compact-playstyles/enganche/master.png",
+          "sha256": "f22f407dce70c4e40412656d8e972ec24e934e995dff4bfa1f9b9b413d9856cb"
+        }
+      }
+    },
+    {
+      "name": "Inside Forward",
+      "slug": "inside-forward",
+      "category": "attacker",
+      "colour": "#E62B2A",
+      "states": {
+        "Locked": {
+          "path": "assets/scanner/compact-playstyles/inside-forward/locked.png",
+          "sha256": "e8a5040936bf718f91d9090242d99581f7abec044b8335de3b66787bf2849992"
+        },
+        "Standard": {
+          "path": "assets/scanner/compact-playstyles/inside-forward/standard.png",
+          "sha256": "8ca40b5db0cd7eb7f673bfe0d528d1e605d00d1e2c5998afb0d0f9784f8fbf6c"
+        },
+        "Intermediate": {
+          "path": "assets/scanner/compact-playstyles/inside-forward/intermediate.png",
+          "sha256": "9e69697d961b901ee8710b515cafdf3db99d5b4441664af90773b8ed31991e35"
+        },
+        "Advanced": {
+          "path": "assets/scanner/compact-playstyles/inside-forward/advanced.png",
+          "sha256": "8743a2cb2db5b12f770350ea127e17541f056a68c3d0ac0b50d92c07be5fb435"
+        },
+        "Master": {
+          "path": "assets/scanner/compact-playstyles/inside-forward/master.png",
+          "sha256": "3956cd9182705a6893342fa89c87cde64efd5fed9b84d4978377f82390c691d0"
+        }
+      }
+    },
+    {
+      "name": "Winger",
+      "slug": "winger",
+      "category": "attacker",
+      "colour": "#E62B2A",
+      "states": {
+        "Locked": {
+          "path": "assets/scanner/compact-playstyles/winger/locked.png",
+          "sha256": "da6ee82e814a0b33dec270e0bf9e7238b1e84a6315774ad636066cf3f2392392"
+        },
+        "Standard": {
+          "path": "assets/scanner/compact-playstyles/winger/standard.png",
+          "sha256": "ff8fc77cb7c798e5b6cb50fa2c692f31519f53eaa837f1540697deea05624b93"
+        },
+        "Intermediate": {
+          "path": "assets/scanner/compact-playstyles/winger/intermediate.png",
+          "sha256": "1e4ef6971888addb045b1fd3d8c7fa99c7df9e60208995f4b32f9a7974128a55"
+        },
+        "Advanced": {
+          "path": "assets/scanner/compact-playstyles/winger/advanced.png",
+          "sha256": "180d64b17f1c15d6d9e70e21433ca31038d8a6b83e1e413aed2c7b231cc7f1e6"
+        },
+        "Master": {
+          "path": "assets/scanner/compact-playstyles/winger/master.png",
+          "sha256": "975566fac31b487802b25fe5547e863730b3f4cac5db39a64ff3e41fdcfd2d85"
+        }
+      }
+    },
+    {
+      "name": "False Winger",
+      "slug": "false-winger",
+      "category": "midfielder",
+      "colour": "#F8B827",
+      "states": {
+        "Locked": {
+          "path": "assets/scanner/compact-playstyles/false-winger/locked.png",
+          "sha256": "e543a67bf084da56a4846887b2f6f74b4c5a75be20c2d71b216e891fa85165cf"
+        },
+        "Standard": {
+          "path": "assets/scanner/compact-playstyles/false-winger/standard.png",
+          "sha256": "263448b68f67f038f0bd13cd951607a1b87e24ae0dc047bc9e2821a5800ca455"
+        },
+        "Intermediate": {
+          "path": "assets/scanner/compact-playstyles/false-winger/intermediate.png",
+          "sha256": "1fb22558da704b6b5179cf01b066265cee7868017948b393ba1834bd7bcaae6a"
+        },
+        "Advanced": {
+          "path": "assets/scanner/compact-playstyles/false-winger/advanced.png",
+          "sha256": "9752d04a45abb6f90ed7d0276ab077bbb5d585588b9f5e15460097718eddcb36"
+        },
+        "Master": {
+          "path": "assets/scanner/compact-playstyles/false-winger/master.png",
+          "sha256": "38d83154103d21d53d257f2e1029615519a011cc43ae1bc77a01990ee5eefcf6"
+        }
+      }
+    },
+    {
+      "name": "Mezzala",
+      "slug": "mezzala",
+      "category": "midfielder",
+      "colour": "#F8B827",
+      "states": {
+        "Locked": {
+          "path": "assets/scanner/compact-playstyles/mezzala/locked.png",
+          "sha256": "63e7b7dc0ad0491d0711465059091ac6ec8b41580ab0d3bdfa93d4109a8bcc71"
+        },
+        "Standard": {
+          "path": "assets/scanner/compact-playstyles/mezzala/standard.png",
+          "sha256": "5da2cf3b895e3d19fd7663bc2bd047beac9011bbe6e153ac22fcb81eca8147b1"
+        },
+        "Intermediate": {
+          "path": "assets/scanner/compact-playstyles/mezzala/intermediate.png",
+          "sha256": "446b294ac509896dad9bd24bbe03cf7b7d0e5a349a62b39df2e4fc1e28cc06ef"
+        },
+        "Advanced": {
+          "path": "assets/scanner/compact-playstyles/mezzala/advanced.png",
+          "sha256": "376db5f0a96948a0141a93f75a4a36817105f83b8904e473df057104f70472ac"
+        },
+        "Master": {
+          "path": "assets/scanner/compact-playstyles/mezzala/master.png",
+          "sha256": "88320153c3b3edbc0d510fb8a3cce42ce71ff847317637294691177d07e7d73e"
+        }
+      }
+    },
+    {
+      "name": "Box-to-Box",
+      "slug": "box-to-box",
+      "category": "midfielder",
+      "colour": "#F8B827",
+      "states": {
+        "Locked": {
+          "path": "assets/scanner/compact-playstyles/box-to-box/locked.png",
+          "sha256": "e1496ac537c139dbbb024832e041ff274ba1a05f9abd6c1cd457001e24e8b8aa"
+        },
+        "Standard": {
+          "path": "assets/scanner/compact-playstyles/box-to-box/standard.png",
+          "sha256": "a6da13284ef66bd838c0a3f6dffdaeff41e2b09b36d701eb91371a2780d6f5c4"
+        },
+        "Intermediate": {
+          "path": "assets/scanner/compact-playstyles/box-to-box/intermediate.png",
+          "sha256": "bbecc186db83a9dc0f0933574f0bd4078454020bc066757193ab45e67f8af517"
+        },
+        "Advanced": {
+          "path": "assets/scanner/compact-playstyles/box-to-box/advanced.png",
+          "sha256": "48bcca4b55872a15c67626033aae73361dd24bd4c1aa9251a6f91e22c169a7f8"
+        },
+        "Master": {
+          "path": "assets/scanner/compact-playstyles/box-to-box/master.png",
+          "sha256": "fc2f63b1108ee323e8294cabf35a58105f52a165e8de6fc5820630d9700a5244"
+        }
+      }
+    },
+    {
+      "name": "Regista",
+      "slug": "regista",
+      "category": "midfielder",
+      "colour": "#F8B827",
+      "states": {
+        "Locked": {
+          "path": "assets/scanner/compact-playstyles/regista/locked.png",
+          "sha256": "52d815934516e506d2eed7cde1fd649168add22329ee09c165961c90e556b356"
+        },
+        "Standard": {
+          "path": "assets/scanner/compact-playstyles/regista/standard.png",
+          "sha256": "31e5f8bab41895f7bb680a3409c1f7a2f992850121b0f9ed28939d9387baf596"
+        },
+        "Intermediate": {
+          "path": "assets/scanner/compact-playstyles/regista/intermediate.png",
+          "sha256": "8c752fe5c9e7677dea01bc30cf397c453581756af5c64ea79759f5fbce5f23bc"
+        },
+        "Advanced": {
+          "path": "assets/scanner/compact-playstyles/regista/advanced.png",
+          "sha256": "293518f6c208ca619de14c3d69aa67bc254ed86fb16ed17dba28ba0c68f5d59b"
+        },
+        "Master": {
+          "path": "assets/scanner/compact-playstyles/regista/master.png",
+          "sha256": "9bc173719e703d92f27a759ef0f966875507b8c549619b798a42b10488c1613a"
+        }
+      }
+    },
+    {
+      "name": "Ball Winner",
+      "slug": "ball-winner",
+      "category": "midfielder",
+      "colour": "#F8B827",
+      "states": {
+        "Locked": {
+          "path": "assets/scanner/compact-playstyles/ball-winner/locked.png",
+          "sha256": "2113f932f7cf9806943c36fa9f9d2b772c43f4039eaccdf2bb5b510b58bd9aad"
+        },
+        "Standard": {
+          "path": "assets/scanner/compact-playstyles/ball-winner/standard.png",
+          "sha256": "5d6ac0ac34dfd612030ee90d5e9ea60f5485d85346155c7bdeed652adb560abe"
+        },
+        "Intermediate": {
+          "path": "assets/scanner/compact-playstyles/ball-winner/intermediate.png",
+          "sha256": "a7323ef83b842bc10da0f38a568d44c198e8178eb8d93dc249a227a123f84db6"
+        },
+        "Advanced": {
+          "path": "assets/scanner/compact-playstyles/ball-winner/advanced.png",
+          "sha256": "fa9ac54fa284b709bcf80edf30d0384d237fd51902d5ce02bac34cb73199421e"
+        },
+        "Master": {
+          "path": "assets/scanner/compact-playstyles/ball-winner/master.png",
+          "sha256": "e4005bf446a7b37025d74e2d8912e018c4a3cc0bfe7a8d926b4604a36c9c1bde"
+        }
+      }
+    },
+    {
+      "name": "Anchor Man",
+      "slug": "anchor-man",
+      "category": "midfielder",
+      "colour": "#F8B827",
+      "states": {
+        "Locked": {
+          "path": "assets/scanner/compact-playstyles/anchor-man/locked.png",
+          "sha256": "a7b3c39e0170a4a369b4edd22831fb48197235051f2750dd12ea059ae1e11af9"
+        },
+        "Standard": {
+          "path": "assets/scanner/compact-playstyles/anchor-man/standard.png",
+          "sha256": "152c723bf7f74ae4d92d8369e6eba393b9f1044e13a3b470dc4c6502eedbd004"
+        },
+        "Intermediate": {
+          "path": "assets/scanner/compact-playstyles/anchor-man/intermediate.png",
+          "sha256": "74221a8974175ffb76bf48f6b1cc6c0820cf968d17979840d8036c128f001cdf"
+        },
+        "Advanced": {
+          "path": "assets/scanner/compact-playstyles/anchor-man/advanced.png",
+          "sha256": "7e9d9ff6b7ca0c2b54f07b9c1a0378eee9b040c99a8baf51a19c2e0399b6bbcb"
+        },
+        "Master": {
+          "path": "assets/scanner/compact-playstyles/anchor-man/master.png",
+          "sha256": "e9ca6fdad6908053d3d2c5583e02544dfa5f34151c5696400b946fa88ac33b33"
+        }
+      }
+    },
+    {
+      "name": "No-Nonsense DC",
+      "slug": "no-nonsense-dc",
+      "category": "defender",
+      "colour": "#7DC729",
+      "states": {
+        "Locked": {
+          "path": "assets/scanner/compact-playstyles/no-nonsense-dc/locked.png",
+          "sha256": "d4a86742f5573c0722ad17c736d0355f5fbdb093423d8260eea1dcbf38c34b14"
+        },
+        "Standard": {
+          "path": "assets/scanner/compact-playstyles/no-nonsense-dc/standard.png",
+          "sha256": "ffc6de42438b02598d03f719e07a88b05fd89e603d75e1c293b0f180efe18c98"
+        },
+        "Intermediate": {
+          "path": "assets/scanner/compact-playstyles/no-nonsense-dc/intermediate.png",
+          "sha256": "6411e75128b5d5ca5a397629c3256668d2f5b358196b0b569346f9368d054679"
+        },
+        "Advanced": {
+          "path": "assets/scanner/compact-playstyles/no-nonsense-dc/advanced.png",
+          "sha256": "95357c5482c6999aa10f6d80af125ee96d5290352aac86adbd1928b741ce0d33"
+        },
+        "Master": {
+          "path": "assets/scanner/compact-playstyles/no-nonsense-dc/master.png",
+          "sha256": "cd57a07e16496d156a3d39453fd7df638b76f531b429c730cb728f23ad503085"
+        }
+      }
+    },
+    {
+      "name": "Stopper",
+      "slug": "stopper",
+      "category": "defender",
+      "colour": "#7DC729",
+      "states": {
+        "Locked": {
+          "path": "assets/scanner/compact-playstyles/stopper/locked.png",
+          "sha256": "4a9d8301445956b86f0078f4d0e40ead690d34ceee986368213d914c7cc8aece"
+        },
+        "Standard": {
+          "path": "assets/scanner/compact-playstyles/stopper/standard.png",
+          "sha256": "5ecb994bf39703986bceebcaed5289ee4c6ebe18b9a4dcd05224e821495023a4"
+        },
+        "Intermediate": {
+          "path": "assets/scanner/compact-playstyles/stopper/intermediate.png",
+          "sha256": "53762999894e8985fa92a6b12eb2135d2e0ec8a5fc6a26d084454bf23dacc955"
+        },
+        "Advanced": {
+          "path": "assets/scanner/compact-playstyles/stopper/advanced.png",
+          "sha256": "24f26500edbd24befa7ddfa3c1adc08b8d4d36cede5c3d3d2d8f82e9c8e86090"
+        },
+        "Master": {
+          "path": "assets/scanner/compact-playstyles/stopper/master.png",
+          "sha256": "ef3eea55f3c7f6f410da34465e7580daf4a3aac715cdfea9470b9154fa01370e"
+        }
+      }
+    },
+    {
+      "name": "Ball Playing DC",
+      "slug": "ball-playing-dc",
+      "category": "defender",
+      "colour": "#7DC729",
+      "states": {
+        "Locked": {
+          "path": "assets/scanner/compact-playstyles/ball-playing-dc/locked.png",
+          "sha256": "f3aa6936632379b6199995cc5f2d05bb48fc93ddf086ec6f18cd1db746c6e20f"
+        },
+        "Standard": {
+          "path": "assets/scanner/compact-playstyles/ball-playing-dc/standard.png",
+          "sha256": "f369fb75ae677f2dcda1b389e077a196b04b2a31f59be0eb04da9963e6ff4e6a"
+        },
+        "Intermediate": {
+          "path": "assets/scanner/compact-playstyles/ball-playing-dc/intermediate.png",
+          "sha256": "82a2e443785197556f572c1f045307129924ad9fc0161bf49db5ed27da4cc111"
+        },
+        "Advanced": {
+          "path": "assets/scanner/compact-playstyles/ball-playing-dc/advanced.png",
+          "sha256": "5ad0a8402d13658fb30731bc625762c2a622bff0a23bbf4d5e7ff021f5b2f5c7"
+        },
+        "Master": {
+          "path": "assets/scanner/compact-playstyles/ball-playing-dc/master.png",
+          "sha256": "5f563474d2dcbfa57d0150b46d95dee10838aea3da363045fbc91c08ad942a88"
+        }
+      }
+    },
+    {
+      "name": "Full Back",
+      "slug": "full-back",
+      "category": "defender",
+      "colour": "#7DC729",
+      "states": {
+        "Locked": {
+          "path": "assets/scanner/compact-playstyles/full-back/locked.png",
+          "sha256": "b412223d33bf2a7454c6c4b850d1d7bad7d9b7e7c5683fc1e13e41d7b3f288a8"
+        },
+        "Standard": {
+          "path": "assets/scanner/compact-playstyles/full-back/standard.png",
+          "sha256": "f5c4f007e0465929c985f208b53ef4009e1ba0ed5a0bbe871ac327c7d5cac2b2"
+        },
+        "Intermediate": {
+          "path": "assets/scanner/compact-playstyles/full-back/intermediate.png",
+          "sha256": "90095c9f489efee140b982ceaaabd02ff75c26d3644eb49f24e3193f3f601ca9"
+        },
+        "Advanced": {
+          "path": "assets/scanner/compact-playstyles/full-back/advanced.png",
+          "sha256": "7e657f1735715a6a63cb1cd358c00e0ec57c76d44c1260865f199b788e34c2db"
+        },
+        "Master": {
+          "path": "assets/scanner/compact-playstyles/full-back/master.png",
+          "sha256": "defc0a3f7880a944722af538087db48ce1c13b197ed69e221bb8b2e412efc022"
+        }
+      }
+    },
+    {
+      "name": "Wing Back",
+      "slug": "wing-back",
+      "category": "defender",
+      "colour": "#7DC729",
+      "states": {
+        "Locked": {
+          "path": "assets/scanner/compact-playstyles/wing-back/locked.png",
+          "sha256": "baa029b2d007c3d5baa9f263c2af5aa732c797ac2562450c7d11c86d86415aa2"
+        },
+        "Standard": {
+          "path": "assets/scanner/compact-playstyles/wing-back/standard.png",
+          "sha256": "642409aa79f2c4894c0052eeaa1410cd5d33f6b3877417175cc9691be7869ffb"
+        },
+        "Intermediate": {
+          "path": "assets/scanner/compact-playstyles/wing-back/intermediate.png",
+          "sha256": "7066e975597772f7c4b8b7294969e287c327951443c9e0fbe1de107270528344"
+        },
+        "Advanced": {
+          "path": "assets/scanner/compact-playstyles/wing-back/advanced.png",
+          "sha256": "233322973379801dcd37bb4a6268efbf7a100385494e3f371f993d149ca0e75d"
+        },
+        "Master": {
+          "path": "assets/scanner/compact-playstyles/wing-back/master.png",
+          "sha256": "8620ed9a6a0c1ea91f5f2bc6a651c0be30714222939961e9096f4d27d72b7aee"
+        }
+      }
+    },
+    {
+      "name": "Ball Playing GK",
+      "slug": "ball-playing-gk",
+      "category": "defender",
+      "colour": "#7DC729",
+      "states": {
+        "Locked": {
+          "path": "assets/scanner/compact-playstyles/ball-playing-gk/locked.png",
+          "sha256": "1784b35b61f321c772fbeb225ea9355580ff7271cc7f0de0c5d6af200f5a56f3"
+        },
+        "Standard": {
+          "path": "assets/scanner/compact-playstyles/ball-playing-gk/standard.png",
+          "sha256": "97a7d28f65e5241d19eaf1682a380183047861119e309ca03eea0028a8f9fdb6"
+        },
+        "Intermediate": {
+          "path": "assets/scanner/compact-playstyles/ball-playing-gk/intermediate.png",
+          "sha256": "a714b2c7ace20f2e59b1d941ac3a66d7e38cf64c1960652150141a99499b4323"
+        },
+        "Advanced": {
+          "path": "assets/scanner/compact-playstyles/ball-playing-gk/advanced.png",
+          "sha256": "92f12eeeb34cb71a64581aef2a2be0d7d4b39e771166cfaff5020263e9b21b91"
+        },
+        "Master": {
+          "path": "assets/scanner/compact-playstyles/ball-playing-gk/master.png",
+          "sha256": "8295357104b70d062d444f67e6164be1e50a160af255aab22934222609227ac4"
+        }
+      }
+    },
+    {
+      "name": "Sweeper Keeper",
+      "slug": "sweeper-keeper",
+      "category": "defender",
+      "colour": "#7DC729",
+      "states": {
+        "Locked": {
+          "path": "assets/scanner/compact-playstyles/sweeper-keeper/locked.png",
+          "sha256": "515dd56366fbd0f2b29cf74ed2548bc7dd00e8a0bdaaa04c686e13f4d6748677"
+        },
+        "Standard": {
+          "path": "assets/scanner/compact-playstyles/sweeper-keeper/standard.png",
+          "sha256": "7a82c8fe85d8d1895b673c9e22eba2d2d1a8c91eb47778852b906be9b77698a0"
+        },
+        "Intermediate": {
+          "path": "assets/scanner/compact-playstyles/sweeper-keeper/intermediate.png",
+          "sha256": "daed5f1024b0e6a8664195f289674322438be0cbd63662b998b13c15a4717787"
+        },
+        "Advanced": {
+          "path": "assets/scanner/compact-playstyles/sweeper-keeper/advanced.png",
+          "sha256": "f1d1391804ebabc714a0a2b1cdb49343872b792ae5be37d5404a703b90afca59"
+        },
+        "Master": {
+          "path": "assets/scanner/compact-playstyles/sweeper-keeper/master.png",
+          "sha256": "c64106c742c774aa8473951968ee9c9a4edfb44b603fdf3a46a0e07387f12198"
+        }
+      }
+    },
+    {
+      "name": "Box Commander",
+      "slug": "box-commander",
+      "category": "defender",
+      "colour": "#7DC729",
+      "states": {
+        "Locked": {
+          "path": "assets/scanner/compact-playstyles/box-commander/locked.png",
+          "sha256": "f8921941f86e2d9feaff711a1a49fb591d46da35970b802fb0f4e804654c4d9b"
+        },
+        "Standard": {
+          "path": "assets/scanner/compact-playstyles/box-commander/standard.png",
+          "sha256": "c22851c1c32ff9a187cfb0cf19e4503101daa449ddb43d04260b1d34c6c8c832"
+        },
+        "Intermediate": {
+          "path": "assets/scanner/compact-playstyles/box-commander/intermediate.png",
+          "sha256": "693643d226cdbd9a94620117b21283c0b4f115d0167b9b6d7deb92e58c1e440d"
+        },
+        "Advanced": {
+          "path": "assets/scanner/compact-playstyles/box-commander/advanced.png",
+          "sha256": "c877dfb4b0069e7fd49ed5695829cd434e6f64dbdf800e4f8e72faf628f80034"
+        },
+        "Master": {
+          "path": "assets/scanner/compact-playstyles/box-commander/master.png",
+          "sha256": "b16e3f4e2203404abb01061f7eb46531b30bfb1e7ae2e1ea9698bd9419ac9780"
+        }
+      }
+    }
+  ],
+  "overlays": {
+    "indicator_levelup": {
+      "path": "assets/scanner/compact-overlays/indicator_levelup.png",
+      "sha256": "37fcbc8ff925d2811fdaefe14d563b6c8def07596cce714f8b4e67ea853a2784"
+    },
+    "indicator_lock": {
+      "path": "assets/scanner/compact-overlays/indicator_lock.png",
+      "sha256": "f7c880e34addd236ec1ada7077eddb4f94e06597aada88a2f7001d1bc6a25c01"
+    },
+    "indicator_wrong_position": {
+      "path": "assets/scanner/compact-overlays/indicator_wrong_position.png",
+      "sha256": "11bd20e12e13b3402c8ef59f8e91ee9a01456d2fde7929ed7bc2c7a0c160f796"
+    },
+    "level_boosted_attacker": {
+      "path": "assets/scanner/compact-overlays/level_boosted_attacker.png",
+      "sha256": "8f9c2b66dfbcdd8f127a82afc71f3b28ab20d1fc0deef170439560d058788efe"
+    },
+    "level_boosted_midfielder": {
+      "path": "assets/scanner/compact-overlays/level_boosted_midfielder.png",
+      "sha256": "932ad6176d6fe3450d97f5a717221247108b12f503bc49627f87323d31fe3ea4"
+    },
+    "level_boosted_defender": {
+      "path": "assets/scanner/compact-overlays/level_boosted_defender.png",
+      "sha256": "fb316fe073df4dd0219447c8bc0fdbcec074fafc8335d7a5c0ebd57a64e80511"
+    }
+  },
+  "counts": {
+    "playstyles": 20,
+    "levelsPerPlaystyle": 5,
+    "playstyleImages": 100,
+    "overlayImages": 6,
+    "totalImages": 106
+  }
+}

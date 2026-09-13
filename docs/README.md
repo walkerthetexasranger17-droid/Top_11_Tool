@@ -22,7 +22,7 @@ This folder separates current operational documentation from historical developm
 
 ## Releases
 
-- [`releases/v0.4.14.md`](releases/v0.4.14.md) — isolated-badge level-ring scanner + defender lookalike confirmation.
+- [`releases/v0.4.15.md`](releases/v0.4.15.md) — isolated-badge level-ring scanner + defender lookalike confirmation.
 
 - [`releases/v0.4.13.md`](releases/v0.4.13.md) — exact playstyle-state + coloured-only Special Ability scanner references.
 

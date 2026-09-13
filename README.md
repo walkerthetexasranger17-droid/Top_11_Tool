@@ -1,8 +1,8 @@
-# Top Eleven Tool v0.4.14
+# Top Eleven Tool v0.4.15
 
 Top Eleven Tool is a mobile-first PWA companion for managing a Top Eleven squad, scanning player cards, planning training, selecting a formation, assigning set pieces and presenting tactics in a simpler form.
 
-`v0.4.14` keeps the approved exact playstyle/Special Ability image packs from v0.4.13 and tightens scanner recognition after real-device testing. Playstyle levels are now read from an isolated badge crop using individual exact level references and the explicit `000 / 100 / 110 / 111` ring-segment pattern; Ready/Boosted/Wrong Position are checked in a separate overlay pass. The coloured-only Special Ability path remains unchanged. Core training/tactics engines remain unchanged.
+`v0.4.15` keeps the approved HQ playstyle display pack and coloured-only Special Ability pack unchanged, but moves scanner recognition to the game's exact compact `PlaystyleSmallAtlas` renderer used beside player names. Every detected playstyle is checked against its five single compact level images, independently confirmed a second time, and tie-broken when the two reads disagree. The max-XP Ready arrow is treated as a separate overlay and masked from the level decision. Core training/tactics engines remain unchanged.
 
 ## Main navigation
 
@@ -120,7 +120,7 @@ The Firebase end-to-end sign-in/sync path still needs a real browser and the act
 - Scanner identity/level recognition, icon assets and mentor recommendation logic were deliberately left unchanged for separate work.
 
 
-## v0.4.14
+## v0.4.15
 
 - Rechecked the approved playstyle reference labels after real-device failures; the PNG mapping was correct and the image pack is unchanged.
 - Added automatic isolation of the small playstyle badge from the name strip before identity/level analysis.

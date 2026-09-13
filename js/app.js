@@ -1,5 +1,5 @@
 (() => {
-  window.__TE_RUNTIME__='0.4.14-r1';
+  window.__TE_RUNTIME__='0.4.15-r1';
   const TE=window.TE5;const D=TE.Data,P=TE.Players,S=TE.Storage,DP=TE.DrillProfile,T=TE.Training,TT=TE.TeamTraining,SC=TE.Scanner,R=TE.Recommendations,F=TE.Formation,TP=TE.TeamPlan,TAC=TE.Tactics,M=TE.Mentor,B=TE.BibleData,C=TE.Cloud;
   const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
   const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -147,7 +147,7 @@
   function schedulePersistScanQueue(){clearTimeout(schedulePersistScanQueue.t);schedulePersistScanQueue.t=setTimeout(()=>persistScanQueueState(),40);}
   async function restoreScanQueueState(){const saved=await S.getJSON(SCAN_QUEUE_META_KEY,null);if(!saved?.items?.length)return;const rows=[];for(const raw of saved.items){const item={...raw,dataUrl:null,nextRetryAt:0};if(item.imageStored)item.dataUrl=await queueImageGet(item.id);if(['scanning','fallback','waiting'].includes(item.status)&&item.dataUrl){item.status='error';item.error='A previous scan was interrupted. Tap Retry Scan when you want to try again.';item.statusText='NEEDS RETRY · previous request stopped';}if(!item.manual&&!item.dataUrl&&item.status!=='saved'){item.status='error';item.statusText='NEEDS RETRY · screenshot could not be restored';item.error='The queued screenshot could not be restored. Remove it and add the screenshot again.';}rows.push(item);}state.scanQueue=rows;state.scanQueueSeq=Math.max(Number(saved.seq)||0,...rows.map(x=>Number(x.id)||0),0);const reviewIndex=rows.findIndex(x=>x.id===saved.reviewId&&['ready','saved'].includes(x.status));state.scanQueueReviewIndex=reviewIndex;renderScanQueue();if(reviewIndex>=0)loadQueueReview(reviewIndex);if(rows.some(x=>x.status==='queued'))runScanQueue();}
 
-  // ---------- Scanner v8 · Gemini 3.1 Flash Live · exact-reference batch review queue ----------
+  // ---------- Scanner v9 · Gemini 3.1 Flash Live · exact-reference batch review queue ----------
   let scannerHealthOkAt=0;
   const SCANNER_HEALTH_TTL_MS=5*60*1000;
   function scannerSetupFailure(err){return ['NOT_CONFIGURED','REFERENCE_LOAD','NETWORK','GEMINI_API_ERROR','GEMINI_LIVE_ERROR','GEMINI_LIVE_CLOSED'].includes(String(err?.code||''));}
