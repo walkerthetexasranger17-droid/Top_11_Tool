@@ -2,7 +2,7 @@ $ErrorActionPreference = 'Stop'
 
 $root = Split-Path -Parent $MyInvocation.MyCommand.Path
 $port = 8000
-$url = "http://localhost:$port/?build=0.5.0-r2"
+$url = "http://localhost:$port/?build=0.5.2"
 
 function Write-HttpResponse {
     param(

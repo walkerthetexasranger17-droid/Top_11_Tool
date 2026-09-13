@@ -1,8 +1,10 @@
-# Top Eleven Tool v0.5.0
+# Top Eleven Tool v0.5.2
+
+> **Project recovery:** a new chat/session must read [`START_HERE.md`](START_HERE.md) before modifying code. The app now embeds a permanent build-30527 Game Research Index under `docs/research/build_30527/` and machine-readable findings under `data/build_30527/index/`.
 
 Top Eleven Tool is a mobile-first PWA companion for managing a Top Eleven squad, scanning player cards, planning training, selecting a formation, assigning set pieces and presenting tactics in a simpler form.
 
-`v0.5.0` starts the Team Plan research/rebuild phase. The proven v0.4.18 Scanner v12 pipeline is frozen and its approved HQ playstyle display images, compact scanner references and coloured-only Special Ability images remain unchanged. Formation is also intentionally unchanged. Set Pieces now preserves manual overrides while refreshing automatic recommendations; Captain remains manual because no authoritative captain-selection formula has been recovered. Tactics has completed its first evidence-led correction: exact build-30527 drain is preserved, Approach now locks Mentality without inventing weights for every other setting, opponent-dependent Marking is no longer inferred from our own XI, and current game semantics/playstyles/SAs are used only as transparent tie-break signals. Mentor logic is the next evidence-led rebuild target.
+`v0.5.2` is the current Team Plan research/rebuild build. The proven v0.4.18 Scanner v12 pipeline is frozen and its approved HQ playstyle display images, compact scanner references and coloured-only Special Ability images remain unchanged. Formation is also intentionally unchanged. Set Pieces now preserves manual overrides while refreshing automatic recommendations; Captain remains manual because no authoritative captain-selection formula has been recovered. Tactics has completed its first evidence-led correction: exact build-30527 drain is preserved, Approach now locks Mentality without inventing weights for every other setting, opponent-dependent Marking is no longer inferred from our own XI, and current game semantics/playstyles/SAs are used only as transparent tie-break signals. Mentor logic is the next evidence-led rebuild target.
 
 ## Main navigation
 
@@ -134,5 +136,5 @@ The Firebase end-to-end sign-in/sync path still needs a real browser and the act
 
 ## Project recovery / handoff
 
-Before continuing development in a new chat or environment, read `PROJECT_HANDOFF.md` at the project root. It is the canonical current-state recovery document and must be updated before future build handoffs/packages.
+Before continuing development in a new chat or environment, read `START_HERE.md`. It points to the current state, research index and exact recovery sequence. Continuity material lives under `docs/continuity/`, not in the project root.
 

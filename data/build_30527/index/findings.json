@@ -1,0 +1,248 @@
+{
+  "schema_version": 1,
+  "updated": "2026-09-13",
+  "findings": [
+    {
+      "id": "TACTICS-001",
+      "system": "tactics",
+      "status": "GAME_FACT",
+      "title": "Exact condition drain arithmetic",
+      "summary": "11 tactic dimensions are summed from Low/Medium/High option intensities using defaults 0/5/7 plus base 15, normalized by 100; classification thresholds are strict >0.40 and >0.65.",
+      "confidence": "high",
+      "sources": [
+        "source_archive/NATIVE_FORMULAS_PASS1.md",
+        "source_archive/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.1_VERIFIED.md"
+      ],
+      "unresolved": []
+    },
+    {
+      "id": "TACTICS-002",
+      "system": "tactics",
+      "status": "GAME_ASSET_FACT",
+      "title": "All 11 tactic semantic tooltips recovered",
+      "summary": "Build localisation explicitly describes passing, shooting, focus, crossing, possession transitions, mentality, marking, pressing, back line and tackling behaviour.",
+      "confidence": "high",
+      "sources": [
+        "source_archive/TACTICS_V2_TOOLTIP_EXTRACT.txt"
+      ],
+      "unresolved": []
+    },
+    {
+      "id": "TACTICS-003",
+      "system": "tactics",
+      "status": "UNRESOLVED",
+      "title": "Private best-tactic effectiveness formula",
+      "summary": "No authoritative client-side numerical score selecting the best tactic for a given XI has been recovered.",
+      "confidence": "high",
+      "sources": [
+        "source_archive/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.1_VERIFIED.md"
+      ],
+      "unresolved": [
+        "Football Engine option effectiveness weights",
+        "opponent interaction magnitudes"
+      ]
+    },
+    {
+      "id": "MENTOR-001",
+      "system": "mentors",
+      "status": "GAME/LIVE_FACT",
+      "title": "Mentor effect state reaches live matches",
+      "summary": "Mentor snapshots are carried in JoinMatchResponse and MatchPeriod; in-match assign/unassign returns full updated mentor state.",
+      "confidence": "high",
+      "sources": [
+        "source_archive/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.1_VERIFIED.md"
+      ],
+      "unresolved": []
+    },
+    {
+      "id": "MENTOR-002",
+      "system": "mentors",
+      "status": "LIVE_FACT",
+      "title": "Seven mentor raw effect arrays captured",
+      "summary": "Current and next effect arrays are preserved for saboteur, wing_commander, analyst, architect, deadball_specialist, iron_guard and enforcer.",
+      "confidence": "high",
+      "sources": [
+        "data/build_30527/index/mentor_effects.json"
+      ],
+      "unresolved": []
+    },
+    {
+      "id": "MENTOR-003",
+      "system": "mentors",
+      "status": "GAME_ASSET_FACT",
+      "title": "Mentor boost units and meanings decoded",
+      "summary": "Localisation proves tactic boosts are percentage effectiveness values, attribute boosts are +attribute points to all players, and signature array positions have named gameplay semantics.",
+      "confidence": "high",
+      "sources": [
+        "source_archive/MENTOR_LOCALIZATION_EXTRACT.txt",
+        "data/build_30527/index/mentor_effects.json"
+      ],
+      "unresolved": []
+    },
+    {
+      "id": "MENTOR-004",
+      "system": "mentors",
+      "status": "UNRESOLVED",
+      "title": "Exact Football Engine consumer",
+      "summary": "The state/domain flow is proven, but the exact Football Engine numerical fields that consume Mentor CurrentEffects remain unresolved.",
+      "confidence": "high",
+      "sources": [
+        "source_archive/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.1_VERIFIED.md"
+      ],
+      "unresolved": [
+        "CurrentEffects[] -> Football Engine variable/function"
+      ]
+    },
+    {
+      "id": "SETPIECE-001",
+      "system": "set_pieces",
+      "status": "GAME_FACT",
+      "title": "Explicit stored set-piece duties",
+      "summary": "Captain, left/right corners, left/right free kicks, penalty kicker and ordered penalty takers are explicit current-client assignments.",
+      "confidence": "high",
+      "sources": [
+        "source_archive/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.1_VERIFIED.md"
+      ],
+      "unresolved": []
+    },
+    {
+      "id": "SETPIECE-002",
+      "system": "set_pieces",
+      "status": "UNRESOLVED",
+      "title": "Automatic captain ranking",
+      "summary": "No authoritative automatic captain-selection formula has been recovered. Companion keeps captain manual.",
+      "confidence": "high",
+      "sources": [
+        "source_archive/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.1_VERIFIED.md"
+      ],
+      "unresolved": []
+    },
+    {
+      "id": "PLAYER-001",
+      "system": "players",
+      "status": "GAME_FACT",
+      "title": "Current 12-role model and pitch rectangles",
+      "summary": "Current playable roles are GK, DL, DC, DR, DMC, ML, MC, MR, AML, AMC, AMR, ST with recovered 0\u20131000 pitch rectangles; DML/DMR are legacy/internal.",
+      "confidence": "high",
+      "sources": [
+        "source_archive/BUILD_30527_IMPLEMENTATION_LEDGER.md"
+      ],
+      "unresolved": []
+    },
+    {
+      "id": "PLAYER-002",
+      "system": "players",
+      "status": "GAME_FACT",
+      "title": "Role key/white attributes",
+      "summary": "The client has role->key-attribute data; multi-role players use the union of natural-role key attributes.",
+      "confidence": "high",
+      "sources": [
+        "source_archive/BUILD_30527_IMPLEMENTATION_LEDGER.md",
+        "source_archive/NATIVE_FORMULAS_PASS1.md"
+      ],
+      "unresolved": []
+    },
+    {
+      "id": "PLAYSTYLE-001",
+      "system": "playstyles",
+      "status": "GAME/LIVE_FACT",
+      "title": "Current playstyle schema and eligibility source",
+      "summary": "Current playstyle IDs/levels are known; role eligibility is server-provided PlaystyleDefinition data. Ball Playing GK is not currently offered.",
+      "confidence": "high",
+      "sources": [
+        "source_archive/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.1_VERIFIED.md"
+      ],
+      "unresolved": []
+    },
+    {
+      "id": "SA-001",
+      "system": "special_abilities",
+      "status": "GAME_FACT",
+      "title": "Current special ability enum is 1..19",
+      "summary": "Current build includes Long Shots, Set Piece Taker, Versatile Attacker, Intercepting Specialist, Set Piece Stopper, Blocker, Rebound Specialist, Cross Expert and Counter Attack Stopper; Shadow Striker is absent.",
+      "confidence": "high",
+      "sources": [
+        "source_archive/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.1_VERIFIED.md"
+      ],
+      "unresolved": []
+    },
+    {
+      "id": "SA-002",
+      "system": "special_abilities",
+      "status": "SERVER_RUNTIME",
+      "title": "Training eligibility is player-specific",
+      "summary": "Client requests GetAvailableTrainingAbilitiesResponse for a specific player; no universal role->ability training matrix should be invented.",
+      "confidence": "high",
+      "sources": [
+        "source_archive/BUILD_30527_IMPLEMENTATION_LEDGER.md"
+      ],
+      "unresolved": []
+    },
+    {
+      "id": "TRAIN-001",
+      "system": "training",
+      "status": "GAME_FACT",
+      "title": "Deterministic local skill-point distributor exists",
+      "summary": "Recovered 3-way group split, deterministic 48-bit LCG, state-dependent per-attribute selection, caps and ceil conversion.",
+      "confidence": "high",
+      "sources": [
+        "source_archive/NATIVE_FORMULAS_PASS1.md",
+        "source_archive/NATIVE_FORMULAS_PASS2.md"
+      ],
+      "unresolved": []
+    },
+    {
+      "id": "TRAIN-002",
+      "system": "training",
+      "status": "GAME/LIVE_BOUNDARY",
+      "title": "Normal ExecuteTraining final AttributeGain is server-returned",
+      "summary": "Current normal training response carries per-player final AttributeGain arrays; local distributor existence must not be overstated as the normal-session authority.",
+      "confidence": "high",
+      "sources": [
+        "source_archive/NATIVE_FORMULAS_PASS5.md",
+        "source_archive/NATIVE_FORMULAS_PASS6.md"
+      ],
+      "unresolved": []
+    },
+    {
+      "id": "BUILD-001",
+      "system": "build",
+      "status": "GAME_FACT",
+      "title": "Exact Windows binary identity",
+      "summary": "TopEleven_Full(4).zip package v27.3.0.0 has GameAssembly/global-metadata hashes identical to the previously inspected build-30527 Windows binaries.",
+      "confidence": "high",
+      "sources": [
+        "data/build_30527/index/source_manifest.json"
+      ],
+      "unresolved": []
+    },
+    {
+      "id": "MENTOR-005",
+      "system": "mentors",
+      "status": "GAME_ASSET_FACT",
+      "title": "Analyst display name is Jonas Braun",
+      "summary": "Exact build localisation uses mentorName_jonasBraun / Jonas Braun. The companion previously displayed Jonas Brown; v0.5.2 corrects only the display name and leaves the internal analyst ID/effects unchanged.",
+      "confidence": "high",
+      "sources": [
+        "source_archive/MENTOR_LOCALIZATION_EXTRACT.txt"
+      ],
+      "unresolved": []
+    },
+    {
+      "id": "MENTOR-006",
+      "system": "mentors",
+      "status": "APP_DEFECT",
+      "title": "Current level override does not change effect state",
+      "summary": "mentor-engine effectiveMentor() changes only mentor.level; rawEffects() continues returning the captured arrays and attributeCoverage() counts the Attribute family regardless of level/availability. This can score effects that are not proven active at the overridden level.",
+      "confidence": "high",
+      "sources": [
+        "js/mentor-engine.js",
+        "js/bible-data.js"
+      ],
+      "unresolved": [
+        "correct per-level effect-family availability source",
+        "uncaptured intermediate magnitudes"
+      ]
+    }
+  ]
+}

@@ -1,37 +1,21 @@
-# Documentation index
+# Documentation
 
-This folder separates current operational documentation from historical development evidence.
+## Start / continuity
+- [`../START_HERE.md`](../START_HERE.md) — mandatory first file for a recovered/new chat.
+- [`continuity/CURRENT_STATE.md`](continuity/CURRENT_STATE.md) — current project checkpoint and next work.
+- [`continuity/NEW_CHAT_RECOVERY.md`](continuity/NEW_CHAT_RECOVERY.md) — exact fresh-chat instructions.
+- `continuity/archive/` — historical handoffs, not current instructions.
 
-## Setup
-
-- [`setup/FIREBASE.md`](setup/FIREBASE.md) — Firebase Authentication, Firestore and hosting setup.
-- [`setup/SCANNER.md`](setup/SCANNER.md) — Gemini scanner configuration and pipeline summary.
-
-## Current verification
-
-- [`verification/TEST_MATRIX.md`](verification/TEST_MATRIX.md) — automated and manual release checks.
-- [`verification/BIBLE_COMPLIANCE.md`](verification/BIBLE_COMPLIANCE.md) — current Build-30527 contract status.
-
-## Reference
-
-- [`reference/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.md`](reference/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.md) — canonical Build-30527 implementation contract/evidence boundary. Historical v5.2.x references inside this document are intentional because they describe the inspected baseline and migration history.
-
-## Development
-
-- [`development/APK_LOGIC_NOTES.md`](development/APK_LOGIC_NOTES.md) — retained APK/static-analysis notes.
+## Game research
+- [`research/build_30527/INDEX.md`](research/build_30527/INDEX.md) — human game-knowledge index.
+- [`research/build_30527/UNRESOLVED.md`](research/build_30527/UNRESOLVED.md) — hard boundary: do not guess these.
+- `research/build_30527/systems/` — subsystem findings.
+- `research/build_30527/source_archive/` — preserved native/audit/localisation evidence.
+- `../data/build_30527/index/` — machine-readable finding/protocol/native/mentor indexes.
 
 ## Releases
+`releases/` contains build notes. Current version is v0.5.2.
 
-- [`releases/v0.4.18.md`](releases/v0.4.18.md) — native-resolution playstyle badge evidence for Scanner v12.
-- [`releases/v0.4.16.md`](releases/v0.4.16.md) — isolated-badge level-ring scanner + defender lookalike confirmation.
-
-- [`releases/v0.4.13.md`](releases/v0.4.13.md) — exact playstyle-state + coloured-only Special Ability scanner references.
-
-- [`releases/v0.4.12.md`](releases/v0.4.12.md) — focused post-testing feature patch.
-
-- [`releases/v0.4.11.md`](releases/v0.4.11.md) — GitHub-testing cleanup release.
-- [`releases/v0.4.10.md`](releases/v0.4.10.md) — free-only account/security release report.
-
-## Archive
-
-`archive/legacy-v5/` contains older provenance/audit records from the previous v5.x numbering line. They are kept as evidence, not as current product instructions.
+## Setup / verification
+- `setup/`
+- `verification/`

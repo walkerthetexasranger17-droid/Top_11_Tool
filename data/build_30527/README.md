@@ -14,3 +14,7 @@ Files:
 - `PROVENANCE.md` — where each rule/value came from and what is not claimed.
 
 Do not treat captured user levels/stock as permanent game constants. The fixed drill catalogue and role map are game data; level/unlock/stock are user state.
+
+## Permanent research index
+
+`index/` contains the machine-readable build-30527 knowledge base used by future logic work. Start with `../../START_HERE.md` and `../../docs/research/build_30527/INDEX.md` for human context.
