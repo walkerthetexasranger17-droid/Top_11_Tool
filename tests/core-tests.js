@@ -120,6 +120,15 @@ function inside(role,x,y){const r=B.ROLE_RECTS[role];return x>=r.minX&&x<r.maxX&
   const chk=TAC.drainChecksums();eq(chk.all,{Low:963,Medium:77823,High:18414},'full drain class checksum exact');ok(chk.total===97200,'full tactic grid contains 97,200 combinations');
   const perMentality={hardDefending:{Low:36,Medium:14388,High:5016},defending:{Low:111,Medium:15606,High:3723},normal:{Low:669,Medium:17835,High:936},attacking:{Low:111,Medium:15606,High:3723},hardAttacking:{Low:36,Medium:14388,High:5016}};
   for(const m of B.TACTICS.mentality){let n=0;TAC.enumerate(()=>n++,m.key);ok(n===19440,`${m.label}: fixed mentality search space is exactly 19,440`);eq(chk.perMentality[m.key],perMentality[m.key],`${m.label}: drain-class checksum exact`);}
+  // v0.5.0 tactics evidence pass: exact drain stays untouched; recommendation heuristics stop pretending Approach is a hidden weight on every setting.
+  const tacticStarters=[['GK',500],['DL',100],['DC',400],['DC',600],['DR',900],['ML',100],['MC',400],['MC',600],['MR',900],['ST',400],['ST',600]].map(([role,y],i)=>({assignedRole:role,x:500,y,player:player(`t${i}`,`T${i}`,[role])}));
+  const balancedFits=TAC.optionFits(tacticStarters,'balanced'),attackingFits=TAC.optionFits(tacticStarters,'attacking');
+  ok(!('approachFit' in balancedFits.fits.passing.short)&&balancedFits.fits.passing.short.optionFit===balancedFits.fits.passing.short.squadFit,'Approach no longer injects invented style weights into non-mentality tactics');
+  near(balancedFits.fits.passing.short.optionFit,attackingFits.fits.passing.short.optionFit,1e-12,'same XI has same non-mentality squad fit across approaches');
+  near(balancedFits.raw.marking.man,balancedFits.raw.marking.zonal,1e-12,'own XI does not fabricate opponent-dependent marking preference');
+  const symmetricPlan=TAC.recommend(tacticStarters,{approach:'balanced',drainLimit:'Medium'});ok(symmetricPlan.values.focus==='balanced','equal lane strength uses neutral Balanced focus instead of arbitrary enum-first flank');
+  const fastPlan=TAC.recommend(tacticStarters,{approach:'balanced',drainLimit:'High',opponentAttack:'fast'}),longPlan=TAC.recommend(tacticStarters,{approach:'balanced',drainLimit:'High',opponentAttack:'longDistance'});ok(fastPlan.values.marking==='man'&&longPlan.values.marking==='zonal','current shipped marking guidance can be applied when explicit opponent attack context exists');
+  ok(TAC.MODEL_VERSION==='30527-drain-fit-v2'&&/No claimed private match-engine weights/.test(symmetricPlan.evidencePolicy),'tactics v2 labels heuristic boundary explicitly');
 
   // ---------------------------------------------------------------------------
   // Team Plan dependency: formation -> tactics -> mentor; approach/drain never reshuffle XI.
@@ -168,6 +177,11 @@ function inside(role,x,y){const r=B.ROLE_RECTS[role];return x>=r.minX&&x<r.maxX&
   // Specialists remain transparent companion-only logic.
   // ---------------------------------------------------------------------------
   const specA=player('pa','Penalty',['ST'],{Finishing:120,Shooting:120,Creativity:90});specA.specialAbilities=['Penalty Kick Specialist'];const specB=player('pb','Raw Skill',['ST'],{Finishing:200,Shooting:200,Creativity:200});const rr=R.rankPlaymakers([specA,specB]);ok(rr.penalties[0].player.key==='pa','penalty specialist flag is first explicit lexicographic criterion');ok(rr.captain===null&&/No authoritative captain formula/.test(rr.captainNote),'no invented hidden captain formula');
+  const autoSp=R.normaliseSetPieceState(null,[specA,specB]);ok(autoSp.version===4&&autoSp.sources.penalty1==='auto','v0.5.0 set-piece state records recommendation provenance');ok(autoSp.assignments.penalty1==='pa','fresh automatic penalty recommendation uses current ranking');ok(autoSp.assignments.captain===''&&autoSp.sources.captain==='manual','captain remains deliberately manual/unresolved');
+  const manualSp=R.setManualSetPiece(autoSp,'penalty1','pb',[specA,specB]);const preservedManual=R.normaliseSetPieceState(manualSp,[specA,specB]);ok(preservedManual.assignments.penalty1==='pb'&&preservedManual.sources.penalty1==='manual','manual set-piece override survives recommendation recalculation');
+  const refreshedSp=R.refreshSetPieceRecommendations(manualSp,[specA,specB]);ok(refreshedSp.assignments.penalty1==='pa'&&refreshedSp.sources.penalty1==='auto','explicit refresh replaces manual/legacy non-captain slots with current recommendations');
+  const migratedSp=R.normaliseSetPieceState({penalty1:'pb',freeRight:'pb'},[specA,specB]);ok(migratedSp.assignments.penalty1==='pb'&&migratedSp.sources.penalty1==='legacy','v3 set-piece values migrate non-destructively with unknown/legacy provenance');
+  const staleAuto={version:4,assignments:{...autoSp.assignments,penalty1:'pb'},sources:{...autoSp.sources,penalty1:'auto'}};const repairedAuto=R.normaliseSetPieceState(staleAuto,[specA,specB]);ok(repairedAuto.assignments.penalty1==='pa','automatic set-piece slot is recalculated instead of going stale');
 
   // ---------------------------------------------------------------------------
   // v5.2.7 provenance-audit regressions: direct build-30527 native corrections.

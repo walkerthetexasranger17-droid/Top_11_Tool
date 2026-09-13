@@ -1,8 +1,8 @@
-# Top Eleven Tool v0.4.18
+# Top Eleven Tool v0.5.0
 
 Top Eleven Tool is a mobile-first PWA companion for managing a Top Eleven squad, scanning player cards, planning training, selecting a formation, assigning set pieces and presenting tactics in a simpler form.
 
-`v0.4.18` keeps every approved HQ playstyle display image, compact scanner reference and coloured-only Special Ability image unchanged. Scanner v12 removes destructive whole-frame resizing completely. A real 2688×1216 upload now stays 2688×1216 for the entire scan: name, OVR, age, roles, all skills, playstyle and Special Abilities are cropped directly from the original pixels. The native 2688×1216 Top Eleven layout is the scanner baseline. Matching-layout screenshots at other resolutions are handled by proportional ROI scaling; the source image itself is never resized. Playstyle level detection continues to use the compact-renderer references, context-matched pixel guard and Ready-arrow mask. The max-XP Ready arrow remains masked from the level comparison. Core training/tactics engines remain unchanged.
+`v0.5.0` starts the Team Plan research/rebuild phase. The proven v0.4.18 Scanner v12 pipeline is frozen and its approved HQ playstyle display images, compact scanner references and coloured-only Special Ability images remain unchanged. Formation is also intentionally unchanged. Set Pieces now preserves manual overrides while refreshing automatic recommendations; Captain remains manual because no authoritative captain-selection formula has been recovered. Tactics has completed its first evidence-led correction: exact build-30527 drain is preserved, Approach now locks Mentality without inventing weights for every other setting, opponent-dependent Marking is no longer inferred from our own XI, and current game semantics/playstyles/SAs are used only as transparent tie-break signals. Mentor logic is the next evidence-led rebuild target.
 
 ## Main navigation
 
@@ -34,7 +34,7 @@ See [`docs/setup/FIREBASE.md`](docs/setup/FIREBASE.md) for project setup and Git
 
 ## Scanner
 
-The scanner uses Gemini 3.1 Flash Live with HIGH thinking and separate passes for core data, playstyle identity, exact level-ring counting, visual overlays and Special Abilities. The app automatically isolates the playstyle badge before the level pass, maps the right/bottom/left ring pattern `000 / 100 / 110 / 111` to Standard / Intermediate / Advanced / Master, and keeps Ready/Boosted/Wrong Position out of that decision. Native phone screenshots are normalised internally and goalkeeper layouts use their own attribute schema.
+The scanner uses Gemini 3.1 Flash Live with HIGH thinking and separate passes for core data, playstyle identity, exact level-ring counting, visual overlays and Special Abilities. The app automatically isolates the playstyle badge before the level pass, maps the right/bottom/left ring pattern `000 / 100 / 110 / 111` to Standard / Intermediate / Advanced / Master, and keeps Ready/Boosted/Wrong Position out of that decision. The original screenshot stays at native resolution throughout scanning; ROI coordinates scale proportionally for matching layouts at other resolutions, and goalkeeper layouts use their own attribute schema.
 
 See [`docs/setup/SCANNER.md`](docs/setup/SCANNER.md).
 
@@ -131,3 +131,8 @@ The Firebase end-to-end sign-in/sync path still needs a real browser and the act
 - Ready / Boosted / Wrong Position moved to a separate overlay-only pass.
 - Added a direct Ball Playing DC versus No-Nonsense DC confirmation pass.
 - The 260 playstyle PNGs and 19 coloured Special Ability PNGs are byte-for-byte unchanged from v0.4.13.
+
+## Project recovery / handoff
+
+Before continuing development in a new chat or environment, read `PROJECT_HANDOFF.md` at the project root. It is the canonical current-state recovery document and must be updated before future build handoffs/packages.
+
