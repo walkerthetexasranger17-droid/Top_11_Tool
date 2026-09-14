@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "updated": "2026-09-14",
+  "status": "PARKED",
+  "active_research_target": "role/action attribute importance",
+  "player_profile_redesign": {
+    "priority": "future",
+    "rule": "Use only information visible in the single scanned screenshot plus deterministic derivations from verified game data.",
+    "responsive": {
+      "mobile": true,
+      "desktop_web": true,
+      "preserve_existing_global_navigation": true,
+      "do_not_add_left_sidebar_from_concept_art": true
+    },
+    "planned_elements": [
+      "collectible-style player card",
+      "single-screenshot portrait crop/extraction experiment",
+      "displayed OVR",
+      "base OVR plus Tier OVR contribution where deterministically derivable",
+      "natural roles",
+      "Tier with genuine game asset",
+      "Playstyle and level",
+      "Special Abilities",
+      "all visible attributes",
+      "white/key attributes from verified role data",
+      "future evidence-backed primary-vs-supporting skill grouping"
+    ],
+    "forbidden_unless_visible_in_same_screenshot": [
+      "height",
+      "weight",
+      "condition",
+      "morale",
+      "form",
+      "career stats",
+      "market value",
+      "contract expiry",
+      "languages",
+      "AI-generated biography or notes"
+    ],
+    "portrait": {
+      "production_dependency": false,
+      "scanner_failure_must_not_depend_on_portrait": true,
+      "fallbacks": [
+        "Gemini portrait extraction from same screenshot",
+        "fixed screenshot crop/mask",
+        "neutral silhouette"
+      ]
+    },
+    "references": [
+      "docs/design/reference/current_web_profile_reference_2026-09-14.png",
+      "docs/design/reference/player_profile_web_concept_v1.png",
+      "docs/design/reference/player_profile_mobile_concept_v1.png",
+      "docs/design/PLAYER_PROFILE_TODO.md"
+    ],
+    "concept_asset_warning": "Generated reference images contain placeholder/invented logos, icons, faces and labels. Replace with genuine app/game assets and verified data only.",
+    "tier_assets": {
+      "source_archive": "docs/research/build_30527/source_archive/tier_assets/TopEleven_Tier_Assets_Source.rar",
+      "preserve_original_archive": true,
+      "use_genuine_game_assets_when_implemented": true,
+      "supporting_evidence_folder": "docs/research/build_30527/evidence/tier_ovr_formula_2026-09-14/"
+    }
+  }
+}

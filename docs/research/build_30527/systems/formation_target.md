@@ -41,3 +41,26 @@ The app should eventually distinguish **Best Formation Now** from **Target Forma
 Does build 30527 contain a recoverable per-role hierarchy or weighting among the already-known key/white attributes?
 
 See `../V054_ROLE_PRIORITY_CHECKPOINT.md` for the controlled ST evidence and research boundary.
+
+
+## v0.5.5 current ST Balance re-test — interpretation correction
+
+Current screenshots show Gosling Lataille at OVR 157 / Stellar (+50 to all key attributes) and François Roelandt at OVR 103 / Rare (+10). Lataille is now stronger across every ST key attribute except Finishing, which is tied at 201. The user reports that swapping either player into the same striker slot leaves the displayed Lineup Balance at **9.9**.
+
+Therefore the historical Roelandt Balance improvement must not be treated as proof that Shooting/Finishing receive extra Lineup Balance weight. A more compatible explanation with the game's wording is that Balance measures whole-XI capability matching and/or lineup compatibility.
+
+The current test is UI-rounded, unlike the historical exact server float, so a hidden sub-decimal difference remains possible.
+
+**Formation rule:** use Lineup Balance as formation/compatibility evidence, not as a standalone role-skill weighting oracle. Seek role/action attribute priorities independently. See `../V055_CURRENT_ST_BALANCE_RETEST.md`.
+
+## Tier-normalised player-profile note
+
+Current UI evidence proves that Tier adds a fixed permanent value to every player-wide key attribute and that the resulting OVR increase depends on key-attribute count. For outfield players the underlying Tier OVR contribution is `tier bonus × key-count / 15`.
+
+This creates two useful views for future recruitment/training research:
+
+- **match-facing profile:** current displayed/post-Tier attributes;
+- **training/base-profile research view:** reconstruct pre-Tier values by subtracting the Tier bonus from each player-wide key attribute.
+
+Do not remove Tier from actual player selection unless later match-engine evidence says Tier is excluded. See `tier_ovr.md`.
+

@@ -1,10 +1,10 @@
-# Top Eleven Tool v0.5.4
+# Top Eleven Tool v0.5.6
 
 > **Project recovery:** a new chat/session must read [`START_HERE.md`](START_HERE.md) before modifying code. The app now embeds a permanent build-30527 Game Research Index under `docs/research/build_30527/` and machine-readable findings under `data/build_30527/index/`.
 
 Top Eleven Tool is a mobile-first PWA companion for managing a Top Eleven squad, scanning player cards, planning training, selecting a formation, assigning set pieces and presenting tactics in a simpler form.
 
-`v0.5.4` is a research checkpoint that preserves all v0.5.3 runtime behaviour while adding permanent Target Formation / role-attribute-priority evidence. A controlled natural-ST substitution showed that lower-OVR François Roelandt produced higher Lineup Balance than Gosling Lataille despite a slightly lower equal-weight average across all nine ST white skills. This makes unequal role-specific white-skill importance a formal research hypothesis; no production weights or illustrative training targets are hard-coded.
+`v0.5.6` is a research correction checkpoint. It preserves runtime behaviour while embedding the current Lataille/Roelandt screenshots and recording that both now display 9.9 Lineup Balance despite Lataille being much stronger across the ST key-skill profile. The earlier Balance delta remains historical evidence but is no longer used to support per-role skill weighting; role/action priorities must be proven independently.
 
 ## Main navigation
 
@@ -138,3 +138,7 @@ The Firebase end-to-end sign-in/sync path still needs a real browser and the act
 
 Before continuing development in a new chat or environment, read `START_HERE.md`. It points to the current state, research index and exact recovery sequence. Continuity material lives under `docs/continuity/`, not in the project root.
 
+
+## v0.5.6 checkpoint note
+
+Player Profile concept work is parked under `docs/design/PLAYER_PROFILE_TODO.md`; it is not a production redesign in this build. Active research remains evidence-backed role/action attribute importance for Target Formation, recruitment and Training.

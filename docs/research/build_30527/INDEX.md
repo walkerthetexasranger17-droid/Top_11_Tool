@@ -1,6 +1,6 @@
 # Top Eleven Build 30527 — Game Research Index
 
-**Index version:** 2  
+**Index version:** 4  
 **Last updated:** 14 September 2026  
 **Purpose:** permanent, embedded reference for future Top Eleven Tool logic work.
 
@@ -27,6 +27,7 @@ See `data/build_30527/index/source_manifest.json`.
 ## System pages
 
 - [Target Formation / role priority](systems/formation_target.md)
+- [Tier / OVR](systems/tier_ovr.md)
 - [Tactics](systems/tactics.md)
 - [Mentors](systems/mentors.md)
 - [Set Pieces](systems/set_pieces.md)
@@ -38,16 +39,17 @@ See `data/build_30527/index/source_manifest.json`.
 ## Machine-readable indexes
 
 - `data/build_30527/index/findings.json` — searchable finding register.
-- `data/build_30527/index/role_attribute_priority_hypotheses.json` — controlled ST evidence and unresolved per-role priority hypothesis.
+- `data/build_30527/index/role_attribute_priority_hypotheses.json` — historical ST evidence, current re-test correction and unresolved per-role priority hypothesis.
 - `data/build_30527/index/mentor_effects.json` — Mentor IDs, live arrays, decoded semantics and protocol.
 - `data/build_30527/index/tactics_semantics.json` — exact drain and shipped tactic tooltips.
 - `data/build_30527/index/native_methods.json` — high-value recovered native symbols/addresses.
 - `data/build_30527/index/protocol_fields.json` — high-value protocol fields.
 - `data/build_30527/index/source_manifest.json` — build/source hashes.
+- `data/build_30527/index/ui_todo.json` — parked responsive Player Profile design constraints and references.
 
 ## Current highest-value checkpoint
 
-The v0.5.4 checkpoint adds a high-value Formation/Training hypothesis: a controlled natural-ST substitution improved Lineup Balance despite the replacement having both lower OVR and a slightly lower equal-weight average across all nine ST white skills. This rules out simplistic OVR/equal-white explanations for that observation and makes **unequal role-specific white-skill priority** the next targeted research question. Shooting/Finishing are an ST hypothesis only; no weights or target values are approved. See `V054_ROLE_PRIORITY_CHECKPOINT.md`.
+The v0.5.6 checkpoint preserves the v0.5.5 ST Balance correction and the Tier/OVR formula, parks responsive collectible-style Player Profile work under `docs/design/`, and returns the active research target to **native/action attribute consumers**. Do not use Lineup Balance as a weighting oracle and do not infer primary skills from concept art. See `V056_CHECKPOINT.md`, `V055_CURRENT_ST_BALANCE_RETEST.md`, and `systems/tier_ovr.md`.
 
 ## Research rule
 

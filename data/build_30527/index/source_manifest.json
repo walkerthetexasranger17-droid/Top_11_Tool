@@ -71,5 +71,17 @@
       "sha256": "281e1db88ea5b2d8d1bdef31f6c17f0121c56ac24e6d32b2b1a5ba758a11ce2d",
       "role": "preserved research evidence / distilled source"
     }
+  ],
+  "evidence_sources": [
+    {
+      "path": "docs/research/build_30527/evidence/current_striker_balance_2026-09-14/Gosling_Lataille_ST_current.png",
+      "sha256": "86f4aead4513011489a5d03fe0a1cd53cd1bfb11fa83455fb803162942cb84df",
+      "role": "current user-supplied UI evidence for v0.5.5 ST Balance re-test"
+    },
+    {
+      "path": "docs/research/build_30527/evidence/current_striker_balance_2026-09-14/Francois_Roelandt_ST_current.png",
+      "sha256": "053a396fa44e84d389e887982c92da815bb673986deb090ea1f7f4c9c70b54a5",
+      "role": "current user-supplied UI evidence for v0.5.5 ST Balance re-test"
+    }
   ]
 }

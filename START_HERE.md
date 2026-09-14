@@ -1,6 +1,6 @@
 # START HERE — Top Eleven Tool
 
-**Current app version: v0.5.4**  
+**Current app version: v0.5.6**  
 **Game reference: Top Eleven build 30527 / Windows package 27.3.0.0**
 
 This is the single recovery entry point for a new chat/session.
@@ -33,8 +33,12 @@ Do not ask the user to re-explain the project first.
 
 ## One-line checkpoint
 
-v0.5.4 preserves all prior v0.5.3 logic and adds a permanent Target Formation / role-priority research checkpoint. A controlled natural-ST swap proves that neither OVR nor an equal average of every ST white skill explains Lineup Balance: lower-OVR François Roelandt raised Balance to 10.0 while having a slightly lower all-white mean but much stronger Shooting/Finishing. **Next target: seek authoritative per-role primary/secondary attribute hierarchy in build-30527 data; do not invent weights or numeric training targets.**
+v0.5.6 preserves all prior runtime logic, Tier/OVR and current Balance corrections, and parks the responsive collectible-style Player Profile as a documented future TODO. **Active target: seek authoritative role/action attribute priority from build-30527 native/game data; do not use Lineup Balance as a weighting oracle and do not invent skill weights or training targets.**
 
 ## Important runtime rule
 
 Historical Mentor capture levels/effect arrays are research evidence only. They must never seed the user's current Mentor ownership/level state or be reused as the magnitude for another selected level.
+
+## v0.5.6 parked UI reference
+
+Player Profile redesign is parked, not active. Read `docs/design/PLAYER_PROFILE_TODO.md` only when returning to UI work. Current active task remains build-30527 role/action attribute-priority research. Do not let generated mockups trigger an app-shell redesign or introduce data not visible in the single scan screenshot.

@@ -18,3 +18,11 @@
 - `docs/research/build_30527/source_archive/TACTICS_V2_TOOLTIP_EXTRACT.txt` — `82c509a201efd132b12dea80e23eec2d01c231c5fe238208cacba92fe875f470`
 - `docs/research/build_30527/source_archive/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.1_VERIFIED.md` — `a6ff50f339e7bf4690c63b445870253232bdfa128539bacf7c0f086557019bc8`
 - `docs/research/build_30527/source_archive/Top_Eleven_Build_30527_Verification_Audit.md` — `281e1db88ea5b2d8d1bdef31f6c17f0121c56ac24e6d32b2b1a5ba758a11ce2d`
+
+## User-supplied Tier assets preserved in v0.5.6
+- `docs/research/build_30527/source_archive/tier_assets/TopEleven_Tier_Assets_Source.rar` — `fdf1781d009718e8b04af9fbe584933547addfebc2212d51d28ca459a5d16547` — original RAR5 Tier asset archive supplied by user; preserve for future genuine Tier UI extraction.
+- `docs/research/build_30527/source_archive/tier_assets/lataille_stellar_ovr_breakdown.png` — `4ac047c11ed633b5d5534c9b85218a3689c392962994941f2c7db4cf5c325dd2`
+- `docs/research/build_30527/source_archive/tier_assets/kazachenko_rare_profile.png` — `44f81073b95196c313a3a3a067b1adec4d245e92cb61655b23396826b90b8307`
+- `docs/research/build_30527/source_archive/tier_assets/kazachenko_rare_ovr_breakdown.png` — `fc442d9d9777bff835eb6edd97339b50f9c3d712616b79a2c8a4385e120f0794`
+- `docs/research/build_30527/source_archive/tier_assets/sanchez_rare_profile.png` — `25473a7aeb0bf761b4ac9aafedec07619e52df96a01555528ab6cddcc35024a7`
+- `docs/research/build_30527/source_archive/tier_assets/sanchez_rare_ovr_breakdown.png` — `cd1484aed37ea0f1aa5d5705b4d96dc446394a23bcbfbb2e0b9979a8a906b3a6`

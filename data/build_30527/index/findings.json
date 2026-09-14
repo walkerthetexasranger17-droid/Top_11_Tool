@@ -318,11 +318,12 @@
       "system": "formation",
       "status": "LIVE_FACT",
       "title": "Lower-OVR natural ST produced higher Lineup Balance",
-      "summary": "In a controlled same-slot ST substitution, quality-44 François Roelandt raised server Lineup Balance from ~9.8298 to 10.0 versus quality-51 Gosling Lataille. Both were natural STs. Roelandt also had a slightly lower equal-weight mean across all nine ST key attributes, ruling out both OVR-only and equal-all-white-average explanations for this observation.",
+      "summary": "In a controlled same-slot ST substitution, quality-44 François Roelandt raised server Lineup Balance from ~9.8298 to 10.0 versus quality-51 Gosling Lataille. Both were natural STs. Roelandt also had a slightly lower equal-weight mean across all nine ST key attributes, ruling out both OVR-only and equal-all-white-average explanations for this observation. This remains a valid historical observation for that state, but v0.5.5 current re-testing shows it must not be interpreted as proof of ST skill weighting.",
       "confidence": "high",
       "sources": [
         "docs/research/build_30527/V054_ROLE_PRIORITY_CHECKPOINT.md",
-        "data/build_30527/index/role_attribute_priority_hypotheses.json"
+        "data/build_30527/index/role_attribute_priority_hypotheses.json",
+        "docs/research/build_30527/V055_CURRENT_ST_BALANCE_RETEST.md"
       ],
       "unresolved": [
         "Which player/profile inputs caused the Balance increase"
@@ -331,19 +332,20 @@
     {
       "id": "FORMATION-004",
       "system": "formation",
-      "status": "RESEARCH_HYPOTHESIS",
+      "status": "UNRESOLVED_HYPOTHESIS",
       "title": "White/key attributes may have unequal role importance",
-      "summary": "The controlled ST comparison is consistent with role-specific primary attributes carrying more importance than other white skills. Shooting and Finishing are the leading ST hypothesis because the lower-OVR replacement was much stronger there, but Playstyle/profile effects remain confounders and no exact weighting is proven.",
-      "confidence": "medium",
+      "summary": "Unequal role-specific white-skill importance remains plausible for match actions, but the historical ST Lineup Balance comparison is no longer accepted as direct evidence for it. Current re-testing shows a much stronger Lataille and weaker Roelandt both display 9.9 Balance in the same slot.",
+      "confidence": "low-medium",
       "sources": [
         "docs/research/build_30527/V054_ROLE_PRIORITY_CHECKPOINT.md",
-        "data/build_30527/index/role_attribute_priority_hypotheses.json"
+        "data/build_30527/index/role_attribute_priority_hypotheses.json",
+        "docs/research/build_30527/V055_CURRENT_ST_BALANCE_RETEST.md"
       ],
       "unresolved": [
         "Per-role primary/secondary hierarchy",
         "Exact weights",
-        "Whether Lineup Balance and match performance use the same hierarchy",
-        "Playstyle contribution to the captured ST result"
+        "Whether Lineup Balance uses role-skill weights at all",
+        "Native/action-consumer attribute relationships"
       ]
     },
     {
@@ -360,6 +362,49 @@
         "Per-role priority hierarchy",
         "Target ratios/values",
         "Interaction with playstyle and tactics"
+      ]
+    },
+    {
+      "id": "FORMATION-005",
+      "system": "formation",
+      "status": "LIVE_UI_FACT",
+      "title": "Current striker swap displays unchanged 9.9 Lineup Balance",
+      "summary": "In the current user lineup, swapping OVR-157 Stellar Gosling Lataille and OVR-103 Rare François Roelandt in the ST slot leaves the displayed Lineup Balance at 9.9, despite Lataille now being stronger across essentially the entire ST key-skill profile.",
+      "confidence": "high for displayed UI state",
+      "sources": [
+        "docs/research/build_30527/V055_CURRENT_ST_BALANCE_RETEST.md"
+      ],
+      "unresolved": [
+        "Whether underlying server Balance floats are exactly equal or merely round to the same 9.9 display"
+      ]
+    },
+    {
+      "id": "FORMATION-006",
+      "system": "formation",
+      "status": "RESEARCH_CORRECTION",
+      "title": "Lineup Balance is not a safe proxy for per-role skill weights",
+      "summary": "The historical Roelandt/Lataille Balance delta should be interpreted as whole-lineup/placement compatibility evidence, not proof that Shooting/Finishing carry greater ST Balance weight. Per-role skill priority must be researched independently.",
+      "confidence": "high as research boundary",
+      "sources": [
+        "docs/research/build_30527/V055_CURRENT_ST_BALANCE_RETEST.md"
+      ],
+      "unresolved": [
+        "What exact inputs Lineup Balance compares across the XI"
+      ]
+    },
+    {
+      "id": "PLAYER-003",
+      "system": "players",
+      "status": "GAME_UI_FACT",
+      "title": "Tier OVR contribution scales with player-wide key-attribute count",
+      "summary": "Tier grants a fixed bonus to every player-wide key attribute. For outfield players, underlying Tier OVR contribution is bonus × key-count / 15. UI examples confirm ST Stellar +50 across 9 keys => +30 OVR; AML Rare +10 across 8 keys => ~+5.33 underlying / +5 displayed; AMC+AMR Rare +10 across 9 union keys => +6 OVR.",
+      "confidence": "high",
+      "sources": [
+        "docs/research/build_30527/systems/tier_ovr.md"
+      ],
+      "unresolved": [
+        "Exact UI rounding implementation beyond tested examples",
+        "Whether any match-engine path uses reconstructed pre-Tier attributes rather than permanent post-Tier values"
       ]
     }
   ]

@@ -1,6 +1,6 @@
 # Top Eleven Tool — Current State
 
-**App version:** v0.5.4  
+**App version:** v0.5.6  
 **Checkpoint date:** 14 September 2026  
 **Stable scanner baseline:** v0.4.18  
 **Game reference:** build 30527 / Windows package 27.3.0.0  
@@ -10,7 +10,7 @@
 
 - Do not guess Top Eleven formulas, hidden multipliers, tactics effects, Mentor effects or server values.
 - GAME FACT / LIVE FACT / GAME ASSET FACT / STRONG EVIDENCE / COMPANION LOGIC / UNRESOLVED must remain separate.
-- Version builds numerically only (`v0.5.3`, `v0.5.4`); no r-suffixes.
+- Version builds numerically only (`v0.5.3`, `v0.5.6`); no r-suffixes.
 - Keep `START_HERE.md`, this file and the Game Research Index updated before packaging.
 - Do not restart a broad multi-system mine. Research one missing fact at a time.
 
@@ -20,7 +20,7 @@
 The v0.4.18 scanner remains frozen unless a new real screenshot proves a regression.
 
 ### Formation UI/selection
-The current Formation UI is considered good and has not been redesigned in v0.5.4. Research has, however, established that Lineup Balance is a meaningful game factor; do not confuse that with permission to invent its private formula.
+The current Formation UI is considered good and has not been redesigned in v0.5.5. Research has, however, established that Lineup Balance is a meaningful game factor; do not confuse that with permission to invent its private formula.
 
 ## Completed Team Plan work
 
@@ -66,3 +66,16 @@ Read `docs/research/build_30527/V054_ROLE_PRIORITY_CHECKPOINT.md`. Current key p
 ## External reference
 
 The full game package is `TopEleven_Full(4).zip`. It is not embedded due to size. Critical hashes are stored in `data/build_30527/index/source_manifest.json`; search the Library before asking the user to upload it again.
+
+
+## v0.5.5 evidence correction
+
+Current striker screenshots and a same-slot UI re-test invalidate the use of the old Roelandt/Lataille Balance delta as evidence for ST primary-skill weighting. Both now display 9.9 Balance despite Lataille being much stronger across the ST key-skill profile. The old exact server result remains historical state evidence only. Research must seek per-role/action attribute priorities independently of Lineup Balance.
+
+## v0.5.6 parked UI work
+
+The collectible-style Player Profile concepts are **future UI work only**. Read `docs/design/PLAYER_PROFILE_TODO.md` before touching the Player Profile. The current global app shell/navigation must be preserved and the finished layout must support both mobile and desktop/web. Future profile data is restricted to the single scanned screenshot plus deterministic derivations from verified game data.
+
+### Active next task
+
+Resume native/game-data research for **role/action attribute importance**. Do not use Lineup Balance as the weighting oracle. Seek actual action consumers/formulas/subsets for shooting, finishing, passing, dribbling, crossing/aerial play, defending and goalkeeper actions; only then feed proven priorities into training/recruitment.

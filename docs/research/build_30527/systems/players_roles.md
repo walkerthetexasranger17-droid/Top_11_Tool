@@ -41,3 +41,8 @@ The exact white/key map proves **which** attributes are key for a role; it does 
 Controlled ST evidence now rules out both OVR-only and equal-all-white-average explanations for one server Balance result. See `../V054_ROLE_PRIORITY_CHECKPOINT.md`.
 
 Working hypothesis: each role may have a smaller primary subset above the remaining white skills. For ST, Shooting/Finishing are the leading hypothesis, not a confirmed weighting. No other role hierarchy should be guessed from football intuition.
+
+
+## v0.5.5 evidence correction
+
+The historical lower-OVR ST Balance improvement is no longer treated as proof of unequal ST white-skill weighting. In the current player state, Lataille is much stronger across the full ST key-skill profile yet either striker displays 9.9 Balance. Per-role primary skill weights remain unresolved and must be sought in native/action data rather than inferred from Lineup Balance.

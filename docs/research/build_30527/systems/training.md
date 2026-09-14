@@ -41,3 +41,8 @@ If build/native/live evidence establishes primary vs secondary role attributes, 
 Values such as primary skills at 250 and others at 180 are **illustrative user examples only**. They are not game facts, targets or approved constants.
 
 See `../V054_ROLE_PRIORITY_CHECKPOINT.md` and `data/build_30527/index/role_attribute_priority_hypotheses.json`.
+
+
+## v0.5.5 training research boundary
+
+Do not use the historical Roelandt/Lataille Lineup Balance result to set training priorities. Unequal role-skill importance remains plausible, but priorities must come from direct role/action evidence. Continue to preserve every white skill and avoid hard-coded primary targets until that hierarchy is proven.
