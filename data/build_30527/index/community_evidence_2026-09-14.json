@@ -137,7 +137,7 @@
         "community claims Versatile Attacker can complement/stack with One-on-One",
         "explanations reference legacy Shadow Striker concepts"
       ],
-      "use": "historical anecdote only; stale-schema warning because Shadow Striker is absent from build 30527",
+      "use": "historical anecdote only; raw build-30527 enum says Long Shots, while v0.5.9 current-client localisation proves the live display identity is Shadow Striker",
       "evidence": "COMMUNITY_STALE_SCHEMA_WARNING"
     },
     {
@@ -151,6 +151,195 @@
       ],
       "use": "community corroboration for False Nine as flexible link/space-creation role",
       "evidence": "COMMUNITY_CORROBORATION"
+    },
+    {
+      "id": "reddit_midfield_control_2026_04_09",
+      "date": "2026-04-09",
+      "url": "https://www.reddit.com/r/topeleven/comments/1sgxhfh/thoughts_tips_tricks/",
+      "topic": "midfield_control_and_lane_focus",
+      "observations": [
+        "diamond/extra central midfield and DMC recommended to increase control and reduce counters",
+        "3-1-5-1 / 3-1-4-1-1 suggested with short passing",
+        "focus through middle or flanks according to opponent shape"
+      ],
+      "use": "supports midfield-count and opponent-lane scoring; not proof of a universal best shape",
+      "evidence": "COMMUNITY_CORROBORATION",
+      "confidence": "medium-high"
+    },
+    {
+      "id": "reddit_double_dmc_2026_02_25",
+      "date": "2026-02-25",
+      "url": "https://www.reddit.com/r/topeleven/comments/1rekkxs/most_successful_formations_tactics/",
+      "topic": "double_dmc_vs_equal_stronger",
+      "observations": [
+        "manager near 189 OVR reports repeatedly beating 200+ teams using double-DMC 3-4-2-1 and 4-2-3-1 variants",
+        "overly attacking setup described as exposed against similar/stronger teams"
+      ],
+      "use": "supports extra screening and risk reduction versus stronger/equal opponents",
+      "evidence": "COMMUNITY_CORROBORATION",
+      "confidence": "medium"
+    },
+    {
+      "id": "reddit_midfield_overrun_2026_08_19",
+      "date": "2026-08-19",
+      "url": "https://www.reddit.com/r/topeleven/comments/1vsl7ur/whats_my_tactical_mistake_here/",
+      "topic": "midfield_overrun_not_possession",
+      "observations": [
+        "4-1-1-3-1 with one MC lost 0-3 to a side with three central midfielders despite 53% possession",
+        "community diagnosis focused on midfield numerical mismatch, not possession share",
+        "Lewis Green recommended against Nemanja when a wide/crossing plan is viable"
+      ],
+      "use": "strong challenge to possession-as-objective; supports central matchup score and Lewis cross-plan synergy",
+      "evidence": "COMMUNITY_CORROBORATION",
+      "confidence": "medium-high"
+    },
+    {
+      "id": "reddit_formation_2026_09_13",
+      "date": "2026-09-13",
+      "url": "https://www.reddit.com/r/topeleven/comments/1wf6148/formation_tactics_help/",
+      "topic": "back_line_dmc_and_mentor_alignment",
+      "observations": [
+        "one-DC setup criticised",
+        "3DC and back-four families both described as viable, with DMC valued",
+        "Fabregas used for possession; Herrera for counterattack against stronger opponents"
+      ],
+      "use": "supports conditional back3/back4 choice, DMC value, and Mentor-plan alignment",
+      "evidence": "COMMUNITY_CORROBORATION",
+      "confidence": "medium-high"
+    },
+    {
+      "id": "reddit_mentor_green_2026_08_09",
+      "date": "2026-08-09",
+      "url": "https://www.reddit.com/r/topeleven/comments/1vjfz4f/new_update_at_a_glance_mentors_within_squad/",
+      "topic": "lewis_green_cross_target_man",
+      "observations": [
+        "manager reports Lewis Green + high crossing + Target Man produced a large short-run goal/assist return",
+        "thread confirms halftime Mentor switching is used tactically"
+      ],
+      "use": "current anecdotal corroboration of game-extracted crossing/aerial/Target-Man semantics; not causal proof",
+      "evidence": "COMMUNITY_CORROBORATION",
+      "confidence": "medium"
+    },
+    {
+      "id": "reddit_mentor_fabregas_braun_2026_08_11",
+      "date": "2026-08-11",
+      "url": "https://www.reddit.com/r/topeleven/comments/1vltffv/what_manager_should_i_use/",
+      "topic": "mentor_plan_and_halftime",
+      "observations": [
+        "3-1-4-1-1 with through-middle + short passing suggested with Cesc Fabregas",
+        "Braun described as particularly useful for second-half adaptation"
+      ],
+      "use": "supports plan-specific Mentor selection and halftime advisor concept",
+      "evidence": "COMMUNITY_CORROBORATION",
+      "confidence": "medium"
+    },
+    {
+      "id": "reddit_mentor_alignment_2026_08_21",
+      "date": "2026-08-21",
+      "url": "https://www.reddit.com/r/topeleven/comments/1vue6r4/chaotic_matches_this_season_anyone_had_them/",
+      "topic": "mentor_alignment_general",
+      "observations": [
+        "players explicitly warn that a Mentor whose tactic family does not match the current plan wastes a major bonus",
+        "Fabregas and Shearer both reported successful in different plans"
+      ],
+      "use": "supports Mentor alignment as a high-priority joint-plan dimension, not a universal Mentor ranking",
+      "evidence": "COMMUNITY_CORROBORATION",
+      "confidence": "medium"
+    },
+    {
+      "id": "reddit_striker_playstyle_2026_09_01",
+      "date": "2026-09-01",
+      "url": "https://www.reddit.com/r/topeleven/comments/1w4c9co/which_playstyle_potential_is_the_most_effective/",
+      "topic": "st_playstyle_system_fit",
+      "observations": [
+        "Target Man repeatedly linked to wing/crossing setups and Heading/Strength",
+        "Poacher linked to being the main scorer",
+        "False Nine linked to systems where wide attackers score and the ST creates/manipulates space"
+      ],
+      "use": "supports Playstyle-as-system-fit modifier, not a universal playstyle ranking",
+      "evidence": "COMMUNITY_CORROBORATION",
+      "confidence": "medium-high"
+    },
+    {
+      "id": "reddit_meta_2024_09_16",
+      "date": "2024-09-16",
+      "url": "https://www.reddit.com/r/topeleven/comments/1fi1ut2/",
+      "topic": "three_back_midfield_meta_legacy_recent_window",
+      "observations": [
+        "3-1-5-1 and 3-1-4-1-1 described as top meta families",
+        "DMC + wide mids/wingbacks described as necessary support for three at the back"
+      ],
+      "use": "recent-window historical context only; current 2026 back-four evidence means this must stay conditional",
+      "evidence": "COMMUNITY_CORROBORATION",
+      "confidence": "medium"
+    },
+    {
+      "id": "reddit_narrow_wide_2024_09_20",
+      "date": "2024-09-20",
+      "url": "https://www.reddit.com/r/topeleven/comments/1fjc18l/",
+      "topic": "exploit_opponent_shape",
+      "observations": [
+        "attack flanks when opponent leaves wing coverage weak",
+        "use AMC when opponent lacks DM/DMC",
+        "two DMs suggested against AML/AMR-heavy strikerless attack"
+      ],
+      "use": "supports spatial counter rules: lane exploit + role cover",
+      "evidence": "COMMUNITY_CORROBORATION",
+      "confidence": "medium"
+    },
+    {
+      "id": "reddit_formation_matchup_2026_07_04",
+      "date": "2026-07-04",
+      "url": "https://www.reddit.com/r/topeleven/comments/1undoce/what_is_the_way_to_actually_win_games/",
+      "topic": "current_meta_disagreement",
+      "observations": [
+        "one camp reports 4-1-2-3 V with False Nine success",
+        "another reports 3-1-4-1-1/3-1-5-1 defensive-central success",
+        "multiple comments emphasise playing to own-player strengths"
+      ],
+      "use": "evidence against hard-coding one global formation; supports candidate-family scoring",
+      "evidence": "COMMUNITY_CONTRADICTION",
+      "confidence": "medium"
+    },
+    {
+      "id": "reddit_current_back4_2026_08_21",
+      "date": "2026-08-21",
+      "url": "https://www.reddit.com/r/topeleven/comments/1vund7g/i_cant_beat_my_friendwhy/",
+      "topic": "post_update_back_four_claim",
+      "observations": [
+        "one manager reports 3-defender formations performing worse after update and considers returning to back four",
+        "defensive Makelele/Vidic suggested against Shearer"
+      ],
+      "use": "low-confidence current-meta challenge to old 3DC dominance; keep as conditional signal only",
+      "evidence": "COMMUNITY_CHALLENGE",
+      "confidence": "low"
+    },
+    {
+      "id": "reddit_wide_bypass_2026_04_16",
+      "date": "2026-04-16",
+      "url": "https://www.reddit.com/r/topeleven/comments/1smnknx/how_to_avoid_losses_like_this/",
+      "topic": "bypass_midfield_with_width",
+      "observations": [
+        "against a congested/strong midfield, flanks and longer passing suggested to bypass central control",
+        "4-2-3-1 wide with two DMCs cited as working structure"
+      ],
+      "use": "supports bypass logic when opponent central density is high",
+      "evidence": "COMMUNITY_CORROBORATION",
+      "confidence": "medium"
+    },
+    {
+      "id": "reddit_upset_2026_08_05",
+      "date": "2026-08-05",
+      "url": "https://www.reddit.com/r/topeleven/comments/1vgkxsd/just_won_a_very_nice_upset/",
+      "topic": "stronger_opponent_structural_cover",
+      "observations": [
+        "manager reports beating opponent about 20 OVR higher after maximising preparation and ensuring no defensive holes",
+        "MR/ML were kept back to support flanks while DCs covered the middle",
+        "attacking route was then focused through the middle using MC/ST strength"
+      ],
+      "use": "supports cover-danger-first then exploit-own-strong-lane logic against stronger opponents; single-match anecdote",
+      "evidence": "COMMUNITY_CORROBORATION",
+      "confidence": "medium"
     }
   ]
 }

@@ -1,16 +1,16 @@
 # Top Eleven Tool — Current State
 
-**App version:** v0.5.8  
+**App version:** v0.5.10  
 **Checkpoint date:** 14 September 2026  
 **Stable scanner baseline:** v0.4.18  
 **Game reference:** build 30527 / Windows package 27.3.0.0  
-**Current development area:** ST role/Playstyle evidence model + unfinished three-effect Mentor decision logic (Formation + Tactics v1 baseline remains closed)
+**Current development area:** v0.5.10 decision-engine validation and UI integration: joint Formation + Tactics + level-gated Mentor planning, squad-coverage guidance, and complete Individual Training hierarchies
 
 ## Non-negotiable rules
 
 - Do not guess Top Eleven formulas, hidden multipliers, tactics effects, Mentor effects or server values.
 - GAME FACT / LIVE FACT / GAME ASSET FACT / STRONG EVIDENCE / COMPANION LOGIC / UNRESOLVED must remain separate.
-- Version builds numerically only (`v0.5.3`, `v0.5.7`, `v0.5.8`); no r-suffixes.
+- Version builds numerically only (`v0.5.3`, `v0.5.7`, `v0.5.10`); no r-suffixes.
 - Keep `START_HERE.md`, this file and the Game Research Index updated before packaging.
 - Do not restart a broad multi-system mine. Research one missing fact at a time.
 
@@ -55,15 +55,14 @@ Read `docs/research/build_30527/V057_FORMATION_TACTICS_CHECKPOINT.md`. Current k
 5. **Assistant Feedback boundary:** `MatchPeriod` already carries selected `MatchFeedback {Minute, StringId, AssistantId}` from the server. Exact trigger thresholds/selection logic are server-owned and unresolved.
 6. **Lineup Balance remains server-private:** meaningful for structure/compatibility, but not a safe oracle for per-role white-skill weights.
 
-## Active next research
+## Active development target
 
-Build an evidence-backed **role/Playstyle attribute-priority table**, starting with ST.
+The broad static research phase is sufficiently mature for the current product goal. Build the **joint Formation + Tactics + Mentor companion decision engine** from the proven game constraints plus `community_logic_2024_2026.json`.
 
-- GAME FACT / GAME ASSET FACT determine white-skill membership, action/drill relationships and Playstyle semantics.
-- COMMUNITY evidence may support hypotheses but cannot become game truth.
-- Any actual numerical priority such as `3 / 2 / 1` is **COMPANION LOGIC** and must remain transparent.
-- Do not invent private match-engine percentages or equalise every white skill by default.
-- After ST, work systematically through AML/AMR, AMC, MC, ML/MR, DMC, DL/DR, DC and GK.
+- GAME FACT / GAME ASSET FACT define legality, role semantics, tactic semantics, condition drain and Mentor effects.
+- COMMUNITY evidence ranks plausible choices only where private effectiveness maths is unavailable.
+- Any numerical plan score is **COMPANION LOGIC** and must be transparent/testable.
+- Continue targeted research only when implementation exposes a specific low-confidence or contradictory rule.
 
 ## Parked implementation tasks
 
@@ -73,7 +72,7 @@ Build an evidence-backed **role/Playstyle attribute-priority table**, starting w
 
 ## External reference
 
-The full game package is `TopEleven_Full(4).zip`. It is not embedded due to size. Critical hashes are stored in `data/build_30527/index/source_manifest.json`; search the Library before asking the user to upload it again.
+The latest supplied full game package is `TopEleven_Full(5).zip`. It is not embedded due to size. Critical hashes are stored in `data/build_30527/index/source_manifest.json`; search the Library before asking the user to upload it again.
 
 
 ## v0.5.5 evidence correction
@@ -96,7 +95,7 @@ Read `docs/research/build_30527/V058_MENTOR_ST_COMMUNITY_CHECKPOINT.md`.
 ### Mentor correction
 - Seven-Mentor effect extraction remains valid, including exact Tactical/Attribute/Signature wording and captured arrays.
 - **Mentor recommendation is not fully finished.** `mentor-synergy-v3` uses direct Tactical match + Attribute key-skill coverage + Signature-unlocked Boolean. It does not yet reason over each Signature Move's actual activation condition/trade-off.
-- Current official Top Eleven documentation confirms Level 10 + **3 Prestige levels**, Signature Seals and halftime Mentor swapping. Exact build-30527 Prestige state/protocol representation is unresolved and must not be invented.
+- Current official Top Eleven documentation confirms Level 10 + **3 Prestige levels**, Signature Seals and halftime Mentor swapping. v0.5.9 additionally proves PrestigeProgress/PriceForNextPrestige and Signature-Seal gating in the supplied current Windows client.
 - Safe next architecture: pre-match semantic fit + halftime/live Mentor switch advisor. Do not create one fake numeric Signature score.
 
 ### ST evidence model
@@ -113,8 +112,42 @@ Read `docs/research/build_30527/V058_MENTOR_ST_COMMUNITY_CHECKPOINT.md`.
 ### Formation remains closed
 The v0.5.7 Target Formation remains `GK / DL DC DC DR / DMC MC / AML AMC AMR / ST`. Community evidence currently corroborates the value of midfield control/back-four+DMC structure but does not establish an official best formation or justify reopening the native Formation v1 baseline.
 
-### Active next
-1. Signature-aware Mentor research rules are now mapped in `data/build_30527/index/mentor_signature_rule_design.json`; next Mentor step is a tested runtime implementation, not more speculative scoring.
-2. ST Special Ability weighting remains intentionally unresolved: current client data gives the 19-name enum and server/player-specific availability, while official Help confirms role-dependent choices but not effect multipliers. Seek current effect hooks/live captures rather than stale community rankings.
-3. ST tactic context is now partially resolved at companion level: Target Man has strong cross/aerial-service context and a direct Lewis Green interaction; False Nine and Poacher remain qualitative and must not be bound to fixed tactic presets.
-4. Then repeat the evidence workflow for AML/AMR.
+### Superseded by v0.5.10
+The joint plan scorer, level-gated Mentor Signature context and role/Playstyle training hierarchy are now implemented as transparent COMPANION LOGIC.
+
+
+
+## v0.5.9 community logic checkpoint
+
+Read `docs/research/build_30527/V059_COMMUNITY_LOGIC_CHECKPOINT.md` and `data/build_30527/index/community_logic_2024_2026.json`.
+
+The 2024–26 forum + r/topeleven pass is now mature enough to support implementation. High-confidence companion principles are:
+
+- central midfield parity/control matters more than formation-name popularity;
+- DMC screening is strongly valued against AMC/central overloads, with double-DMC a situational stronger-opponent option;
+- attack the opponent's weak lane rather than choosing focus from our own XI alone;
+- keep both 3CB and back-four families because current evidence conflicts on a universal winner;
+- short vs mixed/long passing follows formation spacing and route-to-goal intent;
+- possession percentage is not the objective function;
+- Mentor value is plan-dependent (Cesc possession/short, Herrera counter, Lewis wide/cross/aerial, Braun halftime adaptation);
+- ST Playstyle is a system-fit modifier, not a global ranking.
+
+Do not hard-code current community disputes around universal 3-1-5-1 superiority, universal back-four superiority, one pressing/offside recipe, or one globally best Mentor.
+
+## v0.5.9 full Windows-client checkpoint
+
+Read `docs/research/build_30527/V059_FULL_WINDOWS_GAME_CHECKPOINT.md` first. The supplied current Windows/WSA client uses Unity 6000.3.13f1 / IL2CPP metadata v39 / BundleVersionCode 10599. It corrects the old research interpretation of `LongShots`: current localisation displays it as **Shadow Striker**. It also proves three SA slots, explicit role/player SA eligibility structures, exact SA activation and Playstyle trigger/outcome event records, Mentor Prestige + Signature Seals in shipped files, and Playstyle-specific game-authored post-match semantics. That v0.5.9 checkpoint was research-only; v0.5.10 now implements the transparent companion decision layer described below.
+
+
+## v0.5.10 decision-engine foundation
+
+- Broad static game-file mining is parked; community/game evidence has been converted into production COMPANION LOGIC.
+- New central logic contract: `data/build_30527/index/decision_logic_v1.json`.
+- `Strategy` holds the full role/Playstyle training hierarchy plus formation/tactic structural rules.
+- `SquadCoverage` reports current natural-role coverage separately from the best XI and suggests multi-role recruitment profiles.
+- Formation strategic ranking now combines current XI quality with structural matchup instead of role-mean alone.
+- Tactics `Auto — Best Fit` can compare all five mentalities while retaining exact recovered drain arithmetic.
+- Mentor Tactical/Attribute/Signature families unlock at Levels 1/5/10; locked families contribute exactly zero. Signature context is now scored explicitly.
+- Individual Training is role -> Playstyle -> tactic context -> deficiency -> drill efficiency; grey skills still have zero utility.
+- `TeamPlan.buildOptimalPlan()` scores complete Formation + Tactics + Mentor packages and carries squad-coverage guidance.
+- Joint weights are transparent companion values: 45% Formation / 40% Tactics / 15% Mentor. Do not present them as Nordeus coefficients.

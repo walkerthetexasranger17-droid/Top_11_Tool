@@ -157,12 +157,14 @@
     {
       "id": "SA-001",
       "system": "special_abilities",
-      "status": "GAME_FACT",
+      "status": "SUPERSEDED_BY_CURRENT_CLIENT",
       "title": "Current special ability enum is 1..19",
-      "summary": "Current build includes Long Shots, Set Piece Taker, Versatile Attacker, Intercepting Specialist, Set Piece Stopper, Blocker, Rebound Specialist, Cross Expert and Counter Attack Stopper; Shadow Striker is absent.",
+      "summary": "Older build-30527 interpretation treated raw Long Shots as distinct and concluded Shadow Striker absent. Current Windows/WSA client proves raw LongShots is localized/displayed as Shadow striker. See v0.5.9 current-client evidence.",
       "confidence": "high",
       "sources": [
-        "source_archive/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.1_VERIFIED.md"
+        "source_archive/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.1_VERIFIED.md",
+        "data/current_windows_client_2026-09-14/special_ability_current_client.json",
+        "docs/research/build_30527/V059_FULL_WINDOWS_GAME_CHECKPOINT.md"
       ],
       "unresolved": []
     },
@@ -509,14 +511,16 @@
     {
       "id": "MENTOR-011",
       "system": "mentors",
-      "status": "GAME_FACT_OFFICIAL_CURRENT",
+      "status": "GAME_STATIC_CLIENT+OFFICIAL_CURRENT",
       "title": "Mentors have three Prestige levels after Level 10",
-      "summary": "Current official Top Eleven Help Center states Mentor progression continues after Level 10 through 3 Prestige levels using XP and a Signature Seal for each stage, further upgrading Signature Move; official 2027 documentation also confirms halftime Mentor swapping.",
+      "summary": "Current client and official Help both prove Mentor progression continues after Level 10 through 3 Prestige levels; client state exposes PriceForNextPrestige/PrestigeProgress and resource strings identify Signature Seals as the Prestige gating currency used to upgrade Signature Move.",
       "confidence": "high for current official product rules",
       "sources": [
         "https://nordeus.helpshift.com/hc/en/3-top-eleven-be-a-soccer-manager/faq/1805-leveling-up-mentors/?l=en",
         "https://nordeus.helpshift.com/hc/en/3-top-eleven-be-a-soccer-manager/faq/1803-top-eleven-2027-is-here/",
-        "data/build_30527/index/mentor_effects.json"
+        "data/build_30527/index/mentor_effects.json",
+        "data/current_windows_client_2026-09-14/mentor_full_client_evidence.json",
+        "docs/research/build_30527/V059_FULL_WINDOWS_GAME_CHECKPOINT.md"
       ],
       "unresolved": [
         "Exact build-30527 Prestige/Signature-Seal protocol/static fields"
@@ -560,13 +564,15 @@
       "system": "special_abilities",
       "status": "RESEARCH_BOUNDARY",
       "title": "Current ST Special Ability weighting cannot be safely recovered from static/community evidence",
-      "summary": "Build 30527 exposes 19 current SA names and server/player-specific trainable availability. Current official Help confirms ability choices depend on player role, but no current comparable effect multipliers or ST ranking were recovered. Community recommendations conflict and often reuse stale Shadow Striker-era assumptions, so no ST SA weight is added.",
+      "summary": "Current client explicitly represents role/player SA eligibility and exact live-match SA activation events, but no universal static role→SA table or comparable inherent effect multiplier/ranking has yet been recovered. Shadow Striker is current via the LongShots internal alias. Community rankings remain contradictory, so ST SA numeric weighting stays unresolved pending deeper native/static work or controlled event captures.",
       "confidence": "high as boundary",
       "sources": [
         "data/build_30527/special_abilities_30527.json",
         "data/build_30527/index/st_role_priority_evidence.json",
         "docs/research/build_30527/V058_MENTOR_ST_COMMUNITY_CHECKPOINT.md",
-        "https://nordeus.helpshift.com/hc/en/3-top-eleven-be-a-soccer-manager/faq/778-how-does-adding-a-new-special-ability-work/"
+        "https://nordeus.helpshift.com/hc/en/3-top-eleven-be-a-soccer-manager/faq/778-how-does-adding-a-new-special-ability-work/",
+        "data/current_windows_client_2026-09-14/special_ability_current_client.json",
+        "docs/research/build_30527/V059_FULL_WINDOWS_GAME_CHECKPOINT.md"
       ],
       "unresolved": [
         "current private SA multipliers",
@@ -606,6 +612,109 @@
       "unresolved": [
         "runtime implementation/test contract",
         "Prestige-level exact magnitude/state fields"
+      ]
+    },
+    {
+      "id": "SA-004",
+      "system": "special_abilities",
+      "status": "GAME_STATIC_CLIENT",
+      "title": "LongShots is the current internal alias for Shadow Striker",
+      "summary": "Current client localizes special_ability_6 and LongShots UI keys as Shadow striker; the production alias was correct and v0.5.8 research wording was not.",
+      "confidence": "high",
+      "sources": [
+        "data/current_windows_client_2026-09-14",
+        "docs/research/build_30527/V059_FULL_WINDOWS_GAME_CHECKPOINT.md"
+      ],
+      "unresolved": []
+    },
+    {
+      "id": "SA-005",
+      "system": "special_abilities",
+      "status": "GAME_STATIC_CLIENT",
+      "title": "Three Special Ability slots are supported",
+      "summary": "Current metadata/resources expose first/second/third ability fields and explicit Third Special Ability reward/UI text.",
+      "confidence": "high",
+      "sources": [
+        "data/current_windows_client_2026-09-14",
+        "docs/research/build_30527/V059_FULL_WINDOWS_GAME_CHECKPOINT.md"
+      ],
+      "unresolved": []
+    },
+    {
+      "id": "MATCH-001",
+      "system": "match_stream",
+      "status": "GAME_STATIC_CLIENT",
+      "title": "SA and Playstyle activations are explicit match-stream events",
+      "summary": "Football Engine streaming descriptors record SpecialAbilityType and PlaystyleTriggerType/PlaystyleOutcomeType, enabling future controlled capture counting.",
+      "confidence": "high",
+      "sources": [
+        "data/current_windows_client_2026-09-14",
+        "docs/research/build_30527/V059_FULL_WINDOWS_GAME_CHECKPOINT.md"
+      ],
+      "unresolved": [
+        "Inherent SA effect multiplier",
+        "full trigger threshold logic"
+      ]
+    },
+    {
+      "id": "PLAYSTYLE-002",
+      "system": "playstyles",
+      "status": "GAME_STATIC_CLIENT",
+      "title": "Per-Playstyle post-match semantic feedback exists",
+      "summary": "Current resources contain Playstyle-specific post-match and trait-test text. Target Man explicitly links to high balls, aerial control, long passes, crosses and hold-up; analogous semantics exist for all current Playstyles.",
+      "confidence": "high",
+      "sources": [
+        "data/current_windows_client_2026-09-14",
+        "docs/research/build_30527/V059_FULL_WINDOWS_GAME_CHECKPOINT.md"
+      ],
+      "unresolved": [
+        "Numeric hidden Playstyle coefficients"
+      ]
+    },
+    {
+      "id": "MENTOR-013",
+      "system": "mentors",
+      "status": "GAME_STATIC_CLIENT",
+      "title": "Signature Seals are the Prestige gating currency",
+      "summary": "Current resource strings explicitly state Signature Seals Prestige Mentors and further improve Signature Moves.",
+      "confidence": "high",
+      "sources": [
+        "data/current_windows_client_2026-09-14",
+        "docs/research/build_30527/V059_FULL_WINDOWS_GAME_CHECKPOINT.md"
+      ],
+      "unresolved": []
+    },
+    {
+      "id": "TACTICS-010",
+      "system": "tactics",
+      "status": "GAME_STATIC_CLIENT",
+      "title": "Current client still models condition drain across all 11 tactic dimensions",
+      "summary": "TacticsConditionDrainSettings/Overrides/Repo/Service cover all 11 tactical families. Current numeric override values were not safely recovered from the newer client.",
+      "confidence": "high",
+      "sources": [
+        "data/current_windows_client_2026-09-14",
+        "docs/research/build_30527/V059_FULL_WINDOWS_GAME_CHECKPOINT.md"
+      ],
+      "unresolved": [
+        "current Windows-client numeric override table"
+      ]
+    },
+    {
+      "id": "COMMUNITY-001",
+      "system": "formation_tactics_mentors",
+      "status": "COMPANION_LOGIC_EVIDENCE",
+      "title": "2024-26 forum + Reddit rules support joint plan scoring",
+      "summary": "Recent community evidence repeatedly supports central midfield/DMC coverage, opponent weak-lane exploitation, plan-dependent passing and Mentor alignment, while conflicting on a universal 3CB/back-four winner or one fixed tactic recipe. Use these as transparent companion ranking rules only.",
+      "confidence": "medium-high for structural principles; lower for individual formation/mentor matchup anecdotes",
+      "sources": [
+        "docs/research/build_30527/V059_COMMUNITY_LOGIC_CHECKPOINT.md",
+        "data/build_30527/index/community_logic_2024_2026.json",
+        "data/build_30527/index/community_evidence_2026-09-14.json"
+      ],
+      "unresolved": [
+        "numeric companion score calibration",
+        "universal current-meta backline winner",
+        "fixed pressing/offside/man-marking recipe"
       ]
     }
   ]

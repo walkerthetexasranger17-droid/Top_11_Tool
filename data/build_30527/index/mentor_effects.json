@@ -350,5 +350,11 @@
       "halftime/live context switch advisor"
     ],
     "numeric_cross_mentor_signature_score": "NOT_APPROVED"
+  },
+  "current_windows_client_2026_09_14": {
+    "prestige": "Client-proven: 3 prestige stages represented; PriceForNextPrestige + PrestigeProgress[]",
+    "currency": "Signature Seals explicitly identified as Prestige gating currency",
+    "effects": "CurrentEffects[] and NextLevelEffects[] preserved; signature localization formulas recovered",
+    "source": "data/current_windows_client_2026-09-14/mentor_full_client_evidence.json"
   }
 }

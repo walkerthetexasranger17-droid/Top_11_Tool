@@ -1,6 +1,6 @@
 # Top Eleven Build 30527 — Game Research Index
 
-**Index version:** 7  
+**Index version:** 8  
 **Last updated:** 14 September 2026  
 **Purpose:** permanent, embedded reference for future Top Eleven Tool logic work.
 
@@ -41,7 +41,8 @@ See `data/build_30527/index/source_manifest.json`.
 - `data/build_30527/index/findings.json` — searchable finding register.
 - `data/build_30527/index/role_attribute_priority_hypotheses.json` — historical ST evidence, current re-test correction and current qualitative ST companion evidence bands.
 - `data/build_30527/index/st_role_priority_evidence.json` — ST key-skill/action/Playstyle evidence and draft qualitative priority bands; no numeric Nordeus weights.
-- `data/build_30527/index/community_evidence_2026-09-14.json` — web/community corroboration kept explicitly separate from GAME FACT.
+- `data/build_30527/index/community_evidence_2026-09-14.json` — raw web/community corroboration kept explicitly separate from GAME FACT.
+- `data/build_30527/index/community_logic_2024_2026.json` — confidence-rated companion rules distilled from forum + r/topeleven, with disputed claims explicitly blocked from hard-coding.
 - `data/build_30527/index/mentor_effects.json` — Mentor IDs, live arrays, decoded semantics and protocol.
 - `data/build_30527/index/mentor_signature_rule_design.json` — all seven Signature activation contexts split into pre-match vs halftime/live rules; no fabricated universal Signature score.
 - `data/build_30527/index/tactics_semantics.json` — exact drain and shipped tactic tooltips.
@@ -52,7 +53,7 @@ See `data/build_30527/index/source_manifest.json`.
 
 ## Current highest-value checkpoint
 
-The current recovery checkpoint is **v0.5.8**. Read `V058_MENTOR_ST_COMMUNITY_CHECKPOINT.md` first, then the closed v0.5.7 Formation + Tactics baseline. v0.5.8 records that production three-effect Mentor decision logic is not yet implemented, but the evidence architecture for all seven Signatures is now mapped in `mentor_signature_rule_design.json`; it also adds the official current 3-Prestige-level Mentor rule as a static-protocol unresolved boundary, and preserves the first qualitative ST role/Playstyle evidence bands plus a separate community-corroboration index. Do not use Lineup Balance as a weighting oracle and do not promote community outcomes to GAME FACT.
+The current recovery checkpoint is **v0.5.10**. Read `V0510_DECISION_ENGINE_CHECKPOINT.md` first for the implemented joint logic contract, then `V059_COMMUNITY_LOGIC_CHECKPOINT.md`, `V059_FULL_WINDOWS_GAME_CHECKPOINT.md`, `V058_MENTOR_ST_COMMUNITY_CHECKPOINT.md`, and the closed v0.5.7 Formation + Tactics baseline. The v0.5.9 research remains the evidence basis; v0.5.10 converts it into transparent COMPANION LOGIC. Do not use Lineup Balance as a weighting oracle and do not promote community outcomes to GAME FACT.
 
 ## Research rule
 
@@ -88,9 +89,14 @@ Read `V058_MENTOR_ST_COMMUNITY_CHECKPOINT.md` before changing Mentor recommendat
 
 Key corrections/additions:
 - Mentor extraction is strong, but recommendation logic is **not finished**: v0.5.7 only uses Signature availability as a Boolean tie-break rather than its actual activation semantics.
-- Current official Top Eleven documentation adds **3 Prestige levels** beyond Mentor Level 10 and confirms halftime Mentor swapping. Exact build-30527 Prestige/Signature-Seal protocol representation remains unresolved.
+- Current official Top Eleven documentation adds **3 Prestige levels** beyond Mentor Level 10 and confirms halftime Mentor swapping. **Superseded by v0.5.9:** the supplied current Windows client also exposes Prestige/Signature-Seal structures; only exact runtime effect magnitudes remain dynamic.
 - Community evidence is now indexed as a separate corroboration layer, never promoted to GAME FACT.
 - First ST qualitative evidence bands are preserved in `st_role_priority_evidence.json`; private numeric attribute weights remain unresolved.
 - Current Formation v1 target remains closed/stable unless new evidence exposes a genuine contradiction.
 
 **Active next target:** productionise/test the already-mapped Signature-aware Mentor rules without invented cross-Mentor percentages. ST SA weighting remains intentionally unresolved; Target Man tactic context is strong enough for cross/aerial-service companion logic, while False Nine/Poacher remain qualitative. Then continue to AML/AMR.
+
+
+## v0.5.9 full Windows-client checkpoint
+
+Read `V059_COMMUNITY_LOGIC_CHECKPOINT.md` together with `V059_FULL_WINDOWS_GAME_CHECKPOINT.md`. Structured extraction is in `data/current_windows_client_2026-09-14/`. The full-client checkpoint supersedes the v0.5.8 Shadow-Striker-absent research conclusion, upgrades Mentor Prestige/Signature Seals to current-client static fact, records explicit SA/Playstyle match-stream trigger architecture, and adds current Playstyle game-authored semantic feedback. The community checkpoint adds a confidence-rated 2024–26 forum/Reddit decision layer for Formation + Tactics + Mentor without promoting anecdotes to GAME FACT.

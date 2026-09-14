@@ -1,7 +1,7 @@
 (() => {
-  const TE=window.TE5=window.TE5||{};const B=TE.BibleData,D=TE.Data;
-  if(!B||!D)throw new Error('bible-data.js and data.js must load before tactics-engine.js');
-  const MODEL_VERSION='30527-drain-fit-v2';
+  const TE=window.TE5=window.TE5||{};const B=TE.BibleData,D=TE.Data,STRAT=TE.Strategy;
+  if(!B||!D||!STRAT)throw new Error('bible-data.js, data.js and strategy-logic.js must load before tactics-engine.js');
+  const MODEL_VERSION='30527-drain-fit-v3-strategy';
   const DIMENSIONS=['passing','shooting','focus','cross','lost','won','mentality','marking','pressing','backLine','tackling'];
   const SEARCH_DIMS=DIMENSIONS.filter(x=>x!=='mentality');
   const DRAIN_RANK={Low:0,Medium:1,High:2};
@@ -104,7 +104,7 @@
     add(sa.has('Playmaker')&&values.passing==='short','Playmaker semantic fit with short combination play');
     return{score,signals};
   }
-  function recommend(starters,{approach='balanced',drainLimit='Medium',overrides={},opponentAttack='unknown'}={}){
+  function recommend(starters,{approach='balanced',drainLimit='Medium',overrides={},opponentAttack='unknown',opponentSlots=null,relativeStrength=0}={}){
     if(!starters?.length)return{error:'no-lineup'};
     const calc=optionFits(starters,approach),mentality=calc.approach.mentality,limit=DRAIN_RANK[drainLimit]??1;
     let best=null,ordinal=0,eligibleCandidates=0;
@@ -112,13 +112,10 @@
       const drain=calculateDrain(values,overrides);
       if(DRAIN_RANK[drain.drainClass]>limit){ordinal++;return;}
       eligibleCandidates++;
-      const fitVals=SEARCH_DIMS.map(dim=>calc.fits[dim][values[dim]]),tacticFit=mean(fitVals.map(x=>x.optionFit)),maxCount=fitVals.filter(x=>x.maxSquadFit).length,semantic=semanticTieScore(values,calc,starters,{opponentAttack}),cand={values:{...values},...drain,tacticFit,maxSquadFitDimensions:maxCount,semanticTieScore:semantic.score,semanticSignals:semantic.signals,ordinal};
-      const fitTie=best&&Math.abs(tacticFit-best.tacticFit)<=1e-12;
-      if(!best||tacticFit>best.tacticFit+1e-12||fitTie&&(
-        semantic.score>best.semanticTieScore||semantic.score===best.semanticTieScore&&(
-          drain.rawScore<best.rawScore||drain.rawScore===best.rawScore&&(
-            maxCount>best.maxSquadFitDimensions||maxCount===best.maxSquadFitDimensions&&ordinal<best.ordinal
-          )
+      const fitVals=SEARCH_DIMS.map(dim=>calc.fits[dim][values[dim]]),tacticFit=mean(fitVals.map(x=>x.optionFit)),maxCount=fitVals.filter(x=>x.maxSquadFit).length,semantic=semanticTieScore(values,calc,starters,{opponentAttack}),contextFit=STRAT.scoreTacticContext(values,starters,{opponentSlots,relativeStrength}),decisionComponents={lineupFitScore:tacticFit*70,contextScore:contextFit.score*2,drainEfficiencyScore:(1-drain.normalized)*10,semanticScore:semantic.score*.5};const decisionScore=Object.values(decisionComponents).reduce((a,b)=>a+b,0),cand={values:{...values},...drain,tacticFit,maxSquadFitDimensions:maxCount,semanticTieScore:semantic.score,semanticSignals:semantic.signals,contextFit,decisionComponents,decisionScore,ordinal};
+      if(!best||decisionScore>best.decisionScore+1e-12||Math.abs(decisionScore-best.decisionScore)<=1e-12&&(
+        drain.rawScore<best.rawScore||drain.rawScore===best.rawScore&&(
+          maxCount>best.maxSquadFitDimensions||maxCount===best.maxSquadFitDimensions&&ordinal<best.ordinal
         )
       ))best=cand;
       ordinal++;
@@ -132,7 +129,13 @@
     if(opponentAttack==='unknown')reasons.marking+=` Opponent attack profile is unknown; marking style is not inferred from our own XI.`;
     else reasons.marking+=` Opponent profile '${opponentAttack}' was supplied and used only as a game-guidance tie-break.`;
     reasons.mentality=`${option('mentality',mentality).label} is locked by the ${calc.approach.label} approach.`;
-    return{model:MODEL_VERSION,evidence:'TOP ELEVEN TOOL CALCULATION',evidencePolicy:'Exact build-30527 drain + XI attribute fit; shipped game semantics only as deterministic tie-breaks. No claimed private match-engine weights.',approach:calc.approach.label,drainLimit,opponentAttack,metrics:calc.metrics,evaluatedCandidates,eligibleCandidates,...best,reasons};
+    return{model:MODEL_VERSION,evidence:'TOP ELEVEN TOOL CALCULATION',evidencePolicy:'Exact build-30527 drain + XI attribute fit, plus transparent companion structural/community logic. No claimed private match-engine weights.',approach:calc.approach.label,approachKey:approach,drainLimit,opponentAttack,opponentSlots,relativeStrength,metrics:calc.metrics,evaluatedCandidates,eligibleCandidates,...best,reasons};
   }
-  TE.Tactics={MODEL_VERSION,DIMENSIONS,SEARCH_DIMS,calculateDrain,resolveDrainContribution,enumerate,drainChecksums,lineupMetrics,rawSupports,optionFits,semanticTieScore,recommend,option};
+  function recommendAuto(starters,{drainLimit='Medium',overrides={},opponentAttack='unknown',opponentSlots=null,relativeStrength=0}={}){
+    const rows=Object.keys(B.APPROACHES).map(approach=>recommend(starters,{approach,drainLimit,overrides,opponentAttack,opponentSlots,relativeStrength})).filter(x=>!x.error);
+    rows.sort((a,b)=>b.decisionScore-a.decisionScore||a.rawScore-b.rawScore||a.approachKey.localeCompare(b.approachKey));
+    if(!rows.length)return{error:'no-drain-compatible-plan'};
+    const best=rows[0];return{...best,autoSelected:true,alternatives:rows.slice(1,3).map(x=>({approach:x.approach,approachKey:x.approachKey,decisionScore:x.decisionScore,values:x.values,drainClass:x.drainClass,contextFit:x.contextFit}))};
+  }
+  TE.Tactics={MODEL_VERSION,DIMENSIONS,SEARCH_DIMS,calculateDrain,resolveDrainContribution,enumerate,drainChecksums,lineupMetrics,rawSupports,optionFits,semanticTieScore,recommend,recommendAuto,option};
 })();

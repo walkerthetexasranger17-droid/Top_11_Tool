@@ -1,5 +1,8 @@
 # TOP ELEVEN TOOL BIBLE — BUILD 30527
 
+> **v0.5.9 cross-client correction (2026-09-14):** the supplied current Windows/WSA client proves the raw/internal `LongShots` Special Ability is localized and displayed as **Shadow Striker**. Older build-30527 passages below that say “Shadow Striker absent” describe the earlier raw-enum interpretation and are superseded for current display identity. See `docs/research/build_30527/V059_FULL_WINDOWS_GAME_CHECKPOINT.md`.
+
+
 **Document version:** 1.1 — provenance-audited correction  
 **Companion baseline inspected:** v5.2.4  
 **Game target:** Top Eleven build 30527 / Unity IL2CPP metadata v39  
@@ -2095,7 +2098,7 @@ The next build is not complete until all of these pass:
 - [ ] Role Score is target-role key-skill mean; OVR never affects it.
 - [ ] Global assignment cannot assign one player twice and beats/equals a greedy baseline on crafted versatile-player fixture.
 - [ ] Current playstyle enum/eligibility table matches §7; Ball Playing GK not offered.
-- [ ] Current SA enum is IDs 1..19; Shadow Striker absent; SA array not capped at two.
+- [ ] Current SA raw enum retains `LongShots`; current Windows-client localisation/display identity is **Shadow Striker**; SA storage is not capped at two and current client supports a third slot.
 - [ ] Tactics enum IDs and drain intensity table match §10 exactly, including Stay On Feet=High and all Cross options=Low.
 - [ ] Drain grid enumerates exactly 97,200 combos; fixed mentality exactly 19,440.
 - [ ] Drain class counts exactly Low=963, Medium=77,823, High=18,414 using default table.
@@ -2173,7 +2176,7 @@ Before declaring the next app “done”, the creator should be able to answer *
 - Approach + drain generates tactics from the chosen XI rather than selecting one of three hard-coded presets.
 - Mentor recommendation uses the seven captured current mentors and their actual boost records, without inventing hidden multipliers.
 - Playstyle eligibility is role-aware and current; Ball Playing GK is not offered.
-- All 19 current SAs are represented; Shadow Striker and the two-SA cap are gone; server-specific ability eligibility is not guessed.
+- All current SAs are represented with raw/internal provenance preserved; `LongShots` is displayed as Shadow Striker, third-slot support is preserved, and server/runtime ability eligibility is not guessed.
 - Individual training rewards intense drills that cover several weak white skills and ignores grey-skill utility.
 - Team Training uses the actual players in the group.
 - Scanner functionality/regressions survive.

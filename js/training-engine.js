@@ -1,7 +1,7 @@
 (() => {
-  const TE=window.TE5=window.TE5||{};const D=TE.Data;
-  if(!D)throw new Error('data.js must load before training-engine.js');
-  const MODEL_VERSION='30527-white-beam-v1',BEAM_WIDTH=250;
+  const TE=window.TE5=window.TE5||{};const D=TE.Data,STRAT=TE.Strategy;
+  if(!D||!STRAT)throw new Error('data.js and strategy-logic.js must load before training-engine.js');
+  const MODEL_VERSION='30527-white-beam-v2-hierarchy',BEAM_WIDTH=250;
 
   function rolesFor(player,roles,position){
     const raw=Array.isArray(roles)?roles:(Array.isArray(player?.roles)?player.roles:[position||player?.position]);
@@ -10,12 +10,12 @@
   }
   function whiteSkillsFor(player,roles,position){return D.whiteSkillsForRoles(rolesFor(player,roles,position));}
   function applicableSkillsFor(player,roles,position){return D.applicableSkillsForRoles(rolesFor(player,roles,position));}
-  function buildNeeds(white,skills){
+  function buildNeeds(white,skills,priorityWeights={}){
     const missing=white.filter(a=>skills?.[a]===undefined||skills?.[a]===null||skills?.[a]==='');
     const values=Object.fromEntries(white.map(a=>[a,Number(skills?.[a]??0)]));
     const sorted=white.map(a=>values[a]).filter(Number.isFinite).sort((a,b)=>b-a),top=sorted.slice(0,Math.min(3,sorted.length));
     const target=top.length?top.reduce((a,b)=>a+b,0)/top.length:0,need={};
-    for(const a of white)need[a]=Math.max(1,target-values[a]+1);
+    for(const a of white){const base=Math.max(1,target-values[a]+1),weight=Math.max(1,Number(priorityWeights[a]||1));need[a]=base*weight;}
     return{missing,values,target,need,weakAttributes:white.filter(a=>need[a]>1)};
   }
   function normalLevelSetting(profile,drill){return profile?.drills?.[drill.drillId]||{unlocked:!!drill.capturedUnlocked,level:Number(drill.capturedLevelId||0)};}
@@ -84,9 +84,9 @@
     }
     return beam.sort((a,b)=>compareStates(a,b,mode))[0]||null;
   }
-  function buildIndividualSession({player,roles,position,skills,normalProfile,masterStock,slots=6,mode='maxGrowth'}={}){
+  function buildIndividualSession({player,roles,position,skills,normalProfile,masterStock,slots=6,mode='maxGrowth',tactics=null}={}){
     const resolvedRoles=rolesFor(player,roles,position);if(!resolvedRoles.length)return{drills:[],error:'invalid-position'};
-    const actualSkills=skills||player?.skills||{},white=whiteSkillsFor(player,resolvedRoles),applicable=applicableSkillsFor(player,resolvedRoles),needs=buildNeeds(white,actualSkills);
+    const actualSkills=skills||player?.skills||{},white=whiteSkillsFor(player,resolvedRoles),applicable=applicableSkillsFor(player,resolvedRoles),hierarchy=STRAT.trainingPriorityProfile(player,{roles:resolvedRoles,tactics}),priorityWeights=Object.fromEntries(hierarchy.priorities.map(x=>[x.attribute,x.weight])),needs=buildNeeds(white,actualSkills,priorityWeights);
     if(needs.missing.length)return{drills:[],error:'missing-white-attributes',missingAttributes:needs.missing,meta:{model:MODEL_VERSION,roles:resolvedRoles,whiteAttributes:white}};
     const whiteSet=new Set(white),applicableSet=new Set(applicable);
     const normalCandidates=D.NORMAL_DRILLS.map(d=>candidateFromNormal(d,normalProfile,whiteSet,applicableSet)).filter(Boolean);
@@ -102,16 +102,16 @@
         target:needs.target,baseNeed:needs.need,sessionCredit:best.credit,priorityAttributes,weakWhiteAttributes:[...needs.weakAttributes],
         coveredWhiteAttributes:[...best.covered],coveredWeakWhiteAttributes:[...best.weakCovered],totalUsefulScore:best.utility,totalCondition:best.totalCondition,totalXp:best.totalXp,
         masterUsage:best.masterUsage,remainingMasterStock,normalCandidateCount:normalCandidates.length,masterCandidateCount:masterCandidates.length,
-        exactGainPrediction:false,greyAttributesAffectScore:false,rankingMode:'top3-white-beam'
+        exactGainPrediction:false,greyAttributesAffectScore:false,rankingMode:'role-playstyle-tactic-deficiency-beam',hierarchy
       }
     };
   }
-  function evaluateCatalogue({player,roles,position,skills,normalProfile,masterStock}={}){
-    const resolvedRoles=rolesFor(player,roles,position),white=whiteSkillsFor(player,resolvedRoles),applicable=applicableSkillsFor(player,resolvedRoles),needs=buildNeeds(white,skills||player?.skills||{}),whiteSet=new Set(white),applicableSet=new Set(applicable);
+  function evaluateCatalogue({player,roles,position,skills,normalProfile,masterStock,tactics=null}={}){
+    const resolvedRoles=rolesFor(player,roles,position),white=whiteSkillsFor(player,resolvedRoles),applicable=applicableSkillsFor(player,resolvedRoles),hierarchy=STRAT.trainingPriorityProfile(player,{roles:resolvedRoles,tactics}),priorityWeights=Object.fromEntries(hierarchy.priorities.map(x=>[x.attribute,x.weight])),needs=buildNeeds(white,skills||player?.skills||{},priorityWeights),whiteSet=new Set(white),applicableSet=new Set(applicable);
     const rows=[...D.NORMAL_DRILLS.map(d=>candidateFromNormal(d,normalProfile,whiteSet,applicableSet)),...D.MASTER_CAMPUS_DRILLS.map(d=>candidateFromMaster(d,masterStock,whiteSet,applicableSet))]
       .filter(Boolean).map(candidate=>({candidate,metric:scoreCandidate(candidate,needs.need,{})}))
       .sort((a,b)=>b.metric.score-a.metric.score||b.metric.whiteCoverageCount-a.metric.whiteCoverageCount||a.candidate.catalogueOrder-b.candidate.catalogueOrder);
-    return{roles:resolvedRoles,white,applicable,needs,rows};
+    return{roles:resolvedRoles,white,applicable,needs,hierarchy,rows};
   }
   TE.Training={MODEL_VERSION,BEAM_WIDTH,rolesFor,whiteSkillsFor,applicableSkillsFor,buildNeeds,levelEffectPct,levelName,buildIndividualSession,evaluateCatalogue,scoreCandidate,beamSearch,compareStates};
 })();

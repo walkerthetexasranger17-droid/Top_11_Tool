@@ -149,7 +149,7 @@
         "Versatile Attacker",
         "Cross Expert"
       ],
-      "shadow_striker_current_build": "ABSENT"
+      "shadow_striker_current_build": "CURRENT_DISPLAY_ALIAS_OF_INTERNAL_LONGSHOTS_IN_CURRENT_WINDOWS_CLIENT"
     },
     "official_current": {
       "role_dependent_selection": true,
@@ -161,7 +161,7 @@
       "quality": "CONTRADICTORY_AND_PARTLY_STALE",
       "observations": [
         "One-on-One Scorer, Free Kick Specialist and Versatile Attacker are each promoted as 'best' ST options in different player reports.",
-        "Some community advice still references Shadow Striker for attackers even though Shadow Striker is absent from the current build-30527 enum.",
+        "Some community advice still references Shadow Striker for attackers while older raw enums name it Long Shots; current Windows client confirms the display identity is Shadow Striker.",
         "Versatile Attacker activation/effect descriptions are anecdotal and inconsistent across reports."
       ],
       "safe_use": "Do not add an ST SA weight or recommend training a specific SA from role alone. For an already-owned SA, only surface context where current game/official evidence can support it."
@@ -216,5 +216,24 @@
         "Counter Attack as a Poacher-specific requirement"
       ]
     }
+  },
+  "current_client_upgrade_2026_09_14": {
+    "status": "GAME_STATIC_CLIENT",
+    "Target Man": [
+      "post-match feedback explicitly references high balls",
+      "aerial control",
+      "receiving long passes and holding up play",
+      "crosses reaching the Target Man"
+    ],
+    "False Nine": [
+      "post-match feedback explicitly references ball control",
+      "playing around central defence",
+      "difficulty for central defenders"
+    ],
+    "Poacher": [
+      "post-match feedback repeatedly references box threat and defensive-line danger"
+    ],
+    "boundary": "These semantics strengthen qualitative companion priorities but still do not provide numeric Nordeus attribute coefficients.",
+    "source": "data/current_windows_client_2026-09-14/playstyle_game_authored_semantics.json"
   }
 }

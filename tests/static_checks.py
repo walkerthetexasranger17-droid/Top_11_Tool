@@ -42,7 +42,7 @@ for phase in ['possession','transition','out']:
     if not soup.select_one(f'[data-tactic-phase="{phase}"]'): errs.append(f'Tactics missing {phase} phase')
 if not soup.select_one('[data-training-tab="individual"]') or not soup.select_one('[data-training-tab="team"]'):
     errs.append('Training does not expose Individual | Team tabs on one page')
-if 'v0.5.8' not in html: errs.append('visible version is not v0.5.8')
+if 'v0.5.10' not in html: errs.append('visible version is not v0.5.10')
 if re.search(r'BUILD\s*30527|Build\s*30527',html): errs.append('internal build 30527 is still visible in product HTML')
 if 'verified scanner' in html.lower(): errs.append('technical scanner provenance is exposed in normal UI')
 
@@ -85,7 +85,7 @@ if not account_btn or account_btn.get('title')!='Profile & Security': errs.appen
 css_text=(ROOT/'css/app.css').read_text(encoding='utf-8')
 if '.account-button' not in css_text or 'cursor:pointer' not in css_text: errs.append('profile button does not advertise clickability with a pointer cursor')
 sw_text=(ROOT/'sw.js').read_text(encoding='utf-8')
-if "const CACHE='te-v0-5-8" not in sw_text or "e.request.mode==='navigate'" not in sw_text or "cache:'no-store'" not in sw_text: errs.append('v0.4.12 service-worker update/navigation freshness guard missing')
+if "const CACHE='te-v0-5-10" not in sw_text or "e.request.mode==='navigate'" not in sw_text or "cache:'no-store'" not in sw_text: errs.append('v0.4.12 service-worker update/navigation freshness guard missing')
 if "toast('App initialisation failed','err')" in js: errs.append('generic app-initialisation error toast survived GitHub testing hotfix')
 if not (ROOT/'firestore.rules').is_file(): errs.append('firestore.rules missing')
 rules=(ROOT/'firestore.rules').read_text(encoding='utf-8') if (ROOT/'firestore.rules').is_file() else ''
@@ -186,7 +186,7 @@ if '| Tackling | Stay On Feet | 1 | High | 7 |' not in packaged_bible or '| Tack
 
 # Runtime module ordering.
 scripts=[Path(x.get('src').split('?')[0]).name for x in soup.find_all('script',src=True)]
-for req in ['bible-data.js','cloud.js','formation.js','tactics-engine.js','mentor-engine.js','team-plan-engine.js','training-engine.js','team-training-engine.js','scanner-engine.js','app.js']:
+for req in ['bible-data.js','strategy-logic.js','squad-coverage-engine.js','cloud.js','formation.js','tactics-engine.js','mentor-engine.js','team-plan-engine.js','training-engine.js','team-training-engine.js','scanner-engine.js','app.js']:
     if req not in scripts: errs.append(f'missing runtime script {req}')
 if scripts and scripts[-1]!='app.js': errs.append('app.js must load after dependency modules')
 

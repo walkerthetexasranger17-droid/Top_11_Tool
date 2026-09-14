@@ -1,0 +1,1228 @@
+{
+  "source": "TopEleven_Full(5).zip current Windows/WSA client extraction",
+  "extraction_date": "2026-09-14",
+  "unity_version": "6000.3.13f1",
+  "bundle_version_code": "10599",
+  "evidence_class": "GAME_STATIC_CLIENT",
+  "descriptions": {
+    "winger": "Wingers are a synonym for danger from the flanks. Their incursions are a nightmare for DLs and DRs because of their crosses, speed and dribbling skills.",
+    "inside_forward": "The Inside Forward will cut into the open space and create a scoring opportunity for the STs, or engage the goalkeeper directly and finish himself.",
+    "sweeper_keeper": "The Sweeper Keeper feels comfortable playing out of his area, rushing out to intercept opponents' long balls. A proper 11th outfield player whenever needed.",
+    "false_winger": "Deployed on the wings, False Wingers drift to central areas of the pitch, creating a numerical advantage in the midfield that disrupts and overwhelms rival defences.",
+    "ball_playing_dc": "Ball-playing DCs are a balanced mix of defensive solvency and technique. They stop attacks and fluidly pass the ball to the midfield, or hold it to calm the waters.",
+    "full_back": "Full-backs' focus is primarily defence. It's their job to stop hazards coming from the sides, even if they will occasionally support fast-paced offensives from their flanks.",
+    "enganche": "The Enganche is a quick-minded skilled driver that connects midfield and attack, moving the ball forward fast. He displays great technical and assisting skills.",
+    "anchor_man": "The Anchor Man stands in front of the defensive line. He anticipates any opposing action in that area, and distributes the ball to players in more forward positions.",
+    "box_to_box": "Present in a large area of the field, the Box-to-box MC appears wherever needed, supporting other midfielders. He can take part in both attacking and defending plays.",
+    "wing_back": "Wing-backs are defenders that thrive on attack. They run up their flanks, overlapping side midfielders, and giving crosses or dragging opposing defenders' attention.",
+    "ball_winner": "A mainly defensive midfielder, the Ball Winner is very proficient at steals and tackles. He holds the line, gets the ball and gives it to the playmaker.",
+    "ball_playing_gk": "A Ball-playing GK can play with his feet, contributing to the team's passing game. He can help build up the offensive play or trigger a counter attack with a well-aimed pass.",
+    "box_commander": "The Box Commander imposes his rules in the box. His presence, both physically and mentally, intimidates the most seasoned STs. He becomes a giant on the goal line.",
+    "target_man": "The Target Man is a magnet for aerial passes in the attacking line. He'll either finish or hold up the ball against the DCs and wait for teammates to join the offensive.",
+    "poacher": "Scoring goals is the Poacher's only focus. Always waiting on the edges of the opponents' defensive line, any ball he finds in the penalty area can become a hazard.",
+    "stopper": "Stoppers are blunt but precise when it comes to neutralising the attackers' attempts to score. They are experts in marking and tackling. A life insurance in the box.",
+    "false_nine": "A skilled ball driver, the False Nine receives the ball deep and brings danger to the surroundings of the box, forcing DCs to break their position.",
+    "mezzala": "A Mezzala brings dynamism to the midfield and feeds their teammates with his passing skills and space creation. Teammates with high mobility will get the most from him.",
+    "regista": "The Regista is a director. With only few yet very precise and effective actions he",
+    "no_nonsense_dc": "A No-nonsense DC has one job: to clear the ball out at the slightest sign of danger. He acts fast and decisively, leaving no room for flourishes or mistakes."
+  },
+  "post_match_feedback_by_tag": {
+    "anchor-man": [
+      {
+        "key": "post_match_feedback_AnchorMan_many_battles_defense_1",
+        "text": "[b]{0}[/b] {{ps-anchor-man}} anticipated enemy attacks and defended relentlessly."
+      },
+      {
+        "key": "post_match_feedback_AnchorMan_many_battles_opponent_epic_defense_2",
+        "text": "Their defense ralied around [b]{0}[/b] {{ps-anchor-man}} and stopped us from pushing."
+      },
+      {
+        "key": "post_match_feedback_AnchorMan_many_battles_opponent_epic_defense_1",
+        "text": "We clearly needed a better solution for opponents' [b]{0}[/b] {{ps-anchor-man}}."
+      },
+      {
+        "key": "post_match_feedback_AnchorMan_many_battles_epic_defense_3",
+        "text": "[b]{0}[/b] {{ps-anchor-man}} helped our defence stay strong throughout the match."
+      },
+      {
+        "key": "post_match_feedback_AnchorMan_many_battles_epic_defense_1",
+        "text": "[b]{0}[/b] {{ps-anchor-man}} held down our defence and made it impenetrable."
+      },
+      {
+        "key": "post_match_feedback_AnchorMan_many_battles_opponent_epic_defense_3",
+        "text": "[b]{0}[/b] {{ps-anchor-man}} allowed their defenders to stick to the game plan perfectly."
+      },
+      {
+        "key": "post_match_feedback_AnchorMan_Opponent_many_battles_defense_2",
+        "text": "Opponents' [b]{0}[/b] {{ps-anchor-man}} made it near impossible to break their defence."
+      },
+      {
+        "key": "post_match_feedback_AnchorMan_many_battles_epic_defense_2",
+        "text": "Our back line felt strong with [b]{0}[/b] {{ps-anchor-man}} organizing."
+      },
+      {
+        "key": "post_match_feedback_AnchorMan_many_battles_defense_3",
+        "text": "[b]{0}[/b] {{ps-anchor-man}} inspired our defence and kept our shape sturdy."
+      },
+      {
+        "key": "post_match_feedback_AnchorMan_many_battles_defense_2",
+        "text": "[b]{0}[/b] {{ps-anchor-man}} was the centerpiece of our defence, keeping us in the game."
+      },
+      {
+        "key": "post_match_feedback_AnchorMan_Opponent_many_battles_defense_1",
+        "text": "[b]{0}[/b] {{ps-anchor-man}} carried their defensive line this game."
+      },
+      {
+        "key": "post_match_feedback_AnchorMan_Opponent_many_battles_defense_3",
+        "text": "The opposition's [b]{0}[/b] {{ps-anchor-man}} made it hard to get through their defence."
+      }
+    ],
+    "ball-playing-dc": [
+      {
+        "key": "post_match_feedback_BallPlayingDC_many_battles_epic_defense_2",
+        "text": "[b]{0}[/b] {{ps-ball-playing-dc}} is always comfortable on the ball. Not many defenders like him!"
+      },
+      {
+        "key": "post_match_feedback_BallPlayingDC_many_battles_epic_defense_3",
+        "text": "Our defence linked well with our midfield when [b]{0}[/b] {{ps-ball-playing-dc}} was on the ball."
+      },
+      {
+        "key": "post_match_feedback_BallPlayingDC_many_battles_opponent_epic_defense_1",
+        "text": "Opponents' [b]{0}[/b] {{ps-ball-playing-dc}} showed some big time attack contributions."
+      },
+      {
+        "key": "post_match_feedback_BallPlayingDC_Opponent_many_battles_defense_2",
+        "text": "[b]{0}[/b] {{ps-ball-playing-dc}} allowed their team to build up a steady defensive effort."
+      },
+      {
+        "key": "post_match_feedback_BallPlayingDC_many_battles_epic_defense_1",
+        "text": "[b]{0}[/b] {{ps-ball-playing-dc}} was the most active and promising player on the pitch."
+      },
+      {
+        "key": "post_match_feedback_BallPlayingDC_many_battles_opponent_epic_defense_2",
+        "text": "They had [b]{0}[/b] {{ps-ball-playing-dc}} present and contributing on both sides of the pitch."
+      },
+      {
+        "key": "post_match_feedback_BallPlayingDC_Opponent_many_battles_defense_3",
+        "text": "We couldn't get anything going in attack because of [b]{0}[/b] {{ps-ball-playing-dc}}."
+      },
+      {
+        "key": "post_match_feedback_BallPlayingDC_many_battles_defense_2",
+        "text": "[b]{0}[/b] {{ps-ball-playing-dc}} was a great connecting piece between our midfield and defense."
+      },
+      {
+        "key": "post_match_feedback_BallPlayingDC_Opponent_many_battles_defense_1",
+        "text": "[b]{0}[/b]'s {{ps-ball-playing-dc}} defensive play prevented us from pushing our attacking tempo."
+      },
+      {
+        "key": "post_match_feedback_BallPlayingDC_many_battles_defense_3",
+        "text": "Consistent and calm at the back, [b]{0}[/b] {{ps-ball-playing-dc}} guided the game for us."
+      },
+      {
+        "key": "post_match_feedback_BallPlayingDC_many_battles_opponent_epic_defense_3",
+        "text": "Their [b]{0}[/b] {{ps-ball-playing-dc}} forced attacking pressure whenever they had the ball."
+      },
+      {
+        "key": "post_match_feedback_BallPlayingDC_many_battles_defense_1",
+        "text": "[b]{0}[/b] {{ps-ball-playing-dc}} allowed us to play our game and stay defensively focused."
+      }
+    ],
+    "ball-playing-gk": [
+      {
+        "key": "post_match_feedback_BallPlayingGK_many_battles_defense_1",
+        "text": "[b]{0}[/b] {{ps-ball-playing-gk}} worked well with our defenders, both in defence and attack."
+      },
+      {
+        "key": "post_match_feedback_BallPlayingGK_many_battles_defense_2",
+        "text": "[b]{0}[/b] {{ps-ball-playing-gk}} calmly started many attacking moves from the back."
+      },
+      {
+        "key": "post_match_feedback_BallPlayingGK_many_battles_epic_defense_3",
+        "text": "[b]{0}[/b] {{ps-ball-playing-gk}} facilitated the ball forward so our midfield pushed the pace."
+      },
+      {
+        "key": "post_match_feedback_BallPlayingGK_many_battles_epic_defense_1",
+        "text": "[b]{0}[/b] {{ps-ball-playing-gk}} maintained tight defence, allowing our attackers to prosper."
+      },
+      {
+        "key": "post_match_feedback_BallPlayingGK_many_battles_defense_3",
+        "text": "Our tactics suit a goalkeeper like [b]{0}[/b] {{ps-ball-playing-gk}} who is so good on the ball."
+      },
+      {
+        "key": "post_match_feedback_BallPlayingGK_many_battles_epic_defense_2",
+        "text": "[b]{0}[/b] {{ps-ball-playing-gk}} was brilliant around the box, assisting offense and defense."
+      }
+    ],
+    "ball-winner": [
+      {
+        "key": "post_match_feedback_BallWinner_Opponent_many_battles_defense_2",
+        "text": "Opponents' [b]{0}[/b] {{ps-ball-winner}} gave us problems in both defense and midfield."
+      },
+      {
+        "key": "post_match_feedback_BallWinner_many_battles_opponent_epic_defense_2",
+        "text": "Opponents' [b]{0}[/b] {{ps-ball-winner}} did not allow us to play our game on the pitch."
+      },
+      {
+        "key": "post_match_feedback_BallWinner_many_battles_opponent_epic_defense_3",
+        "text": "[b]{0}[/b] {{ps-ball-winner}} did not make it easy for our attackers, limiting our chances."
+      },
+      {
+        "key": "post_match_feedback_BallWinner_Opponent_many_battles_defense_1",
+        "text": "Opponents' [b]{0}[/b] {{ps-ball-winner}} pressed us hard and stole several balls."
+      },
+      {
+        "key": "post_match_feedback_BallWinner_many_battles_epic_defense_1",
+        "text": "[b]{0}[/b] {{ps-ball-winner}} terrorized their midfielders with relentless pressure.."
+      },
+      {
+        "key": "post_match_feedback_BallWinner_many_battles_defense_1",
+        "text": "[b]{0}[/b] {{ps-ball-winner}} stole numerous chances from our opponents' midfielders."
+      },
+      {
+        "key": "post_match_feedback_BallWinner_many_battles_defense_2",
+        "text": "We had [b]{0}[/b] {{ps-ball-winner}} making it really hard for opponents' midfield."
+      },
+      {
+        "key": "post_match_feedback_BallWinner_many_battles_epic_defense_2",
+        "text": "[b]{0}[/b] {{ps-ball-winner}} kept attacking their midfield so our guys dominated the space."
+      },
+      {
+        "key": "post_match_feedback_BallWinner_many_battles_epic_defense_3",
+        "text": "[b]{0}[/b] {{ps-ball-winner}} helped our defenders slow the pace of their attacks and chances."
+      },
+      {
+        "key": "post_match_feedback_BallWinner_many_battles_opponent_epic_defense_1",
+        "text": "It was hard to maintain ball pressure and control against [b]{0}[/b] {{ps-ball-winner}}."
+      },
+      {
+        "key": "post_match_feedback_BallWinner_many_battles_defense_3",
+        "text": "[b]{0}[/b] {{ps-ball-winner}} broke up play and never let their midfields feel comfortable."
+      },
+      {
+        "key": "post_match_feedback_BallWinner_Opponent_many_battles_defense_3",
+        "text": "[b]{0}[/b] {{ps-ball-winner}} caused us to give away interceptions in dangerous areas."
+      }
+    ],
+    "box-commander": [
+      {
+        "key": "post_match_feedback_BoxCommander_many_battles_epic_defense_1",
+        "text": "[b]{0}[/b] {{ps-box-commander}} did not see a single shot that he couldn't handle with ease."
+      },
+      {
+        "key": "post_match_feedback_BoxCommander_many_battles_defense_3",
+        "text": "We made it tough for them to convert chances because of [b]{0}[/b] {{ps-box-commander}}."
+      },
+      {
+        "key": "post_match_feedback_BoxCommander_many_battles_defense_2",
+        "text": "Opponents' strikers couldn't capitalize on chances against [b]{0}[/b] {{ps-box-commander}}."
+      },
+      {
+        "key": "post_match_feedback_BoxCommander_many_battles_defense_1",
+        "text": "[b]{0}[/b] {{ps-box-commander}} had a suffocating effect on the opponents' strikers."
+      },
+      {
+        "key": "post_match_feedback_BoxCommander_many_battles_epic_defense_2",
+        "text": "[b]{0}[/b] {{ps-box-commander}} really took everything the opponents' strikers had to offer."
+      },
+      {
+        "key": "post_match_feedback_BoxCommander_many_battles_epic_defense_3",
+        "text": "[b]{0}[/b] {{ps-box-commander}} frustrated their strikers and kept our goal impervious."
+      }
+    ],
+    "box-to-box": [
+      {
+        "key": "post_match_feedback_BoxToBox_many_battles_epic_defense_2",
+        "text": "[b]{0}[/b] {{ps-box-to-box}} was dominant in both attacking and defensive areas of the pitch."
+      },
+      {
+        "key": "post_match_feedback_BoxToBox_many_battles_epic_defense_3",
+        "text": "[b]{0}[/b] {{ps-box-to-box}} contributed to our attack, while blocking them in midfield."
+      },
+      {
+        "key": "post_match_feedback_BoxToBox_many_battles_opponent_epic_defense_1",
+        "text": "Wherever we pushed, [b]{0}[/b] {{ps-box-to-box}} was there with an answer to stop us."
+      },
+      {
+        "key": "post_match_feedback_BoxToBox_many_battles_opponent_epic_defense_2",
+        "text": "Opponents' [b]{0}[/b] {{ps-box-to-box}} was a menace on every part of the pitch."
+      },
+      {
+        "key": "post_match_feedback_BoxToBox_many_battles_epic_defense_1",
+        "text": "[b]{0}[/b] {{ps-box-to-box}} alone overwhelmed the opponent - incredible!"
+      },
+      {
+        "key": "post_match_feedback_BoxToBox_many_battles_opponent_epic_defense_3",
+        "text": "[b]{0}[/b] {{ps-box-to-box}} gave them true effort and strength in both halves of the pitch."
+      },
+      {
+        "key": "post_match_feedback_BoxToBox_many_battles_defense_2",
+        "text": "[b]{0}[/b] {{ps-box-to-box}} was present in every area of the pitch that he was needed."
+      },
+      {
+        "key": "post_match_feedback_BoxToBox_many_battles_defense_1",
+        "text": "[b]{0}[/b] {{ps-box-to-box}} allowed us to maintain our numbers in midfield easily."
+      },
+      {
+        "key": "post_match_feedback_BoxToBox_many_battles_defense_3",
+        "text": "[b]{0}[/b] {{ps-box-to-box}} was definitely our engine in that match!"
+      },
+      {
+        "key": "post_match_feedback_BoxToBox_Opponent_many_battles_defense_3",
+        "text": "[b]{0}[/b] {{ps-box-to-box}} gave us a tough time in every phase of the game."
+      },
+      {
+        "key": "post_match_feedback_BoxToBox_Opponent_many_battles_defense_1",
+        "text": "[b]{0}[/b] {{ps-box-to-box}} made it feel like they had an extra man on the pitch."
+      },
+      {
+        "key": "post_match_feedback_BoxToBox_Opponent_many_battles_defense_2",
+        "text": "We had to fight against [b]{0}[/b] {{ps-box-to-box}} in both attack and defense."
+      }
+    ],
+    "enganche": [
+      {
+        "key": "post_match_feedback_Enganche_many_battles_epic_attack_3",
+        "text": "We got into some great spaces thanks to the creative passing of [b]{0}[/b] {{ps-enganche}}."
+      },
+      {
+        "key": "post_match_feedback_Enganche_many_battles_opponent_epic_attack_2",
+        "text": "They played only through [b]{0}[/b] {{ps-enganche}} and managed to break our defense."
+      },
+      {
+        "key": "post_match_feedback_Enganche_Opponent_many_battles_attack_2",
+        "text": "[b]{0}[/b] {{ps-enganche}} helped them pass the ball around us easily."
+      },
+      {
+        "key": "post_match_feedback_Enganche_many_battles_epic_attack_1",
+        "text": "[b]{0}[/b] {{ps-enganche}} managed to sneak brilliant passes through some tight spaces."
+      },
+      {
+        "key": "post_match_feedback_Enganche_many_battles_epic_attack_2",
+        "text": "[b]{0}[/b] {{ps-enganche}} was playing dangerous passes throughout the match."
+      },
+      {
+        "key": "post_match_feedback_Enganche_Opponent_many_battles_attack_1",
+        "text": "They had a clear passing advantage due to [b]{0}[/b] {{ps-enganche}} ."
+      },
+      {
+        "key": "post_match_feedback_Enganche_many_battles_opponent_epic_attack_3",
+        "text": "Our defenders tried but couldn't intercept precise passes from [b]{0}[/b] {{ps-enganche}}."
+      },
+      {
+        "key": "post_match_feedback_Enganche_many_battles_attack_2",
+        "text": "[b]{0}[/b] {{ps-enganche}} made sure our offense did not lack the chances they needed."
+      },
+      {
+        "key": "post_match_feedback_Enganche_many_battles_attack_3",
+        "text": "Our offensive moves were constantly going through [b]{0}[/b] {{ps-enganche}}."
+      },
+      {
+        "key": "post_match_feedback_Enganche_Opponent_many_battles_attack_3",
+        "text": "It was an easy day at the office for [b]{0}[/b] {{ps-enganche}}, passing around us at will."
+      },
+      {
+        "key": "post_match_feedback_Enganche_many_battles_attack_1",
+        "text": "[b]{0}[/b] {{ps-enganche}} kept all of our attackers busy with precise assists."
+      },
+      {
+        "key": "post_match_feedback_Enganche_many_battles_opponent_epic_attack_1",
+        "text": "With [b]{0}[/b] {{ps-enganche}} they passed the ball through our line with ease."
+      }
+    ],
+    "false-nine": [
+      {
+        "key": "post_match_feedback_FalseNine_Opponent_many_battles_attack_2",
+        "text": "[b]{0}[/b] {{ps-false-nine}} made it difficult for our central defenders.."
+      },
+      {
+        "key": "post_match_feedback_FalseNine_many_battles_epic_attack_2",
+        "text": "[b]{0}[/b] {{ps-false-nine}} had their defence struggling throughout the match."
+      },
+      {
+        "key": "post_match_feedback_FalseNine_Opponent_many_battles_attack_1",
+        "text": "Our defenders did not have an answer for [b]{0}[/b] {{ps-false-nine}} this time."
+      },
+      {
+        "key": "post_match_feedback_FalseNine_many_battles_epic_attack_1",
+        "text": "Not a single defender knew how to handle our [b]{0}[/b] {{ps-false-nine}}."
+      },
+      {
+        "key": "post_match_feedback_FalseNine_many_battles_opponent_epic_attack_1",
+        "text": "Opponents' [b]{0}[/b] {{ps-false-nine}} was just unstoppable on offense this time."
+      },
+      {
+        "key": "post_match_feedback_FalseNine_many_battles_epic_attack_3",
+        "text": "[b]{0}[/b] {{ps-false-nine}} looked threatening from kick-off!"
+      },
+      {
+        "key": "post_match_feedback_FalseNine_many_battles_attack_3",
+        "text": "Their defenders won't want to deal with [b]{0}[/b] {{ps-false-nine}} again any time soon."
+      },
+      {
+        "key": "post_match_feedback_FalseNine_Opponent_many_battles_attack_3",
+        "text": "[b]{0}[/b] {{ps-false-nine}} seemed to always be causing problems for our back line."
+      },
+      {
+        "key": "post_match_feedback_FalseNine_many_battles_opponent_epic_attack_2",
+        "text": "Opponents' [b]{0}[/b] {{ps-false-nine}} had his moves drilled to perfection."
+      },
+      {
+        "key": "post_match_feedback_FalseNine_many_battles_attack_1",
+        "text": "[b]{0}[/b] {{ps-false-nine}} played masterfully around the opponents' defense."
+      },
+      {
+        "key": "post_match_feedback_FalseNine_many_battles_attack_2",
+        "text": "Their defenders could not find a way to neutralize [b]{0}[/b] {{ps-false-nine}}."
+      },
+      {
+        "key": "post_match_feedback_FalseNine_many_battles_opponent_epic_attack_3",
+        "text": "Opponents' [b]{0}[/b] {{ps-false-nine}} showed us what ball control really means this match."
+      }
+    ],
+    "false-winger": [
+      {
+        "key": "post_match_feedback_false_Winger_many_battles_attack_2",
+        "text": "We pushed the pace hard off the back of [b]{0}[/b] {{ps-false-winger}} ."
+      },
+      {
+        "key": "post_match_feedback_false_Winger_many_battles_attack_3",
+        "text": "[b]{0}[/b] {{ps-false-winger}} kept our attacking tempo high throughout the match."
+      },
+      {
+        "key": "post_match_feedback_false_Winger_many_battles_epic_attack_1",
+        "text": "[b]{0}[/b] {{ps-false-winger}} was instrumental in breaking through their defense."
+      },
+      {
+        "key": "post_match_feedback_false_Winger_many_battles_attack_1",
+        "text": "[b]{0}[/b] {{ps-false-winger}} helped us break through the opponents' defense."
+      },
+      {
+        "key": "post_match_feedback_false_Winger_Opponent_many_battles_attack_3",
+        "text": "[b]{0}[/b] {{ps-false-winger}} forced our midfielders out of position with his movement."
+      },
+      {
+        "key": "post_match_feedback_false_Winger_many_battles_epic_attack_2",
+        "text": "We looked threatening around the box with [b]{0}[/b] {{ps-false-winger}} cutting in from wide."
+      },
+      {
+        "key": "post_match_feedback_false_Winger_many_battles_opponent_epic_attack_1",
+        "text": "Our defensive formation suffered trying to follow [b]{0}[/b]'s {{ps-false-winger}} movement."
+      },
+      {
+        "key": "post_match_feedback_false_Winger_many_battles_opponent_epic_attack_2",
+        "text": "Opponents' [b]{0}[/b] {{ps-false-winger}} allowed their attackers to create additional chances."
+      },
+      {
+        "key": "post_match_feedback_false_Winger_many_battles_opponent_epic_attack_3",
+        "text": "The entire game our defense was a step behind their [b]{0}[/b] {{ps-false-winger}}."
+      },
+      {
+        "key": "post_match_feedback_false_Winger_Opponent_many_battles_attack_2",
+        "text": "[b]{0}[/b] {{ps-false-winger}} often caught our midfielders out of position."
+      },
+      {
+        "key": "post_match_feedback_false_Winger_Opponent_many_battles_attack_1",
+        "text": "Opponents' [b]{0}[/b] {{ps-false-winger}} made it hard to connect defence and midfield."
+      },
+      {
+        "key": "post_match_feedback_false_Winger_many_battles_epic_attack_3",
+        "text": "[b]{0}[/b] {{ps-false-winger}} was lively for us and gave their defence trouble all game."
+      }
+    ],
+    "full-back": [
+      {
+        "key": "post_match_feedback_FullBack_many_battles_opponent_epic_defense_1",
+        "text": "We couldn't move over the flank, [b]{0}[/b] {{ps-full-back}} made it impossible."
+      },
+      {
+        "key": "post_match_feedback_FullBack_Opponent_many_battles_defense_3",
+        "text": "Their fullback [b]{0}[/b] {{ps-full-back}} ran the show for their defence."
+      },
+      {
+        "key": "post_match_feedback_FullBack_many_battles_opponent_epic_defense_2",
+        "text": "Opponents' [b]{0}[/b] {{ps-full-back}} kept the intensiity and we couldn't secure the flank."
+      },
+      {
+        "key": "post_match_feedback_FullBack_many_battles_epic_defense_1",
+        "text": "[b]{0}[/b] {{ps-full-back}} was key in preventing opponents' storm on the flank."
+      },
+      {
+        "key": "post_match_feedback_FullBack_many_battles_defense_2",
+        "text": "[b]{0}[/b] {{ps-full-back}} kept forcing the opponent to attack our stronger side."
+      },
+      {
+        "key": "post_match_feedback_FullBack_many_battles_epic_defense_3",
+        "text": "Very little made it into the box because of [b]{0}[/b]'s {{ps-full-back}} defence."
+      },
+      {
+        "key": "post_match_feedback_FullBack_many_battles_defense_3",
+        "text": "Their attacks had to go through our stronger side thanks to [b]{0}[/b] {{ps-full-back}}."
+      },
+      {
+        "key": "post_match_feedback_FullBack_Opponent_many_battles_defense_2",
+        "text": "Opponents' [b]{0}[/b] {{ps-full-back}} really managed to slow down our flanking attacks."
+      },
+      {
+        "key": "post_match_feedback_FullBack_many_battles_epic_defense_2",
+        "text": "[b]{0}[/b] {{ps-full-back}} handled every attack that started on their flank."
+      },
+      {
+        "key": "post_match_feedback_FullBack_Opponent_many_battles_defense_1",
+        "text": "We pushed the flanks, but the opponents' [b]{0}[/b] {{ps-full-back}} really slowed us down."
+      },
+      {
+        "key": "post_match_feedback_FullBack_many_battles_opponent_epic_defense_3",
+        "text": "Their [b]{0}[/b] {{ps-full-back}} pushed our attacking line towards our weaker side."
+      },
+      {
+        "key": "post_match_feedback_FullBack_many_battles_defense_1",
+        "text": "[b]{0}[/b] {{ps-full-back}} provided much needed assistance on our flank."
+      }
+    ],
+    "inside-forward": [
+      {
+        "key": "post_match_feedback_InsideForward_many_battles_attack_1",
+        "text": "[b]{0}[/b] {{ps-inside-forward}} led to many opportunities by cutting into the space."
+      },
+      {
+        "key": "post_match_feedback_InsideForward_many_battles_epic_attack_2",
+        "text": "[b]{0}[/b] {{ps-inside-forward}} played some great balls into the box for us."
+      },
+      {
+        "key": "post_match_feedback_InsideForward_many_battles_opponent_epic_attack_1",
+        "text": "We couldn't stop [b]{0}[/b] {{ps-inside-forward}} from cutting in and isolating our keeper."
+      },
+      {
+        "key": "post_match_feedback_InsideForward_Opponent_many_battles_attack_2",
+        "text": "[b]{0}[/b] {{ps-inside-forward}} was too hard to catch when cutting in to the box."
+      },
+      {
+        "key": "post_match_feedback_InsideForward_Opponent_many_battles_attack_3",
+        "text": "[b]{0}[/b] {{ps-inside-forward}} was cutting into our box with ease too often."
+      },
+      {
+        "key": "post_match_feedback_InsideForward_many_battles_attack_3",
+        "text": "When [b]{0}[/b] {{ps-inside-forward}} is in form like this, our attack always looks dangerous."
+      },
+      {
+        "key": "post_match_feedback_InsideForward_many_battles_attack_2",
+        "text": "[b]{0}[/b] {{ps-inside-forward}} kept creating space for our attacking line."
+      },
+      {
+        "key": "post_match_feedback_InsideForward_many_battles_opponent_epic_attack_2",
+        "text": "We were one step behind opponents' [b]{0}[/b] {{ps-inside-forward}} the entire match."
+      },
+      {
+        "key": "post_match_feedback_InsideForward_many_battles_epic_attack_3",
+        "text": "We create great chances for ourselves when [b]{0}[/b] {{ps-inside-forward}} is playing like this."
+      },
+      {
+        "key": "post_match_feedback_InsideForward_many_battles_epic_attack_1",
+        "text": "[b]{0}[/b] {{ps-inside-forward}} allowed us to easily utilize chances around the box."
+      },
+      {
+        "key": "post_match_feedback_InsideForward_many_battles_opponent_epic_attack_3",
+        "text": "[b]{0}[/b] {{ps-inside-forward}} was fast with the ball and gave them additional chances."
+      },
+      {
+        "key": "post_match_feedback_InsideForward_Opponent_many_battles_attack_1",
+        "text": "Their whole attack line benefited from [b]{0}[/b]'s {{ps-inside-forward}} movement."
+      }
+    ],
+    "mezzala": [
+      {
+        "key": "post_match_feedback_Mezzala_many_battles_attack_3",
+        "text": "[b]{0}[/b] {{ps-mezzala}} was providing great vertical movement all game."
+      },
+      {
+        "key": "post_match_feedback_Mezzala_many_battles_opponent_epic_attack_2",
+        "text": "[b]{0}[/b] {{ps-mezzala}} made their attacks fast and overwhelming, we couldn't keep up."
+      },
+      {
+        "key": "post_match_feedback_Mezzala_many_battles_epic_attack_3",
+        "text": "[b]{0}[/b] {{ps-mezzala}} cut through the opposition midfield with ease."
+      },
+      {
+        "key": "post_match_feedback_Mezzala_many_battles_opponent_epic_attack_3",
+        "text": "[b]{0}[/b] {{ps-mezzala}} moved to each and every area of the pitch, pressuring us."
+      },
+      {
+        "key": "post_match_feedback_Mezzala_many_battles_epic_attack_1",
+        "text": "[b]{0}[/b] {{ps-mezzala}} ran circles around the opponents' players, masterful!"
+      },
+      {
+        "key": "post_match_feedback_Mezzala_many_battles_attack_1",
+        "text": "[b]{0}[/b] {{ps-mezzala}} facilitated rapid attacks that surprised our opponent."
+      },
+      {
+        "key": "post_match_feedback_Mezzala_many_battles_attack_2",
+        "text": "Our team was energized and fast, inspired by [b]{0}[/b] {{ps-mezzala}}."
+      },
+      {
+        "key": "post_match_feedback_Mezzala_many_battles_opponent_epic_attack_1",
+        "text": "They needed [b]{0}[/b] {{ps-mezzala}} in both defense and attack to win this game."
+      },
+      {
+        "key": "post_match_feedback_Mezzala_many_battles_epic_attack_2",
+        "text": "[b]{0}[/b] {{ps-mezzala}} never stopped running. Their midfielders couldn't keep up."
+      },
+      {
+        "key": "post_match_feedback_Mezzala_Opponent_many_battles_attack_3",
+        "text": "Their player [b]{0}[/b] {{ps-mezzala}} was causing our midfield problems all game."
+      },
+      {
+        "key": "post_match_feedback_Mezzala_Opponent_many_battles_attack_1",
+        "text": "Opponents' [b]{0}[/b] {{ps-mezzala}} outworked us in the midfield this time."
+      },
+      {
+        "key": "post_match_feedback_Mezzala_Opponent_many_battles_attack_2",
+        "text": "Opponents' [b]{0}[/b] {{ps-mezzala}} would not be slowed down this game."
+      }
+    ],
+    "no-nonsense-dc": [
+      {
+        "key": "post_match_feedback_NoNonsenseDC_many_battles_defense_2",
+        "text": "They would have had many more chances, if it wasnt for [b]{0}[/b] {{ps-no-nonsense-dc}}."
+      },
+      {
+        "key": "post_match_feedback_NoNonsenseDC_many_battles_epic_defense_3",
+        "text": "[b]{0}[/b] {{ps-no-nonsense-dc}} cleared many dangerous balls played into our penalty area."
+      },
+      {
+        "key": "post_match_feedback_NoNonsenseDC_many_battles_defense_1",
+        "text": "[b]{0}[/b] {{ps-no-nonsense-dc}} reacted well when the situation became dangerous."
+      },
+      {
+        "key": "post_match_feedback_NoNonsenseDC_Opponent_many_battles_defense_1",
+        "text": "Opponents' [b]{0}[/b] {{ps-no-nonsense-dc}} was always at the right place at the right time."
+      },
+      {
+        "key": "post_match_feedback_NoNonsenseDC_many_battles_epic_defense_1",
+        "text": "[b]{0}[/b] {{ps-no-nonsense-dc}} didn't allow their chances to threaten our goalkeeper."
+      },
+      {
+        "key": "post_match_feedback_NoNonsenseDC_many_battles_epic_defense_2",
+        "text": "[b]{0}[/b] {{ps-no-nonsense-dc}} gave the rest of the squad confidence with solid defence."
+      },
+      {
+        "key": "post_match_feedback_NoNonsenseDC_Opponent_many_battles_defense_3",
+        "text": "[b]{0}[/b] {{ps-no-nonsense-dc}} didn't put a foot wrong throughout the match."
+      },
+      {
+        "key": "post_match_feedback_NoNonsenseDC_many_battles_opponent_epic_defense_3",
+        "text": "[b]{0}[/b] {{ps-no-nonsense-dc}} was the impenetrable centerpoint of their defensive effort."
+      },
+      {
+        "key": "post_match_feedback_NoNonsenseDC_many_battles_opponent_epic_defense_1",
+        "text": "Against opponents' [b]{0}[/b] {{ps-no-nonsense-dc}} it felt like we couldn't push forward at all."
+      },
+      {
+        "key": "post_match_feedback_NoNonsenseDC_many_battles_opponent_epic_defense_2",
+        "text": "We didn't have a way to get around [b]{0}[/b] {{ps-no-nonsense-dc}} and attack properly."
+      },
+      {
+        "key": "post_match_feedback_NoNonsenseDC_many_battles_defense_3",
+        "text": "[b]{0}[/b] {{ps-no-nonsense-dc}} never let clear cut chances develop in our penalty area."
+      },
+      {
+        "key": "post_match_feedback_NoNonsenseDC_Opponent_many_battles_defense_2",
+        "text": "[b]{0}[/b] {{ps-no-nonsense-dc}} pressed hard and several times stopped us cold."
+      }
+    ],
+    "poacher": [
+      {
+        "key": "post_match_feedback_Poacher_many_battles_opponent_epic_attack_3",
+        "text": "Opponents' [b]{0}[/b] {{ps-poacher}} took our defenders on and managed to stay ahead."
+      },
+      {
+        "key": "post_match_feedback_Poacher_Opponent_many_battles_attack_2",
+        "text": "Our defenders did not remove the threat of [b]{0}[/b] {{ps-poacher}}."
+      },
+      {
+        "key": "post_match_feedback_Poacher_many_battles_epic_attack_2",
+        "text": "Their defenders had a nightmare playing against [b]{0}[/b] {{ps-poacher}}."
+      },
+      {
+        "key": "post_match_feedback_Poacher_many_battles_epic_attack_3",
+        "text": "Our opponents will be happy to not have to deal with [b]{0}[/b] {{ps-poacher}} again soon!"
+      },
+      {
+        "key": "post_match_feedback_Poacher_many_battles_opponent_epic_attack_2",
+        "text": "Opponents' [b]{0}[/b] {{ps-poacher}} was fast and unpredictable, a nightmare to stop."
+      },
+      {
+        "key": "post_match_feedback_Poacher_Opponent_many_battles_attack_3",
+        "text": "[b]{0}[/b] {{ps-poacher}} was a handful for our defenders. We couldn't stop them."
+      },
+      {
+        "key": "post_match_feedback_Poacher_many_battles_attack_1",
+        "text": "[b]{0}[/b] {{ps-poacher}} dominated the opponents' defensive line."
+      },
+      {
+        "key": "post_match_feedback_Poacher_many_battles_opponent_epic_attack_1",
+        "text": "Everything our defenders tried, did not work to stop [b]{0}[/b] {{ps-poacher}}."
+      },
+      {
+        "key": "post_match_feedback_Poacher_many_battles_attack_2",
+        "text": "[b]{0}[/b] {{ps-poacher}} was dangerous around the opponents' box."
+      },
+      {
+        "key": "post_match_feedback_Poacher_many_battles_attack_3",
+        "text": "[b]{0}[/b] {{ps-poacher}} was a threat all game in the opponents' area."
+      },
+      {
+        "key": "post_match_feedback_Poacher_Opponent_many_battles_attack_1",
+        "text": "Opponents' [b]{0}[/b] {{ps-poacher}} was too much to handle in the box."
+      },
+      {
+        "key": "post_match_feedback_Poacher_many_battles_epic_attack_1",
+        "text": "Opponents' defence absolutely fell apart against [b]{0}[/b] {{ps-poacher}}."
+      }
+    ],
+    "regista": [
+      {
+        "key": "post_match_feedback_Regista_many_battles_defense_1",
+        "text": "[b]{0}[/b] {{ps-regista}} kept us in the game with fast and precise passes."
+      },
+      {
+        "key": "post_match_feedback_Regista_many_battles_defense_3",
+        "text": "[b]{0}[/b] {{ps-regista}} piloted the game from midfield and provided great service."
+      },
+      {
+        "key": "post_match_feedback_Regista_many_battles_defense_2",
+        "text": "[b]{0}[/b] {{ps-regista}} orchestrated our offense and kept our strikers busy."
+      },
+      {
+        "key": "post_match_feedback_Regista_many_battles_epic_defense_2",
+        "text": "[b]{0}[/b]'s {{ps-regista}} passes allowed us to completely outplay their defensive line."
+      },
+      {
+        "key": "post_match_feedback_Regista_many_battles_epic_defense_3",
+        "text": "[b]{0}[/b] {{ps-regista}} had just what we needed in order to keep our attackers busy."
+      },
+      {
+        "key": "post_match_feedback_Regista_Opponent_many_battles_defense_1",
+        "text": "Their [b]{0}[/b] {{ps-regista}} was in control of the match from the start."
+      },
+      {
+        "key": "post_match_feedback_Regista_Opponent_many_battles_defense_3",
+        "text": "The vision and rhythm of [b]{0}[/b] {{ps-regista}} gave our opponents a serious advantage."
+      },
+      {
+        "key": "post_match_feedback_Regista_many_battles_epic_defense_1",
+        "text": "[b]{0}[/b] {{ps-regista}} was the centerpoint of our precise passing game."
+      },
+      {
+        "key": "post_match_feedback_Regista_many_battles_opponent_epic_defense_2",
+        "text": "Opponents' [b]{0}[/b] {{ps-regista}} knew how to keep their attackers busy all the time."
+      },
+      {
+        "key": "post_match_feedback_Regista_many_battles_opponent_epic_defense_3",
+        "text": "[b]{0}[/b] {{ps-regista}} was the mastermind behind their passing game for this match."
+      },
+      {
+        "key": "post_match_feedback_Regista_Opponent_many_battles_defense_2",
+        "text": "Opponents' [b]{0}[/b] {{ps-regista}} was like another coach on the pitch for them."
+      },
+      {
+        "key": "post_match_feedback_Regista_many_battles_opponent_epic_defense_1",
+        "text": "Opponents' [b]{0}[/b] {{ps-regista}} linked their midfield and attack with perfection."
+      }
+    ],
+    "stopper": [
+      {
+        "key": "post_match_feedback_Stopper_many_battles_opponent_epic_defense_2",
+        "text": "Our midfield created the chances, but [b]{0}[/b] {{ps-stopper}} prevented us from scoring."
+      },
+      {
+        "key": "post_match_feedback_Stopper_many_battles_defense_2",
+        "text": "[b]{0}[/b] {{ps-stopper}} made sure our goalkeeper never had too much to handle."
+      },
+      {
+        "key": "post_match_feedback_Stopper_many_battles_opponent_epic_defense_1",
+        "text": "We would have had more shots on goal, if it wasn't for [b]{0}[/b] {{ps-stopper}}."
+      },
+      {
+        "key": "post_match_feedback_Stopper_many_battles_epic_defense_3",
+        "text": "[b]{0}[/b] {{ps-stopper}} had some important blocks - our goalkeeper was thankful!"
+      },
+      {
+        "key": "post_match_feedback_Stopper_many_battles_defense_3",
+        "text": "Our keeper had little to do with [b]{0}[/b] {{ps-stopper}} playing this way."
+      },
+      {
+        "key": "post_match_feedback_Stopper_many_battles_opponent_epic_defense_3",
+        "text": "[b]{0}[/b] {{ps-stopper}} did not allow us to cash in on the balls we sent forward."
+      },
+      {
+        "key": "post_match_feedback_Stopper_many_battles_defense_1",
+        "text": "[b]{0}[/b] {{ps-stopper}} made sure opposition chances didn't materialize."
+      },
+      {
+        "key": "post_match_feedback_Stopper_Opponent_many_battles_defense_1",
+        "text": "[b]{0}[/b] {{ps-stopper}} prevented our strikers from taking all of their chances."
+      },
+      {
+        "key": "post_match_feedback_Stopper_many_battles_epic_defense_1",
+        "text": "Against [b]{0}[/b] {{ps-stopper}} our opponents' could barely get to the goal."
+      },
+      {
+        "key": "post_match_feedback_Stopper_Opponent_many_battles_defense_2",
+        "text": "[b]{0}[/b] {{ps-stopper}} interrupted several of our chances close to goal."
+      },
+      {
+        "key": "post_match_feedback_Stopper_Opponent_many_battles_defense_3",
+        "text": "[b]{0}[/b] {{ps-stopper}} broke up some great chances we had."
+      },
+      {
+        "key": "post_match_feedback_Stopper_many_battles_epic_defense_2",
+        "text": "[b]{0}[/b] {{ps-stopper}} made sure our opponents had no sight of goal."
+      }
+    ],
+    "sweeper-keeper": [
+      {
+        "key": "post_match_feedback_SweeperKeeper_many_battles_epic_defense_3",
+        "text": "[b]{0}[/b] {{ps-sweeper-keeper}} locked in with our defenders, choking up their attack."
+      },
+      {
+        "key": "post_match_feedback_SweeperKeeper_many_battles_defense_2",
+        "text": "[b]{0}[/b] {{ps-sweeper-keeper}} prevented them from creating chances through crosses."
+      },
+      {
+        "key": "post_match_feedback_SweeperKeeper_many_battles_defense_1",
+        "text": "[b]{0}[/b] {{ps-sweeper-keeper}} made several crucial interceptions in the late game."
+      },
+      {
+        "key": "post_match_feedback_SweeperKeeper_many_battles_defense_3",
+        "text": "Their attackers never got in behind because of [b]{0}[/b]'s {{ps-sweeper-keeper}} awareness."
+      },
+      {
+        "key": "post_match_feedback_SweeperKeeper_many_battles_epic_defense_1",
+        "text": "[b]{0}[/b] {{ps-sweeper-keeper}} moved to intercept balls before they became chances."
+      },
+      {
+        "key": "post_match_feedback_SweeperKeeper_many_battles_epic_defense_2",
+        "text": "[b]{0}[/b] {{ps-sweeper-keeper}} cleared up the space around the box with no real danger."
+      }
+    ],
+    "target-man": [
+      {
+        "key": "post_match_feedback_TargetMan_many_battles_epic_attack_1",
+        "text": "Every high flying ball we sent managed to find [b]{0}[/b] {{ps-target-man}}."
+      },
+      {
+        "key": "post_match_feedback_TargetMan_many_battles_opponent_epic_attack_3",
+        "text": "Our aerial defence was not good enough to stop [b]{0}[/b] {{ps-target-man}}."
+      },
+      {
+        "key": "post_match_feedback_TargetMan_many_battles_attack_1",
+        "text": "[b]{0}[/b] {{ps-target-man}} maintained aerial control in the opponents' box."
+      },
+      {
+        "key": "post_match_feedback_TargetMan_Opponent_many_battles_attack_2",
+        "text": "[b]{0}[/b] {{ps-target-man}} took control over the aerial space of our box."
+      },
+      {
+        "key": "post_match_feedback_TargetMan_many_battles_opponent_epic_attack_2",
+        "text": "Our defenders were ready, but [b]{0}[/b] {{ps-target-man}} utilized all of his chances."
+      },
+      {
+        "key": "post_match_feedback_TargetMan_many_battles_attack_2",
+        "text": "Many of our high balls were able to find [b]{0}[/b] {{ps-target-man}}."
+      },
+      {
+        "key": "post_match_feedback_TargetMan_many_battles_epic_attack_3",
+        "text": "[b]{0}[/b] {{ps-target-man}} manages to get on the end of every long pass!"
+      },
+      {
+        "key": "post_match_feedback_TargetMan_many_battles_opponent_epic_attack_1",
+        "text": "Opponents' [b]{0}[/b] {{ps-target-man}} asserted total aerial domination in our box."
+      },
+      {
+        "key": "post_match_feedback_TargetMan_many_battles_attack_3",
+        "text": "[b]{0}[/b] {{ps-target-man}} received our long passes and held up play well."
+      },
+      {
+        "key": "post_match_feedback_TargetMan_Opponent_many_battles_attack_3",
+        "text": "Crosses into the area reached [b]{0}[/b] {{ps-target-man}} far too often."
+      },
+      {
+        "key": "post_match_feedback_TargetMan_many_battles_epic_attack_2",
+        "text": "[b]{0}[/b] {{ps-target-man}} created good chances for our attackers thanks to long passes."
+      },
+      {
+        "key": "post_match_feedback_TargetMan_Opponent_many_battles_attack_1",
+        "text": "Too many aerial balls found oppponents' [b]{0}[/b] {{ps-target-man}} in the box."
+      }
+    ],
+    "wing-back": [
+      {
+        "key": "post_match_feedback_WingBack_many_battles_defense_2",
+        "text": "[b]{0}[/b] {{ps-wing-back}} was effective and on point over the flank."
+      },
+      {
+        "key": "post_match_feedback_WingBack_many_battles_defense_1",
+        "text": "[b]{0}[/b] {{ps-wing-back}} never allowed our opponents' midfield to rest."
+      },
+      {
+        "key": "post_match_feedback_WingBack_Opponent_many_battles_defense_3",
+        "text": "[b]{0}[/b] {{ps-wing-back}} broke up our momentum every time we mounted an attack."
+      },
+      {
+        "key": "post_match_feedback_WingBack_many_battles_opponent_epic_defense_3",
+        "text": "[b]{0}[/b] {{ps-wing-back}} helped them move the ball and attack from the flank effectively."
+      },
+      {
+        "key": "post_match_feedback_WingBack_many_battles_epic_defense_1",
+        "text": "[b]{0}[/b] {{ps-wing-back}} broke the will of opponents' midfielders, allowing us to win."
+      },
+      {
+        "key": "post_match_feedback_WingBack_Opponent_many_battles_defense_1",
+        "text": "Couldn't win without an answer for opponents'  [b]{0}[/b] {{ps-wing-back}} on the flank."
+      },
+      {
+        "key": "post_match_feedback_WingBack_Opponent_many_battles_defense_2",
+        "text": "[b]{0}[/b] {{ps-wing-back}} increased the pressure they were imposing on the flanks."
+      },
+      {
+        "key": "post_match_feedback_WingBack_many_battles_defense_3",
+        "text": "[b]{0}[/b] {{ps-wing-back}} left their midfield no time on the ball."
+      },
+      {
+        "key": "post_match_feedback_WingBack_many_battles_epic_defense_3",
+        "text": "[b]{0}[/b] {{ps-wing-back}} got forward into great areas, but maintained the defensive line."
+      },
+      {
+        "key": "post_match_feedback_WingBack_many_battles_epic_defense_2",
+        "text": "In attack and defence, [b]{0}[/b] {{ps-wing-back}} was real trouble for their midfielders."
+      },
+      {
+        "key": "post_match_feedback_WingBack_many_battles_opponent_epic_defense_1",
+        "text": "Our flank did not withstand the pressure from opponents' [b]{0}[/b] {{ps-wing-back}}."
+      },
+      {
+        "key": "post_match_feedback_WingBack_many_battles_opponent_epic_defense_2",
+        "text": "[b]{0}[/b] {{ps-wing-back}} stopped us cold on the flank with no real chances in the center."
+      }
+    ],
+    "winger": [
+      {
+        "key": "post_match_feedback_Winger_many_battles_epic_attack_2",
+        "text": "[b]{0}[/b]'s {{ps-winger}} pace was instrumental in breaking down the opposition defence."
+      },
+      {
+        "key": "post_match_feedback_Winger_many_battles_attack_2",
+        "text": "[b]{0}[/b]'s {{ps-winger}} crosses from the side were our edge in this match."
+      },
+      {
+        "key": "post_match_feedback_Winger_many_battles_opponent_epic_attack_2",
+        "text": "[b]{0}[/b] {{ps-winger}} outplayed us on the flank and delivered the ball with precision."
+      },
+      {
+        "key": "post_match_feedback_Winger_Opponent_many_battles_attack_2",
+        "text": "We needed more help on the flank to stop [b]{0}[/b] {{ps-winger}}."
+      },
+      {
+        "key": "post_match_feedback_Winger_many_battles_opponent_epic_attack_3",
+        "text": "[b]{0}[/b] {{ps-winger}} crossed past defenders and gave their team shots from the box."
+      },
+      {
+        "key": "post_match_feedback_Winger_Opponent_many_battles_attack_3",
+        "text": "[b]{0}[/b] {{ps-winger}} saw daylight all the time down our flank."
+      },
+      {
+        "key": "post_match_feedback_Winger_many_battles_opponent_epic_attack_1",
+        "text": "Opponents' [b]{0}[/b] {{ps-winger}} crosses had a major impact on this match."
+      },
+      {
+        "key": "post_match_feedback_Winger_many_battles_attack_3",
+        "text": "Great service was provided by [b]{0}[/b] {{ps-winger}} with their crosses."
+      },
+      {
+        "key": "post_match_feedback_Winger_many_battles_epic_attack_1",
+        "text": "[b]{0}[/b] {{ps-winger}} picked up the tempo on the flank and broke our opponent."
+      },
+      {
+        "key": "post_match_feedback_Winger_many_battles_epic_attack_3",
+        "text": "The speed of [b]{0}[/b] {{ps-winger}} caused big problems for their fullbacks."
+      },
+      {
+        "key": "post_match_feedback_Winger_Opponent_many_battles_attack_1",
+        "text": "[b]{0}[/b] {{ps-winger}} took advantage of our exposed flanks this match."
+      },
+      {
+        "key": "post_match_feedback_Winger_many_battles_attack_1",
+        "text": "[b]{0}[/b] {{ps-winger}} determined the match outcome with his crosses."
+      }
+    ]
+  },
+  "trait_test_by_internal_key": {
+    "anchorman": [
+      {
+        "key": "trait_test_anchorman_description",
+        "text": "The Anchor Man combines fitness and technique to anticipate the moves of the opponents, recover the ball and distribute it out to players in more forward positions."
+      },
+      {
+        "key": "trait_test_anchorman_match_report_opponent",
+        "text": "Opponent's {0} stopped us from [830AFF]pushing[-] {1} past midfield."
+      },
+      {
+        "key": "trait_test_anchorman_match_report_player",
+        "text": "{0} [830AFF]anticipated[-] {1} and stopped many midfield attacks."
+      }
+    ],
+    "ballplayingdc": [
+      {
+        "key": "trait_test_ballplayingdc_description",
+        "text": "Ball-playing DCs are a balanced mix of defensive solvency and technique. They stop attacks and fluidly pass the ball to the midfield, or hold it to calm the waters."
+      },
+      {
+        "key": "trait_test_ballplayingdc_match_report_opponent",
+        "text": "Their defense and midfield [830AFF]outplayed[-] {1} us, thanks to {0}."
+      },
+      {
+        "key": "trait_test_ballplayingdc_match_report_player",
+        "text": "{0} was the vital to [830AFF]connect[-] {1} our defense and midfield."
+      }
+    ],
+    "ballplayinggk": [
+      {
+        "key": "trait_test_ballplayinggk_match_report_opponent",
+        "text": "{0} was like an [830AFF]additional defender[-] {1} for their team."
+      },
+      {
+        "key": "trait_test_ballplayinggk_match_report_player",
+        "text": "Our keeper, {0} played as a proper [830AFF]outfield[-] {1} player."
+      },
+      {
+        "key": "trait_test_ballplayinggk_description",
+        "text": "A Ball-playing GK can play with his feet, contributing to the team's passing game. He can help build up the offensive play or trigger a counter attack with a well-aimed pass."
+      }
+    ],
+    "ballwinner": [
+      {
+        "key": "trait_test_ballwinner_match_report_opponent",
+        "text": "{0} [830AFF]intercepted[-] {1} many of our passes in the midfield."
+      },
+      {
+        "key": "trait_test_ballwinner_match_report_player",
+        "text": "{0} [830AFF]intercepted[-] {1} many dangerous passes in the midfield."
+      },
+      {
+        "key": "trait_test_ballwinner_description",
+        "text": "A mainly defensive midfielder, the Ball Winner is very proficient at interceptions and tackles. He holds the line, gets the ball and gives it to the playmaker."
+      }
+    ],
+    "boxcommander": [
+      {
+        "key": "trait_test_boxcommander_match_report_opponent",
+        "text": "Our attackers were often [830AFF]overwhelmed[-]{1} by {0}."
+      },
+      {
+        "key": "trait_test_boxcommander_description",
+        "text": "The Box Commander imposes his rules in the box. His presence, both physically and mentally, intimidates the most seasoned STs. He becomes a giant on the goal line."
+      },
+      {
+        "key": "trait_test_boxcommander_match_report_player",
+        "text": "Opponents [830AFF]felt discouraged[-] {1} to face {0} at the net."
+      }
+    ],
+    "boxtobox": [
+      {
+        "key": "trait_test_boxtobox_description",
+        "text": "Present in a large area of the field, the Box-to-box MC appears wherever needed, supporting other midfielders. He can take part in both attacking and defending plays."
+      },
+      {
+        "key": "trait_test_boxtobox_match_report_player",
+        "text": "{0} was everywhere, [830AFF]supporting[-] {1}  on attack and defense."
+      },
+      {
+        "key": "trait_test_boxtobox_match_report_opponent",
+        "text": "Opponent's {0} was key on their [830AFF]supporting[-] {1} of the midfield."
+      }
+    ],
+    "enganche": [
+      {
+        "key": "trait_test_enganche_match_report_player",
+        "text": "{0} was in the very center of our [830AFF]assist[-] {1} game."
+      },
+      {
+        "key": "trait_test_enganche_description",
+        "text": "The Enganche is a quick-minded skilled driver that connects midfield and attack, moving the ball forward fast. He displays great technical and assisting skills."
+      },
+      {
+        "key": "trait_test_enganche_match_report_opponent",
+        "text": "We couldn't stop {0} [830AFF]assisting[-] {1} in many of their attacks."
+      }
+    ],
+    "false9": [
+      {
+        "key": "trait_test_false9_match_report_opponent",
+        "text": "{0} [830AFF]outmanouvred[-] {1} our defenders easily."
+      },
+      {
+        "key": "trait_test_false9_description",
+        "text": "Usually a skilled ball driver, a False Nine receives the ball deep and brings danger to the surroundings of the box, forcing DCs to break their position."
+      },
+      {
+        "key": "trait_test_false9_match_report_player",
+        "text": "{0} managed to [830AFF]outmanouvre[-] {1}  the defenders easily."
+      }
+    ],
+    "falsewinger": [
+      {
+        "key": "trait_test_falsewinger_match_report_player",
+        "text": "From the wings, {0} [830AFF]reinforced[-] {1} our midfield."
+      },
+      {
+        "key": "trait_test_falsewinger_match_report_opponent",
+        "text": "Their midfield was [830AFF]reinforced[-] {1} with {0} coming off the wing."
+      },
+      {
+        "key": "trait_test_falsewinger_description",
+        "text": "Deployed on the wings, False Wingers drift to central areas of the pitch, creating a numerical advantage in the midfield that disrupts and overwhelms rival defences."
+      }
+    ],
+    "fullback": [
+      {
+        "key": "trait_test_fullback_match_report_opponent",
+        "text": "Our side attackers didn't manage to [830AFF]get through[-] {1} {0}."
+      },
+      {
+        "key": "trait_test_fullback_description",
+        "text": "Full-backs' focus is primarily defence. It's their job to stop hazards coming from the sides, even if they will occasionally support fast-paced offensives from their flanks."
+      },
+      {
+        "key": "trait_test_fullback_match_report_player",
+        "text": "{0} kept our [830AFF]flanks secure[-] {1} throughout the match."
+      }
+    ],
+    "mezzala": [
+      {
+        "key": "trait_test_mezzala_match_report_player",
+        "text": "{0} helped us [830AFF]outrun[-] {1} the opponent in the midfield."
+      },
+      {
+        "key": "trait_test_mezzala_match_report_opponent",
+        "text": "{0} [830AFF]outran[-] {1} our midfielders with ease."
+      },
+      {
+        "key": "trait_test_mezzala_description",
+        "text": "A Mezzala brings dynamism to the midfield and feeds their teammates with their passing skills and space creation. Teammates with high mobility will get the most from him."
+      }
+    ],
+    "poacher": [
+      {
+        "key": "trait_test_poacher_match_report_player",
+        "text": "{0} was a [830AFF]constant threat[-] {1} to the opponents box."
+      },
+      {
+        "key": "trait_test_poacher_description",
+        "text": "Scoring goals is the Poacher's only focus. Always waiting on the edges of the opponents' defensive line, any ball given to him in that area is a hazard."
+      },
+      {
+        "key": "trait_test_poacher_match_report_opponent",
+        "text": "Opponent's {0} was a [830AFF]constant threat[-] {1} to our defenders."
+      }
+    ],
+    "regista": [
+      {
+        "key": "trait_test_regista_match_report_opponent",
+        "text": "Through {0}, our opponent took [830AFF]full control[-] {1} of the midfield."
+      },
+      {
+        "key": "trait_test_regista_description",
+        "text": "Registas are directors. With few but very precise and effective actions they'll get the ball deep in their own halves and set up the attacking phase of the team."
+      },
+      {
+        "key": "trait_test_regista_match_report_player",
+        "text": "Our midfielders [830AFF]moved the ball[-] {1} with ease through {0}."
+      }
+    ],
+    "stopper": [
+      {
+        "key": "trait_test_stopper_match_report_opponent",
+        "text": "Our strikers had [830AFF]no effective solution[-] {1} for {0}."
+      },
+      {
+        "key": "trait_test_stopper_description",
+        "text": "Stoppers are blunt but precise when it comes to neutralising the attackers' attempts to score. They are experts in marking and tackling. A life insurance in the box."
+      },
+      {
+        "key": "trait_test_stopper_match_report_player",
+        "text": "{0} presented [830AFF]a wall[-] {1} for the opponent's strikers."
+      }
+    ],
+    "sweeper": [
+      {
+        "key": "trait_test_sweeper_match_report_player",
+        "text": "We felt secure with {0} as our [830AFF]last line[-] {1} of defense."
+      },
+      {
+        "key": "trait_test_sweeper_description",
+        "text": "The Sweeper moves freely behind other DCs, appearing wherever needed as the last defensive resort. Once recovered, he will drive the ball himself to the midfield with security."
+      },
+      {
+        "key": "trait_test_sweeper_match_report_opponent",
+        "text": "We pushed forward, but it was hard to get the ball [830AFF]past[-] {1} {0}."
+      }
+    ],
+    "sweeperkeeper": [
+      {
+        "key": "trait_test_sweeperkeeper_match_report_opponent",
+        "text": "Many of our long balls were [830AFF]intercepted[-] {1} by {0}."
+      },
+      {
+        "key": "trait_test_sweeperkeeper_description",
+        "text": "The Sweeper Keeper feels comfortable playing out of his area, rushing out to intercept opponents' long balls. A proper 11th outfield player whenever needed."
+      },
+      {
+        "key": "trait_test_sweeperkeeper_match_report_player",
+        "text": "{0} rushed out to [830AFF]intercept[-] {1} long passes into his box."
+      }
+    ],
+    "targetman": [
+      {
+        "key": "trait_test_targetman_match_report_player",
+        "text": "{0} was a significant [830AFF]aerial threat[-] {1} in the box."
+      },
+      {
+        "key": "trait_test_targetman_match_report_opponent",
+        "text": "Our defenders couldn't stop the [830AFF]aerial threat[-] {1} of {0}."
+      },
+      {
+        "key": "trait_test_targetman_description",
+        "text": "The Target Man is a magnet for aerial passes in the attacking line. He'll either finish or hold up the ball against the DCs and wait for teammates to join the offensive."
+      }
+    ],
+    "wingback": [
+      {
+        "key": "trait_test_wingback_match_report_player",
+        "text": "{0} brought many good opportunities with his [830AFF]crosses[-] {1}."
+      },
+      {
+        "key": "trait_test_wingback_description",
+        "text": "Wing-backs are defenders that thrive on attack. They run up their flanks, overlapping side midfielders, and giving crosses or dragging opposing defenders' attention."
+      },
+      {
+        "key": "trait_test_wingback_match_report_opponent",
+        "text": "{0} sieged our box relentlessly with his [830AFF]crosses[-] {1}."
+      }
+    ],
+    "winger": [
+      {
+        "key": "trait_test_winger_description",
+        "text": "Wingers are a synonym for danger from the flanks. Their incursions are a nightmare for DLs and DRs because of their crosses, speed and dribbling skills."
+      },
+      {
+        "key": "trait_test_winger_match_report_opponent",
+        "text": "We needed more help [830AFF]in the flanks[-] {1} against {0}."
+      },
+      {
+        "key": "trait_test_winger_match_report_player",
+        "text": "{0} was relentless when attacking from the [830AFF]flanks[-] {1}."
+      }
+    ]
+  },
+  "interpretation_rule": "Feedback/trait strings are game-authored semantic evidence of situations associated with a Playstyle. They are not numeric effectiveness weights or proof of hidden trigger thresholds."
+}

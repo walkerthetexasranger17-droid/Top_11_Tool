@@ -1,10 +1,10 @@
-# Top Eleven Tool v0.5.8
+# Top Eleven Tool v0.5.10
 
 > **Project recovery:** a new chat/session must read [`START_HERE.md`](START_HERE.md) before modifying code. The app now embeds a permanent build-30527 Game Research Index under `docs/research/build_30527/` and machine-readable findings under `data/build_30527/index/`.
 
 Top Eleven Tool is a mobile-first PWA companion for managing a Top Eleven squad, scanning player cards, planning training, selecting a formation, assigning set pieces and presenting tactics in a simpler form.
 
-`v0.5.8` is a research/continuity checkpoint on top of the closed v0.5.7 Formation + Tactics baseline. It records the unfinished three-effect Mentor decision layer (Signature semantics are not yet integrated), current official Mentor Prestige/halftime facts, a separate community-corroboration index, and the first qualitative ST role/Playstyle evidence bands. No private match-engine weights or speculative Mentor percentages were added to runtime logic.
+`v0.5.10` is the first production decision-engine build on top of the completed game/native and 2024–26 community research. It adds a transparent joint Formation + Tactics + Mentor planner, a separate squad-coverage/recruitment blueprint, strict Mentor Level 1/5/10 boost-family gating, and full role + Playstyle Individual Training priority hierarchies. The numerical plan weights are explicitly **COMPANION LOGIC** and are documented in `data/build_30527/index/decision_logic_v1.json`; they are not claimed Nordeus match-engine coefficients.
 
 ## Main navigation
 

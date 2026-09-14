@@ -11,7 +11,7 @@ These are deliberately unresolved boundaries. A future coding session must not s
 ## Mentors
 - Exact native Football Engine consumer that applies `MentorBoostDomain.CurrentEffects[]`.
 - Full Level 1-10 Mentor magnitude curves. Family unlock levels are now proven as Tactical=1, Attribute=5, Signature=10; the missing part is the numerical value at each level.
-- Exact build-30527 protocol/static representation of the **3 official Prestige levels** and Signature Seals after Level 10. Current official product documentation proves the feature exists, but the embedded static archive did not expose its fields.
+- Historical build-30527 archive does not expose the newer Prestige fields, but the supplied current Windows client now **resolves** the existence of 3 Prestige stages and Signature Seal gating. Exact level/Prestige effect magnitudes remain runtime-state values and must not be invented.
 - Signature-aware companion decision rules are not finished. Current runtime only uses Signature availability as a Boolean tie-break; do not invent one cross-Mentor numeric Signature score.
 - Any Mentor effect not present in the current effect state/localisation index.
 - Causal match-outcome magnitude from Alan/Green captures; observed match-stat changes are evidence, not controlled causation.
@@ -50,3 +50,20 @@ If a new capture or binary pass resolves one of these, update this file and the 
 ## Role / Playstyle attribute priority weights
 
 **UNRESOLVED:** the client exposes exact white/key-attribute membership per role but no recovered private numeric per-role skill weighting table. v0.5.8 preserves qualitative ST COMPANION evidence bands, but numeric Nordeus weights remain unresolved and must not be implied. False Nine Passing/Positioning priority remains unresolved. ST Special-Ability weighting is now explicitly blocked by missing current effect multipliers/current action hooks and contradictory stale-schema community evidence. ST tactic context is only partially resolved: Target Man has strong cross/aerial-service COMPANION context, while fixed Poacher/False-Nine tactic presets remain unresolved.
+
+
+## v0.5.9 current Windows-client boundaries
+
+- **RESOLVED correction:** Shadow Striker is current; `LongShots` is the internal/raw identifier and is localized as Shadow Striker.
+- **RESOLVED:** three Mentor Prestige stages and Signature Seal gating are now present in the supplied current client, not only official web documentation.
+- **UNRESOLVED:** one universal static role→Special-Ability eligibility matrix. Runtime/protocol eligibility is explicit, but the static table has not been recovered.
+- **UNRESOLVED:** inherent numeric Special Ability effectiveness multipliers. Exact activation events are observable in the match stream, enabling controlled tests.
+- **UNRESOLVED:** exact Playstyle trigger thresholds / numeric coefficients. Trigger and outcome event types exist; game-authored feedback provides semantics only.
+- **UNRESOLVED:** current Windows-client condition-drain numeric override table. The 11-dimension architecture is confirmed.
+## Community companion logic boundaries
+
+- **UNRESOLVED / do not universalise:** whether 3CB or back four is globally stronger in the current 2026 match engine. Community evidence conflicts.
+- **UNRESOLVED / do not universalise:** one optimal pressing/offside/man-marking/tackling recipe. Treat these as context/risk/drain decisions.
+- **RESOLVED companion boundary:** possession percentage is not a safe optimisation target by itself; use structural matchup and chance-route logic first.
+- **RESOLVED companion boundary:** Mentor ranking must be plan-dependent rather than one global best-Mentor table. Exact causal outcome magnitude remains unresolved.
+
