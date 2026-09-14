@@ -94,5 +94,11 @@
     "symbol": "TrainingReportData::.ctor",
     "address": "0x5116FB4",
     "status": "GAME_FACT"
+  },
+  {
+    "system": "mentors",
+    "symbol": "MentorBoostIconResolver.UnlockLevelForKind",
+    "address": "0x181B202A0",
+    "status": "GAME_FACT"
   }
 ]

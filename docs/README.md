@@ -14,7 +14,7 @@
 - `../data/build_30527/index/` — machine-readable finding/protocol/native/mentor indexes.
 
 ## Releases
-`releases/` contains build notes. Current version is v0.5.2.
+`releases/` contains build notes. Current version is v0.5.4.
 
 ## Setup / verification
 - `setup/`

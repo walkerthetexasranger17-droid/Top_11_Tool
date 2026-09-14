@@ -119,3 +119,5 @@ body.drawer-open{overflow:hidden}.drawer-backdrop{position:fixed;z-index:72;inse
 body.booting .app{visibility:hidden}
 
 @media(max-width:560px){.formation-actions{display:grid}.formation-actions .mini-note{max-width:none}.set-piece-slot{min-width:86px;max-width:105px;grid-template-columns:30px minmax(0,1fr);padding:4px 5px}.set-piece-slot .pitch-player-ring{width:29px;height:29px}.set-piece-slot-copy small{font-size:6px}.set-piece-slot-copy b{font-size:9px}.set-piece-candidates{grid-template-columns:1fr}.tactic-calculator-fields{grid-template-columns:1fr 1fr}}
+
+.mentor-state-control{display:flex!important;align-items:center;gap:8px}.mentor-level-row.mentor-locked{opacity:.62}.mentor-level-control button:disabled,.mentor-level-control input:disabled{opacity:.38;cursor:not-allowed}

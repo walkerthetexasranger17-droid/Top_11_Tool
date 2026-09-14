@@ -1,7 +1,7 @@
 # Top Eleven Build 30527 — Game Research Index
 
-**Index version:** 1  
-**Last updated:** 13 September 2026  
+**Index version:** 2  
+**Last updated:** 14 September 2026  
 **Purpose:** permanent, embedded reference for future Top Eleven Tool logic work.
 
 This index prevents repeated reverse-engineering and stops assumptions from being promoted into “game facts”.
@@ -26,6 +26,7 @@ See `data/build_30527/index/source_manifest.json`.
 
 ## System pages
 
+- [Target Formation / role priority](systems/formation_target.md)
 - [Tactics](systems/tactics.md)
 - [Mentors](systems/mentors.md)
 - [Set Pieces](systems/set_pieces.md)
@@ -37,15 +38,16 @@ See `data/build_30527/index/source_manifest.json`.
 ## Machine-readable indexes
 
 - `data/build_30527/index/findings.json` — searchable finding register.
+- `data/build_30527/index/role_attribute_priority_hypotheses.json` — controlled ST evidence and unresolved per-role priority hypothesis.
 - `data/build_30527/index/mentor_effects.json` — Mentor IDs, live arrays, decoded semantics and protocol.
 - `data/build_30527/index/tactics_semantics.json` — exact drain and shipped tactic tooltips.
 - `data/build_30527/index/native_methods.json` — high-value recovered native symbols/addresses.
 - `data/build_30527/index/protocol_fields.json` — high-value protocol fields.
 - `data/build_30527/index/source_manifest.json` — build/source hashes.
 
-## Current highest-value new finding
+## Current highest-value checkpoint
 
-Mentor effect descriptions in the exact game package resolve the units and positions of previously ambiguous live arrays. Tactical effects are expressed as `% effectiveness`; attribute effects are explicit `+N` attribute points to all players; multi-value Signature Move arrays map to named effect/penalty positions. This materially improves Mentor logic without guessing.
+The v0.5.4 checkpoint adds a high-value Formation/Training hypothesis: a controlled natural-ST substitution improved Lineup Balance despite the replacement having both lower OVR and a slightly lower equal-weight average across all nine ST white skills. This rules out simplistic OVR/equal-white explanations for that observation and makes **unequal role-specific white-skill priority** the next targeted research question. Shooting/Finishing are an ST hypothesis only; no weights or target values are approved. See `V054_ROLE_PRIORITY_CHECKPOINT.md`.
 
 ## Research rule
 

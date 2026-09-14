@@ -67,15 +67,29 @@ The earlier safe rule “do not automatically call every scalar a percent” was
 
 Keep raw arrays alongside decoded semantics so we can detect future version changes.
 
+## v0.5.3 unlock/state correction
+
+The current protocol keeps `IsUnlocked` separate from `Progress.Level`; Locked is not a fabricated level 0. Native client logic in `MentorBoostIconResolver.UnlockLevelForKind` proves the family gates:
+
+- Tactical: level 1
+- Attribute: level 5
+- Signature: level 10
+
+The companion now defaults every Mentor to **Locked** user state and starts at level 1 only after the user marks that Mentor unlocked. Historical captured levels/XP remain research evidence only.
+
 ## Still unresolved
 
-The exact native Football Engine function/field consuming `CurrentEffects[]` has not yet been recovered. Therefore do not claim an undocumented effect path or invent hidden stacking maths.
+- Complete Level 1-10 magnitude table for each Mentor. `CurrentEffects[]` / `NextLevelEffects[]` are runtime state; the static `MentorBoostMap` does not contain the numeric progression ladder.
+- Exact native/server Football Engine consumer that applies `MentorBoostDomain.CurrentEffects[]`.
+- Hidden stacking/causal outcome maths.
 
-## Current app defect to fix next
+Static live-match update/assign paths inspected so far move Mentor snapshots/state but do not apply visible client-side numerical football arithmetic. Treat server-side application as **STRONG EVIDENCE**, not a recovered formula.
 
-Changing a Mentor level in the companion currently changes the displayed/scored level while retaining effect arrays captured at another level. Rebuild this so availability and magnitude are distinct; never synthesize missing level magnitudes.
+## Current app state in v0.5.3
 
-## Current companion-engine audit (v0.5.2)
+The captured-account default defect has been removed. Runtime Mentor definitions no longer carry captured level/XP/current/next arrays. User state is `Locked/Unlocked + Level 1-10`; family availability follows the proven 1/5/10 gates. Exact selected-level magnitudes remain explicitly unresolved rather than borrowed from historical captures.
+
+## Previous companion-engine audit (v0.5.2)
 
 `js/mentor-engine.js` currently:
 
@@ -94,3 +108,6 @@ This audit is the starting point for v0.5.3. Do not tune weights before fixing e
 ## Display-name correction
 
 Exact build localisation uses `mentorName_jonasBraun` / **Jonas Braun**. The companion previously displayed “Jonas Brown”. v0.5.2 corrects the display name while retaining the `analyst` internal ID and existing portrait filename.
+
+
+See `../V053_RESEARCH_CHECKPOINT.md` for the checkpoint that ended the broad research pass and set the next focused targets.

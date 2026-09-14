@@ -30,3 +30,14 @@ The client consumes this server-returned final gain in the normal report/update 
 Therefore exact normal-training outcome remains server/runtime-owned unless captured. Do not turn the local skill-point distributor into a false “exact normal training predictor”.
 
 See source archive `NATIVE_FORMULAS_PASS5.md` and `PASS6.md`.
+
+
+## v0.5.4 role-priority training boundary
+
+The optimiser currently knows exact white/key-skill membership by role, but not a proven importance hierarchy within that set.
+
+If build/native/live evidence establishes primary vs secondary role attributes, future training should prioritise those primary skills while keeping the remaining white skills strong rather than forcing every white skill toward one identical target.
+
+Values such as primary skills at 250 and others at 180 are **illustrative user examples only**. They are not game facts, targets or approved constants.
+
+See `../V054_ROLE_PRIORITY_CHECKPOINT.md` and `data/build_30527/index/role_attribute_priority_hypotheses.json`.

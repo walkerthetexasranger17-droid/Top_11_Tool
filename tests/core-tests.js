@@ -139,14 +139,23 @@ function inside(role,x,y){const r=B.ROLE_RECTS[role];return x>=r.minX&&x<r.maxX&
   for(const sp of squad){const k=await P.save(sp);sp.key=k;}
   let plan=await TP.buildFormation({templateId:'442',mode:'bestXI'});ok(plan.starters.length===11,'Team Plan formation built');ok(plan.bench.length===1,'Team Plan bench stored');ok(plan.starters.every(s=>Number.isInteger(s.x)&&Number.isInteger(s.y)&&inside(s.assignedRole,s.x,s.y)),'Team Plan stores exact integer X/Y inside assigned role rectangles');
   const lineupBefore=plan.starters.map(x=>x.playerKey+'@'+x.assignedRole+'@'+x.x+','+x.y);
+  M.setStateOverrides(Object.fromEntries(B.MENTORS.map(m=>[m.id,{unlocked:true,level:10}])));
   plan=await TP.updateRecommendations({approach:'balanced',drainLimit:'Medium'});eq(plan.starters.map(x=>x.playerKey+'@'+x.assignedRole+'@'+x.x+','+x.y),lineupBefore,'initial tactics/mentor recommendation leaves formation unchanged');ok(plan.tactics.evaluatedCandidates===19440,'chosen mentality actually enumerates all 19,440 tactic candidates');
   plan=await TP.updateRecommendations({approach:'attacking',drainLimit:'High'});eq(plan.starters.map(x=>x.playerKey+'@'+x.assignedRole+'@'+x.x+','+x.y),lineupBefore,'Approach/Drain change recalculates tactics/mentor without reshuffling formation');ok(plan.tactics.values.mentality==='attacking','Approach locks exact corresponding mentality');ok(['Low','Medium','High'].includes(plan.tactics.drainClass),'exact drain class stored in Team Plan');
   ok(plan.mentor.best&&plan.mentor.alternatives.length>=2,'mentor returns best plus at least two alternatives');ok(plan.mentor.alternatives.every(x=>typeof x.reason==='string'&&x.reason.length>0),'mentor alternatives include why-not reasons');
 
-  // Mentor live facts are preserved exactly; recommendation ordering is direct match -> useful coverage -> level -> stable order.
+  // Mentor v0.5.3 state model: account screenshots are research evidence, not runtime defaults.
   ok(B.MENTORS.length===7,'exactly seven documented mentors');
-  const rawMentors=JSON.stringify(B.MENTORS.map(x=>({id:x.id,t:x.tactic,a:x.attribute,s:x.signature})));const hydrated=await TP.hydrateStarters(plan);M.recommend(hydrated,plan.tactics);eq(JSON.stringify(B.MENTORS.map(x=>({id:x.id,t:x.tactic,a:x.attribute,s:x.signature}))),rawMentors,'mentor raw effect arrays round-trip without interpretation/loss');
-  const architect=B.MENTORS.find(x=>x.id==='architect'),analyst=B.MENTORS.find(x=>x.id==='analyst');ok(M.direct(architect,{values:{passing:'short'}},'Balanced',{})===3,'Architect exact Short direct-match score');ok(M.direct(analyst,{values:{passing:'long'}},'Balanced',{})===3,'Analyst exact Long direct-match score');
+  ok(B.MENTORS.every(x=>x.level===undefined&&x.xp===undefined&&x.xpNext===undefined),'runtime Mentor definitions contain no captured account level/XP defaults');
+  ok(B.MENTORS.every(x=>x.tactic.current===undefined&&x.attribute.current===undefined&&x.signature.current===undefined),'captured effect arrays are not reused as selected-level runtime magnitudes');
+  const hydrated=await TP.hydrateStarters(plan),architect=B.MENTORS.find(x=>x.id==='architect'),analyst=B.MENTORS.find(x=>x.id==='analyst');
+  M.setStateOverrides({architect:{unlocked:false,level:10}});ok(M.direct(M.effectiveMentor(architect),{values:{passing:'short'}},'Balanced',{})===0,'locked Mentor contributes no Tactical effect');
+  M.setStateOverrides({architect:{unlocked:true,level:1}});let eff=M.effectiveMentor(architect);eq(M.activeFamilies(eff),{tactic:true,attribute:false,signature:false},'Level 1 unlocks Tactical family only');ok(M.direct(eff,{values:{passing:'short'}},'Balanced',{})===3,'unlocked Architect has Short Pass semantic synergy');ok(M.attributeCoverage(eff,hydrated).hits===0,'Attribute family is inactive below Level 5');
+  M.setStateOverrides({architect:{unlocked:true,level:5}});eff=M.effectiveMentor(architect);eq(M.activeFamilies(eff),{tactic:true,attribute:true,signature:false},'Level 5 unlocks Attribute family');ok(M.attributeCoverage(eff,hydrated).hits>0,'Level 5 active Attribute family can contribute role-key coverage');
+  M.setStateOverrides({architect:{unlocked:true,level:10}});eff=M.effectiveMentor(architect);eq(M.activeFamilies(eff),{tactic:true,attribute:true,signature:true},'Level 10 unlocks Signature family');ok(M.rawEffects(eff).tactic.magnitude==='UNRESOLVED FOR SELECTED LEVEL','selected-level Mentor magnitude remains explicitly unresolved');
+  M.setStateOverrides({analyst:{unlocked:true,level:1}});ok(M.direct(M.effectiveMentor(analyst),{values:{passing:'long'}},'Balanced',{})===3,'Analyst exact Long Pass semantic synergy');
+  M.setStateOverrides(Object.fromEntries(B.MENTORS.map(m=>[m.id,{unlocked:false,level:1}])));const none=M.recommend(hydrated,plan.tactics);ok(none.error==='no-unlocked-mentors'&&!none.best,'all-locked Mentor state produces no fabricated recommendation');
+  M.setStateOverrides(Object.fromEntries(B.MENTORS.map(m=>[m.id,{unlocked:true,level:10}])));
 
   // ---------------------------------------------------------------------------
   // Individual Training Bible model.

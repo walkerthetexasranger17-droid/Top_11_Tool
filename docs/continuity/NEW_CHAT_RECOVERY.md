@@ -6,6 +6,7 @@ This file exists so a new chat can recover the project without asking the user t
 
 > Read `/START_HERE.md` first. Then read:
 > - `docs/continuity/CURRENT_STATE.md`
+> - `docs/research/build_30527/V053_RESEARCH_CHECKPOINT.md`
 > - `docs/research/build_30527/INDEX.md`
 > - `docs/research/build_30527/UNRESOLVED.md`
 >

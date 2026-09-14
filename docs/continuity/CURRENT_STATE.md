@@ -1,103 +1,68 @@
 # Top Eleven Tool — Current State
 
-**App version:** v0.5.2  
-**Date:** 13 September 2026  
+**App version:** v0.5.4  
+**Checkpoint date:** 14 September 2026  
 **Stable scanner baseline:** v0.4.18  
 **Game reference:** build 30527 / Windows package 27.3.0.0  
-**Current development area:** Team Plan — Mentor logic next
+**Current development area:** Target Formation + role-specific attribute-priority research
 
 ## Non-negotiable rules
 
-- Do not guess Top Eleven formulas, hidden multipliers, tactics effects, Mentor effects, symbols, or server values.
-- Prefer exact game binaries, IL2CPP/native metadata, serialized assets/localisation and controlled live captures.
-- If not proven, mark it **UNRESOLVED**.
-- Community/meta evidence may inform companion strategy but must never be presented as a game-code fact.
-- Make narrow changes and preserve working code.
-- Version builds numerically only: `v0.5.1`, `v0.5.2`, `v0.5.3`… **No r1/r2 suffixes.**
-- Update this file and the Game Research Index before packaging any meaningful build.
+- Do not guess Top Eleven formulas, hidden multipliers, tactics effects, Mentor effects or server values.
+- GAME FACT / LIVE FACT / GAME ASSET FACT / STRONG EVIDENCE / COMPANION LOGIC / UNRESOLVED must remain separate.
+- Version builds numerically only (`v0.5.3`, `v0.5.4`); no r-suffixes.
+- Keep `START_HERE.md`, this file and the Game Research Index updated before packaging.
+- Do not restart a broad multi-system mine. Research one missing fact at a time.
 
-## Stable / frozen areas
+## Stable / frozen
 
 ### Scanner
-The v0.4.18 scanner pipeline achieved a clean real-device test and remains frozen unless a new real screenshot proves a regression. Native-resolution 2688×1216 handling, compact PlaystyleSmallAtlas references, pixel-level level guard and coloured Special Ability references must not be casually refactored.
+The v0.4.18 scanner remains frozen unless a new real screenshot proves a regression.
 
-### Formation
-Formation is considered good. Do not redesign or rework it unless a specific bug is demonstrated.
+### Formation UI/selection
+The current Formation UI is considered good and has not been redesigned in v0.5.4. Research has, however, established that Lineup Balance is a meaningful game factor; do not confuse that with permission to invent its private formula.
 
-## Completed in the v0.5.x line
+## Completed Team Plan work
 
-### v0.5.1 — Set Pieces provenance
-- Set Piece storage distinguishes automatic recommendations, manual overrides and migrated legacy values.
-- Automatic non-Captain recommendations refresh against the current XI.
-- Manual assignments persist.
-- `Refresh Recommendations` deliberately replaces old/generated non-Captain picks.
-- Captain remains manual because no authoritative Captain-selection formula has been recovered.
+### Set Pieces
+- provenance-aware automatic/manual/legacy assignments;
+- explicit refresh of generated choices;
+- Captain remains manual because no official automatic formula is known.
 
-### v0.5.2 — Tactics evidence correction
-- Exact build-30527 condition-drain arithmetic remains unchanged.
-- Approach locks Mentality but no longer injects invented style weights into every other tactic.
-- Symmetric lane data no longer fabricates Left Flank via enum order.
-- Marking is no longer inferred from our own defenders; current game guidance describes it in relation to opponent attack style.
-- Game semantic/playstyle/Special Ability relationships are tie-break evidence only, not fake hidden multipliers.
-- Core deterministic suite reached 276 assertions before the research-index packaging pass.
+### Tactics
+- exact build-30527 drain preserved;
+- Approach locks Mentality without invented cross-dimension aggression weights;
+- neutral/symmetric lane handling fixed;
+- opponent-dependent Marking no longer inferred from our own XI;
+- no recovered numeric client-side tactic-effectiveness formula beyond drain.
 
-### v0.5.2 — Embedded Game Research Index
-The project now carries a structured game knowledge base at:
+### Mentor state correction — v0.5.3
+- Runtime Mentor definitions no longer contain screenshot/capture-derived level, XP or effect-array defaults.
+- Fresh user state is **Locked** for every Mentor. Locked is separate from level; once unlocked, level starts at 1.
+- User manually marks owned/unlocked Mentors and sets Level 1-10.
+- Proven family gates: Tactical=1, Attribute=5, Signature=10.
+- A selected level never borrows a captured effect magnitude from a different historical level.
+- If no Mentor is marked unlocked, the app gives no fabricated Mentor recommendation.
 
-`docs/research/build_30527/`
+## Research findings checkpointed
 
-and machine-readable indexes at:
+Read `docs/research/build_30527/V054_ROLE_PRIORITY_CHECKPOINT.md`. Current key points:
 
-`data/build_30527/index/`
+1. **Mentors:** family unlocks 1/5/10 are proven; complete Level 1-10 numeric ladders remain runtime/server-owned/unresolved.
+2. **Formation:** Lineup Balance is gameplay-relevant and position suitability changes it deterministically.
+3. **New ST live fact:** replacing quality-51 natural ST Gosling Lataille with quality-44 natural ST François Roelandt raised Balance from ~9.8298 to 10.0.
+4. **Equal-white average is insufficient:** Lataille still had the slightly higher equal-weight mean across all nine ST white skills, so the server result is not explained by simply averaging every white skill equally.
+5. **Research hypothesis:** white/key attributes may have unequal importance inside a role. Roelandt's large Shooting/Finishing advantage makes those the leading ST-primary hypothesis, but no weight is proven and Playstyle remains a confounder.
+6. **Training consequence:** if a per-role hierarchy is proven, train priority tiers rather than equalising every white skill. Example targets such as 250/180 are illustrative only, not constants.
 
-This is now the preferred source for future logic work. Do not re-mine already indexed facts without a reason.
+## Next focused work
 
-## New Mentor finding at this checkpoint
+1. Search build 30527 native/game data specifically for **per-role attribute importance/weights/subsets** beyond simple white-skill membership.
+2. Trace Football Engine action consumers and role/player evaluation code for evidence that some role attributes are primary.
+3. Keep Target Formation research active: recruitment should ultimately specify both natural position and evidence-backed attribute profile.
+4. If static data cannot reveal the hierarchy, design controlled Lineup Balance tests that isolate same-role players with contrasting attribute profiles.
+5. Do not add unequal production weights until independently supported.
 
-The current build's own localisation resolves the units/meaning of the seven captured Mentor boost families. This is stronger than the earlier raw-array-only interpretation.
+## External reference
 
-Examples:
-
-- `tacticWingAttacksEffectiveness [30]` = **30% increased wing-attack effectiveness**.
-- `attributeCrossingHeading [20]` = **+20 Crossing and +20 Heading to all players during the match**.
-- `signatureAnkleBreaker [25,10]` = set pieces **25% more effective**; after a miss, opponent attackers receive **-10% to their next attack**.
-- `signatureIronCheck [2,10]` = successful defensive check drains **2% of the opponent attacker's maximum Condition**, with **10% higher card risk**.
-
-See `data/build_30527/index/mentor_effects.json` for the full current/next arrays and decoded descriptions.
-
-## Authoritative Mentor display correction
-
-Exact game localisation identifies the Analyst as **Jonas Braun** (`mentorName_jonasBraun`). v0.5.2 corrects the companion display name from Jonas Brown without changing the internal `analyst` ID/effects.
-
-## Known Mentor modelling defect in current app
-
-The app currently lets a user alter a Mentor level while retaining effect arrays captured at another level. It can therefore score an effect that is not actually active at the selected level. This must be corrected before we tune Mentor recommendation ranking.
-
-Do **not** invent missing intermediate per-level magnitudes. Use only:
-- captured current/next arrays;
-- proven unlock/availability state;
-- game localisation semantics;
-- future legitimate captures where needed.
-
-## Current source files likely involved next
-
-- `js/mentor-engine.js`
-- `js/tactics-engine.js`
-- `js/team-plan-engine.js`
-- `js/app.js`
-- Mentor data in `js/bible-data.js` / related data modules
-- `data/build_30527/index/mentor_effects.json`
-
-## Next execution order
-
-1. Audit current `mentor-engine.js` against the new indexed Mentor semantics.
-2. Separate **boost family availability** from **raw magnitude**; never reuse a captured magnitude at an unproven level.
-3. Rebuild Mentor recommendation around direct tactic synergy + actually active attribute/signature effects.
-4. Use Tactics and Mentor jointly where the game data proves a direct relationship (Short Pass, Long Pass, Wings, Counter Attack, etc.).
-5. Add deterministic Mentor regression fixtures.
-6. Run the full scanner/core/static/package suite.
-7. Update `CURRENT_STATE.md`, `INDEX.md`, findings JSON and release notes before packaging v0.5.3.
-
-## External reference file
-
-The full Windows game package used for this research was `TopEleven_Full(4).zip`. Its critical hashes are stored in `data/build_30527/index/source_manifest.json`. The package itself is not embedded because of size. If future raw binary mining is required and the file is not attached, search the user's Library before asking for another upload.
+The full game package is `TopEleven_Full(4).zip`. It is not embedded due to size. Critical hashes are stored in `data/build_30527/index/source_manifest.json`; search the Library before asking the user to upload it again.

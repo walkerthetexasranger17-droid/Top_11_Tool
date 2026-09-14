@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "updated": "2026-09-14",
+  "status": "RESEARCH_HYPOTHESIS",
+  "rule": "Do not use as production weighting until independently proven.",
+  "known_role_key_membership_source": "data/build_30527/white_skill_map_30527.json",
+  "hypothesis": "White/key attributes within a role may have unequal importance, with a smaller primary subset contributing more strongly to role performance and/or Lineup Balance.",
+  "controlled_evidence": {
+    "role": "ST",
+    "baseline_player": {
+      "name": "Gosling Lataille",
+      "quality": 51,
+      "balance": 9.8297964933,
+      "key_attributes": {
+        "Passing": 52.62,
+        "Dribbling": 52.74,
+        "Shooting": 53.08,
+        "Finishing": 57.34,
+        "Positioning": 54.17,
+        "Heading": 55.71,
+        "Strength": 53.52,
+        "Speed": 54.43,
+        "Creativity": 50.95
+      },
+      "equal_weight_key_mean": 53.84,
+      "playstyle": "Poacher",
+      "playstyle_level": "Intermediate"
+    },
+    "replacement_player": {
+      "name": "François Roelandt",
+      "quality": 44,
+      "balance": 10.0,
+      "key_attributes": {
+        "Passing": 58.37,
+        "Dribbling": 57.44,
+        "Shooting": 63.46,
+        "Finishing": 67.82,
+        "Positioning": 40.82,
+        "Heading": 44.99,
+        "Strength": 45.37,
+        "Speed": 57.1,
+        "Creativity": 40.94
+      },
+      "equal_weight_key_mean": 52.92,
+      "playstyle": "False Nine",
+      "playstyle_level": "Intermediate"
+    },
+    "balance_delta": 0.1702035067,
+    "key_observation": "Replacement has lower OVR and lower equal-weight all-key mean, but much higher Shooting and Finishing and produces higher server Lineup Balance."
+  },
+  "candidate_primary_attributes": {
+    "ST": {
+      "attributes": [
+        "Shooting",
+        "Finishing"
+      ],
+      "status": "HYPOTHESIS_ONLY",
+      "reason": "Strongest discriminating advantage in the controlled ST comparison; not yet isolated from Playstyle or other profile effects."
+    }
+  },
+  "all_other_roles": {
+    "status": "UNRESOLVED",
+    "instruction": "Search game/native data before assigning primary attributes or weights."
+  },
+  "training_design_boundary": {
+    "approved": "Use priority tiers only after evidence is recovered.",
+    "not_approved": [
+      "Equalising all white skills to one target",
+      "Hard-coding 250/180 or other target values",
+      "Inventing per-role weights from football intuition"
+    ]
+  }
+}

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-09-13",
+  "updated": "2026-09-14",
   "findings": [
     {
       "id": "TACTICS-001",
@@ -122,7 +122,7 @@
       "system": "players",
       "status": "GAME_FACT",
       "title": "Current 12-role model and pitch rectangles",
-      "summary": "Current playable roles are GK, DL, DC, DR, DMC, ML, MC, MR, AML, AMC, AMR, ST with recovered 0\u20131000 pitch rectangles; DML/DMR are legacy/internal.",
+      "summary": "Current playable roles are GK, DL, DC, DR, DMC, ML, MC, MR, AML, AMC, AMR, ST with recovered 0–1000 pitch rectangles; DML/DMR are legacy/internal.",
       "confidence": "high",
       "sources": [
         "source_archive/BUILD_30527_IMPLEMENTATION_LEDGER.md"
@@ -242,6 +242,124 @@
       "unresolved": [
         "correct per-level effect-family availability source",
         "uncaptured intermediate magnitudes"
+      ]
+    },
+    {
+      "id": "MENTOR-007",
+      "system": "mentors",
+      "status": "GAME_FACT",
+      "title": "Mentor boost-family unlock levels",
+      "summary": "Native client logic separates family availability by Mentor level: Tactical at 1, Attribute at 5, Signature at 10.",
+      "confidence": "high",
+      "sources": [
+        "docs/research/build_30527/V053_RESEARCH_CHECKPOINT.md"
+      ],
+      "unresolved": []
+    },
+    {
+      "id": "MENTOR-008",
+      "system": "mentors",
+      "status": "SERVER_RUNTIME",
+      "title": "Complete per-level Mentor magnitudes are not in static boost map",
+      "summary": "MentorBoostMap carries presentation/localisation metadata while CurrentEffects/NextLevelEffects arrive in Mentor state. No complete local Level 1-10 numeric ladder has been recovered.",
+      "confidence": "high",
+      "sources": [
+        "docs/research/build_30527/V053_RESEARCH_CHECKPOINT.md",
+        "data/build_30527/index/mentor_effects.json"
+      ],
+      "unresolved": [
+        "Level 1-10 numeric magnitudes for every Mentor/effect"
+      ]
+    },
+    {
+      "id": "MENTOR-009",
+      "system": "mentors",
+      "status": "STRONG_EVIDENCE",
+      "title": "Mentor match application appears server-side",
+      "summary": "Inspected live-match state update and assign/unassign paths transport Mentor snapshots without visible local football arithmetic; no obvious Mentor-named Football Engine consumer was found in the broad metadata pass.",
+      "confidence": "medium-high",
+      "sources": [
+        "docs/research/build_30527/V053_RESEARCH_CHECKPOINT.md"
+      ],
+      "unresolved": [
+        "Direct authoritative effect-application consumer"
+      ]
+    },
+    {
+      "id": "FORMATION-001",
+      "system": "formation",
+      "status": "GAME_ASSET_FACT",
+      "title": "Lineup Balance affects ball-winning chance and possession",
+      "summary": "Current shipped guidance states that better Lineup Balance improves the chance of winning the ball and therefore possession; exact 0-10 calculation remains private.",
+      "confidence": "high",
+      "sources": [
+        "docs/research/build_30527/V053_RESEARCH_CHECKPOINT.md"
+      ],
+      "unresolved": [
+        "Exact Lineup Balance formula"
+      ]
+    },
+    {
+      "id": "FORMATION-002",
+      "system": "formation",
+      "status": "GAME_FACT",
+      "title": "Current formation status/legality helper path exists",
+      "summary": "Native client exposes SquadUtil IsCurrentFormationLegal and formation-status key helpers, providing a focused future path for current legality/advisory rules.",
+      "confidence": "high",
+      "sources": [
+        "docs/research/build_30527/V053_RESEARCH_CHECKPOINT.md"
+      ],
+      "unresolved": [
+        "Exact branch rules not yet fully decompiled/indexed"
+      ]
+    },
+    {
+      "id": "FORMATION-003",
+      "system": "formation",
+      "status": "LIVE_FACT",
+      "title": "Lower-OVR natural ST produced higher Lineup Balance",
+      "summary": "In a controlled same-slot ST substitution, quality-44 François Roelandt raised server Lineup Balance from ~9.8298 to 10.0 versus quality-51 Gosling Lataille. Both were natural STs. Roelandt also had a slightly lower equal-weight mean across all nine ST key attributes, ruling out both OVR-only and equal-all-white-average explanations for this observation.",
+      "confidence": "high",
+      "sources": [
+        "docs/research/build_30527/V054_ROLE_PRIORITY_CHECKPOINT.md",
+        "data/build_30527/index/role_attribute_priority_hypotheses.json"
+      ],
+      "unresolved": [
+        "Which player/profile inputs caused the Balance increase"
+      ]
+    },
+    {
+      "id": "FORMATION-004",
+      "system": "formation",
+      "status": "RESEARCH_HYPOTHESIS",
+      "title": "White/key attributes may have unequal role importance",
+      "summary": "The controlled ST comparison is consistent with role-specific primary attributes carrying more importance than other white skills. Shooting and Finishing are the leading ST hypothesis because the lower-OVR replacement was much stronger there, but Playstyle/profile effects remain confounders and no exact weighting is proven.",
+      "confidence": "medium",
+      "sources": [
+        "docs/research/build_30527/V054_ROLE_PRIORITY_CHECKPOINT.md",
+        "data/build_30527/index/role_attribute_priority_hypotheses.json"
+      ],
+      "unresolved": [
+        "Per-role primary/secondary hierarchy",
+        "Exact weights",
+        "Whether Lineup Balance and match performance use the same hierarchy",
+        "Playstyle contribution to the captured ST result"
+      ]
+    },
+    {
+      "id": "TRAIN-003",
+      "system": "training",
+      "status": "COMPANION_DESIGN_PENDING_EVIDENCE",
+      "title": "Future training should support evidence-backed skill priority tiers",
+      "summary": "If unequal role-specific white-skill importance is proven, training should prioritise primary role attributes while keeping secondary/supporting white skills strong instead of forcing every white skill toward one equal target. Numeric examples such as 250/180 are illustrative only and are not approved constants.",
+      "confidence": "design-intent",
+      "sources": [
+        "docs/research/build_30527/V054_ROLE_PRIORITY_CHECKPOINT.md"
+      ],
+      "unresolved": [
+        "Per-role priority hierarchy",
+        "Target ratios/values",
+        "Interaction with playstyle and tactics"
       ]
     }
   ]

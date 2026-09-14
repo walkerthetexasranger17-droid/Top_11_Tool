@@ -10,8 +10,7 @@ These are deliberately unresolved boundaries. A future coding session must not s
 
 ## Mentors
 - Exact native Football Engine consumer that applies `MentorBoostDomain.CurrentEffects[]`.
-- Full per-level Mentor magnitude curves between captured states.
-- Exact unlock level/state for each effect family unless supplied by current authoritative state/config.
+- Full Level 1-10 Mentor magnitude curves. Family unlock levels are now proven as Tactical=1, Attribute=5, Signature=10; the missing part is the numerical value at each level.
 - Any Mentor effect not present in the current effect state/localisation index.
 - Causal match-outcome magnitude from Alan/Green captures; observed match-stat changes are evidence, not controlled causation.
 
@@ -21,7 +20,10 @@ These are deliberately unresolved boundaries. A future coding session must not s
 - Any dominant-foot rule unless recovered.
 
 ## Players / Formation
+- Exact private Lineup Balance 0-10 formula, despite shipped guidance proving Balance affects ball-winning chance/possession.
 - Exact private match-engine weighting of attributes.
+- Exact hierarchy/weighting among white/key attributes within each role (for example whether ST Shooting/Finishing are primary above other ST white skills).
+- Whether Lineup Balance uses the same role-attribute hierarchy as live match performance.
 - Exact playstyle-level performance multiplier.
 - Exact Squad Balance server formula.
 - Hidden Talent effect on match/training performance.

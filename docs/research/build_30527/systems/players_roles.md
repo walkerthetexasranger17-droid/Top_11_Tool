@@ -32,3 +32,12 @@ Current map:
 Native `PlayerWrapper.IsKeyAttribute` recovered at `0x4A592E0`.
 
 No unproven role-specific attribute weighting should be called game fact.
+
+
+## v0.5.4 role-priority hypothesis
+
+The exact white/key map proves **which** attributes are key for a role; it does not prove that all members of that set are equally important in Lineup Balance or match performance.
+
+Controlled ST evidence now rules out both OVR-only and equal-all-white-average explanations for one server Balance result. See `../V054_ROLE_PRIORITY_CHECKPOINT.md`.
+
+Working hypothesis: each role may have a smaller primary subset above the remaining white skills. For ST, Shooting/Finishing are the leading hypothesis, not a confirmed weighting. No other role hierarchy should be guessed from football intuition.
