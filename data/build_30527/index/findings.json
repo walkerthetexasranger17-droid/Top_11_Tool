@@ -303,15 +303,13 @@
       "id": "FORMATION-002",
       "system": "formation",
       "status": "GAME_FACT",
-      "title": "Current formation status/legality helper path exists",
-      "summary": "Native client exposes SquadUtil IsCurrentFormationLegal and formation-status key helpers, providing a focused future path for current legality/advisory rules.",
+      "title": "Current hard and irregular formation rules decompiled",
+      "summary": "SquadUtil current native validator plus shipped localisation establish exact goalkeeper/defender/midfield/central/flank/attacking-area requirements and per-role crowding caps; irregular warnings separately require ST-or-AMC, both flanks, DC, DMC-or-MC and MC-or-AMC presence.",
       "confidence": "high",
       "sources": [
-        "docs/research/build_30527/V053_RESEARCH_CHECKPOINT.md"
+        "docs/research/build_30527/source_archive/native/NATIVE_FORMATION_VALIDATOR_PASS.md"
       ],
-      "unresolved": [
-        "Exact branch rules not yet fully decompiled/indexed"
-      ]
+      "unresolved": []
     },
     {
       "id": "FORMATION-003",
@@ -405,6 +403,209 @@
       "unresolved": [
         "Exact UI rounding implementation beyond tested examples",
         "Whether any match-engine path uses reconstructed pre-Tier attributes rather than permanent post-Tier values"
+      ]
+    },
+    {
+      "id": "FORMATION-007",
+      "system": "formation",
+      "status": "CALCULATION",
+      "title": "Current legal formation space exhaustively enumerated",
+      "summary": "Recovered build-30527 rules yield 2,843 hard-legal role-count configurations, 1,893 warning-free configurations and 249 warning-free exactly symmetric configurations. A transparent one-slot advisory-robustness companion filter leaves 12 symmetric candidates.",
+      "confidence": "high",
+      "sources": [
+        "docs/research/build_30527/source_archive/native/NATIVE_FORMATION_VALIDATOR_PASS.md",
+        "docs/research/build_30527/tools/formation_validator_30527.py"
+      ],
+      "unresolved": []
+    },
+    {
+      "id": "FORMATION-008",
+      "system": "formation",
+      "status": "COMPANION_LOGIC",
+      "title": "4-1-1-3-1 DMC+MC is current default long-term Target Formation candidate",
+      "summary": "GK/DL/DC/DC/DR/DMC/MC/AML/AMC/AMR/ST is fully legal, warning-free, symmetric and one-slot advisory-resilient, covers 18/19 active Playstyles and provides complementary DMC+MC key-attribute profiles while preserving both-flank and central tactical options. This is a transparent app target, not an official Nordeus best-formation claim.",
+      "confidence": "medium-high",
+      "sources": [
+        "docs/research/build_30527/systems/formation_target.md",
+        "data/build_30527/index/target_formation_comparison.json"
+      ],
+      "unresolved": [
+        "Opponent-specific counter-formations",
+        "Private Lineup Balance formula",
+        "Private match-engine formation effectiveness"
+      ]
+    },
+    {
+      "id": "TACTICS-004",
+      "system": "tactics",
+      "status": "COMPANION_LOGIC",
+      "title": "Target formation should be a tactic-flexible platform, not a fixed tactic preset",
+      "summary": "The DMC+MC target keeps both flanks and a full central spine occupied, so tactic selection can remain XI/context-driven under exact drain constraints. No single passing/focus/cross/pressing preset is hard-coded from formation alone.",
+      "confidence": "high as companion design boundary",
+      "sources": [
+        "docs/research/build_30527/systems/tactics_target_integration.md"
+      ],
+      "unresolved": [
+        "Private option effectiveness weights"
+      ]
+    },
+    {
+      "id": "TACTICS-005",
+      "system": "tactics",
+      "status": "GAME_ASSET_FACT",
+      "title": "Assistant Feedback exposes tactic/context relationships",
+      "summary": "Build 30527 ships 227 Assistant Feedback strings. Relevant messages explicitly relate short passing to possession/midfield control; defensive situations to long balls+counter-attacks; fast players to counter-attacks; lane focus to where passing succeeds; midfield numbers to possession; high press to ball recovery with fatigue trade-off; attacking style to offside-trap use; and card accumulation to easing tackling. These are semantic/context relationships, not numerical match weights.",
+      "confidence": "high",
+      "sources": [
+        "source_archive/TACTICS_ASSISTANT_FEEDBACK_EXTRACT.txt",
+        "data/build_30527/index/tactics_assistant_feedback.json",
+        "systems/tactics_semantic_archetypes.md"
+      ],
+      "unresolved": []
+    },
+    {
+      "id": "TACTICS-006",
+      "system": "tactics",
+      "status": "SERVER_RUNTIME_BOUNDARY",
+      "title": "Assistant Feedback trigger logic is server-owned in MatchPeriod",
+      "summary": "Nordeus.Communication.MatchPeriod carries HomeMatchFeedback/AwayMatchFeedback, and MatchFeedback contains Minute, StringId and AssistantId. The client receives the selected feedback message rather than exposing the conditions that selected it. Exact trigger thresholds/decision rules are therefore not recovered client-side.",
+      "confidence": "high",
+      "sources": [
+        "source_archive/native/NATIVE_MATCH_FEEDBACK_BOUNDARY.md"
+      ],
+      "unresolved": [
+        "server-side assistant feedback trigger thresholds and selection logic"
+      ]
+    },
+    {
+      "id": "FORMATION-009",
+      "system": "formation",
+      "status": "COMPANION_CALCULATION",
+      "title": "Robust frontier has two 18/19-playstyle leaders",
+      "summary": "Among all 12 symmetric warning-free one-slot-advisory-resilient role-count shapes, two cover 18/19 active Playstyles: the advanced-wide DMC+MC shape (DL DC DC DR / DMC MC / AML AMC AMR / ST), missing only False Winger, and the midfield-wide DMC+MC shape (DL DC DC DR / DMC ML MC MR / AMC ST), missing only Inside Forward. The advanced-wide version remains the default target because it retains four advanced attacking roles and higher Shooting/Finishing role-key membership while preserving every native structural warning group.",
+      "confidence": "high",
+      "sources": [
+        "data/build_30527/index/formation_resilient_frontier.json",
+        "systems/formation_target.md"
+      ],
+      "unresolved": []
+    },
+    {
+      "id": "MENTOR-010",
+      "system": "mentors",
+      "status": "COMPANION_LOGIC_GAP",
+      "title": "Signature semantics are not integrated into current Mentor ranking",
+      "summary": "mentor-synergy-v3 ranks direct Tactical match, active Attribute key-skill coverage, Signature-unlocked Boolean, then stable order. Exact Signature activation conditions/trade-offs are supporting text only, so three-effect Mentor decision support is not finished.",
+      "confidence": "high",
+      "sources": [
+        "js/mentor-engine.js",
+        "docs/research/build_30527/V058_MENTOR_ST_COMMUNITY_CHECKPOINT.md"
+      ],
+      "unresolved": [
+        "rule-based pre-match Signature-context fit",
+        "halftime/live Mentor switch logic"
+      ]
+    },
+    {
+      "id": "MENTOR-011",
+      "system": "mentors",
+      "status": "GAME_FACT_OFFICIAL_CURRENT",
+      "title": "Mentors have three Prestige levels after Level 10",
+      "summary": "Current official Top Eleven Help Center states Mentor progression continues after Level 10 through 3 Prestige levels using XP and a Signature Seal for each stage, further upgrading Signature Move; official 2027 documentation also confirms halftime Mentor swapping.",
+      "confidence": "high for current official product rules",
+      "sources": [
+        "https://nordeus.helpshift.com/hc/en/3-top-eleven-be-a-soccer-manager/faq/1805-leveling-up-mentors/?l=en",
+        "https://nordeus.helpshift.com/hc/en/3-top-eleven-be-a-soccer-manager/faq/1803-top-eleven-2027-is-here/",
+        "data/build_30527/index/mentor_effects.json"
+      ],
+      "unresolved": [
+        "Exact build-30527 Prestige/Signature-Seal protocol/static fields"
+      ]
+    },
+    {
+      "id": "PLAYER-004",
+      "system": "players",
+      "status": "COMPANION_LOGIC",
+      "title": "First qualitative ST Playstyle priority bands preserved",
+      "summary": "Cross-source evidence supports a qualitative ST scoring core of Shooting+Finishing with Positioning structural support; Poacher, Target Man and False Nine receive separate evidence-based modifiers. No private numeric Nordeus weights are claimed.",
+      "confidence": "medium-high as transparent companion model",
+      "sources": [
+        "data/build_30527/index/st_role_priority_evidence.json",
+        "data/build_30527/white_skill_map_30527.json",
+        "data/build_30527/normal_drills.json",
+        "docs/research/build_30527/V058_MENTOR_ST_COMMUNITY_CHECKPOINT.md"
+      ],
+      "unresolved": [
+        "Numeric priority weights",
+        "False Nine Passing/Positioning priority",
+        "Special Ability modifier",
+        "tactic-context modifier"
+      ]
+    },
+    {
+      "id": "FORMATION-010",
+      "system": "formation",
+      "status": "COMMUNITY_CORROBORATION",
+      "title": "Current community structure evidence does not overturn Formation v1",
+      "summary": "Recent player reports repeatedly value midfield control and often pair a single DMC with a back four; these observations are compatible with the current target but remain anecdotal and do not prove a universal best formation.",
+      "confidence": "community-only",
+      "sources": [
+        "data/build_30527/index/community_evidence_2026-09-14.json",
+        "docs/research/build_30527/V058_MENTOR_ST_COMMUNITY_CHECKPOINT.md"
+      ],
+      "unresolved": []
+    },
+    {
+      "id": "SA-003",
+      "system": "special_abilities",
+      "status": "RESEARCH_BOUNDARY",
+      "title": "Current ST Special Ability weighting cannot be safely recovered from static/community evidence",
+      "summary": "Build 30527 exposes 19 current SA names and server/player-specific trainable availability. Current official Help confirms ability choices depend on player role, but no current comparable effect multipliers or ST ranking were recovered. Community recommendations conflict and often reuse stale Shadow Striker-era assumptions, so no ST SA weight is added.",
+      "confidence": "high as boundary",
+      "sources": [
+        "data/build_30527/special_abilities_30527.json",
+        "data/build_30527/index/st_role_priority_evidence.json",
+        "docs/research/build_30527/V058_MENTOR_ST_COMMUNITY_CHECKPOINT.md",
+        "https://nordeus.helpshift.com/hc/en/3-top-eleven-be-a-soccer-manager/faq/778-how-does-adding-a-new-special-ability-work/"
+      ],
+      "unresolved": [
+        "current private SA multipliers",
+        "current attacker-SA action hooks",
+        "controlled live activation evidence"
+      ]
+    },
+    {
+      "id": "PLAYER-005",
+      "system": "players",
+      "status": "COMPANION_LOGIC",
+      "title": "ST tactic context can be separated by Playstyle without fixed presets",
+      "summary": "Target Man has the strongest current context match: official aerial-pass/hold-up semantics plus Lewis Green's extracted Wing/Crossing/Heading/Aerial package support cross/aerial service. False Nine and Poacher have clear role semantics but insufficient evidence for fixed passing/focus/counter presets.",
+      "confidence": "medium-high for Target Man; medium/low for fixed settings on the others",
+      "sources": [
+        "data/build_30527/index/st_role_priority_evidence.json",
+        "docs/research/build_30527/V058_MENTOR_ST_COMMUNITY_CHECKPOINT.md"
+      ],
+      "unresolved": [
+        "whether Long Pass is a specific Target Man engine trigger",
+        "fixed False Nine tactic mappings",
+        "fixed Poacher tactic mappings"
+      ]
+    },
+    {
+      "id": "MENTOR-012",
+      "system": "mentors",
+      "status": "COMPANION_RULE_DESIGN",
+      "title": "Signature-aware Mentor decision architecture mapped without universal numeric scoring",
+      "summary": "All seven Signatures are now mapped to explicit pre-match or halftime/live context rules. Herrera/Green have direct selected-plan/action context; Braun and Makélélé depend on live halftime/score state; Cesc, Shearer and Vidić carry explicit opportunity/cost/risk context. Production recommender remains unchanged pending rule tests.",
+      "confidence": "high as transparent companion architecture",
+      "sources": [
+        "data/build_30527/index/mentor_effects.json",
+        "data/build_30527/index/mentor_signature_rule_design.json",
+        "docs/research/build_30527/V058_MENTOR_ST_COMMUNITY_CHECKPOINT.md"
+      ],
+      "unresolved": [
+        "runtime implementation/test contract",
+        "Prestige-level exact magnitude/state fields"
       ]
     }
   ]

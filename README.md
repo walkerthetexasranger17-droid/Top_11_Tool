@@ -1,10 +1,10 @@
-# Top Eleven Tool v0.5.6
+# Top Eleven Tool v0.5.8
 
 > **Project recovery:** a new chat/session must read [`START_HERE.md`](START_HERE.md) before modifying code. The app now embeds a permanent build-30527 Game Research Index under `docs/research/build_30527/` and machine-readable findings under `data/build_30527/index/`.
 
 Top Eleven Tool is a mobile-first PWA companion for managing a Top Eleven squad, scanning player cards, planning training, selecting a formation, assigning set pieces and presenting tactics in a simpler form.
 
-`v0.5.6` is a research correction checkpoint. It preserves runtime behaviour while embedding the current Lataille/Roelandt screenshots and recording that both now display 9.9 Lineup Balance despite Lataille being much stronger across the ST key-skill profile. The earlier Balance delta remains historical evidence but is no longer used to support per-role skill weighting; role/action priorities must be proven independently.
+`v0.5.8` is a research/continuity checkpoint on top of the closed v0.5.7 Formation + Tactics baseline. It records the unfinished three-effect Mentor decision layer (Signature semantics are not yet integrated), current official Mentor Prestige/halftime facts, a separate community-corroboration index, and the first qualitative ST role/Playstyle evidence bands. No private match-engine weights or speculative Mentor percentages were added to runtime logic.
 
 ## Main navigation
 

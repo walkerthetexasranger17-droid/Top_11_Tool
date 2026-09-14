@@ -111,3 +111,37 @@ Exact build localisation uses `mentorName_jonasBraun` / **Jonas Braun**. The com
 
 
 See `../V053_RESEARCH_CHECKPOINT.md` for the checkpoint that ended the broad research pass and set the next focused targets.
+
+
+## v0.5.8 decision-logic audit — three effects are not fully integrated
+
+The extracted seven-Mentor effect catalogue is mature enough to describe all three families, but the current companion recommender is **not** complete. `js/mentor-engine.js` (`mentor-synergy-v3`) currently ranks by direct Tactical-family match, active Attribute-family key-skill coverage, Signature-unlocked Boolean, then stable order. Signature *meaning and activation condition* are not yet used.
+
+Therefore v0.5.7/v0.5.8 must **not** be described as having finished Mentor recommendation logic. The next safe architecture is rule-based pre-match fit plus a halftime/live switch advisor, using the exact game-authored Signature conditions without forcing them into invented cross-Mentor percentages.
+
+### Current official progression not yet recovered from embedded static archive
+
+Current official Top Eleven Help Center documentation (checked 14 September 2026) states that each Mentor progresses through Level 10 and then **3 Prestige levels**. Level 10 unlocks Signature Move; Prestige uses XP + Signature Seals to further upgrade the Signature. Official 2027 documentation also states that a Mentor can be swapped at halftime.
+
+- https://nordeus.helpshift.com/hc/en/3-top-eleven-be-a-soccer-manager/faq/1805-leveling-up-mentors/?l=en
+- https://nordeus.helpshift.com/hc/en/3-top-eleven-be-a-soccer-manager/faq/1803-top-eleven-2027-is-here/
+
+This is **GAME FACT from current official documentation**, but the exact build-30527 Prestige/Signature-Seal protocol/static representation remains **UNRESOLVED**. No `Prestige`/`Signature Seal` structure exists in the embedded research archive searched during this pass, and the external full game package was unavailable in the Library. Do not fabricate Level 11–13 state fields.
+
+### Community corroboration boundary
+
+Current player reports line up with several exact extracted effects — e.g. Fàbregas with short/possession plans, Herrera with counters, and Lewis Green with crossing/Target-Man service. These reports are stored under `data/build_30527/index/community_evidence_2026-09-14.json` as **COMMUNITY CORROBORATION only**. They do not prove hidden magnitudes or causality.
+
+See `../V058_MENTOR_ST_COMMUNITY_CHECKPOINT.md`.
+
+## v0.5.8 Signature-aware companion rule design
+
+The research architecture for all seven Signature Moves is now preserved in `data/build_30527/index/mentor_signature_rule_design.json`. This is **COMPANION RULE DESIGN**, not a recovered Nordeus ranking formula.
+
+The key rule is to avoid one fabricated cross-Mentor Signature score. Instead, use explicit activation context:
+- plan/action context where it is directly inferable (Herrera counters, Green crosses);
+- plan context plus explicit cost/risk (Fàbregas, Vidić);
+- opportunity-only context where event frequency is unknown (Shearer);
+- halftime/live state only where the game wording requires it (Braun weakest defensive zone, Makélélé while leading).
+
+Production `mentor-engine.js` remains `mentor-synergy-v3` in v0.5.8 and has **not** been changed to consume these rules yet. The next Mentor coding task is to add tests for these named conditions/trade-offs before changing recommendation behaviour.

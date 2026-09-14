@@ -1,5 +1,5 @@
 {
-  "index_version": 1,
+  "index_version": 2,
   "game_build": {
     "build_label": "30527",
     "windows_package_version": "27.3.0.0",
@@ -70,6 +70,56 @@
       "path": "docs/research/build_30527/source_archive/Top_Eleven_Build_30527_Verification_Audit.md",
       "sha256": "281e1db88ea5b2d8d1bdef31f6c17f0121c56ac24e6d32b2b1a5ba758a11ce2d",
       "role": "preserved research evidence / distilled source"
+    },
+    {
+      "path": "docs/research/build_30527/source_archive/TACTICS_ASSISTANT_FEEDBACK_EXTRACT.txt",
+      "sha256": "5cbc025e5f977f80f151be2c474cb1f3f7eca402ace4f4c8ee865c8c8c712f6e",
+      "role": "shipped Assistant Feedback extraction used for tactics semantic evidence"
+    },
+    {
+      "path": "docs/research/build_30527/source_archive/native/NATIVE_MATCH_FEEDBACK_BOUNDARY.md",
+      "sha256": "e71a0cdb24c9d639f8f2d8823492e0d748df3e8d90087bd88ed19790d7c93e29",
+      "role": "native/protocol evidence that Assistant Feedback selection is delivered server-side"
+    },
+    {
+      "path": "docs/research/build_30527/source_archive/tier_assets/TopEleven_Tier_Assets_Source.rar",
+      "sha256": "fdf1781d009718e8b04af9fbe584933547addfebc2212d51d28ca459a5d16547",
+      "role": "original user-supplied RAR5 Tier asset archive preserved for genuine future UI extraction"
+    },
+    {
+      "path": "docs/research/build_30527/source_archive/mentor_assets_official/img_mentor_card_big_s1_01.png",
+      "sha256": "750421ac9b6074c705cb77dd2b9f098cb29b9678d9c79685a7b7d2114dfe68d5",
+      "role": "official user-supplied game Mentor render; preserve source; identity mapping unresolved"
+    },
+    {
+      "path": "docs/research/build_30527/source_archive/mentor_assets_official/img_mentor_card_big_s1_02.png",
+      "sha256": "032c7949e838ab8036773a6bd9b64fca538e1912ee1cae764c94e7e007e1b673",
+      "role": "official user-supplied game Mentor render; preserve source; identity mapping unresolved"
+    },
+    {
+      "path": "docs/research/build_30527/source_archive/mentor_assets_official/img_mentor_card_big_s1_03.png",
+      "sha256": "bd20169517dd7d0ce7dc52825bb26cc8cb2c12a8546639c78d450eb7655d2466",
+      "role": "official user-supplied game Mentor render; preserve source; identity mapping unresolved"
+    },
+    {
+      "path": "docs/research/build_30527/source_archive/mentor_assets_official/img_mentor_card_big_s1_04.png",
+      "sha256": "c20078d2ac0f1f9ff999fb2619d6067c286eeeef632ea1c882965134571312aa",
+      "role": "official user-supplied game Mentor render; preserve source; identity mapping unresolved"
+    },
+    {
+      "path": "docs/research/build_30527/source_archive/mentor_assets_official/img_mentor_card_big_s1_05.png",
+      "sha256": "f77ece3345d5254c3dce5f16ea84478897aef90f87ea5a9f690432eecdf27b76",
+      "role": "official user-supplied game Mentor render; preserve source; identity mapping unresolved"
+    },
+    {
+      "path": "docs/research/build_30527/source_archive/mentor_assets_official/img_mentor_card_big_s1_06.png",
+      "sha256": "c63f601a84fe7c7de255cc1a81909b1503f55464f186e800f0b3175cef034575",
+      "role": "official user-supplied game Mentor render; preserve source; identity mapping unresolved"
+    },
+    {
+      "path": "docs/research/build_30527/source_archive/mentor_assets_official/img_mentor_card_big_s1_07.png",
+      "sha256": "50e968e7f74bdf05aaeca65789869dca8421c50f8ccb262d916025212213885e",
+      "role": "official user-supplied game Mentor render; preserve source; identity mapping unresolved"
     }
   ],
   "evidence_sources": [

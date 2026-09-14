@@ -1,7 +1,7 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "updated": "2026-09-14",
-  "status": "UNRESOLVED_RESEARCH_HYPOTHESIS",
+  "status": "ST_COMPANION_EVIDENCE_BANDS_DRAFTED_NUMERIC_WEIGHTS_UNRESOLVED",
   "rule": "Do not use Lineup Balance as direct evidence of per-role attribute weighting; do not use production weighting until independently proven.",
   "known_role_key_membership_source": "data/build_30527/white_skill_map_30527.json",
   "hypothesis": "White/key attributes within a role may have unequal match-action importance, but the historical Roelandt/Lataille Lineup Balance result is not sufficient evidence for those weights.",
@@ -128,5 +128,56 @@
     "formula": "underlying Tier OVR contribution = tier bonus × player-wide key-attribute count / 15 for outfield players",
     "research_use": "When comparing trained/base profiles, subtract the Tier bonus from each player-wide key attribute; do not remove Tier for match-facing player selection without evidence.",
     "source": "docs/research/build_30527/systems/tier_ovr.md"
-  }
+  },
+  "st_companion_evidence_model": {
+    "source": "data/build_30527/index/st_role_priority_evidence.json",
+    "base_scoring_core": [
+      "Shooting",
+      "Finishing"
+    ],
+    "base_structural_support": [
+      "Positioning"
+    ],
+    "playstyle_modifiers": {
+      "Poacher": {
+        "elevate": [
+          "Shooting",
+          "Finishing"
+        ],
+        "support": [
+          "Speed",
+          "Creativity",
+          "Positioning"
+        ]
+      },
+      "Target Man": {
+        "elevate": [
+          "Heading",
+          "Strength",
+          "Positioning",
+          "Finishing"
+        ],
+        "support": [
+          "Shooting"
+        ]
+      },
+      "False Nine": {
+        "elevate": [
+          "Dribbling"
+        ],
+        "support": [
+          "Creativity",
+          "Speed",
+          "Shooting",
+          "Finishing"
+        ],
+        "candidate": [
+          "Passing",
+          "Positioning"
+        ]
+      }
+    },
+    "evidence_boundary": "Qualitative COMPANION bands only. No Nordeus numeric weights recovered."
+  },
+  "community_corroboration_source": "data/build_30527/index/community_evidence_2026-09-14.json"
 }

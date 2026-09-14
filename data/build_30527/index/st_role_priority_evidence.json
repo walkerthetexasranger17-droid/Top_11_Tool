@@ -1,0 +1,220 @@
+{
+  "schema_version": 1,
+  "updated": "2026-09-14",
+  "status": "COMPANION_DRAFT_NO_NUMERIC_WEIGHTS",
+  "role": "ST",
+  "game_fact_key_attributes": [
+    "Passing",
+    "Dribbling",
+    "Shooting",
+    "Finishing",
+    "Positioning",
+    "Heading",
+    "Strength",
+    "Speed",
+    "Creativity"
+  ],
+  "private_numeric_weights": "UNRESOLVED",
+  "official_playstyle_semantics": {
+    "Poacher": "Scoring-focused ST operating on the defensive line / penalty-area threat.",
+    "False Nine": "Skilled ball driver receiving deep and creating danger around the box while pulling DCs out.",
+    "Target Man": "Aerial-pass target who can finish or hold the ball against DCs for teammates."
+  },
+  "game_action_training_clusters": {
+    "Shooting Technique": [
+      "Shooting",
+      "Strength",
+      "Finishing"
+    ],
+    "1-on-1 Finishing": [
+      "Dribbling",
+      "Finishing"
+    ],
+    "Wing Play": [
+      "Heading",
+      "Shooting",
+      "Finishing"
+    ],
+    "Passes Before Shot": [
+      "Creativity",
+      "Positioning",
+      "Passing",
+      "Finishing"
+    ],
+    "Use Your Head": [
+      "Heading",
+      "Creativity",
+      "Positioning",
+      "Passing"
+    ],
+    "Contact Play": [
+      "Dribbling",
+      "Strength"
+    ],
+    "Fast Counter-Attacks": [
+      "Creativity",
+      "Passing",
+      "Finishing"
+    ],
+    "Slalom Dribble": [
+      "Speed",
+      "Dribbling",
+      "Passing"
+    ]
+  },
+  "draft_priority_bands": {
+    "base_ST": {
+      "scoring_core": [
+        "Shooting",
+        "Finishing"
+      ],
+      "structural_support": [
+        "Positioning"
+      ],
+      "status": "COMPANION_LOGIC_FROM_CROSS_SOURCE_EVIDENCE"
+    },
+    "Poacher": {
+      "elevate": [
+        "Shooting",
+        "Finishing"
+      ],
+      "support": [
+        "Speed",
+        "Creativity",
+        "Positioning"
+      ],
+      "status": "COMPANION_LOGIC_STRONG_COMMUNITY_ALIGNMENT_WITH_OFFICIAL_SEMANTICS"
+    },
+    "Target Man": {
+      "elevate": [
+        "Heading",
+        "Strength",
+        "Positioning",
+        "Finishing"
+      ],
+      "support": [
+        "Shooting"
+      ],
+      "tactic_context": [
+        "wide/cross delivery is semantically compatible",
+        "Lewis Green effect package is directly compatible"
+      ],
+      "status": "COMPANION_LOGIC_STRONG_OFFICIAL_DRILL_COMMUNITY_ALIGNMENT"
+    },
+    "False Nine": {
+      "elevate": [
+        "Dribbling"
+      ],
+      "support": [
+        "Creativity",
+        "Speed",
+        "Shooting",
+        "Finishing"
+      ],
+      "candidate_not_yet_elevated": [
+        "Passing",
+        "Positioning"
+      ],
+      "status": "COMPANION_LOGIC_OFFICIAL_BALL_DRIVER_SEMANTIC_WITH_MIXED_COMMUNITY_EVIDENCE"
+    }
+  },
+  "do_not_infer": [
+    "player height as hidden playstyle multiplier",
+    "player weight as hidden playstyle multiplier",
+    "footedness as hidden playstyle multiplier",
+    "numeric Nordeus attribute percentages"
+  ],
+  "source_files": [
+    "data/build_30527/white_skill_map_30527.json",
+    "data/build_30527/normal_drills.json",
+    "data/build_30527/index/community_evidence_2026-09-14.json"
+  ],
+  "official_sources": [
+    "https://forum.topeleven.com/tutorials-guides/83715-%5Bofficial%5D-playstyle-types.html",
+    "https://nordeus.helpshift.com/hc/en/3-top-eleven-be-a-soccer-manager/faq/1099-how-do-playstyles-influence-live-matches/"
+  ],
+  "special_ability_research": {
+    "status": "UNRESOLVED_FOR_WEIGHTING",
+    "game_fact": {
+      "current_build_enum_count": 19,
+      "eligibility": "player/role-specific availability is server-controlled; do not infer a universal role→SA matrix",
+      "current_enum_relevant_attacker_names": [
+        "Playmaker",
+        "One-on-One Scorer",
+        "Long Shots",
+        "Dribbler",
+        "Penalty Kick Specialist",
+        "Free Kick Specialist",
+        "Set Piece Taker",
+        "Versatile Attacker",
+        "Cross Expert"
+      ],
+      "shadow_striker_current_build": "ABSENT"
+    },
+    "official_current": {
+      "role_dependent_selection": true,
+      "training_cost": "40 or 50 skill points depending on the ability",
+      "source": "https://nordeus.helpshift.com/hc/en/3-top-eleven-be-a-soccer-manager/faq/778-how-does-adding-a-new-special-ability-work/",
+      "effect_multipliers_published": false
+    },
+    "community_result": {
+      "quality": "CONTRADICTORY_AND_PARTLY_STALE",
+      "observations": [
+        "One-on-One Scorer, Free Kick Specialist and Versatile Attacker are each promoted as 'best' ST options in different player reports.",
+        "Some community advice still references Shadow Striker for attackers even though Shadow Striker is absent from the current build-30527 enum.",
+        "Versatile Attacker activation/effect descriptions are anecdotal and inconsistent across reports."
+      ],
+      "safe_use": "Do not add an ST SA weight or recommend training a specific SA from role alone. For an already-owned SA, only surface context where current game/official evidence can support it."
+    },
+    "next_evidence_needed": [
+      "current official effect descriptions for attacker SAs",
+      "current-client/static effect strings or action hooks",
+      "controlled/live captures showing SA activation context",
+      "player-specific server availability when recommending trainable abilities"
+    ]
+  },
+  "tactic_context_research": {
+    "status": "QUALITATIVE_COMPANION_CONTEXT_ONLY",
+    "Target Man": {
+      "high_confidence": [
+        "wide/cross delivery is directly compatible with official aerial-pass/hold-up semantics",
+        "Lewis Green is a direct Mentor-context match because his extracted package boosts Wing Attacks, Crossing+Heading and Aerial Dominance on crosses"
+      ],
+      "community_corroboration": [
+        "current 2026 player reports pair Target Man with high crossing and wide creators",
+        "a recent Lewis Green + high-crossing + Target Man report describes a large scoring/assist increase"
+      ],
+      "do_not_promote": [
+        "Long Passing as mandatory: official Target Man wording says aerial passes, not specifically the Long Pass tactic",
+        "any fixed crossing-frequency percentage"
+      ]
+    },
+    "False Nine": {
+      "high_confidence": [
+        "official semantics describe deep receiving, ball driving and pulling DCs out of position"
+      ],
+      "community_corroboration": [
+        "current/historical reports commonly use False Nine as ST/AMC link player and with other goal-scoring attackers",
+        "central/through-middle systems are reported, but are not official mandatory mappings"
+      ],
+      "do_not_promote": [
+        "a fixed passing style",
+        "a fixed focus-passing lane",
+        "a universal lone-striker penalty"
+      ]
+    },
+    "Poacher": {
+      "high_confidence": [
+        "official semantics define penalty-area scoring as the primary role"
+      ],
+      "community_corroboration": [
+        "recent reports often use Poacher as the primary scorer and distinguish it from Target Man service dependence"
+      ],
+      "do_not_promote": [
+        "a fixed passing style",
+        "a fixed crossing frequency",
+        "Counter Attack as a Poacher-specific requirement"
+      ]
+    }
+  }
+}

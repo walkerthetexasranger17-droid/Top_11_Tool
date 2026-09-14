@@ -1,0 +1,311 @@
+{
+  "gameDataVersion": "build_30527",
+  "evidenceClass": "GAME FACT (shipped assistant localization semantics; not numerical match weights)",
+  "source": "docs/research/build_30527/source_archive/TACTICS_ASSISTANT_FEEDBACK_EXTRACT.txt",
+  "groups": {
+    "possession_short_passing": [
+      {
+        "id": "assistant_feedback_4",
+        "text": "Let's try to keep the ball longer with short passes. If we create opportunities that way, it might work out."
+      },
+      {
+        "id": "assistant_feedback_73",
+        "text": "Our lead is looking good. Just keep to a short passing style to maintain possession."
+      },
+      {
+        "id": "assistant_feedback_114",
+        "text": "Bad passing is affecting our possession percentage. Let's focus on short passes and try to keep the ball more."
+      },
+      {
+        "id": "assistant_feedback_134",
+        "text": "We won the last game. Let's keep the ball and try to increase our possession. Let's avoid long balls."
+      },
+      {
+        "id": "assistant_feedback_158",
+        "text": "Our passing is looking good. It was wise to play a short passing style."
+      },
+      {
+        "id": "assistant_feedback_43",
+        "text": "Good job! Keep focusing on short passes to maintain control in the midfield."
+      },
+      {
+        "id": "assistant_feedback_112",
+        "text": "We're not getting the ball to our attackers, and most long balls get intercepted. Shorter passes could help."
+      },
+      {
+        "id": "assistant_feedback_132",
+        "text": "Long balls aren't working. Let's keep the ball on the ground with shorter passes."
+      }
+    ],
+    "direct_long_passing": [
+      {
+        "id": "assistant_feedback_45",
+        "text": "Don't lose hope! There's still time to change the result. Consider attacking using a long passing style."
+      },
+      {
+        "id": "assistant_feedback_44",
+        "text": "We need to hurry up! Try using more long passes in their half!"
+      },
+      {
+        "id": "assistant_feedback_113",
+        "text": "We have a low percentage for completed passes. How about trying long balls?"
+      },
+      {
+        "id": "assistant_feedback_133",
+        "text": "Our strategy with long passes is working really well! Their defenders don't stand a chance against our attackers."
+      },
+      {
+        "id": "assistant_feedback_166",
+        "text": "This team is good. Maybe settle for a draw? Let's up defensive tactics and go for long balls and counter-attacks."
+      },
+      {
+        "id": "assistant_feedback_170",
+        "text": "We need to change tactics due to a sent off player. Let's concentrate on defence and create opportunities from long balls and counter-attacks."
+      },
+      {
+        "id": "assistant_feedback_128",
+        "text": "We're losing the midfield battle. Let's concentrate on defence and focus our attack through counter-attacks and long balls."
+      }
+    ],
+    "counter_attack_context": [
+      {
+        "id": "assistant_feedback_183",
+        "text": "Our fast players could break past the opponent's defence if we decide to play counter-attacks."
+      },
+      {
+        "id": "assistant_feedback_185",
+        "text": "They like ball possession. Invariably, their full-back is upfield. The right passes and counter-attacks may lead to a one-on-one situation."
+      },
+      {
+        "id": "assistant_feedback_85",
+        "text": "We don't have a chance of controlling the game. We should focus on counter-attacks."
+      },
+      {
+        "id": "assistant_feedback_97",
+        "text": "We can't expect to turn this one around. We're up against a very strong team. Maybe we can catch them on counter-attacks?"
+      },
+      {
+        "id": "assistant_feedback_138",
+        "text": "On paper, they're the favourites. We can out-think them. Let's sit back, defend and attack with counters."
+      },
+      {
+        "id": "assistant_feedback_19",
+        "text": "What do you think about sitting back and troubling the opposition with counter-attacks? Let's try it!"
+      },
+      {
+        "id": "assistant_feedback_194",
+        "text": "The opponent knows how to stop our counter-attacks. We should try something else!"
+      },
+      {
+        "id": "assistant_feedback_121",
+        "text": "This result will get us through to the next phase. Let's play smart possession football, and pick them off with counter-attacks."
+      }
+    ],
+    "focus_passing_dynamic": [
+      {
+        "id": "assistant_feedback_88",
+        "text": "We should identify our best performing players and focus on passing the ball to that part of the pitch."
+      },
+      {
+        "id": "assistant_feedback_110",
+        "text": "They keep intercepting our passes to the flanks. Maybe we can try breaking down their defence through the middle."
+      },
+      {
+        "id": "assistant_feedback_203",
+        "text": "Passing through the middle was a great choice, especially for our attackers!"
+      },
+      {
+        "id": "assistant_feedback_204",
+        "text": "We have a high pass completion percentage. Our passing through middle has been the perfect choice for this opponent."
+      },
+      {
+        "id": "assistant_feedback_205",
+        "text": "We are ineffective when passing through the middle today. We should consider a more suitable tactic for this opponent."
+      },
+      {
+        "id": "assistant_feedback_154",
+        "text": "Our attacks down the left flank are creating great opportunities. Let's keep it up!"
+      },
+      {
+        "id": "assistant_feedback_152",
+        "text": "We can't seem to complete enough passes when trying to play down the left flank."
+      },
+      {
+        "id": "assistant_feedback_111",
+        "text": "Attacking down the flanks is paying off. Let's keep the ball, slow down the pace and save some energy."
+      }
+    ],
+    "midfield_and_targets": [
+      {
+        "id": "assistant_feedback_172",
+        "text": "The opposition outnumbers us in midfield. As it stands, they have a better chance of keeping the ball."
+      },
+      {
+        "id": "assistant_feedback_28",
+        "text": "We're losing possession of the game, even with a much stronger team. Players need help in midfield!"
+      },
+      {
+        "id": "assistant_feedback_29",
+        "text": "We need to strengthen the midfield! We're losing the possession game against a weaker opponent."
+      },
+      {
+        "id": "assistant_feedback_61",
+        "text": "The opposition is controlling the midfield. We should fix this now!"
+      },
+      {
+        "id": "assistant_feedback_145",
+        "text": "We can keep the ball, but there just aren't enough targets to pass to upfront."
+      },
+      {
+        "id": "assistant_feedback_174",
+        "text": "Their defenders comfortably outnumber our attackers. If we have problems scoring, look to support our forwards."
+      },
+      {
+        "id": "assistant_feedback_25",
+        "text": "We're losing to this weaker team because of holes in our defence. Maybe we need a player to sit deep and prevent counter-attacks?"
+      }
+    ],
+    "pressing": [
+      {
+        "id": "assistant_feedback_179",
+        "text": "We need to win the ball and attack. Let's press our opponent more."
+      },
+      {
+        "id": "assistant_feedback_200",
+        "text": "The other team is really strong. If we want to have a chance, we should press them high."
+      },
+      {
+        "id": "assistant_feedback_201",
+        "text": "Their team is much weaker. Let's press them high and work on improving our goal difference."
+      },
+      {
+        "id": "assistant_feedback_135",
+        "text": "Our high pressing is paying off! Well done!"
+      },
+      {
+        "id": "assistant_feedback_136",
+        "text": "High pressing might tire our players too early in the game, don't you think?"
+      },
+      {
+        "id": "assistant_feedback_202",
+        "text": "We're losing key battles in defence. Let's press them high to get the ball back before it reaches our goal."
+      },
+      {
+        "id": "assistant_feedback_189",
+        "text": "What a great result! There's no need to press high anymore."
+      },
+      {
+        "id": "assistant_feedback_191",
+        "text": "This game is ours to lose! No point in high pressing any more. Let's sit back and rest our players."
+      },
+      {
+        "id": "assistant_feedback_192",
+        "text": "Our team is much stronger. We should be able to win this game without having to press high."
+      }
+    ],
+    "offside_trap": [
+      {
+        "id": "assistant_feedback_198",
+        "text": "We're playing an attacking style. Using the offside trap would work well here."
+      },
+      {
+        "id": "assistant_feedback_186",
+        "text": "The offside trap is dangerous! If opposing attackers are onside when our defenders push up, we won't be able to catch them."
+      },
+      {
+        "id": "assistant_feedback_59",
+        "text": "Their attackers have figured out how to beat our offside trap. What should we do?"
+      },
+      {
+        "id": "assistant_feedback_58",
+        "text": "Defenders are having troubles executing the offside trap. We should consider changing it!"
+      },
+      {
+        "id": "assistant_feedback_187",
+        "text": "Our defenders cannot focus enough to efficiently use offside traps."
+      },
+      {
+        "id": "assistant_feedback_188",
+        "text": "We conceded some goals as a result of our defender's high line. We should stop using the offside trap tactic."
+      },
+      {
+        "id": "assistant_feedback_60",
+        "text": "Our defenders are so confused by the offside trap that the opposition could use it to their advantage."
+      }
+    ],
+    "marking": [
+      {
+        "id": "assistant_feedback_65",
+        "text": "Too many of their players are running over our defence. We should consider zonal marking so our players cover each other."
+      },
+      {
+        "id": "assistant_feedback_66",
+        "text": "We're failing to defend every area of the pitch, and some players are left unmarked. We should try zonal marking."
+      },
+      {
+        "id": "assistant_feedback_42",
+        "text": "This is a great score! We can boost up defence with man marking!"
+      }
+    ],
+    "tackling_cards": [
+      {
+        "id": "assistant_feedback_124",
+        "text": "Let's put in some harder tackles to keep their strikers quiet."
+      },
+      {
+        "id": "assistant_feedback_157",
+        "text": "Yellow cards earned early on may lead to a send off. Maybe we should reconsider our tackling style."
+      },
+      {
+        "id": "assistant_feedback_219",
+        "text": "If we don't change our tackling style, another player will be sent off."
+      },
+      {
+        "id": "assistant_feedback_220",
+        "text": "We are getting too many cards due to our hard tackling style. I hope no one will be sent off."
+      },
+      {
+        "id": "assistant_feedback_222",
+        "text": "We are committing too many fouls today. We should maybe think about not tackling so hard."
+      },
+      {
+        "id": "assistant_feedback_117",
+        "text": "We shouldn't risk getting more yellow cards! Let's be less physical and avoid committing so many fouls."
+      },
+      {
+        "id": "assistant_feedback_178",
+        "text": "There are more than 3 players booked in our line-up. Avoid pressing and hard tackling or someone could be sent off."
+      }
+    ],
+    "approach_state": [
+      {
+        "id": "assistant_feedback_151",
+        "text": "We're already behind. Our best option now is a more offensive approach."
+      },
+      {
+        "id": "assistant_feedback_3",
+        "text": "We should consider being more offensive while there's still time. We can do it!"
+      },
+      {
+        "id": "assistant_feedback_39",
+        "text": "A draw is not enough! Let's attack even more. We need to win this while there's still time."
+      },
+      {
+        "id": "assistant_feedback_20",
+        "text": "We are weaker than them. We should focus on defence and protect the draw."
+      },
+      {
+        "id": "assistant_feedback_56",
+        "text": "The hard defensive strategy is a great choice. We just need to stay focused until the end."
+      },
+      {
+        "id": "assistant_feedback_102",
+        "text": "Playing all offense is leaving us very vulnerable to counter-attacks."
+      },
+      {
+        "id": "assistant_feedback_24",
+        "text": "We have the advantage. If we push forward too much, we risk conceding a goal from their counter-attack."
+      }
+    ]
+  }
+}

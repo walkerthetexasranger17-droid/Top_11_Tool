@@ -1,0 +1,156 @@
+{
+  "schema_version": 1,
+  "updated": "2026-09-14",
+  "policy": "Community evidence is corroboration/challenge material only. It never becomes GAME FACT without independent game/official evidence.",
+  "sources": [
+    {
+      "id": "reddit_formations_2026_02",
+      "date": "2026-02",
+      "url": "https://www.reddit.com/r/topeleven/comments/1rekkxs/most_successful_formations_tactics/",
+      "topic": "formation_midfield_control",
+      "observations": [
+        "reported success with double-DMC structures",
+        "single-DMC contributor prefers back four",
+        "more central midfield control suggested versus similar/stronger opponents"
+      ],
+      "use": "corroborates structural ideas only",
+      "evidence": "COMMUNITY_CORROBORATION"
+    },
+    {
+      "id": "reddit_formation_tactics_2026_09_13",
+      "date": "2026-09-13",
+      "url": "https://www.reddit.com/r/topeleven/comments/1wf6148/formation_tactics_help/",
+      "topic": "mentor_strategy_alignment",
+      "observations": [
+        "Fabregas reported for possession tactics",
+        "Herrera reported for counterattack against stronger opponents",
+        "back-four / DMC structures discussed"
+      ],
+      "use": "directly aligns with extracted Mentor tactical families",
+      "evidence": "COMMUNITY_CORROBORATION"
+    },
+    {
+      "id": "reddit_mentor_green_2026_08",
+      "date": "2026-08-09",
+      "url": "https://www.reddit.com/r/topeleven/comments/1vjfz4f/new_update_at_a_glance_mentors_within_squad/",
+      "topic": "lewis_green_target_man",
+      "observations": [
+        "manager reports high crossing + Lewis Green + Target Man produced strong goal/assist return"
+      ],
+      "use": "anecdotal outcome consistent with extracted Wing/Crossing/Heading/Aerial semantics; not causal proof",
+      "evidence": "COMMUNITY_CORROBORATION"
+    },
+    {
+      "id": "reddit_striker_playstyle_2026_09",
+      "date": "2026-09-01",
+      "url": "https://www.reddit.com/r/topeleven/comments/1w4c9co/which_playstyle_potential_is_the_most_effective/",
+      "topic": "st_playstyle_fit",
+      "observations": [
+        "Target Man commonly paired with wide crossing and Heading/Strength",
+        "False Nine suggested when wide attackers are scorers",
+        "Poacher commonly chosen for primary goal scorer"
+      ],
+      "use": "current-player corroboration for playstyle-specific ST model",
+      "evidence": "COMMUNITY_CORROBORATION"
+    },
+    {
+      "id": "reddit_st_white_skills_2024",
+      "date": "2024-02-03",
+      "url": "https://www.reddit.com/r/topeleven/comments/1ahrrli/",
+      "topic": "st_attribute_priority",
+      "observations": [
+        "Target Man: Strength/Positioning/Heading/Finishing",
+        "Poacher: Shooting/Finishing/Speed/Creativity",
+        "False Nine: Shooting/Finishing/Dribbling/Speed/Creativity",
+        "Positioning repeatedly described as useful across ST builds"
+      ],
+      "use": "historical player-experience corroboration; not hidden weighting proof",
+      "evidence": "COMMUNITY_CORROBORATION"
+    },
+    {
+      "id": "reddit_st_training_2023",
+      "date": "2023-05-27",
+      "url": "https://www.reddit.com/r/topeleven/comments/13sf4ap/",
+      "topic": "st_training_by_playstyle",
+      "observations": [
+        "Target Man strength+heading",
+        "False Nine dribbling+finishing",
+        "Poacher finishing+shooting"
+      ],
+      "use": "small anecdotal sample but matches broader split",
+      "evidence": "COMMUNITY_CORROBORATION"
+    },
+    {
+      "id": "forum_top10_formations",
+      "date": "2015-2023 thread",
+      "url": "https://forum.topeleven.com/tutorials-guides/37076-top-10-formations-tactics-guide.html",
+      "topic": "historical_formation_tactics",
+      "observations": [
+        "4-5-1 V and other formation/tactic presets documented",
+        "thread contains later revisions and conflicting reports"
+      ],
+      "use": "historical pattern source only; not current rules",
+      "evidence": "COMMUNITY_CORROBORATION"
+    },
+    {
+      "id": "forum_st_power_training",
+      "date": "2020-07",
+      "url": "https://forum.topeleven.com/tutorials-guides/80096-how-easiest-way-train-players-get-new-star-print.html",
+      "topic": "st_training",
+      "observations": [
+        "community guide uses repeated Shooting Technique to target Shooting/Finishing/Strength"
+      ],
+      "use": "corroborates action/training cluster only",
+      "evidence": "COMMUNITY_CORROBORATION"
+    },
+    {
+      "id": "official_sa_role_dependent_current",
+      "date": "current official help; crawled 2026-09",
+      "url": "https://nordeus.helpshift.com/hc/en/3-top-eleven-be-a-soccer-manager/faq/778-how-does-adding-a-new-special-ability-work/",
+      "topic": "special_ability_trainability",
+      "observations": [
+        "official Help says the specializations offered depend on the player's role",
+        "ability mastery costs 40 or 50 skill points depending on the ability"
+      ],
+      "use": "official corroboration of server/player-role-specific SA choice; not an effect-ranking source",
+      "evidence": "GAME_FACT_OFFICIAL_CURRENT"
+    },
+    {
+      "id": "reddit_st_sa_conflict_2023_06",
+      "date": "2023-06-30",
+      "url": "https://www.reddit.com/r/topeleven/comments/14munl7/",
+      "topic": "st_special_ability_conflict",
+      "observations": [
+        "one group strongly prefers One-on-One Scorer",
+        "other managers in the same thread strongly prefer Free Kick Specialist",
+        "reported effectiveness is anecdotal and contradictory"
+      ],
+      "use": "demonstrates community evidence is insufficient for a current ST SA ranking",
+      "evidence": "COMMUNITY_CONTRADICTION"
+    },
+    {
+      "id": "reddit_versatile_attacker_2022",
+      "date": "2022-11-29",
+      "url": "https://www.reddit.com/r/topeleven/comments/z7f0cz/",
+      "topic": "versatile_attacker_legacy_claims",
+      "observations": [
+        "community claims Versatile Attacker can complement/stack with One-on-One",
+        "explanations reference legacy Shadow Striker concepts"
+      ],
+      "use": "historical anecdote only; stale-schema warning because Shadow Striker is absent from build 30527",
+      "evidence": "COMMUNITY_STALE_SCHEMA_WARNING"
+    },
+    {
+      "id": "reddit_false9_system_2025_11",
+      "date": "2025-11-01",
+      "url": "https://www.reddit.com/r/topeleven/comments/1olmc7n/",
+      "topic": "false_nine_system_context",
+      "observations": [
+        "manager reports using False Nine with two wide attackers and switching ST/AMC based on opponent",
+        "claimed ability to attack middle or flanks is player testing, not official mapping"
+      ],
+      "use": "community corroboration for False Nine as flexible link/space-creation role",
+      "evidence": "COMMUNITY_CORROBORATION"
+    }
+  ]
+}

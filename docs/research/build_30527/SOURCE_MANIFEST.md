@@ -26,3 +26,16 @@
 - `docs/research/build_30527/source_archive/tier_assets/kazachenko_rare_ovr_breakdown.png` — `fc442d9d9777bff835eb6edd97339b50f9c3d712616b79a2c8a4385e120f0794`
 - `docs/research/build_30527/source_archive/tier_assets/sanchez_rare_profile.png` — `25473a7aeb0bf761b4ac9aafedec07619e52df96a01555528ab6cddcc35024a7`
 - `docs/research/build_30527/source_archive/tier_assets/sanchez_rare_ovr_breakdown.png` — `cd1484aed37ea0f1aa5d5705b4d96dc446394a23bcbfbb2e0b9979a8a906b3a6`
+
+
+## v0.5.7 embedded tactic / Mentor sources
+- `docs/research/build_30527/source_archive/TACTICS_ASSISTANT_FEEDBACK_EXTRACT.txt` — `5cbc025e5f977f80f151be2c474cb1f3f7eca402ace4f4c8ee865c8c8c712f6e` — shipped Assistant Feedback extraction.
+- `docs/research/build_30527/source_archive/native/NATIVE_MATCH_FEEDBACK_BOUNDARY.md` — `e71a0cdb24c9d639f8f2d8823492e0d748df3e8d90087bd88ed19790d7c93e29` — native MatchFeedback server-boundary evidence.
+- `docs/research/build_30527/source_archive/tier_assets/TopEleven_Tier_Assets_Source.rar` — `fdf1781d009718e8b04af9fbe584933547addfebc2212d51d28ca459a5d16547` — preserved original Tier asset archive.
+- `docs/research/build_30527/source_archive/mentor_assets_official/img_mentor_card_big_s1_01.png` — `750421ac9b6074c705cb77dd2b9f098cb29b9678d9c79685a7b7d2114dfe68d5` — official user-supplied game Mentor render; identity mapping intentionally unresolved.
+- `docs/research/build_30527/source_archive/mentor_assets_official/img_mentor_card_big_s1_02.png` — `032c7949e838ab8036773a6bd9b64fca538e1912ee1cae764c94e7e007e1b673` — official user-supplied game Mentor render; identity mapping intentionally unresolved.
+- `docs/research/build_30527/source_archive/mentor_assets_official/img_mentor_card_big_s1_03.png` — `bd20169517dd7d0ce7dc52825bb26cc8cb2c12a8546639c78d450eb7655d2466` — official user-supplied game Mentor render; identity mapping intentionally unresolved.
+- `docs/research/build_30527/source_archive/mentor_assets_official/img_mentor_card_big_s1_04.png` — `c20078d2ac0f1f9ff999fb2619d6067c286eeeef632ea1c882965134571312aa` — official user-supplied game Mentor render; identity mapping intentionally unresolved.
+- `docs/research/build_30527/source_archive/mentor_assets_official/img_mentor_card_big_s1_05.png` — `f77ece3345d5254c3dce5f16ea84478897aef90f87ea5a9f690432eecdf27b76` — official user-supplied game Mentor render; identity mapping intentionally unresolved.
+- `docs/research/build_30527/source_archive/mentor_assets_official/img_mentor_card_big_s1_06.png` — `c63f601a84fe7c7de255cc1a81909b1503f55464f186e800f0b3175cef034575` — official user-supplied game Mentor render; identity mapping intentionally unresolved.
+- `docs/research/build_30527/source_archive/mentor_assets_official/img_mentor_card_big_s1_07.png` — `50e968e7f74bdf05aaeca65789869dca8421c50f8ccb262d916025212213885e` — official user-supplied game Mentor render; identity mapping intentionally unresolved.

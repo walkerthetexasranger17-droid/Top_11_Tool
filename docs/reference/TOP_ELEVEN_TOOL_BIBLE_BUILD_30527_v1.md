@@ -725,7 +725,7 @@ This model is deterministic, explainable, testable and intentionally **ours**. I
 | --- | --- | --- | --- | --- | --- |
 | Rubén Herrera | saboteur | LIVE-CONFIRMED | 7 | 40/400 | tacticCounterAttackEffectiveness [30] → [30]; attributeCreativityPassing [20] → [25]; signatureBlindSide [30] → [35] |
 | Lewis Green | wing_commander | LIVE-CONFIRMED | 8 | 230/800 | tacticWingAttacksEffectiveness [30] → [30]; attributeCrossingHeading [20] → [40]; signatureAerialDominance [80] → [81] |
-| Jonas Brown | analyst | LIVE-CONFIRMED | 4 | 40/50 | tacticLongPassEffectiveness [30] → [30]; attributeStrengthPositioning [5] → [10]; signatureAdaptiveBlueprint [20] → [21] |
+| Jonas Braun | analyst | LIVE-CONFIRMED | 4 | 40/50 | tacticLongPassEffectiveness [30] → [30]; attributeStrengthPositioning [5] → [10]; signatureAdaptiveBlueprint [20] → [21] |
 | Cesc Fàbregas | architect | APP-ASSET/DISPLAY MAPPING | 6 | 120/200 | tacticShortPassEffectiveness [30] → [30]; attributeDribblingShooting [10] → [15]; signatureMomentumChain [15, 8] → [15, 6] |
 | Alan Shearer | deadball_specialist | LIVE-CONFIRMED | 8 | 710/800 | tacticSoloDribbleEffectiveness [30] → [30]; attributeStrengthShooting [20] → [25]; signatureAnkleBreaker [25, 10] → [30, 10] |
 | Nemanja Vidić | iron_guard | APP-ASSET/DISPLAY MAPPING | 6 | 100/200 | tacticDefensiveActionsEffectivenessWithStaminaPenalty [25] → [25]; attributeTacklingBravery [15] → [20]; signatureIronCheck [2, 10] → [5, 8] |
@@ -733,7 +733,7 @@ This model is deterministic, explainable, testable and intentionally **ours**. I
 
 Captured common state: all seven were unlocked, series 1; `tickets=0`, `gatingItemAmount=0`, ticket limit `100`. Expiration in this capture was `1793498400000` for all seven. These are LIVE snapshot values and must not be hard-coded as permanent account state.
 
-Do not reinterpret multi-value signature arrays. For example Momentum Chain `[15,8]→[15,6]` and Iron Check `[2,10]→[5,8]` are raw confirmed effect arrays whose element semantics are unresolved. Also do not automatically call every scalar “percent”; preserve it as a captured game effect value unless the UI/localization proves a percentage unit.
+The exact build localisation now decodes the indexed effect units/positions; keep the raw arrays alongside those decoded semantics so future build changes can be detected. Do not generalise that proof to unrelated effects. Full selected-level progression ladders remain unresolved.
 
 ### 12.1 Existing v5.2.4 mentor presentation assets to retain
 
@@ -744,14 +744,18 @@ Do not reinterpret multi-value signature arrays. For example Momentum Chain `[15
 | Nemanja Vidić | The Iron Guard | `nemanja-vidic.png` | `iron_guard` |
 | Cesc Fàbregas | The Architect | `cesc-fabregas.png` | `architect` |
 | Lewis Green | The Wing Commander | `lewis-green.png` | `wing_commander` |
-| Jonas Brown | The Analyst | `jonas-brown.png` | `analyst` |
+| Jonas Braun | The Analyst | `jonas-brown.png` *(legacy filename only)* | `analyst` |
 | Rubén Herrera | The Saboteur | `ruben-herrera.png` | `saboteur` |
 
 The internal IDs/effects, not the old `attack/defence/control/width/adaptive/structure` style tags, drive the new recommendation. Alan/Lewis/Rubén/Jonas name↔ID mappings were live-confirmed; Cesc/Nemanja/Claude mappings are retained from the existing app assets/display mapping unless separately protocol-confirmed later.
 
-## 13. Mentor recommendation — FINAL COMPANION LOGIC
+### 12.2 Current official progression addendum (checked 14 September 2026)
 
-Mentor choice is a **lexicographic synergy ranking**, not a fake hidden percentage. For each mentor compute `(directTacticMatch, attributeCoverage, mentorLevel, stableOrder)`. Compare in that order.
+Official Top Eleven 2027 Help Center documentation states that Mentors progress through Level 10 and then **3 Prestige levels**, with Signature Move unlocked at Level 10 and Prestige requiring XP + Signature Seals to further improve that Signature. Official documentation also confirms Mentor swapping at halftime. The exact build-30527 Prestige/Signature-Seal protocol representation has not yet been recovered from the embedded static archive and remains **UNRESOLVED**. Do not invent Level 11–13 wire/state fields.
+
+## 13. Mentor recommendation — CURRENT COMPANION BASELINE (v0.5.8 audit: incomplete three-effect logic)
+
+Mentor choice in the current runtime is a **lexicographic synergy ranking**, not a fake hidden percentage. `mentor-synergy-v3` computes `(directTacticMatch, attributeCoverage, signatureAvailable, stableOrder)` and compares in that order. This is a current companion baseline, **not finished three-effect Mentor logic**: Signature semantics are not yet context-matched.
 
 ### 13.1 Direct tactic match score (0..3 companion points)
 
@@ -761,8 +765,8 @@ Architect / tacticShortPassEffectiveness:
 Analyst / tacticLongPassEffectiveness:
   Long=3, Mixed=1, Short=0
 Wing Commander / tacticWingAttacksEffectiveness:
-  +2 if Focus Passing is Left Flank, Right Flank or Both Flanks
-  +1 if Cross Tendency is Medium or High
+  Left Flank, Right Flank or Both Flanks focus=3; otherwise 0
+  (Cross Tendency is relevant to Aerial Dominance semantics, but is not part of the current direct Tactical score.)
 Saboteur / tacticCounterAttackEffectiveness:
   Force Counter Attack=3; otherwise 0
 Iron Guard / defensive-actions-with-stamina-penalty:
@@ -770,15 +774,16 @@ Iron Guard / defensive-actions-with-stamina-penalty:
 Enforcer / defensive-actions-against-short-passes:
   if opponent passing is known: Short=3, Mixed=1, Long=0; if opponent style unknown=0
 Deadball Specialist / tacticSoloDribbleEffectiveness:
-  +2 if Work It Into The Box; +1 if XI Dribbling support is at/above the median of the main attacking capability metrics
-Clamp each mentor to maximum 3.
+  current companion bridge compares XI Dribbling support against the median of the main attacking capability metrics; returns 3 when at/above median, otherwise 1.
+  This is not an exact game setting mapping; the exact Tactical wording is Dribbling-action effectiveness.
+All direct scores are companion fit points, not game magnitudes.
 ```
 
 ### 13.2 Attribute coverage
 
 Parse confirmed stat boost IDs into pairs: Creativity+Passing; Crossing+Heading; Strength+Positioning; Dribbling+Shooting; Strength+Shooting; Tackling+Bravery; Bravery+Positioning. For each starter, count 1 for each boosted attribute that is a key attribute of that starter’s **assigned role**. `attributeCoverage = total useful hits`. For display, also show `coveragePercent = usefulHits / (11 * numberOfBoostedAttributes) * 100`. Do not multiply by the raw mentor effect value in v1 because its exact match-engine magnitude/scale is unresolved.
 
-Signature effect names and raw arrays are shown as supporting information but are not numerically scored in v1. Return top choice plus at least two alternatives with “why not” explanations.
+Signature effect names are shown as supporting information and `signatureAvailable` is currently only a Boolean tie-break. v0.5.8 explicitly marks this as incomplete: exact Signature activation contexts/trade-offs must become rule-based pre-match/halftime reasoning rather than one invented numeric cross-Mentor score. Return top choice plus at least two alternatives with “why not” explanations. See `docs/research/build_30527/V058_MENTOR_ST_COMMUNITY_CHECKPOINT.md`.
 
 ## 14. Training data — GAME/LIVE FACT
 

@@ -319,5 +319,36 @@
       "UnassignMentorInMatch",
       "UpdateMentorStateAfterHalftimeSwap"
     ]
+  },
+  "official_current_progression_2026_09_14": {
+    "evidence": "GAME FACT from current official Top Eleven Help Center; static build-30527 representation UNRESOLVED",
+    "levels": "1-10 plus 3 Prestige levels",
+    "attribute_unlock_level": 5,
+    "signature_unlock_level": 10,
+    "prestige_levels": 3,
+    "prestige_requirement": "Mentor XP + Signature Seal per stage",
+    "prestige_effect": "further upgrades Signature Move",
+    "halftime_swap": true,
+    "sources": [
+      "https://nordeus.helpshift.com/hc/en/3-top-eleven-be-a-soccer-manager/faq/1805-leveling-up-mentors/?l=en",
+      "https://nordeus.helpshift.com/hc/en/3-top-eleven-be-a-soccer-manager/faq/1803-top-eleven-2027-is-here/"
+    ],
+    "embedded_static_search": "No Prestige/Signature Seal structure recovered in the embedded research archive during v0.5.8. Do not invent protocol fields."
+  },
+  "companion_recommender_v057_audit": {
+    "status": "INCOMPLETE_FOR_THREE_EFFECT_DECISION_SUPPORT",
+    "runtime_model": "mentor-synergy-v3",
+    "ranking_order": [
+      "direct Tactical-family match",
+      "active Attribute-family key-skill coverage",
+      "Signature unlocked boolean",
+      "stable order"
+    ],
+    "gap": "Signature semantics/activation conditions are not scored or rule-matched; Signature is only an availability tie-break.",
+    "recommended_next_architecture": [
+      "pre-match semantic fit",
+      "halftime/live context switch advisor"
+    ],
+    "numeric_cross_mentor_signature_score": "NOT_APPROVED"
   }
 }
