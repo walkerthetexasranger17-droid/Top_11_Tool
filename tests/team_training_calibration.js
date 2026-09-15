@@ -1,0 +1,12 @@
+const fs=require('fs'),vm=require('vm'),path=require('path');global.window=global;const ROOT=path.join(__dirname,'..');
+for(const f of ['optimizer-data.js','bible-data.js','data.js','strategy-data.js','strategy-logic.js','training-engine.js','team-training-engine.js'])vm.runInThisContext(fs.readFileSync(path.join(ROOT,'js',f),'utf8'),{filename:f});
+const {Data:D,Strategy:S,Training:T,TeamTraining:TT}=TE5,A=Object.keys(D.ATTRIBUTE_IDS);let failures=[],assertions=0;function ok(c,m){assertions++;if(!c)failures.push(m)}
+function mk(v=150){return{key:'st',name:'Poacher',position:'ST',roles:['ST'],relatedRoles:[],ovr:v,skills:Object.fromEntries(A.map(a=>[a,v])),specialAbilities:[],playstyle:{type:'Poacher',level:3}}}
+const normal={drills:Object.fromEntries(D.NORMAL_DRILLS.map(d=>[d.drillId,{unlocked:true,level:3}]))};
+let p=mk(),hier=S.trainingPriorityProfile(p,{roles:['ST'],developmentRole:'ST'}),ind=T.buildNeeds(D.whiteSkillsForRoles(['ST']),p.skills,hier.priorities,D.POSITION_WHITE.ST),prep=TT.preparePlayers([p],D.TEAM_GROUPS.attack,{development:[{playerKey:'st',developmentRole:'ST'}]});
+ok(prep.valid.length===1,'Poacher missing from attack Team Training group');const team=prep.valid[0].needs;for(const a of D.whiteSkillsForRoles(['ST']))ok(Math.abs(team.need[a]-ind.need[a])<1e-9,`Team/Individual need mismatch for ${a}: ${team.need[a]} vs ${ind.need[a]}`);
+// If Finishing is already at target shape, both engines must treat it as maintenance, not a fresh growth target.
+p=mk();p.skills.Finishing=ind.targets.Finishing;hier=S.trainingPriorityProfile(p,{roles:['ST'],developmentRole:'ST'});const ind2=T.buildNeeds(D.whiteSkillsForRoles(['ST']),p.skills,hier.priorities,D.POSITION_WHITE.ST),prep2=TT.preparePlayers([p],D.TEAM_GROUPS.attack,{development:[{playerKey:'st',developmentRole:'ST'}]});
+ok(ind2.need.Finishing<1,'Individual developed Finishing did not fall to maintenance');ok(Math.abs(prep2.valid[0].needs.need.Finishing-ind2.need.Finishing)<1e-9,'Team Training resurrected developed Finishing need');
+const session=TT.buildTeamSession('attack',{normalProfile:normal,players:[p],development:[{playerKey:'st',developmentRole:'ST'}]});ok(!session.error&&session.drills.length===6,'Team Training failed six-drill session');ok(session.meta.targetShapeAware===true,'Team Training lost target-shape marker');
+console.log(JSON.stringify({assertions,failures,individualFinishingNeed:ind2.need.Finishing,teamFinishingNeed:prep2.valid[0].needs.need.Finishing,drills:session.drills.map(d=>d.name)},null,2));if(failures.length)process.exitCode=1;

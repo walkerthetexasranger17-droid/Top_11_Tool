@@ -40,6 +40,22 @@
     tackling:[['balanced','Balanced',0,0,.50],['stay','Stay On Feet',1,7,.30],['aggressive','Aggressive',2,5,.80]]
   };
   const TACTICS=Object.fromEntries(Object.entries(tactics).map(([dim,rows])=>[dim,rows.map(([key,label,id,drain,style])=>({key,label,id,drain,style}))]));
+  // Live Top Eleven 2027 UI observation captured 2026-09-15. Values 0/1/2 are the
+  // observed Low/Medium/High per-option intensity ordering, NOT proven linear numeric
+  // contributions or exact condition percentages. Keep separate from legacy defaults.
+  const LIVE_DRAIN={
+    shooting:{sight:0,balanced:1,box:2},
+    passing:{long:0,mixed:1,short:2},
+    focus:{left:0,right:0,center:0,balanced:1,both:2},
+    cross:{low:0,medium:0,high:0},
+    lost:{regroup:0,counterPress:1},
+    won:{buildup:0,counter:1},
+    mentality:{normal:0,defending:1,attacking:1,hardDefending:2,hardAttacking:2},
+    marking:{zonal:0,man:1},
+    pressing:{low:0,mid:1,high:2},
+    backLine:{offside:0,track:1},
+    tackling:{stay:0,balanced:1,aggressive:2}
+  };
   const APPROACHES={hardDefending:{label:'Hard Defending',index:0,mentality:'hardDefending'},defending:{label:'Defending',index:.25,mentality:'defending'},balanced:{label:'Balanced',index:.5,mentality:'normal'},attacking:{label:'Attacking',index:.75,mentality:'attacking'},hardAttacking:{label:'Hard Attacking',index:1,mentality:'hardAttacking'}};
   const MENTORS=[
     {id:'saboteur',displayName:'Rubén Herrera',title:'The Saboteur',asset:'ruben-herrera.png',tactic:{id:'tacticCounterAttackEffectiveness'},attribute:{id:'attributeCreativityPassing',attributes:['Creativity','Passing']},signature:{id:'signatureBlindSide'},mapping:'GAME/LIVE IDENTITY'},
@@ -50,5 +66,5 @@
     {id:'iron_guard',displayName:'Nemanja Vidić',title:'The Iron Guard',asset:'nemanja-vidic.png',tactic:{id:'tacticDefensiveActionsEffectivenessWithStaminaPenalty'},attribute:{id:'attributeTacklingBravery',attributes:['Tackling','Bravery']},signature:{id:'signatureIronCheck'},mapping:'GAME-ASSET IDENTITY'},
     {id:'enforcer',displayName:'Claude Makélélé',title:'The Enforcer',asset:'claude-makelele.png',tactic:{id:'tacticDefensiveActionsEffectivenessAgainstShortPasses'},attribute:{id:'attributeBraveryPositioning',attributes:['Bravery','Positioning']},signature:{id:'signatureParkingTheBus'},mapping:'GAME-ASSET IDENTITY'}
   ];
-  TE.BibleData={VERSION:'1.0',GAME_DATA_VERSION:'build_30527',CURRENT_ROLES,POSITION_ORDER,ROLE_RECTS,ROLE_IDS,PLAYSTYLES,PLAYSTYLE_LEVELS,SPECIAL_ABILITIES,FORMATION_TEMPLATES,TACTICS,APPROACHES,MENTORS,EVIDENCE:{GAME:'GAME FACT',LIVE:'LIVE FACT',COMPANION:'TOP ELEVEN TOOL CALCULATION',UNRESOLVED:'UNRESOLVED'}};
+  TE.BibleData={VERSION:'1.0',GAME_DATA_VERSION:'build_30527',CURRENT_ROLES,POSITION_ORDER,ROLE_RECTS,ROLE_IDS,PLAYSTYLES,PLAYSTYLE_LEVELS,SPECIAL_ABILITIES,FORMATION_TEMPLATES,TACTICS,LIVE_DRAIN,APPROACHES,MENTORS,EVIDENCE:{GAME:'GAME FACT',LIVE:'LIVE FACT',COMPANION:'TOP ELEVEN TOOL CALCULATION',UNRESOLVED:'UNRESOLVED'}};
 })();

@@ -1,0 +1,113 @@
+(() => {
+  const TE=window.TE5=window.TE5||{};const B=TE.BibleData,D=TE.Data,STRAT=TE.Strategy;
+  if(!B||!D||!STRAT)throw new Error('bible-data.js, data.js and strategy-logic.js must load before tactics-engine.js');
+  const MODEL_VERSION='30527-drain-fit-v4-own-squad-v2';
+  const DIMENSIONS=['passing','shooting','focus','cross','lost','won','mentality','marking','pressing','backLine','tackling'];
+  const SEARCH_DIMS=DIMENSIONS.filter(x=>x!=='mentality');
+  const DRAIN_RANK={Low:0,Medium:1,High:2};
+  function option(dim,key){return B.TACTICS[dim]?.find(x=>x.key===key)||null;}
+  function resolveDrainContribution(defaultContribution,override){
+    if(override==null)return defaultContribution;
+    let raw=override,kind='auto';
+    if(typeof override==='object'&&override!==null){
+      if(override.intensity!=null){raw=override.intensity;kind='intensity';}
+      else if(override.contribution!=null){raw=override.contribution;kind='contribution';}
+      else if(override.value!=null)raw=override.value;
+      else return defaultContribution;
+    }
+    if(typeof raw==='string'){
+      const key=raw.trim().toLowerCase();
+      if(key==='low')return 0;if(key==='medium')return 5;if(key==='high')return 7;
+    }
+    const n=Number(raw);
+    // Native TacticsDrainOverrides stores nullable ConditionDrainIntensity enum values:
+    // Low=0, Medium=1, High=2. Keep legacy/direct contribution inputs 0/5/7 too.
+    if(kind==='intensity'||(kind==='auto'&&(n===1||n===2)))return n===0?0:n===1?5:n===2?7:defaultContribution;
+    return [0,5,7].includes(n)?n:defaultContribution;
+  }
+  function calculateDrain(values,overrides={}){
+    let raw=15;
+    for(const dim of DIMENSIONS){
+      const o=option(dim,values?.[dim]);if(!o)throw new Error(`Missing tactic ${dim}`);
+      const override=overrides?.[dim]?.[o.key];raw+=resolveDrainContribution(o.drain,override);
+    }
+    const normalized=raw/100,drainClass=normalized>.65?'High':normalized>.40?'Medium':'Low';
+    return{rawScore:raw,normalized,drainClass};
+  }
+  function enumerate(callback,mentalityKey=null){let count=0;const dims=mentalityKey?SEARCH_DIMS:DIMENSIONS;const vals={};function rec(i){if(i===dims.length){if(mentalityKey)vals.mentality=mentalityKey;count++;callback?.({...vals});return;}const dim=dims[i];for(const o of B.TACTICS[dim]){vals[dim]=o.key;rec(i+1);}}rec(0);return count;}
+  function drainChecksums(){const all={Low:0,Medium:0,High:0},perMentality={};enumerate(v=>all[calculateDrain(v).drainClass]++);for(const m of B.TACTICS.mentality){const c={Low:0,Medium:0,High:0};enumerate(v=>c[calculateDrain(v).drainClass]++,m.key);perMentality[m.key]=c;}return{total:Object.values(all).reduce((a,b)=>a+b,0),all,perMentality};}
+  function mean(a){const v=a.filter(Number.isFinite);return v.length?v.reduce((x,y)=>x+y,0)/v.length:0;}
+  function isKey(starter,attr){return (D.POSITION_WHITE[starter.assignedRole]||[]).includes(attr);}
+  function metric(starters,attrs,{roles=null,lane=null}={}){let pool=starters;if(roles)pool=pool.filter(s=>roles.includes(s.assignedRole));if(lane)pool=pool.filter(s=>lane==='left'?s.y<250:lane==='right'?s.y>750:s.y>=250&&s.y<=750);let vals=[];for(const s of pool)for(const a of attrs){const v=Number(s.player?.skills?.[a]);if(isKey(s,a)&&Number.isFinite(v))vals.push(v);}if(!vals.length){for(const s of starters)for(const a of attrs){const v=Number(s.player?.skills?.[a]);if(Number.isFinite(v))vals.push(v);}}return mean(vals);}
+  function lineupMetrics(starters){
+    const m={};m.TechnicalBuild=metric(starters,['Passing','Creativity','Dribbling']);m.ShootingPower=metric(starters,['Shooting']);m.Finishing=metric(starters,['Shooting','Finishing']);m.WideAttack=metric(starters,['Crossing','Dribbling','Speed'],{roles:['DL','DR','ML','MR','AML','AMR']});m.AerialTarget=metric(starters,['Heading','Strength','Positioning'],{roles:['DC','DMC','AMC','ST']});m.Transition=metric(starters,['Speed','Passing','Dribbling','Finishing']);m.PressingUnit=metric(starters,['Fitness','Aggression','Tackling','Bravery']);m.DefensiveUnit=metric(starters,['Tackling','Marking','Positioning','Bravery']);m.LineControl=metric(starters,['Positioning','Speed','Bravery'],{roles:['DL','DC','DR','DMC']});m.DribblingSupport=metric(starters,['Dribbling']);m.FitnessMean=metric(starters,['Fitness']);m.TacklingMean=metric(starters,['Tackling']);m.PositioningMean=metric(starters,['Positioning']);m.BraveryMean=metric(starters,['Bravery']);m.AggressionMean=metric(starters,['Aggression']);
+    // Bible's lane score is "relevant attacking/build attributes". This explicit companion implementation
+    // uses the union of the named build/attacking attributes already defined in §11.2, not a hidden game weight.
+    const laneAttrs=['Passing','Creativity','Dribbling','Crossing','Shooting','Finishing','Speed'];m.LeftLane=metric(starters,laneAttrs,{lane:'left'});m.CenterLane=metric(starters,laneAttrs,{lane:'center'});m.RightLane=metric(starters,laneAttrs,{lane:'right'});return m;
+  }
+  function rawSupports(m){const av=(...x)=>mean(x);return{
+    passing:{short:m.TechnicalBuild,long:av(m.Transition,m.AerialTarget),mixed:av(m.TechnicalBuild,av(m.Transition,m.AerialTarget))},
+    shooting:{sight:m.ShootingPower,box:av(m.TechnicalBuild,m.Finishing),balanced:av(m.ShootingPower,av(m.TechnicalBuild,m.Finishing))},
+    focus:{left:m.LeftLane,right:m.RightLane,both:av(m.LeftLane,m.RightLane),center:m.CenterLane,balanced:av(m.LeftLane,m.CenterLane,m.RightLane)},
+    cross:{low:m.TechnicalBuild,high:av(m.WideAttack,m.AerialTarget),medium:av(m.TechnicalBuild,av(m.WideAttack,m.AerialTarget))},
+    lost:{counterPress:m.PressingUnit,regroup:m.DefensiveUnit},won:{buildup:m.TechnicalBuild,counter:m.Transition},
+    // Marking matchup effectiveness requires external attack context that this app does not collect.
+    // Keep raw own-team support equal; the v2 companion layer uses only own-player feasibility and drain.
+    marking:{man:m.DefensiveUnit,zonal:m.DefensiveUnit},pressing:{low:m.DefensiveUnit,mid:av(m.DefensiveUnit,m.PressingUnit),high:m.PressingUnit},
+    backLine:{track:m.DefensiveUnit,offside:m.LineControl},tackling:{stay:av(m.TacklingMean,m.PositioningMean),aggressive:av(m.TacklingMean,m.BraveryMean,m.AggressionMean),balanced:av(av(m.TacklingMean,m.PositioningMean),av(m.TacklingMean,m.BraveryMean,m.AggressionMean))}
+  };}
+  function optionFits(starters,approachKey){
+    const approach=B.APPROACHES[approachKey]||B.APPROACHES.balanced,m=lineupMetrics(starters),raw=rawSupports(m),fits={};
+    for(const dim of SEARCH_DIMS){
+      const vals=B.TACTICS[dim].map(o=>raw[dim][o.key]),hi=Math.max(...vals),fitWindow=Math.max(1,Number(STRAT.CONFIG?.feature_model?.skill_reference?.tactic_option_full_separation_points)||25),normalised=B.TACTICS[dim].map(o=>hi<=0?1:Math.max(0,Math.min(1,1-(hi-raw[dim][o.key])/fitWindow))),mx=Math.max(...normalised);
+      fits[dim]={};
+      B.TACTICS[dim].forEach((o,i)=>{const squadFit=normalised[i];fits[dim][o.key]={rawSupport:raw[dim][o.key],squadFit,optionFit:squadFit,maxSquadFit:Math.abs(squadFit-mx)<=1e-12};});
+    }
+    return{approach,metrics:m,raw,fits};
+  }
+  const NEUTRAL_TIES={passing:'mixed',shooting:'balanced',focus:'balanced',cross:'medium',lost:'regroup',won:'buildup',marking:'zonal',pressing:'mid',backLine:'track',tackling:'balanced'};
+  function near(a,b,eps=1e-9){return Math.abs(a-b)<=eps;}
+  function clamp(v,lo,hi){return Math.max(lo,Math.min(hi,v));}
+  function neutralCount(values){let n=0;for(const [dim,key] of Object.entries(NEUTRAL_TIES))if(values?.[dim]===key)n++;return n;}
+  function semanticTieScore(values,calc,starters){
+    let score=0;const signals=[];const add=(condition,reason,points=1)=>{if(condition){score+=points;signals.push(reason);}};
+    for(const [dim,key] of Object.entries(NEUTRAL_TIES)){const rows=B.TACTICS[dim].map(o=>calc.fits[dim][o.key]?.squadFit??0),allEqual=rows.every(x=>near(x,rows[0]));add(allEqual&&values[dim]===key,`${dim}: neutral fallback on equal XI support`);}
+    const L=calc.raw.focus.left,R=calc.raw.focus.right,C=calc.raw.focus.center;if(near(L,R)&&near(R,C))add(values.focus==='balanced','focus: all lanes equal -> balanced',3);else if(near(L,R)&&L>C)add(values.focus==='both','focus: both flanks equally strongest',3);
+    add(values.won==='counter'&&values.passing==='long','direct passing coheres with counter transition');add(values.won==='buildup'&&values.passing==='short','short passing coheres with buildup');add(['left','right','both'].includes(values.focus)&&['medium','high'].includes(values.cross),'flank focus coheres with crossing');
+    return{score,signals};
+  }
+  function bucketScore(raw,negativeCap,positiveCap,max,neutral=max/2){raw=Number(raw)||0;if(raw>=0){const cap=Math.max(1,Number(positiveCap)||1);return neutral+(max-neutral)*Math.min(1,raw/cap);}const cap=Math.max(1,Number(negativeCap)||1);return neutral*Math.max(0,1-Math.min(1,Math.abs(raw)/cap));}
+  function minimumRawDrain(overrides={}){let raw=15;for(const dim of DIMENSIONS){const vals=B.TACTICS[dim].map(o=>resolveDrainContribution(o.drain,overrides?.[dim]?.[o.key]));raw+=Math.min(...vals);}return raw;}
+  function drainEfficiency(rawScore,drainLimit,overrides={}){const ceiling={Low:40,Medium:65,High:100}[drainLimit]??65,floor=minimumRawDrain(overrides);if(rawScore<=floor)return 10;if(rawScore>=ceiling||ceiling<=floor)return 0;return 10*(ceiling-rawScore)/(ceiling-floor);}
+  function scoreDecision(values,drain,calc,starters){
+    const fitVals=SEARCH_DIMS.map(dim=>calc.fits[dim][values[dim]]),tacticFit=mean(fitVals.map(x=>x.optionFit)),maxCount=fitVals.filter(x=>x.maxSquadFit).length,contextFit=STRAT.scoreTacticContext(values,starters,calc.ownBase),b=contextFit.buckets||{};
+    const decisionComponents={nativeLineupFitScore:tacticFit*32,ownSquadStructureScore:bucketScore(Number(b.own_squad_structure)||0,13,31,26,13),internalCoherenceScore:bucketScore(Number(b.internal_coherence)||0,10,26,18,9),playstyleAndSAScore:bucketScore(Number(b.playstyle_and_sa_fit)||0,1,19,14,0),drainEfficiencyScore:drainEfficiency(drain.rawScore,calc.drainLimit,calc.overrides)};
+    const decisionScore=Object.values(decisionComponents).reduce((a,x)=>a+x,0),contradictionCount=(contextFit.contributions||[]).filter(x=>x.points<0).length,semantic=semanticTieScore(values,calc,starters);
+    return{fitVals,tacticFit,maxCount,contextFit,decisionComponents,decisionScore,contradictionCount,semantic};
+  }
+  function recommend(starters,{approach='balanced',drainLimit='Medium',overrides={}}={}){
+    if(!starters?.length)return{error:'no-lineup'};const calc=optionFits(starters,approach);calc.drainLimit=drainLimit;calc.overrides=overrides;calc.ownBase=STRAT.ownFeatures(starters);const mentality=calc.approach.mentality,limit=DRAIN_RANK[drainLimit]??1;let best=null,ordinal=0,eligibleCandidates=0;
+    const evaluatedCandidates=enumerate(values=>{const drain=calculateDrain(values,overrides);if(DRAIN_RANK[drain.drainClass]>limit){ordinal++;return;}eligibleCandidates++;const sc=scoreDecision(values,drain,calc,starters),cand={values:{...values},...drain,tacticFit:sc.tacticFit,maxSquadFitDimensions:sc.maxCount,semanticTieScore:sc.semantic.score,semanticSignals:sc.semantic.signals,contextFit:sc.contextFit,decisionComponents:sc.decisionComponents,decisionScore:sc.decisionScore,contradictionCount:sc.contradictionCount,neutralChoices:neutralCount(values),ordinal};
+      if(!best){best=cand;}else{
+        const semanticBand=Math.max(0,Number(STRAT.CONFIG?.tactics?.semantic_near_tie_points)||0.5),scoreDelta=cand.decisionScore-best.decisionScore;
+        if(scoreDelta>semanticBand+1e-12)best=cand;
+        else if(Math.abs(scoreDelta)<=semanticBand+1e-12){
+          if(cand.contradictionCount<best.contradictionCount)best=cand;
+          else if(cand.contradictionCount===best.contradictionCount){
+            if(cand.semanticTieScore>best.semanticTieScore)best=cand;
+            else if(cand.semanticTieScore===best.semanticTieScore){
+              if(scoreDelta>1e-12)best=cand;
+              else if(near(cand.decisionScore,best.decisionScore)&&(cand.rawScore<best.rawScore||cand.rawScore===best.rawScore&&(cand.neutralChoices>best.neutralChoices||cand.neutralChoices===best.neutralChoices&&cand.ordinal<best.ordinal)))best=cand;
+            }
+          }
+        }
+      }
+      ordinal++;},mentality);
+    if(!best)return{error:'no-drain-compatible-plan',evaluatedCandidates,eligibleCandidates};const reasons={};
+    for(const dim of SEARCH_DIMS){const o=option(dim,best.values[dim]),f=calc.fits[dim][o.key],effectiveContribution=resolveDrainContribution(o.drain,overrides?.[dim]?.[o.key]);reasons[dim]=`${o.label}: lineup support ${f.rawSupport.toFixed(1)}, squad fit ${(f.squadFit*100).toFixed(0)}%; drain contribution ${effectiveContribution}.`;}
+    reasons.marking+=` Matchup-specific marking efficacy is intentionally not modelled; this score uses only own-player feasibility, internal coherence and drain.`;reasons.mentality=`${option('mentality',mentality).label} is locked by the ${calc.approach.label} approach.`;
+    return{model:MODEL_VERSION,evidence:'TOP ELEVEN TOOL CALCULATION',evidencePolicy:'Exact build-30527 drain + own-XI attribute fit + transparent v2 own-squad rules. No external-team or live-state inputs.',approach:calc.approach.label,approachKey:approach,drainLimit,metrics:calc.metrics,evaluatedCandidates,eligibleCandidates,...best,reasons};
+  }
+  function recommendAuto(starters,{drainLimit='Medium',overrides={}}={}){const rows=Object.keys(B.APPROACHES).map(approach=>recommend(starters,{approach,drainLimit,overrides})).filter(x=>!x.error);rows.sort((a,b)=>b.decisionScore-a.decisionScore||a.contradictionCount-b.contradictionCount||a.rawScore-b.rawScore||b.neutralChoices-a.neutralChoices||a.approachKey.localeCompare(b.approachKey));if(!rows.length)return{error:'no-drain-compatible-plan'};const numericBest=rows[0],own=STRAT.ownFeatures(starters),band=Math.max(0,Number(STRAT.CONFIG?.tactics?.auto_approach_near_tie_points)||1.5),preferred=own.attackDefenseDelta>own.margin?'attacking':own.attackDefenseDelta<-own.margin?'defending':'balanced',preferredRow=rows.find(x=>x.approachKey===preferred),best=preferredRow&&preferredRow.decisionScore>=numericBest.decisionScore-band-1e-12?preferredRow:numericBest,ordered=[best,...rows.filter(x=>x!==best)];return{...best,autoSelected:true,autoApproachCalibration:{numericBest:numericBest.approachKey,preferredByOwnSquad:preferred,nearTieBand:band,attackDefenseDelta:own.attackDefenseDelta,preferenceApplied:best!==numericBest},alternatives:ordered.slice(1,3).map(x=>({approach:x.approach,approachKey:x.approachKey,decisionScore:x.decisionScore,values:x.values,drainClass:x.drainClass,contextFit:x.contextFit}))};}
+  TE.Tactics={MODEL_VERSION,DIMENSIONS,SEARCH_DIMS,calculateDrain,resolveDrainContribution,enumerate,drainChecksums,lineupMetrics,rawSupports,optionFits,semanticTieScore,minimumRawDrain,drainEfficiency,recommend,recommendAuto,option};
+})();

@@ -1,0 +1,227 @@
+const fs=require('fs'),vm=require('vm'),path=require('path');global.window=global;global.localStorage={getItem(){return null},setItem(){},removeItem(){},key(){return null},get length(){return 0}};
+const ROOT=path.join(__dirname,'..');for(const f of ['optimizer-data.js','bible-data.js','data.js','strategy-data.js','strategy-logic.js','formation.js','tactics-engine.js'])vm.runInThisContext(fs.readFileSync(path.join(ROOT,'js',f),'utf8'),{filename:f});
+const {Data:D,Formation:F,Tactics:T}=TE5,A=Object.keys(D.ATTRIBUTE_IDS);let failures=[],assertions=0;function ok(c,m){assertions++;if(!c)failures.push(m)}
+function mk(k,r,v=100,ps=null){return{key:k,name:k,position:r,roles:[r],relatedRoles:[],ovr:v,skills:Object.fromEntries(A.map(a=>[a,v])),specialAbilities:[],playstyle:ps?{type:ps,level:3}:null}}
+function xi(){return [['gk','GK'],['dl','DL'],['dc1','DC'],['dc2','DC'],['dr','DR'],['dmc','DMC'],['mc','MC'],['aml','AML'],['amc','AMC'],['amr','AMR'],['st','ST']].map(x=>mk(...x));}
+function set(players,keys,skills,val){for(const p of players.filter(p=>keys.includes(p.key)))for(const a of skills)p.skills[a]=val;}
+function run(players){const starters=F.assign(players,F.FORMATIONS.find(x=>x.id==='41131')).chosen;const r=T.recommendAuto(starters,{drainLimit:'High',drainProfile:T.DRAIN_PROFILE_LIVE});ok(!r.error,'Tactic calibration fixture returned error '+r.error);ok(r.drainProfile===T.DRAIN_PROFILE_LIVE,'Fixture did not use live-observed drain profile');ok(r.rawScore===null&&r.relativeScore===null&&r.normalized===null,'Live profile fabricated a numeric drain total');ok(Number.isInteger(r.mediumCount)&&Number.isInteger(r.highCount),'Live profile did not expose categorical intensity counts');const expectedClass=T.classifyLiveObserved({mediumCount:r.mediumCount,highCount:r.highCount});ok(r.drainClass===(expectedClass||'Unclassified'),'Live drain class did not match the proven pure-class anchors / unresolved mixed boundary');return r;}
+// Neutral own-squad evidence should use the declared neutral defaults rather than receiving free extreme-style coherence.
+{
+  const n=run(xi());ok(n.values.passing==='mixed','Neutral XI did not select Mixed Passing after strong-style coherence gating');ok(n.values.won==='buildup','Neutral XI did not retain Buildup as the neutral possession-won choice');ok(n.values.pressing==='mid','Medium pressing-capacity XI did not select Mid Press after extreme pair bonuses were gated');ok(n.values.focus==='balanced','Equal left/centre/right support did not select Balanced Focus after removing duplicate route-existence bonuses');
+}
+// Technical midfield/attack: short circulation and buildup must be preferred when those clusters are overwhelmingly strong.
+let p=xi();set(p,['dmc','mc','aml','amc','amr'],['Passing','Creativity','Dribbling'],170);let r=run(p);ok(r.values.passing==='short','Technical XI did not select Short Passing');ok(r.values.won==='buildup','Technical XI did not select Focus on Buildup');
+// Symmetric elite wide service plus aerial target: both flanks + high crosses should be the semantic plan.
+p=xi();set(p,['st'],['Heading','Strength','Positioning'],180);set(p,['aml','amr'],['Crossing','Speed','Dribbling'],170);r=run(p);ok(r.values.focus==='both','Symmetric elite wings did not select Both Flanks');ok(r.values.cross==='high','Aerial-wide XI did not select High Crosses');
+// Low pressing-capacity XI should keep the deep regroup package; the gate must not erase the legitimate low-intensity style.
+{
+  const low=xi();set(low,low.filter(x=>x.key!=='gk').map(x=>x.key),['Fitness','Aggression','Tackling','Bravery','Speed'],60);set(low,['dl','dc1','dc2','dr','dmc'],['Marking','Positioning'],180);const lr=run(low);ok(lr.contextFit.own.pressCapacity==='low','Low-press fixture did not create low press capacity');ok(lr.values.pressing==='low'&&lr.values.lost==='regroup','Low press-capacity XI lost the Low Block + Regroup package');
+}
+// Pressing monster: use the aggressive recovery/pressing package under an unconstrained budget.
+p=xi();set(p,p.map(x=>x.key),['Fitness','Aggression','Tackling','Bravery','Speed'],170);r=run(p);ok(r.values.pressing==='high','Pressing monster XI did not select High Press');ok(r.values.lost==='counterPress','Pressing monster XI did not select Counter Press');ok(r.values.tackling==='aggressive','Pressing monster XI did not select Aggressive Tackling');
+// One-sided genuine superiority must route through that side.
+p=xi();set(p,['dl','aml'],['Passing','Creativity','Dribbling','Crossing','Shooting','Finishing','Speed'],190);r=run(p);ok(r.values.focus==='left','Left-dominant XI did not select Left Flank');
+p=xi();set(p,['dr','amr'],['Passing','Creativity','Dribbling','Crossing','Shooting','Finishing','Speed'],190);r=run(p);ok(r.values.focus==='right','Right-dominant XI did not select Right Flank');
+
+// Left/right mirror invariance: exact mirrors must retain score and swap only directional focus when one side is genuinely dominant.
+const leftMirror=xi();set(leftMirror,['dl','aml'],['Passing','Creativity','Dribbling','Crossing','Shooting','Finishing','Speed'],190);const lm=run(leftMirror);
+const roleMirror={DL:'DR',DR:'DL',ML:'MR',MR:'ML',AML:'AMR',AMR:'AML'};
+const rightMirror=leftMirror.map(p=>{const role=roleMirror[p.roles[0]]||p.roles[0];return{...p,key:'m_'+p.key,position:role,roles:[role],skills:{...p.skills}};});const rm=run(rightMirror);
+ok(lm.values.focus==='left'&&rm.values.focus==='right','Left/right mirrored XI did not mirror directional focus');
+const lmSwapped={...lm.values,focus:'right'};ok(JSON.stringify(lmSwapped)===JSON.stringify(rm.values),'Mirror changed a non-directional tactic setting');
+ok(Math.abs(lm.decisionScore-rm.decisionScore)<1e-9,'Left/right mirror changed tactic score');
+
+// Tiny relevant perturbation must not create a plan flip.
+const base=xi(),a=run(base);const tiny=xi();tiny.find(x=>x.key==='aml').skills.Dribbling+=0.001;const b=run(tiny);ok(JSON.stringify(a.values)===JSON.stringify(b.values),'A +0.001 relevant skill perturbation flipped the tactic plan');ok(Math.abs(a.decisionScore-b.decisionScore)<0.01,'A +0.001 perturbation created an excessive tactic-score jump');
+
+// Filtered metric fallback must never borrow unrelated XI players. A narrow shape with no wide-role starter has zero WideAttack support rather than inheriting central-player skills.
+{
+  const narrowRoles=['GK','DC','DC','DC','DMC','MC','MC','MC','AMC','ST','ST'];
+  const narrow=narrowRoles.map((r,i)=>mk(`narrow${i}`,r,100));
+  const form={id:'narrow-cal',name:'narrow-cal',slots:narrowRoles,templateOrder:999};
+  const assigned=F.assign(narrow,form);
+  ok(!assigned.error,'narrow metric fixture could not be assigned');
+  const metrics=T.lineupMetrics(assigned.chosen);
+  ok(metrics.WideAttack===0,'WideAttack borrowed central players when no wide-role player existed');
+}
+
+
+// Open-play aerial-target support comes from advanced target roles, not centre-backs/screen players.
+{
+  const p=xi();
+  const assigned=F.assign(p,F.FORMATIONS.find(x=>x.id==='41131')).chosen;
+  const before=T.lineupMetrics(assigned).AerialTarget;
+  for(const s of assigned.filter(x=>['DC','DMC'].includes(x.assignedRole))){s.player.skills.Heading=200;s.player.skills.Strength=200;s.player.skills.Positioning=200;}
+  const after=T.lineupMetrics(assigned).AerialTarget;
+  ok(Math.abs(after-before)<1e-9,'defensive-role attributes inflated open-play AerialTarget support');
+}
+
+
+// Transition support must come from midfield/attack runners, not from a fast defensive unit.
+{
+  const p=xi(),assigned=F.assign(p,F.FORMATIONS.find(x=>x.id==='41131')).chosen,before=T.lineupMetrics(assigned).Transition;
+  for(const s of assigned.filter(x=>['DL','DC','DR','DMC'].includes(x.assignedRole))){for(const a of ['Speed','Passing','Dribbling','Finishing'])s.player.skills[a]=200;}
+  const after=T.lineupMetrics(assigned).Transition;
+  ok(Math.abs(after-before)<1e-9,'defensive-role attributes inflated attacking Transition support');
+}
+// Goalkeeper fitness is relevant to the goalkeeper, but the goalkeeper is not part of the outfield pressing unit.
+{
+  const p=xi(),assigned=F.assign(p,F.FORMATIONS.find(x=>x.id==='41131')).chosen,before=T.lineupMetrics(assigned).PressingUnit;
+  const gk=assigned.find(x=>x.assignedRole==='GK');gk.player.skills.Fitness=200;gk.player.skills.Aggression=200;gk.player.skills.Tackling=200;gk.player.skills.Bravery=200;
+  const after=T.lineupMetrics(assigned).PressingUnit;
+  ok(Math.abs(after-before)<1e-9,'goalkeeper attributes inflated the outfield PressingUnit metric');
+}
+
+
+// Attacking positioning must not masquerade as defensive-unit/tackling support.
+{
+  const p=xi(),assigned=F.assign(p,F.FORMATIONS.find(x=>x.id==='41131')).chosen,before=T.lineupMetrics(assigned),st=assigned.find(x=>x.assignedRole==='ST');
+  st.player.skills.Positioning=250;const after=T.lineupMetrics(assigned);
+  ok(Math.abs(after.DefensiveUnit-before.DefensiveUnit)<1e-9,'ST attacking Positioning inflated DefensiveUnit');
+  ok(Math.abs(after.PositioningMean-before.PositioningMean)<1e-9,'ST attacking Positioning inflated defensive PositioningMean used by tackling support');
+}
+
+// Long passing and Force Counter Attack must not be fused merely because a direct aerial outlet exists.
+// A slow Target Man can justify Long Passing while still favouring Buildup; a genuine transition unit must retain Long+Counter.
+{
+  const slow=xi();set(slow,['st'],['Heading','Strength','Positioning'],195);set(slow,['st'],['Speed','Dribbling','Passing','Finishing'],70);slow.find(x=>x.key==='st').playstyle={type:'Target Man',level:3};set(slow,['aml','amr'],['Crossing'],180);
+  const sr=run(slow);ok(sr.values.passing==='long','Strong slow Target Man/direct XI did not retain Long Passing');ok(sr.values.won==='buildup','Slow direct Target Man XI was incorrectly forced into Counter Attack without a strong counter outlet');ok(sr.contextFit.own.directOutletStrong===true&&sr.contextFit.own.counterOutletStrong===false,'Slow Target Man fixture did not isolate direct strength from counter strength');
+  const fast=xi();set(fast,['st','aml','amr'],['Speed','Dribbling','Passing','Finishing','Positioning'],185);fast.find(x=>x.key==='st').playstyle={type:'Poacher',level:3};fast.find(x=>x.key==='aml').playstyle={type:'Inside Forward',level:3};fast.find(x=>x.key==='amr').playstyle={type:'Inside Forward',level:3};
+  const fr=run(fast);ok(fr.contextFit.own.counterOutletStrong===true,'Counter-runner fixture failed to create a strong counter outlet');ok(fr.values.passing==='long'&&fr.values.won==='counter','Genuine counter-running XI lost Long + Counter after strong-outlet gating');
+}
+
+// Three central midfield roles alone must not manufacture a Short-Passing strength; actual technical quality must support it.
+{
+  const roles=[['g','GK'],['l','DL'],['c1','DC'],['c2','DC'],['r','DR'],['m1','MC'],['m2','MC'],['m3','MC'],['wl','AML'],['s','ST'],['wr','AMR']];
+  const neutral433=roles.map(x=>mk(x[0],x[1],100)),form433=F.FORMATIONS.find(x=>x.id==='433'),ns=F.assign(neutral433,form433).chosen,nr=T.recommend(ns,{approach:'balanced',drainLimit:'High',drainProfile:T.DRAIN_PROFILE_LIVE});ok(nr.values.passing==='mixed','Neutral three-MC 4-3-3 was incorrectly rewarded with Short Passing from role count alone');
+  const tech433=roles.map(x=>mk(x[0],x[1],100));set(tech433,['m1','m2','m3'],['Passing','Creativity','Dribbling'],180);const ts=F.assign(tech433,form433).chosen,tr=T.recommend(ts,{approach:'balanced',drainLimit:'High',drainProfile:T.DRAIN_PROFILE_LIVE});ok(tr.contextFit.own.technicalBuild==='high'&&tr.values.passing==='short'&&tr.values.won==='buildup','Elite technical three-MC 4-3-3 lost Short + Buildup after central-support strength gating');
+}
+
+// Near-tie semantics must not reintroduce unsupported extreme-style bonuses after the main coherence rules are evidence-gated.
+{
+  const p=xi(),starters=F.assign(p,F.FORMATIONS.find(x=>x.id==='41131')).chosen,calc=T.optionFits(starters,'balanced');calc.ownBase=TE5.Strategy.ownFeatures(starters);
+  const base={shooting:'balanced',focus:'balanced',cross:'medium',lost:'regroup',marking:'zonal',pressing:'mid',backLine:'track',tackling:'balanced'};
+  const lc=T.semanticTieScore({...base,passing:'long',won:'counter'},calc,starters),sb=T.semanticTieScore({...base,passing:'short',won:'buildup'},calc,starters);
+  ok(calc.ownBase.counterOutletStrong===false&&calc.ownBase.technicalBuild==='medium','Neutral semantic-gate fixture did not remain unsupported for strong Counter/Short identities');
+  ok(!lc.signals.some(x=>x.includes('strong counter transition')),'Near-tie resolver rewarded Long + Counter without a strong counter outlet');
+  ok(!sb.signals.some(x=>x.includes('strong technical buildup')),'Near-tie resolver rewarded Short + Buildup without high technical build');
+  const fast=xi();set(fast,['st','aml','amr'],['Speed','Dribbling','Passing','Finishing','Positioning'],185);fast.find(x=>x.key==='st').playstyle={type:'Poacher',level:3};const fs=F.assign(fast,F.FORMATIONS.find(x=>x.id==='41131')).chosen,fc=T.optionFits(fs,'balanced');fc.ownBase=TE5.Strategy.ownFeatures(fs);const fsem=T.semanticTieScore({...base,passing:'long',won:'counter'},fc,fs);ok(fsem.signals.some(x=>x.includes('strong counter transition')),'Near-tie resolver failed to reward a genuine strong counter identity');
+  const tech=xi();set(tech,['dmc','mc','aml','amc','amr'],['Passing','Creativity','Dribbling'],175);const ts=F.assign(tech,F.FORMATIONS.find(x=>x.id==='41131')).chosen,tc=T.optionFits(ts,'balanced');tc.ownBase=TE5.Strategy.ownFeatures(ts);const tsem=T.semanticTieScore({...base,passing:'short',won:'buildup'},tc,ts);ok(tsem.signals.some(x=>x.includes('strong technical buildup')),'Near-tie resolver failed to reward a genuine high-technical buildup identity');
+}
+
+// Shadow Striker is a current live Special Ability. The client/raw Long Shots identity must canonicalise to the same tactic trigger.
+{
+  const base=xi(),form=F.FORMATIONS.find(x=>x.id==='41131');
+  for(const [raw,label] of [['Shadow Striker','display'],['Long Shots','raw alias']]){
+    const p=base.map(x=>({...x,skills:{...x.skills},specialAbilities:[...(x.specialAbilities||[])]}));p.find(x=>x.key==='st').specialAbilities=[raw];
+    const starters=F.assign(p,form).chosen,own=TE5.Strategy.ownFeatures(starters),ctx=TE5.Strategy.scoreTacticContext({passing:'mixed',shooting:'sight',focus:'balanced',cross:'medium',lost:'regroup',won:'buildup',mentality:'normal',marking:'zonal',pressing:'mid',backLine:'track',tackling:'balanced'},starters,own);
+    ok((own.abilities.ShadowStriker||0)===1,`Shadow Striker ${label} identity did not canonicalise to the current live ability`);
+    ok(ctx.contributions.some(x=>x.id==='T-SHOOT-SIGHT-SA'&&x.points===4),`Shadow Striker ${label} identity did not activate Shoot-on-Sight SA synergy`);
+  }
+}
+
+// Dead-ball-only abilities belong to Set Pieces and must not leak into open-play Tactics scoring.
+{
+  const base=xi(),br=run(base),sp=xi();sp.find(x=>x.key==='st').specialAbilities=['Penalty Kick Specialist'];sp.find(x=>x.key==='aml').specialAbilities=['Corner Specialist'];sp.find(x=>x.key==='amc').specialAbilities=['Free Kick Specialist'];const sr=run(sp);
+  ok(JSON.stringify(br.values)===JSON.stringify(sr.values),'Dead-ball-only Special Abilities changed the open-play tactic recommendation');
+  ok(Math.abs(br.decisionScore-sr.decisionScore)<1e-12,'Dead-ball-only Special Abilities changed the open-play tactic score');
+}
+
+// Tactics is independently data-safe: direct calls must reject incomplete visible player profiles rather than skip/coerce unknown values.
+{
+  const p=xi(),starters=F.assign(p,F.FORMATIONS.find(x=>x.id==='41131')).chosen,st=starters.find(x=>x.assignedRole==='ST');
+  st.player.skills.Strength=null;
+  const comp=T.lineupCompleteness(starters),direct=T.recommend(starters,{approach:'balanced',drainLimit:'High',drainProfile:T.DRAIN_PROFILE_LIVE}),auto=T.recommendAuto(starters,{drainLimit:'High',drainProfile:T.DRAIN_PROFILE_LIVE});
+  ok(comp.complete===false&&comp.missing.some(x=>x.playerKey==='st'&&x.attributes.includes('Strength')),'Tactics completeness did not identify explicit-null ST Strength');
+  ok(direct.error==='incomplete-lineup-data','Direct Tactics call did not reject incomplete lineup data');
+  ok(auto.error==='incomplete-lineup-data','Auto Tactics call lost the specific incomplete-lineup error');
+}
+
+// An active Playstyle only contributes to Tactics when the current assigned role is Playstyle-eligible.
+// Related-position legality does not make a role-specific Playstyle active in that different role.
+{
+  const p=xi(),form=F.FORMATIONS.find(x=>x.id==='41131'),target=p.find(x=>x.key==='amc');
+  target.playstyle={type:'TARGET_MAN',level:3}; // Target Man is ST-only, AMC is not eligible.
+  const starters=F.assign(p,form).chosen,own=TE5.Strategy.ownFeatures(starters);
+  ok((own.playstyles.TargetMan||0)===0,'Target Man incorrectly remained tactically active while assigned to ineligible AMC');
+  target.playstyle={type:'FALSE_NINE',level:3}; // False Nine is eligible at AMC.
+  const starters2=F.assign(p,form).chosen,own2=TE5.Strategy.ownFeatures(starters2);
+  ok((own2.playstyles.FalseNine||0)===1,'Eligible AMC False Nine did not remain tactically active');
+}
+
+// The declared Playstyle/Special Ability affinity tables are active runtime logic, not documentation-only data.
+{
+  const form=F.FORMATIONS.find(x=>x.id==='41131'),values={passing:'short',shooting:'balanced',focus:'balanced',cross:'medium',lost:'regroup',won:'buildup',mentality:'normal',marking:'zonal',pressing:'mid',backLine:'track',tackling:'balanced'};
+  const p=xi();p.find(x=>x.key==='mc').playstyle={type:'REGISTA',level:3};
+  const starters=F.assign(p,form).chosen,own=TE5.Strategy.ownFeatures(starters),ctx=TE5.Strategy.scoreTacticContext(values,starters,own);
+  ok(ctx.contributions.some(x=>x.id.startsWith('AFF-PS-Regista-passing-short')&&x.points===3),'Regista Short-Passing affinity remained dead data');
+  ok(ctx.contributions.some(x=>x.id.startsWith('AFF-PS-Regista-won-buildup')&&x.points===2),'Regista Buildup affinity remained dead data');
+  ok(ctx.buckets.playstyle_and_sa_fit>=5,'Regista affinities did not reach the Playstyle/SA score bucket');
+
+  const q=xi();q.find(x=>x.key==='mc').specialAbilities=['Playmaker'];
+  const qs=F.assign(q,form).chosen,qown=TE5.Strategy.ownFeatures(qs),qctx=TE5.Strategy.scoreTacticContext(values,qs,qown);
+  ok(qctx.contributions.some(x=>x.id.startsWith('AFF-SA-Playmaker-passing-short')),'Active Playmaker SA affinity did not execute');
+  ok(qctx.contributions.some(x=>x.id.startsWith('AFF-SA-Playmaker-won-buildup')),'Active Playmaker Buildup affinity did not execute');
+
+  const inactive=xi();inactive.find(x=>x.key==='st').specialAbilities=['Dribbler'];
+  const is=F.assign(inactive,form).chosen,ictx=TE5.Strategy.scoreTacticContext(values,is,TE5.Strategy.ownFeatures(is));
+  ok(!ictx.contributions.some(x=>x.id.startsWith('AFF-SA-Dribbler-')),'Inactive/unresolved Dribbler SA affinity contributed tactic points');
+
+  const bad=xi();bad.find(x=>x.key==='amc').playstyle={type:'TARGET_MAN',level:3};
+  const bs=F.assign(bad,form).chosen,bctx=TE5.Strategy.scoreTacticContext({...values,passing:'long',cross:'high',focus:'both'},bs,TE5.Strategy.ownFeatures(bs));
+  ok(!bctx.contributions.some(x=>x.id.startsWith('AFF-PS-TargetMan-')),'Role-ineligible Target Man produced generic affinity points');
+
+  const one=xi();one.find(x=>x.key==='aml').playstyle={type:'WINGER',level:3};
+  const two=xi();two.find(x=>x.key==='aml').playstyle={type:'WINGER',level:3};two.find(x=>x.key==='amr').playstyle={type:'WINGER',level:3};
+  const affinityRaw=p=>{const s=F.assign(p,form).chosen,c=TE5.Strategy.scoreTacticContext({...values,focus:'both',cross:'high'},s,TE5.Strategy.ownFeatures(s));return c.contributions.filter(x=>x.id.startsWith('AFF-PS-Winger-')).reduce((a,x)=>a+x.points,0);};
+  ok(affinityRaw(one)===affinityRaw(two),'Playstyle affinity multiplied by player count instead of identity presence');
+}
+
+// Directional Winger/Wing Back Playstyle affinities follow the side the eligible player is actually assigned to.
+// A single left-sided identity supports Left + Both, not Right; the mirror is true on the right.
+{
+  const form=F.FORMATIONS.find(x=>x.id==='41131'),values={passing:'mixed',shooting:'balanced',focus:'balanced',cross:'medium',lost:'regroup',won:'buildup',mentality:'normal',marking:'zonal',pressing:'mid',backLine:'track',tackling:'balanced'};
+  const affinityIds=(players,focus)=>{const s=F.assign(players,form).chosen,c=TE5.Strategy.scoreTacticContext({...values,focus},s,TE5.Strategy.ownFeatures(s));return c.contributions.filter(x=>x.id.startsWith('AFF-PS-')).map(x=>x.id);};
+  const left=xi();left.find(x=>x.key==='aml').playstyle={type:'WINGER',level:3};
+  ok(affinityIds(left,'left').some(x=>x.startsWith('AFF-PS-Winger-focus-left')),'Left AML Winger did not support Left Flank');
+  ok(!affinityIds(left,'right').some(x=>x.startsWith('AFF-PS-Winger-focus-right')),'Left AML Winger incorrectly supported Right Flank');
+  ok(affinityIds(left,'both').some(x=>x.startsWith('AFF-PS-Winger-focus-both')),'Left AML Winger did not support Both Flanks');
+
+  const right=xi();right.find(x=>x.key==='amr').playstyle={type:'WINGER',level:3};
+  ok(!affinityIds(right,'left').some(x=>x.startsWith('AFF-PS-Winger-focus-left')),'Right AMR Winger incorrectly supported Left Flank');
+  ok(affinityIds(right,'right').some(x=>x.startsWith('AFF-PS-Winger-focus-right')),'Right AMR Winger did not support Right Flank');
+  ok(affinityIds(right,'both').some(x=>x.startsWith('AFF-PS-Winger-focus-both')),'Right AMR Winger did not support Both Flanks');
+
+  const both=xi();both.find(x=>x.key==='aml').playstyle={type:'WINGER',level:3};both.find(x=>x.key==='amr').playstyle={type:'WINGER',level:3};
+  for(const focus of ['left','right','both'])ok(affinityIds(both,focus).filter(x=>x.startsWith(`AFF-PS-Winger-focus-${focus}`)).length===1,`Two-sided Wingers did not provide exactly one identity-presence affinity for ${focus}`);
+
+  const wb=xi();wb.find(x=>x.key==='dl').playstyle={type:'WING_BACK',level:3};
+  ok(affinityIds(wb,'left').some(x=>x.startsWith('AFF-PS-WingBack-focus-left')),'Left Wing Back did not support Left Flank');
+  ok(!affinityIds(wb,'right').some(x=>x.startsWith('AFF-PS-WingBack-focus-right')),'Left Wing Back incorrectly supported Right Flank');
+
+  const tm=xi();tm.find(x=>x.key==='st').playstyle={type:'TARGET_MAN',level:3};
+  ok(affinityIds(tm,'left').some(x=>x.startsWith('AFF-PS-TargetMan-focus-left'))&&affinityIds(tm,'right').some(x=>x.startsWith('AFF-PS-TargetMan-focus-right')),'Central Target Man service affinity was incorrectly side-restricted');
+}
+
+// The active Playstyle/SA semantic component uses the calibrated fixed +80 raw range, not the old saturated +19 range.
+{
+  const cal=TE5.Strategy.CONFIG.tactics.component_calibration.playstyle_and_sa_fit;
+  ok(Number(cal.positive_cap)===80&&Number(cal.max_score)===14,'Playstyle/SA semantic calibration lost the fixed +80 -> 14 range');
+  ok(Math.abs(T.calibratedBucket(0,'playstyle_and_sa_fit',{negativeCap:2,positiveCap:80,max:14,neutral:0})-0)<1e-12,'Zero semantic evidence did not remain neutral');
+  ok(Math.abs(T.calibratedBucket(40,'playstyle_and_sa_fit',{negativeCap:2,positiveCap:80,max:14,neutral:0})-7)<1e-12,'Half of the calibrated semantic range did not map to half of the 14-point component');
+  ok(Math.abs(T.calibratedBucket(80,'playstyle_and_sa_fit',{negativeCap:2,positiveCap:80,max:14,neutral:0})-14)<1e-12,'Full calibrated semantic range did not map to 14/14');
+  const neutral=run(xi());ok(Math.abs(neutral.decisionComponents.playstyleAndSAScore)<1e-12,'No-Playstyle/no-SA neutral XI received semantic component credit');
+}
+
+
+// Named Playstyle levels are interpreted exactly like numeric enum levels at the Strategy boundary.
+{
+  const p=mk('level','ST',100,'POACHER');
+  p.playstyle.level='Locked';ok(TE5.Strategy.playstyleLevelId(p)===1&&!TE5.Strategy.playstyleActive(p),'Named Locked Playstyle level was treated as active');
+  p.playstyle.level='Standard';ok(TE5.Strategy.playstyleLevelId(p)===2&&TE5.Strategy.playstyleActive(p),'Named Standard Playstyle level was not treated as active');
+  p.playstyle.level='Intermediate';ok(TE5.Strategy.playstyleLevelId(p)===3&&TE5.Strategy.playstyleActive(p),'Named Intermediate Playstyle level did not resolve to enum 3');
+  p.playstyle.level='Master';ok(TE5.Strategy.playstyleLevelId(p)===5&&TE5.Strategy.playstyleActive(p),'Named Master Playstyle level did not resolve to enum 5');
+  delete p.playstyle.level;ok(TE5.Strategy.playstyleActive(p),'Legacy active Playstyle with no stored level lost backward-compatible activation');
+}
+
+console.log(JSON.stringify({assertions,failures},null,2));if(failures.length)process.exitCode=1;

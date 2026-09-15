@@ -1,7 +1,7 @@
 (() => {
   const TE=window.TE5=window.TE5||{};const D=TE.Data,CFG=TE.StrategyData;
   if(!D||!CFG)throw new Error('data.js and strategy-data.js must load before strategy-logic.js');
-  const MODEL_VERSION='companion-strategy-v2-own-squad-runtime-v0514';
+  const MODEL_VERSION='companion-strategy-v2-own-squad-runtime-v0515-calibration-4';
   const EVIDENCE='TOP ELEVEN TOOL CALCULATION';
   const TIER_WEIGHT={...CFG.training.tier_weights};
   const ROLE_TIERS=CFG.training.role_profiles;
@@ -13,7 +13,15 @@
   function tierFor(profile,attr){for(const tier of ['S','A','B','C'])if((profile?.[tier]||[]).includes(attr))return tier;return'C';}
   function normaliseRoles(player,roles){const raw=Array.isArray(roles)?roles:(Array.isArray(player?.roles)?player.roles:[player?.position]);return[...new Set(raw.map(D.normaliseRole).filter(Boolean))];}
   function playstyleName(player){const p=D.playstyleDefinition(player?.playstyle||player?.playstyleType);return p?.name&&p.name!=='No Playstyle'?p.name:null;}
-  function playstyleActive(player){const name=playstyleName(player);if(!name)return false;const raw=player?.playstyle;if(!raw||typeof raw!=='object')return true;const level=Number(raw.level);return !Number.isFinite(level)||level>=2;}
+  function playstyleLevelId(player){
+    const raw=player?.playstyle;if(!raw||typeof raw!=='object')return null;
+    if(raw.level==null||String(raw.level).trim()==='')return null;
+    const numeric=Number(raw.level);if(Number.isFinite(numeric))return numeric;
+    const key=String(raw.level).trim().replace(/[_-]+/g,' ').toLowerCase();
+    const row=(D.PLAYSTYLE_LEVELS||[]).find(x=>String(x?.name||'').trim().toLowerCase()===key);
+    return row?Number(row.id):null;
+  }
+  function playstyleActive(player){const name=playstyleName(player);if(!name)return false;const raw=player?.playstyle;if(!raw||typeof raw!=='object')return true;const level=playstyleLevelId(player);return level==null?true:level>=2;}
   function developmentRoleFor(player,roles,requested=null){const resolved=normaliseRoles(player,roles),req=D.normaliseRole(requested);if(req&&resolved.includes(req))return req;const primary=D.normaliseRole(player?.position);if(primary&&resolved.includes(primary))return primary;const ps=playstyleName(player),roleMap=CFG.training.playstyle_role_profiles?.[ps]||{};const psRole=resolved.find(r=>roleMap[r]);return psRole||resolved[0]||'';}
   function abilityNames(player){const arr=Array.isArray(player?.specialAbilities)?player.specialAbilities:(player?.specialAbility?[player.specialAbility]:[]);return new Set(arr.map(x=>String(x||'').trim()==='Long Shots'?'Shadow Striker':String(x||'').trim()).filter(Boolean));}
   function tacticValues(tactics){return tactics?.values||tactics||{};}
@@ -52,32 +60,33 @@
   function median(vals){const a=vals.filter(Number.isFinite).sort((x,y)=>x-y);if(!a.length)return 0;const m=Math.floor(a.length/2);return a.length%2?a[m]:(a[m-1]+a[m])/2;}
   function percentile(vals,p=.67){const a=vals.filter(Number.isFinite).sort((x,y)=>x-y);if(!a.length)return 0;if(a.length===1)return a[0];const i=(a.length-1)*p,lo=Math.floor(i),hi=Math.ceil(i),f=i-lo;return a[lo]*(1-f)+a[hi]*f;}
   function alias(name){return String(name||'').replace(/[^A-Za-z0-9]/g,'');}
-  function skillMean(starter,skills){const vals=(skills||[]).map(k=>Number(starter?.player?.skills?.[k])).filter(Number.isFinite);return vals.length?mean(vals):null;}
+  function skillMean(starter,skills){const vals=(skills||[]).map(k=>D.skillValue(starter?.player?.skills,k)).filter(v=>v!==null);return vals.length?mean(vals):null;}
   function assignedRoleMean(starter){return skillMean(starter,D.POSITION_WHITE[starter?.assignedRole]||[]);}
   function eligible(starters,roles){return starters.filter(s=>(roles||[]).includes(s.assignedRole));}
   function band(value,base,margin=5){if(!Number.isFinite(value)||!Number.isFinite(base))return'medium';return value<base-margin?'low':value>base+margin?'high':'medium';}
-  function activePlaystyleCounts(starters){const out={};for(const s of starters){if(!playstyleActive(s.player))continue;const n=playstyleName(s.player);if(n)out[alias(n)]=(out[alias(n)]||0)+1;}return out;}
+  function activePlaystyleCounts(starters){const out={};for(const s of starters){if(!playstyleActive(s.player))continue;const def=D.playstyleDefinition(s.player?.playstyle||s.player?.playstyleType),role=D.normaliseRole(s?.assignedRole);if(!def?.name||!role||!(def.roles||[]).includes(role))continue;out[alias(def.name)]=(out[alias(def.name)]||0)+1;}return out;}
   function activeAbilityCounts(starters){const out={};for(const s of starters)for(const n of abilityNames(s.player)){const k=alias(n);out[k]=(out[k]||0)+1;}return out;}
   function clusterRows(starters,roles,skills){return eligible(starters,roles).map(s=>({starter:s,value:skillMean(s,skills)})).filter(x=>Number.isFinite(x.value));}
   function strongRows(rows,xiMedian){if(!rows.length)return[];const threshold=rows.length<3?xiMedian-10:percentile(rows.map(x=>x.value),.67);return rows.filter(x=>x.value>=threshold&&x.value>=xiMedian-10);}
-  function speedAtLeast(starter,floor){const v=Number(starter?.player?.skills?.Speed);return Number.isFinite(v)&&v>=floor;}
+  function speedAtLeast(starter,floor){const v=D.skillValue(starter?.player?.skills,'Speed');return v!==null&&v>=floor;}
   function ownFeatures(starters=[],values=null){
     const shape=startersShape(starters),roleMeans=starters.map(assignedRoleMean).filter(Number.isFinite),xiMedian=median(roleMeans),margin=Number(CFG.feature_model?.skill_reference?.comparison_margin_points)||5,playstyles=activePlaystyleCounts(starters),abilities=activeAbilityCounts(starters);
-    const aerialRows=clusterRows(starters,['ST','AMC'],['Heading','Strength','Positioning']),aerialStrong=strongRows(aerialRows,xiMedian),aerialOutlet=!!playstyles.TargetMan||aerialStrong.length>0;
-    const transitionRows=clusterRows(starters,['ST','AMC','AML','AMR'],['Speed','Dribbling','Passing','Finishing','Positioning']),transitionStrong=strongRows(transitionRows,xiMedian);
+    const aerialRows=clusterRows(starters,['ST','AMC'],['Heading','Strength','Positioning']),aerialCredible=strongRows(aerialRows,xiMedian),targetManCredible=!!playstyles.TargetMan&&aerialCredible.length>0,aerialOutlet=targetManCredible||aerialCredible.length>0,aerialOutletStrong=targetManCredible||aerialRows.some(x=>x.value>xiMedian+margin);
+    const transitionRows=clusterRows(starters,['ST','AMC','AML','AMR'],['Speed','Dribbling','Passing','Finishing','Positioning']),transitionCredible=strongRows(transitionRows,xiMedian);
     const semanticRunner=eligible(starters,['ST','AMC','AML','AMR']).some(s=>{const n=playstyleName(s.player);return['Poacher','Inside Forward'].includes(n)&&speedAtLeast(s,xiMedian-10);});
-    const counterOutlet=transitionStrong.length>0||semanticRunner;
-    const stDirect=strongRows(clusterRows(starters,['ST'],['Strength','Positioning','Heading']),xiMedian).length>0,directOutlet=aerialOutlet||stDirect||counterOutlet;
+    const counterOutlet=transitionCredible.length>0||semanticRunner,counterOutletStrong=semanticRunner||transitionRows.some(x=>x.value>xiMedian+margin);
+    const stDirectRows=clusterRows(starters,['ST'],['Strength','Positioning','Heading']),stDirectCredible=strongRows(stDirectRows,xiMedian).length>0,stDirectStrong=stDirectRows.some(x=>x.value>xiMedian+margin),directOutlet=aerialOutlet||stDirectCredible||counterOutlet,directOutletStrong=aerialOutletStrong||stDirectStrong||counterOutletStrong;
     const technicalRows=clusterRows(starters,['DMC','MC','AMC','ML','MR','AML','AMR'],['Passing','Creativity','Dribbling']),technicalBuildValue=mean(technicalRows.map(x=>x.value));
     const pressRows=clusterRows(starters,['DL','DC','DR','DMC','ML','MC','MR','AML','AMC','AMR','ST'],['Fitness','Aggression','Tackling','Bravery','Speed']),pressValue=mean(pressRows.map(x=>x.value));
     const lineRows=clusterRows(starters,['DL','DC','DR','DMC'],['Speed','Positioning','Bravery']),lineValue=mean(lineRows.map(x=>x.value));
     const markerRows=clusterRows(starters,['DL','DC','DR','DMC'],['Marking','Speed','Strength','Positioning']),markerValue=mean(markerRows.map(x=>x.value));
     const finishRows=clusterRows(starters,['ST','AMC','AML','AMR'],['Shooting','Finishing','Positioning','Dribbling']).map(x=>x.value).sort((a,b)=>b-a),longRows=clusterRows(starters,['ST','AMC','AML','AMR','MC'],['Shooting','Creativity']).map(x=>x.value).sort((a,b)=>b-a);
     const boxFinishing=mean(finishRows.slice(0,2)),longShotThreat=mean(longRows.slice(0,2));
-    const advanced=eligible(starters,['AMC','AML','AMR','ST']),dribbleReliance=advanced.filter(s=>{const dr=Number(s.player?.skills?.Dribbling),rm=assignedRoleMean(s),n=playstyleName(s.player);return Number.isFinite(dr)&&Number.isFinite(rm)&&dr>=rm||['False Nine','Enganche','Inside Forward'].includes(n);}).length>=2;
+    const advanced=eligible(starters,['AMC','AML','AMR','ST']),dribbleReliance=advanced.filter(s=>{const dr=D.skillValue(s.player?.skills,'Dribbling'),rm=assignedRoleMean(s),n=playstyleName(s.player);return dr!==null&&Number.isFinite(rm)&&dr>=rm||['False Nine','Enganche','Inside Forward'].includes(n);}).length>=2;
     const directValues=[...aerialRows.map(x=>x.value),...transitionRows.map(x=>x.value)].filter(Number.isFinite).sort((a,b)=>b-a),directSupport=mean(directValues.slice(0,2));
+    const attackUnitQuality=mean(eligible(starters,['AML','AMC','AMR','ST']).map(assignedRoleMean)),defenseUnitQuality=mean(eligible(starters,['GK','DL','DC','DR','DMC']).map(assignedRoleMean)),attackDefenseDelta=attackUnitQuality-defenseUnitQuality;
     const v=values||{},defensiveActionDemand=['defending','hardDefending'].includes(v.mentality)||(v.pressing==='high'&&v.lost==='counterPress')?'high':(v.pressing==='mid'||v.tackling==='aggressive')?'medium':'low';
-    return{...shape,xiQualityMedian:xiMedian,aerialOutlet,counterOutlet,directOutlet,technicalBuildValue,technicalBuild:band(technicalBuildValue,xiMedian,margin),pressCapacity:band(pressValue,xiMedian,margin),lineSpeed:band(lineValue,xiMedian,margin),markerCapacity:band(markerValue,xiMedian,margin),boxFinishing,longShotThreat,dribbleReliance,defensiveActionDemand,directSupport,playstyles,abilities,margin};
+    return{...shape,xiQualityMedian:xiMedian,aerialOutlet,aerialOutletStrong,counterOutlet,counterOutletStrong,directOutlet,directOutletStrong,technicalBuildValue,technicalBuild:band(technicalBuildValue,xiMedian,margin),pressCapacity:band(pressValue,xiMedian,margin),lineSpeed:band(lineValue,xiMedian,margin),markerCapacity:band(markerValue,xiMedian,margin),boxFinishing,longShotThreat,dribbleReliance,defensiveActionDemand,directSupport,attackUnitQuality,defenseUnitQuality,attackDefenseDelta,playstyles,abilities,margin};
   }
 
   // Small deterministic expression parser for the v2 rule catalogue. It deliberately avoids eval/new Function.
@@ -111,11 +120,80 @@
   function contextualOwn(baseOwn,values=null){const v=values||{},defensiveActionDemand=['defending','hardDefending'].includes(v.mentality)||(v.pressing==='high'&&v.lost==='counterPress')?'high':(v.pressing==='mid'||v.tackling==='aggressive')?'medium':'low';return{...baseOwn,defensiveActionDemand};}
   function buildContext(starters,values=null,baseOwn=null){const own=contextualOwn(baseOwn||ownFeatures(starters),values);return{own,values:values||{},playstyles:own.playstyles,abilities:own.abilities,margin:own.margin};}
   function scoreFormationStructure(starters=[]){const context=buildContext(starters),ev=evaluateRules(CFG.formation.rules||[],context);return{score:ev.score,reasons:ev.contributions.map(x=>({points:x.points,reason:x.message,id:x.id})),own:context.own,contributions:ev.contributions};}
-  function scoreTacticContext(values,starters=[],baseOwn=null){
-    const context=buildContext(starters,values,baseOwn),ev=evaluateRules(CFG.tactics.rules||[],context,r=>values?.[r.dimension]===r.option),buckets={own_squad_structure:0,internal_coherence:0,playstyle_and_sa_fit:0};
-    for(const c of ev.contributions)buckets[c.bucket]=(buckets[c.bucket]||0)+c.points;
-    return{score:ev.score,buckets,reasons:ev.contributions.map(x=>({points:x.points,reason:x.message,id:x.id,bucket:x.bucket})),own:context.own,contributions:ev.contributions};
+  function activePlaystylePlacements(starters=[],name){
+    const wanted=alias(name),rows=[];
+    for(const s of starters){
+      if(!playstyleActive(s.player))continue;
+      const def=D.playstyleDefinition(s.player?.playstyle||s.player?.playstyleType),role=D.normaliseRole(s?.assignedRole);
+      if(!def?.name||alias(def.name)!==wanted||!role||!(def.roles||[]).includes(role))continue;
+      rows.push({starter:s,role});
+    }
+    return rows;
+  }
+  function directionalFocusOptions(name,starters=[]){
+    if(!['Winger','Wing Back'].includes(name))return null;
+    const placements=activePlaystylePlacements(starters,name),allowed=new Set();
+    for(const {role} of placements){
+      if(['DL','ML','AML'].includes(role)){allowed.add('left');allowed.add('both');}
+      if(['DR','MR','AMR'].includes(role)){allowed.add('right');allowed.add('both');}
+    }
+    return allowed.size?allowed:null;
+  }
+  function explicitIdentityAffinityCoverage(){
+    const out=new Set();
+    for(const rule of CFG.tactics.rules||[]){
+      if((Number(rule?.points)||0)<=0||!rule?.dimension||!rule?.option)continue;
+      const branches=String(rule?.when||'').split('||').map(x=>x.trim().replace(/^\(+|\)+$/g,'').trim()).filter(Boolean);
+      if(!branches.length)continue;
+      const refs=[];let identityOnly=true;
+      for(const branch of branches){
+        const m=branch.match(/^(playstyles|abilities)\.([A-Za-z0-9]+)\s*>\s*0$/);
+        if(!m){identityOnly=false;break;}
+        refs.push({kind:m[1]==='playstyles'?'PS':'SA',name:m[2]});
+      }
+      if(!identityOnly)continue;
+      for(const ref of refs)out.add(`${ref.kind}|${ref.name}|${rule.dimension}|${rule.option}`);
+    }
+    return out;
+  }
+  const EXPLICIT_IDENTITY_AFFINITY_COVERAGE=explicitIdentityAffinityCoverage();
+  function tacticAffinityByChoice(starters=[],baseOwn=null){
+    const own=baseOwn||ownFeatures(starters),out={};
+    const push=(kind,name,entry,relation,optionFilter=null)=>{
+      const points=Number(entry?.points)||0;if(!entry?.dimension||!Array.isArray(entry?.options)||!points)return;
+      for(const opt of entry.options){
+        if(optionFilter&&!optionFilter(opt))continue;
+        // A pure identity-only explicit tactic rule already represents this exact semantic relationship.
+        // Keep the established explicit weighting and suppress only the duplicate generic affinity; contextual rules remain additive.
+        if(relation==='support'&&EXPLICIT_IDENTITY_AFFINITY_COVERAGE.has(`${kind}|${alias(name)}|${entry.dimension}|${opt}`))continue;
+        const key=`${entry.dimension}:${opt}`;(out[key]??=[]).push({id:`AFF-${kind}-${alias(name)}-${entry.dimension}-${opt}-${relation}`,points,matched:true,message:`${name} ${relation==='support'?'supports':'opposes'} ${entry.dimension} ${opt}.`,bucket:'playstyle_and_sa_fit'});
+      }
+    };
+    for(const [name,row] of Object.entries(CFG.tactics.playstyle_affinities||{})){
+      if((own.playstyles?.[alias(name)]||0)<=0)continue;
+      const directionalFocus=directionalFocusOptions(name,starters);
+      const filter=entry=>entry?.dimension==='focus'&&directionalFocus?(opt=>directionalFocus.has(opt)):null;
+      for(const entry of row.supports||[])push('PS',name,entry,'support',filter(entry));
+      for(const entry of row.opposes||[])push('PS',name,entry,'oppose',filter(entry));
+    }
+    for(const [name,row] of Object.entries(CFG.tactics.special_ability_affinities||{})){if(!row?.active||(own.abilities?.[alias(name)]||0)<=0)continue;for(const entry of row.supports||[])push('SA',name,entry,'support');for(const entry of row.opposes||[])push('SA',name,entry,'oppose');}
+    return out;
+  }
+  const TACTIC_RULE_ORDER=new Map(),TACTIC_RULES_BY_CHOICE=(()=>{const out={};for(const [i,rule] of (CFG.tactics.rules||[]).entries()){TACTIC_RULE_ORDER.set(rule.id,i);const key=`${rule.dimension}:${rule.option}`;(out[key]??=[]).push(rule);}return out;})();
+  function ruleDependsOnTacticValues(rule){return String(rule?.when||'').includes('values.')||String(rule?.feature||'').startsWith('values.');}
+  function selectedTacticRules(values={},dynamicOnly=null){const out=[];for(const [dimension,option] of Object.entries(values)){const rows=TACTIC_RULES_BY_CHOICE[`${dimension}:${option}`]||[];for(const rule of rows){const dynamic=ruleDependsOnTacticValues(rule);if(dynamicOnly===null||dynamic===dynamicOnly)out.push(rule);}}return out;}
+  function prepareTacticRuleContext(starters=[],baseOwn=null){
+    const own=baseOwn||ownFeatures(starters),context=buildContext(starters,{},own),staticByChoice={},dynamicDimensions=new Set(),affinityByChoice=tacticAffinityByChoice(starters,own);
+    for(const [choice,rows] of Object.entries(TACTIC_RULES_BY_CHOICE)){const ev=evaluateRules(rows.filter(r=>!ruleDependsOnTacticValues(r)),context);staticByChoice[choice]=ev.contributions;for(const rule of rows.filter(ruleDependsOnTacticValues)){dynamicDimensions.add(rule.dimension);for(const m of String(rule.when||'').matchAll(/values\.([A-Za-z0-9_]+)/g))dynamicDimensions.add(m[1]);}}
+    return{own,staticByChoice,affinityByChoice,dynamicDimensions:[...dynamicDimensions].sort(),dynamicCache:new Map()};
+  }
+  function scoreTacticContext(values,starters=[],baseOwn=null,prepared=null){
+    const prep=prepared||null,context=buildContext(starters,values,prep?.own||baseOwn),contributions=[];
+    if(prep){for(const [dimension,option] of Object.entries(values)){const key=`${dimension}:${option}`,rows=prep.staticByChoice?.[key],aff=prep.affinityByChoice?.[key];if(rows)contributions.push(...rows);if(aff)contributions.push(...aff);}const dynamicKey=prep.dynamicDimensions.map(d=>`${d}=${values?.[d]??''}`).join('|');let dynamicRows=prep.dynamicCache.get(dynamicKey);if(!dynamicRows){dynamicRows=evaluateRules(selectedTacticRules(values,true),context).contributions;prep.dynamicCache.set(dynamicKey,dynamicRows);}contributions.push(...dynamicRows);contributions.sort((a,b)=>(TACTIC_RULE_ORDER.get(a.id)??1e9)-(TACTIC_RULE_ORDER.get(b.id)??1e9)||String(a.id).localeCompare(String(b.id)));}
+    else{contributions.push(...evaluateRules(selectedTacticRules(values),context).contributions);const aff=tacticAffinityByChoice(starters,context.own);for(const [dimension,option] of Object.entries(values))contributions.push(...(aff[`${dimension}:${option}`]||[]));}
+    const buckets={own_squad_structure:0,internal_coherence:0,playstyle_and_sa_fit:0};let score=0;for(const c of contributions){score+=Number(c.points)||0;buckets[c.bucket]=(buckets[c.bucket]||0)+c.points;}
+    return{score,buckets,reasons:contributions.map(x=>({points:x.points,reason:x.message,id:x.id,bucket:x.bucket})),own:context.own,contributions};
   }
 
-  TE.Strategy={MODEL_VERSION,EVIDENCE,TIER_WEIGHT,ROLE_TIERS,PLAYSTYLE_TIERS,TARGET_SHAPE,TARGET_RATIOS,SECONDARY_TARGET_RATIO,trainingPriorityProfile,tacticTrainingSignals,abilityTrainingSignals,analyseShape,startersShape,ownFeatures,contextualOwn,buildContext,tokenize,parseExpression,conditionMatches,evaluateRules,scoreFormationStructure,scoreTacticContext,playstyleName,developmentRoleFor,playstyleActive,abilityNames,CONFIG:CFG};
+  TE.Strategy={MODEL_VERSION,EVIDENCE,TIER_WEIGHT,ROLE_TIERS,PLAYSTYLE_TIERS,TARGET_SHAPE,TARGET_RATIOS,SECONDARY_TARGET_RATIO,trainingPriorityProfile,tacticTrainingSignals,abilityTrainingSignals,analyseShape,startersShape,ownFeatures,contextualOwn,buildContext,tokenize,parseExpression,conditionMatches,evaluateRules,scoreFormationStructure,activePlaystylePlacements,directionalFocusOptions,tacticAffinityByChoice,prepareTacticRuleContext,scoreTacticContext,playstyleName,playstyleLevelId,developmentRoleFor,playstyleActive,abilityNames,CONFIG:CFG};
 })();

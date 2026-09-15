@@ -1,0 +1,38 @@
+{
+  "version": "v0.5.14",
+  "status": "ACTIVE v0.5.15 CALIBRATION CONTRACT \u2014 NOT YET FROZEN FOR RELEASE",
+  "generated_date": "2026-09-15",
+  "files": {
+    "decision_logic_v2.json": {
+      "sha256": "6302b8c5857993a68f6d5b9316697901a3a4fcea76085bc1914f6a6956e89116",
+      "bytes": 121438
+    },
+    "strategy_strings_v2.json": {
+      "sha256": "6f0b1cf6f87baa7f6df8152948ab6dd620aed5a929909d4c0f7fee6d3b5ef80d",
+      "bytes": 18627
+    }
+  },
+  "counts": {
+    "feature_quality_definitions": 13,
+    "core_coverage_slots": 11,
+    "flexibility_slots": 5,
+    "availability_depth_slots": 4,
+    "formation_candidates": 12,
+    "formation_rules": 11,
+    "tactic_dimensions": 11,
+    "tactic_options": 33,
+    "tactic_rules": 60,
+    "playstyle_tactic_affinities": 19,
+    "special_ability_tactic_affinities": 12,
+    "mentors": 7,
+    "role_training_profiles": 12,
+    "role_playstyle_profiles": 28,
+    "training_tactic_modifiers": 21,
+    "training_sa_modifiers": 6,
+    "set_piece_slots": 10,
+    "target_shape_tiers": 4,
+    "explanation_strings": 143
+  },
+  "runtime_boundary": "Calibration preserves the stitched own-squad Formation/Tactics/Set Pieces/Mentor/Training pipeline. Current live tactic drain is represented by observed Low/Medium/High option intensities and pure-class transition facts; mixed-intensity numeric weighting remains unresolved and is not fabricated. Captain remains gameplay-neutral and opponent/scouting/live-state inputs remain absent.",
+  "next_step": "Continue neutral-default and stitched-plan calibration after strong-style gating for Short+Buildup and Low/High pressing pairs; mixed live drain weighting remains user-research pending."
+}

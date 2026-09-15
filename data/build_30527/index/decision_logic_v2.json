@@ -1,10 +1,10 @@
 {
   "schema_version": 2,
-  "version": "v0.5.14",
-  "model": "companion-strategy-v2-own-squad-runtime-v0514",
-  "status": "AUTHORITATIVE OWN-SQUAD COMPANION LOGIC CONTRACT — FINAL PRE-CALIBRATION",
+  "version": "v0.5.15-calibration",
+  "model": "companion-strategy-v2-own-squad-runtime-v0515-calibration-4",
+  "status": "ACTIVE v0.5.15 CALIBRATION CONTRACT — NOT YET RELEASE-FROZEN",
   "principles": [
-    "Game/native data controls legality, white skills, tactic options, exact condition drain, Playstyle eligibility and Mentor effect identity.",
+    "Game/native data controls legality, white skills, tactic-option identity, drain-calculation architecture, Playstyle eligibility and Mentor effect identity. Current live drain intensity classes remain separate LIVE FACTS until the server numeric mapping is recovered.",
     "The decision system uses only the manager own squad, assigned XI, player skills, Playstyles, Special Abilities, saved Mentor unlock/level state, Approach and Drain Limit.",
     "No opponent formation, opponent strength, opponent tactics, scouting profile or relative-strength estimate is accepted or inferred anywhere in the decision runtime.",
     "Community evidence influences transparent companion ranking only where no private Nordeus best-value table exists.",
@@ -694,11 +694,11 @@
       }
     ],
     "score_components": {
-      "lineup_quality": 35,
+      "lineup_quality": 40,
       "playstyle_role_fit": 10,
-      "weak_link": 15,
+      "weak_link": 20,
       "core_structure": 30,
-      "formation_flexibility": 10
+      "formation_flexibility": 0
     },
     "rules": [
       {
@@ -857,17 +857,17 @@
     ],
     "assignment_policy": {
       "best_available": "Use 11 unique players. A slot may be filled only by a role currently listed for that player. Do not solve a missing role by silently placing a player out of position.",
-      "dynamic_fallback": "If none of the curated families can be fielded naturally, generate legal shapes from the squad natural-role pool and score them with the same rules. Curated formations are candidates, not a whitelist.",
+      "dynamic_fallback": "During automatic selection, if none of the best curated XI assignments is entirely Natural, generate legal shapes from the squad natural-role pool and score them with the same rules. Related-role curated plans remain candidates, but theoretical natural fieldability by an unused weak player does not suppress the natural fallback. Curated formations are candidates, not a whitelist.",
       "multi_role": "A multi-role player may be assigned to only one slot in a candidate XI. Their other roles count only as flexibility after that assignment.",
-      "playstyle_role_fit": "If a player has an active Playstyle, full Playstyle-fit credit applies only when the assigned role is eligible for that Playstyle in build 30527. A natural role that is not Playstyle-eligible remains legal but loses Playstyle-fit credit.",
+      "playstyle_role_fit": "Each correctly deployed active Playstyle contributes 10/11 points to the Formation Playstyle-fit component. A natural role that is not Playstyle-eligible remains legal but receives no Playstyle-fit bonus; players without an active Playstyle are neutral.",
       "out_of_position": "Emergency wrong-position use is never part of the normal optimiser. If the user explicitly enables emergency mode, show it as a warning and keep it outside the normal score comparison."
     },
     "component_normalization": {
-      "lineup_quality": "For each fieldable candidate, mean assigned_role_white_mean. Across candidates, map worst to 0 and best to 35; if all equal, all receive 35.",
-      "playstyle_role_fit": "10 × (active Playstyle starters assigned to an eligible Playstyle role / active Playstyle starters). Players without an active Playstyle are neutral.",
-      "weak_link": "Take the minimum assigned_role_white_mean in the XI. Across candidates map worst to 0 and best to 15; if all equal, all receive 15.",
-      "core_structure": "Start at 15 neutral, add/subtract own-squad formation rules, clamp to 0..30.",
-      "formation_flexibility": "0..10 from the selected XI natural-role versatility. A player still occupies one current slot and is never counted twice in the XI."
+      "lineup_quality": "Best fieldable candidate receives 40. Other candidates lose one point for each percentage-point gap in mean assigned-role white-skill quality versus that best candidate, clamped to 0..40. Tiny quality differences therefore stay tiny.",
+      "playstyle_role_fit": "10 × (active Playstyle starters assigned to an eligible Playstyle role / 11 starters). Players without an active Playstyle and active Playstyles used outside an eligible role contribute 0 rather than receiving a bonus or an invented penalty.",
+      "weak_link": "Best fieldable candidate weak-link receives 20. Other candidates lose one point for each percentage-point gap in weakest assigned-role white-skill mean versus that best weak-link, clamped to 0..20.",
+      "core_structure": "Fixed global mapping from the proven active-rule range: raw -13 = 0/30, raw 0 = neutral 15/30, raw +30 = 30/30; linear on each side of neutral. This avoids positive-score saturation and never depends on the current candidate set.",
+      "formation_flexibility": "Reported as 0..10 natural-role versatility but contributes 0 additive match-plan points. It is used only after score/quality/Playstyle ties and in Squad Blueprint coverage."
     },
     "tie_break_order": [
       "higher weak-link score",
@@ -876,7 +876,14 @@
       "higher natural-role flexibility",
       "baseline/native-frontier stability",
       "stable candidate id"
-    ]
+    ],
+    "structure_raw_range": {
+      "min": -13,
+      "neutral": 0,
+      "max": 30,
+      "source": "Exhaustive evaluation of all 2,843 build-30527 hard-legal fallback role-count shapes under the active 11 formation rules.",
+      "mapping": "Piecewise fixed global scale: min -> 0/30, neutral -> 15/30, max -> 30/30. Candidate-relative min/max normalization is forbidden."
+    }
   },
   "tactics": {
     "selection": "Enumerate legal 11-dimension tactic combinations under the chosen drain ceiling; score lineup fit + structural context + coherence + Playstyle/SA semantic fit + drain efficiency.",
@@ -907,7 +914,7 @@
         "dimension": "mentality",
         "option": "attacking",
         "points": 3,
-        "when": "own.advancedScorers >= 3 && own.restDefense >= 4",
+        "when": "own.attackDefenseDelta > margin && own.advancedScorers >= 3 && own.restDefense >= 4",
         "message": "tactic.attacking_supported",
         "bucket": "own_squad_structure",
         "confidence": "medium",
@@ -920,7 +927,7 @@
         "dimension": "mentality",
         "option": "defending",
         "points": 3,
-        "when": "own.restDefense >= 5 && own.counterOutlet",
+        "when": "own.attackDefenseDelta < -margin && own.restDefense >= 5",
         "message": "tactic.defending_transition",
         "bucket": "own_squad_structure",
         "confidence": "medium",
@@ -946,7 +953,7 @@
         "dimension": "mentality",
         "option": "hardAttacking",
         "points": 2,
-        "when": "own.advancedScorers >= 4 && own.restDefense >= 4 && own.pressCapacity != low",
+        "when": "own.attackDefenseDelta > 10 && own.advancedScorers >= 4 && own.restDefense >= 4 && own.pressCapacity != low",
         "message": "tactic.hard_attacking_supported",
         "bucket": "own_squad_structure",
         "confidence": "medium",
@@ -972,12 +979,12 @@
         "dimension": "passing",
         "option": "short",
         "points": 4,
-        "when": "own.centralSupport >= 3",
+        "when": "own.centralSupport >= 3 && own.technicalBuild == high",
         "message": "tactic.short_support",
         "bucket": "own_squad_structure",
         "confidence": "medium",
         "evidence": [
-          "companion-own-squad-v0.5.12"
+          "companion-own-squad-v0.5.15-calibration"
         ]
       },
       {
@@ -985,12 +992,12 @@
         "dimension": "passing",
         "option": "short",
         "points": 4,
-        "when": "values.won == buildup",
+        "when": "values.won == buildup && own.technicalBuild == high",
         "message": "tactic.short_buildup",
         "bucket": "internal_coherence",
         "confidence": "medium",
         "evidence": [
-          "companion-own-squad-v0.5.12"
+          "companion-own-squad-v0.5.15-calibration"
         ]
       },
       {
@@ -998,12 +1005,12 @@
         "dimension": "passing",
         "option": "long",
         "points": 4,
-        "when": "values.won == counter",
+        "when": "values.won == counter && own.counterOutletStrong",
         "message": "tactic.long_counter",
         "bucket": "internal_coherence",
         "confidence": "medium",
         "evidence": [
-          "companion-own-squad-v0.5.12"
+          "companion-own-squad-v0.5.15-calibration"
         ]
       },
       {
@@ -1011,7 +1018,7 @@
         "dimension": "passing",
         "option": "long",
         "points": 3,
-        "when": "own.directOutlet",
+        "when": "own.directOutletStrong",
         "message": "tactic.long_outlet",
         "bucket": "own_squad_structure",
         "confidence": "medium",
@@ -1039,58 +1046,6 @@
         "points": 2,
         "when": "abs(own.technicalBuildValue - own.directSupport) <= margin",
         "message": "tactic.mixed_passing_neutral",
-        "bucket": "own_squad_structure",
-        "confidence": "medium",
-        "evidence": [
-          "companion-own-squad-v0.5.12"
-        ]
-      },
-      {
-        "id": "T-FOCUS-CENTER-SUPPORT",
-        "dimension": "focus",
-        "option": "center",
-        "points": 4,
-        "when": "own.hasAMC || own.centralSupport >= 3",
-        "message": "tactic.center_supported",
-        "bucket": "own_squad_structure",
-        "confidence": "medium",
-        "evidence": [
-          "companion-own-squad-v0.5.12"
-        ]
-      },
-      {
-        "id": "T-FOCUS-BOTH-WIDTH",
-        "dimension": "focus",
-        "option": "both",
-        "points": 4,
-        "when": "own.hasLeftProgression && own.hasRightProgression",
-        "message": "tactic.both_supported",
-        "bucket": "own_squad_structure",
-        "confidence": "medium",
-        "evidence": [
-          "companion-own-squad-v0.5.12"
-        ]
-      },
-      {
-        "id": "T-FOCUS-LEFT-SOLO",
-        "dimension": "focus",
-        "option": "left",
-        "points": 3,
-        "when": "own.hasLeftProgression && !own.hasRightProgression",
-        "message": "tactic.left_supported",
-        "bucket": "own_squad_structure",
-        "confidence": "medium",
-        "evidence": [
-          "companion-own-squad-v0.5.12"
-        ]
-      },
-      {
-        "id": "T-FOCUS-RIGHT-SOLO",
-        "dimension": "focus",
-        "option": "right",
-        "points": 3,
-        "when": "own.hasRightProgression && !own.hasLeftProgression",
-        "message": "tactic.right_supported",
         "bucket": "own_squad_structure",
         "confidence": "medium",
         "evidence": [
@@ -1258,7 +1213,7 @@
         "dimension": "won",
         "option": "counter",
         "points": 4,
-        "when": "own.counterOutlet",
+        "when": "own.counterOutletStrong",
         "message": "tactic.counter_outlet",
         "bucket": "own_squad_structure",
         "confidence": "medium",
@@ -1271,12 +1226,12 @@
         "dimension": "won",
         "option": "counter",
         "points": 2,
-        "when": "values.passing in [long,mixed] && own.counterOutlet",
+        "when": "values.passing in [long,mixed] && own.counterOutletStrong",
         "message": "tactic.counter_direct_coherence",
         "bucket": "internal_coherence",
         "confidence": "medium",
         "evidence": [
-          "companion-own-squad-v0.5.12"
+          "companion-own-squad-v0.5.15-calibration"
         ]
       },
       {
@@ -1297,12 +1252,12 @@
         "dimension": "won",
         "option": "buildup",
         "points": 2,
-        "when": "values.passing == short",
+        "when": "values.passing == short && own.technicalBuild == high",
         "message": "tactic.buildup_short_coherence",
         "bucket": "internal_coherence",
         "confidence": "medium",
         "evidence": [
-          "companion-own-squad-v0.5.12"
+          "companion-own-squad-v0.5.15-calibration"
         ]
       },
       {
@@ -1323,12 +1278,12 @@
         "dimension": "lost",
         "option": "regroup",
         "points": 5,
-        "when": "values.pressing == low",
+        "when": "values.pressing == low && own.pressCapacity == low",
         "message": "tactic.regroup_lowblock",
         "bucket": "internal_coherence",
         "confidence": "medium",
         "evidence": [
-          "companion-own-squad-v0.5.12"
+          "companion-own-squad-v0.5.15-calibration"
         ]
       },
       {
@@ -1336,12 +1291,12 @@
         "dimension": "lost",
         "option": "counterPress",
         "points": 5,
-        "when": "values.pressing == high",
+        "when": "values.pressing == high && own.pressCapacity == high",
         "message": "tactic.counterpress_highpress",
         "bucket": "internal_coherence",
         "confidence": "medium",
         "evidence": [
-          "companion-own-squad-v0.5.12"
+          "companion-own-squad-v0.5.15-calibration"
         ]
       },
       {
@@ -1622,13 +1577,14 @@
         "dimension": "shooting",
         "option": "box",
         "points": 3,
-        "when": "own.boxFinishing > own.longShotThreat",
+        "when": "own.boxFinishing > own.longShotThreat + margin",
         "message": "tactic.work_box_finishers",
         "bucket": "own_squad_structure",
         "confidence": "medium",
         "evidence": [
           "companion-own-squad-v0.5.12"
-        ]
+        ],
+        "calibration_note": "Requires the same 5-point separation margin used by Shoot On Sight so tiny attribute perturbations cannot activate a specialist shooting bonus."
       },
       {
         "id": "T-SHOOT-SIGHT-THREAT",
@@ -2331,19 +2287,47 @@
     },
     "neutral_policy": "Neutral/default options are explicit candidates. Lack of a specialist bonus is not itself a penalty. Balanced/Mixed/Mid options receive small fallback support when evidence for either extreme is weak.",
     "component_normalization": {
-      "native_lineup_fit": "Mean normalized XI support across the 10 non-mentality dimensions, scaled to 0..32.",
-      "own_squad_structure": "Sum own-XI structural rule points, clamp raw to -13..+13, then map linearly to 0..26 with 13 neutral.",
-      "internal_coherence": "Sum tactic-to-tactic coherence rule points, clamp raw to -9..+9, then map linearly to 0..18 with 9 neutral.",
-      "playstyle_and_sa_fit": "Sum active Playstyle/Special Ability semantic rule points once per identity, clamp raw to -7..+7, then map linearly to 0..14 with 7 neutral.",
+      "native_lineup_fit": "For each non-mentality dimension, the best own-XI support option receives 1.0. Options lose support linearly by their absolute skill-point gap from that best option, reaching 0 after 25 points; mean across 10 dimensions and scale to 0..32. This avoids min-max hypersensitivity to tiny differences while preserving meaningful squad-strength separation.",
+      "own_squad_structure": "Sum own-XI structural rule points. Raw 0 maps to 13/26; negative points keep the strong original -13-to-zero penalty scale, while positive points use the full +31 attainable rule-catalogue range before reaching 26/26. This prevents routine positive stacks from saturating the component.",
+      "internal_coherence": "Sum tactic-to-tactic coherence rule points. Raw 0 maps to 9/18; the recovered companion-rule range -10..+26 maps piecewise to 0..9..18. Contradictions therefore remain strong while positive coherence no longer saturates after only +9 raw points.",
+      "playstyle_and_sa_fit": "No active semantic match scores 0. Active, assigned-role-eligible Playstyle affinities and active Special Ability affinities contribute their declared companion points, alongside contextual semantic rules. Pure identity-only explicit rules take precedence over the duplicate generic affinity for that same identity/choice, preventing double counting while preserving the established explicit weighting. The exact post-de-dup hard-legal role-shape optimisation proves a maximum attainable positive raw semantic score of 74, and a matching runtime witness reaches 74; raw 74 therefore maps to the full 14-point component. Negative semantic opposition retains the proven cap of 2.",
       "drain_efficiency": "After the Drain Limit hard gate, map raw condition-drain score from the theoretical minimum eligible plan to the selected limit ceiling: minimum=10 points and ceiling=0 points. Ceilings are Low 40, Medium 65, High 100."
     },
     "tie_break_order": [
-      "higher core tactic score",
-      "fewer contradiction penalties",
-      "lower condition drain",
+      "higher core tactic score outside 0.5-point semantic near-tie band",
+      "fewer contradiction penalties inside the near-tie band",
+      "higher semantic fit inside the near-tie band (for example both flanks when both own lanes are equally strongest)",
+      "higher exact tactic score when semantic fit ties",
+      "lower condition drain on exact score/semantic ties",
       "more neutral/default settings",
       "stable canonical option order"
-    ]
+    ],
+    "component_calibration": {
+      "own_squad_structure": {
+        "negative_cap": 13,
+        "positive_cap": 31,
+        "neutral_score": 13,
+        "max_score": 26
+      },
+      "internal_coherence": {
+        "negative_cap": 10,
+        "positive_cap": 26,
+        "neutral_score": 9,
+        "max_score": 18
+      },
+      "playstyle_and_sa_fit": {
+        "negative_cap": 2,
+        "positive_cap": 74,
+        "neutral_score": 0,
+        "max_score": 14
+      },
+      "provenance": "Own-squad and coherence caps use their active rule-catalogue ranges. After activating the affinity catalogue, an overlap audit identified four pure identity-only duplicate relationships already represented by explicit tactic rules. Those duplicate generic affinities are suppressed while contextual overlays remain additive. A mixed-integer optimisation over the exact build-30527 hard-legal role constraints, current Playstyle role eligibility, tactic option domains and active SA semantics proved the post-de-dup positive semantic maximum is 74; a legal runtime XI reproduces raw 74 exactly. The fixed positive cap is therefore 74, not the superseded pre-de-dup 80."
+    },
+    "auto_approach_near_tie_points": 1.5,
+    "auto_approach_policy": "Score every Approach normally. If the own XI attacking-unit quality exceeds defensive-unit quality by more than the 5-point comparison margin, prefer Attacking only when it is within 1.5 tactic-score points of the numeric best. Mirror this for Defending; otherwise prefer Balanced within the same near-tie band. Hard Attacking/Hard Defending are never force-preferred without opponent context.",
+    "semantic_near_tie_points": 0.5,
+    "semantic_near_tie_policy": "Use semantic fallback only when tactic scores are within 0.5 points and contradiction counts are equal. This resolves practically tied own-squad choices such as Both Flanks when left and right lanes are equally strongest, or Balanced focus when all lanes are equal. Outside the band the numeric tactic score wins; semantic preference never overrides a material score difference.",
+    "affinity_runtime_policy": "The declared Playstyle affinity table is active runtime companion logic. A Playstyle contributes once by identity presence only when active and eligible for the player current assigned role. Directional Winger and Wing Back focus-passing affinities are constrained by the side of the eligible assigned role: left-side placements support Left/Both, right-side placements support Right/Both, and identities present on both sides support Left/Right/Both. Special Ability affinities contribute once by identity presence only when the affinity row is active; unresolved rows remain zero. A generic support affinity is suppressed when a positive explicit tactic rule for the same dimension/option is purely the same identity-presence condition (single identity or OR of identities), because that explicit rule already represents the relationship. Contextual explicit rules with additional own-squad or tactic conditions remain additive. Duplicate players with the same identity do not multiply the generic affinity."
   },
   "mentors": {
     "unlock_levels": {
@@ -2629,8 +2613,8 @@
     "runtime_context": "Own XI + selected tactic + saved Mentor unlock/level state only. No scouting or live-match state is accepted."
   },
   "set_pieces": {
-    "status": "LIVE v0.5.14 COMPLETE XI SET-PIECE PACKAGE — CAPTAIN GAMEPLAY-NEUTRAL",
-    "provenance": "The game proves the assignment slots and specialist ability identities. No official automatic ranking formula has been recovered for set pieces. For Captain specifically, historical Nordeus Support stated the choice does not make a player stronger or change stats, and the recovered current build exposes assignment/save state but no captain performance formula.",
+    "status": "CALIBRATION WORKING — COMPLETE XI SET-PIECE PACKAGE + GAMEPLAY-NEUTRAL CAPTAIN",
+    "provenance": "The game proves the assignment slots and specialist ability identities. No official automatic ranking formula has been recovered for set pieces. For Captain specifically, historical Nordeus Support stated the choice does not make a player stronger or change stats, and the recovered current build exposes assignment/save state but no captain performance formula. Current-client enum still contains Set Piece Taker; historical community evidence consistently describes it as a combined penalty/free-kick/corner ability. Because exact current comparative strength is unresolved, the dedicated role-specific specialist remains first and Set Piece Taker is a conservative second specialist tier for all three dead-ball families.",
     "slots": [
       "cornerRight",
       "freeRight",
@@ -2646,6 +2630,7 @@
     "penalty": {
       "order": [
         "Penalty Kick Specialist",
+        "Set Piece Taker",
         "Finishing+Shooting mean",
         "Creativity",
         "stable player key"
@@ -2655,6 +2640,7 @@
     "free_kick": {
       "order": [
         "Free Kick Specialist",
+        "Set Piece Taker",
         "Shooting+Finishing+Passing+Creativity mean",
         "stable player key"
       ],
@@ -3978,7 +3964,7 @@
       "secondary_role_white_support"
     ],
     "target_shape": {
-      "status": "LIVE v0.5.14 ROLE+PLAYSTYLE ATTRIBUTE TILT + VERIFIED INTENSITY GAIN",
+      "status": "CALIBRATION WORKING — ROLE+PLAYSTYLE ATTRIBUTE TILT + VERIFIED INTENSITY GAIN",
       "provenance": "Transparent companion development model; these are desired relative attribute proportions, not recovered hidden Nordeus coefficients or hard caps.",
       "tier_target_ratios": {
         "S": 1.18,
@@ -3987,13 +3973,14 @@
         "C": 0.85
       },
       "secondary_role_only_ratio": 0.82,
-      "reference": "Mean of the top three current normalized levels among the selected development-role white skills, where normalized level = current skill / desired tier ratio.",
-      "target_formula": "target(skill) = normalized_reference * desired_ratio(skill)",
+      "reference": "Maximum current normalized level among the selected development-role white skills that are not S-tier, where normalized level = current skill / desired tier ratio. If the profile has no non-S development skill, use the maximum across all selected development-role white skills.",
+      "target_formula": "normalized_reference = max(current(skill) / desired_ratio(skill)) across non-S development whites; target(skill) = normalized_reference * desired_ratio(skill)",
       "gap_formula": "target_gap(skill) = max(0, target(skill) - current(skill))",
       "need_formula": "(target_gap > 0 ? target_gap + 1 : maintenance_floor) * hierarchy_weight * context_multiplier",
       "maintenance_floor": 0.25,
-      "behaviour": "A flat player is deliberately tilted toward S then A skills. Once an important skill reaches the desired Role+Playstyle shape, its catch-up gap collapses to the small maintenance floor and training shifts to the next underdeveloped important white skill instead of equalising every white skill.",
-      "no_absolute_cap": "The model does not invent an absolute 180/200/etc player-skill cap. It controls relative shape only."
+      "behaviour": "A flat player is deliberately tilted toward S then A skills relative to the median normalized non-signature white-skill development level. One freak lower-priority attribute cannot move the whole target upward. Once an S skill reaches the desired Role+Playstyle shape, it no longer raises its own reference and therefore collapses to the small maintenance floor. As the supporting white-skill group later improves, the signature targets can rise again to preserve the desired specialist shape.",
+      "no_absolute_cap": "The model does not invent an absolute 180/200/etc player-skill cap. It controls relative shape only.",
+      "reference_policy": "median_normalized_non_signature_development_whites"
     }
   },
   "joint_selection": {
@@ -4004,14 +3991,16 @@
     "final_score": "core_plan_score + mentor_adjustment for viable candidates; non-viable candidates retain core_plan_score and cannot be rescued by Mentor fit.",
     "no_mentor_policy": "If no Mentor is unlocked, adjustment is 0 and the plan remains valid.",
     "tie_break_order": [
-      "higher final score",
-      "higher core plan score",
-      "higher set-piece readiness tuple",
+      "higher final score outside 0.5-point near-tie band",
+      "higher core plan score outside 0.5-point near-tie band",
+      "higher set-piece readiness tuple inside the near-tie band",
+      "higher exact final/core score when readiness ties",
       "lower condition drain",
       "higher formation weak-link score",
       "stable formation candidate order"
     ],
-    "set_piece_integration": "A complete automatic set-piece/captain package is generated for every candidate XI. Penalty/free-kick/corner readiness is a late tie-break only; Captain is gameplay-neutral and excluded from the tie-break. Set pieces are non-additive and cannot rescue a weaker core plan."
+    "set_piece_integration": "A complete automatic set-piece/captain package is generated for every candidate XI. Penalty/free-kick/corner readiness is a non-additive late tie-break only when both final and core plan scores are within 0.5 points; Captain is gameplay-neutral and excluded. Set pieces cannot rescue a materially weaker plan.",
+    "set_piece_near_tie_points": 0.5
   },
   "feature_model": {
     "status": "AUTHORITATIVE OWN-SQUAD FEATURE DEFINITIONS",
@@ -4022,7 +4011,8 @@
       "action_cluster": "Mean of the explicitly named current skill values for the eligible players. Match-plan analysis may read any real skill value; the white/grey restriction applies to training utility and Mentor attribute relevance, not to whether a skill value exists.",
       "strong_cluster": "A player is a strong outlet for a cluster when the cluster is at or above the 67th percentile of eligible own players and is not more than 10 points below xi_quality_median. With fewer than three eligible players, use xi_quality_median - 10 as the floor.",
       "comparison_margin_points": 5,
-      "quality_gap_points": 10
+      "quality_gap_points": 10,
+      "tactic_option_full_separation_points": 25
     },
     "shape_features": {
       "centralDef": "count(DC)",
@@ -4055,7 +4045,7 @@
           "Strength",
           "Positioning"
         ],
-        "true_when": "any eligible starter has Target Man OR satisfies strong_cluster for Heading+Strength+Positioning",
+        "true_when": "credible when any eligible ST/AMC has Target Man or satisfies the existing credible-cluster gate; this prevents false no-target penalties",
         "reason": "Used only to decide whether deliberate aerial service has a credible receiver."
       },
       "counterOutlet": {
@@ -4072,11 +4062,11 @@
           "Finishing",
           "Positioning"
         ],
-        "true_when": "any eligible starter satisfies strong_cluster for the transition cluster OR has Poacher/Inside Forward with Speed at or above xi_quality_median-10",
+        "true_when": "credible when any eligible transition row satisfies the existing credible-cluster gate OR a Poacher/Inside Forward has adequate Speed; this prevents false no-outlet penalties",
         "reason": "Represents a credible first transition receiver/runner, not a hidden counter-attack multiplier."
       },
       "directOutlet": {
-        "true_when": "aerialOutlet OR any ST satisfies strong_cluster for Strength+Positioning+Heading OR counterOutlet",
+        "true_when": "credible aerial outlet OR credible ST direct cluster OR credible counter outlet; used for no-outlet safety penalties",
         "reason": "Required before long/direct distribution receives contextual credit."
       },
       "technicalBuild": {
@@ -4196,6 +4186,66 @@
       "technicalBuildValue": {
         "value": "same numeric action_cluster mean used to band technicalBuild",
         "reason": "Numeric companion used only for transparent Mixed-vs-direct support comparison."
+      },
+      "attackUnitQuality": {
+        "eligible_roles": [
+          "AML",
+          "AMC",
+          "AMR",
+          "ST"
+        ],
+        "value": "mean assigned_role_white_mean of advanced starters",
+        "reason": "Own-squad attacking-unit quality used only to choose Auto mentality without opponent information."
+      },
+      "defenseUnitQuality": {
+        "eligible_roles": [
+          "GK",
+          "DL",
+          "DC",
+          "DR",
+          "DMC"
+        ],
+        "value": "mean assigned_role_white_mean of goalkeeper/back-line/screen starters",
+        "reason": "Own-squad defensive-unit quality used only to choose Auto mentality without opponent information."
+      },
+      "attackDefenseDelta": {
+        "value": "attackUnitQuality - defenseUnitQuality",
+        "bands": "attacking support above +margin; defending support below -margin",
+        "reason": "Prevents Auto mentality from choosing Attack/Defend merely because a shape contains enough role labels."
+      },
+      "aerialOutletStrong": {
+        "eligible_roles": [
+          "ST",
+          "AMC"
+        ],
+        "skills": [
+          "Heading",
+          "Strength",
+          "Positioning"
+        ],
+        "true_when": "credible active Target Man OR any eligible aerial cluster > xi_quality_median + comparison margin",
+        "reason": "Positive direct/aerial squad-fit credit requires a real own-XI strength; mere feasibility is not itself a bonus."
+      },
+      "counterOutletStrong": {
+        "eligible_roles": [
+          "ST",
+          "AMC",
+          "AML",
+          "AMR"
+        ],
+        "skills": [
+          "Speed",
+          "Dribbling",
+          "Passing",
+          "Finishing",
+          "Positioning"
+        ],
+        "true_when": "active credible Poacher/Inside Forward OR any eligible transition cluster > xi_quality_median + comparison margin",
+        "reason": "Positive counter squad-fit credit requires a real own-XI transition strength; generic forward existence is only feasibility."
+      },
+      "directOutletStrong": {
+        "true_when": "aerialOutletStrong OR strong ST Strength+Positioning+Heading cluster OR counterOutletStrong",
+        "reason": "Positive Long-passing squad-fit credit requires an actual direct/transition strength, not merely a playable forward."
       }
     },
     "evaluation_context": {

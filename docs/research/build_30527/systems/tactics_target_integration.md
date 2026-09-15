@@ -37,7 +37,7 @@ GAME ASSET FACT:
 - Track Opponent -> shadow progression toward goal.
 - Harder Tackling -> stops more plays at increased foul/booking risk.
 
-Exact condition-drain remains the native 11-dimension formula documented in `tactics.md`.
+The 11-dimension drain-processing architecture remains native-proven. Current live per-option intensities come from controlled UI observation; the mixed-intensity numeric mapping/classifier remains unresolved.
 
 ## Companion recommendation rule
 
@@ -45,7 +45,7 @@ Do **not** hard-code one tactic because the target formation is 4-1-1-3-1. Inste
 
 1. user chooses Approach and Drain Limit;
 2. selected XI/player profiles determine which tactic semantics they support;
-3. exact drain rejects plans above the user limit;
+3. verified drain classification rejects plans above the user limit when the current live classifier is known; during unresolved mixed-intensity calibration only unconstrained/High search is used;
 4. tactic semantics and later role/Playstyle priorities break genuine fit choices;
 5. Mentor is selected only after formation+tactics are known.
 
@@ -60,7 +60,7 @@ These may be used transparently as COMPANION LOGIC:
 - player values for those verified key attributes;
 - Playstyle eligibility and level;
 - Special Ability semantics where proven;
-- exact drain cost/class.
+- verified drain intensity/class, with unresolved numeric weighting shown honestly when applicable.
 
 Do not introduce hidden aggression/style coefficients or claim recovered private effectiveness percentages.
 

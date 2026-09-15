@@ -45,7 +45,7 @@ See `data/build_30527/index/source_manifest.json`.
 - `data/build_30527/index/community_logic_2024_2026.json` — confidence-rated companion rules distilled from forum + r/topeleven, with disputed claims explicitly blocked from hard-coding.
 - `data/build_30527/index/mentor_effects.json` — Mentor IDs, live arrays, decoded semantics and protocol.
 - `data/build_30527/index/mentor_signature_rule_design.json` — all seven Signature activation contexts split into pre-match vs halftime/live rules; no fabricated universal Signature score.
-- `data/build_30527/index/tactics_semantics.json` — exact drain and shipped tactic tooltips.
+- `data/build_30527/index/tactics_semantics.json` — recovered/default drain architecture plus shipped tactic tooltips; current live intensity observations are stored separately under `data/calibration/`.
 - `data/build_30527/index/native_methods.json` — high-value recovered native symbols/addresses.
 - `data/build_30527/index/protocol_fields.json` — high-value protocol fields.
 - `data/build_30527/index/source_manifest.json` — build/source hashes.
@@ -82,7 +82,7 @@ Key preserved source additions:
 - `source_archive/TACTICS_ASSISTANT_FEEDBACK_EXTRACT.txt`
 - `source_archive/native/NATIVE_MATCH_FEEDBACK_BOUNDARY.md`
 
-Current companion Target Formation: `GK / DL DC DC DR / DMC MC / AML AMC AMR / ST`. This is a transparent app target, not a Nordeus best-formation claim. Tactics remain XI/context-driven under the exact native drain constraint.
+Current companion Target Formation: `GK / DL DC DC DR / DMC MC / AML AMC AMR / ST`. This is a transparent app target, not a Nordeus best-formation claim. Tactics remain XI/context-driven under the verified drain architecture/current live-intensity boundary.
 
 **Historical next target (completed by later checkpoints):** role/Playstyle attribute priorities are now represented by the v0.5.14 target-shape/intensity model. The private Nordeus numeric weighting formula remains unresolved.
 

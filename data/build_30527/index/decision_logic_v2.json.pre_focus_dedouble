@@ -1,0 +1,4377 @@
+{
+  "schema_version": 2,
+  "version": "v0.5.14",
+  "model": "companion-strategy-v2-own-squad-runtime-v0514",
+  "status": "AUTHORITATIVE OWN-SQUAD COMPANION LOGIC CONTRACT — FINAL PRE-CALIBRATION",
+  "principles": [
+    "Game/native data controls legality, white skills, tactic-option identity, drain-calculation architecture, Playstyle eligibility and Mentor effect identity. Current live drain intensity classes remain separate LIVE FACTS until the server numeric mapping is recovered.",
+    "The decision system uses only the manager own squad, assigned XI, player skills, Playstyles, Special Abilities, saved Mentor unlock/level state, Approach and Drain Limit.",
+    "No opponent formation, opponent strength, opponent tactics, scouting profile or relative-strength estimate is accepted or inferred anywhere in the decision runtime.",
+    "Community evidence influences transparent companion ranking only where no private Nordeus best-value table exists.",
+    "Every active bonus or penalty must have a human-readable explanation string.",
+    "Hard legality gates are evaluated before soft scores.",
+    "Locked Mentor boost families contribute exactly zero.",
+    "A Mentor effect that requires unavailable external/live-match information receives zero pre-match ranking credit rather than a guessed substitute.",
+    "Training only gives utility to actual white skills; grey skills never receive utility.",
+    "Individual Training optimises the desired Role+Playstyle attribute shape: higher-value white skills are intentionally developed above lower-value white skills instead of equalising the whole white set.",
+    "Verified drill intensity is real gain input: Very Easy/Easy/Medium/Hard/Very Hard map to base XP 1/2/3/4/5 per player. Drill level or Master effect multiplies that strength; exact final attribute gain remains server-authoritative.",
+    "Captaincy has no proven match-performance effect in the recovered current client. Historical Nordeus Support explicitly stated captain choice does not strengthen players or change stats; Captain therefore contributes zero Team Plan ranking value."
+  ],
+  "squad_blueprint": {
+    "matching_policy": "Assign unique players to simultaneous core functional slots; a player may not fill two required slots at once. Versatility is reported separately.",
+    "quality_gap_policy": "A slot can be structurally covered but still flagged weak if its best assigned-role quality is materially below the current first-XI median.",
+    "core_slots": [
+      {
+        "id": "goalkeeper",
+        "label": "Goalkeeper",
+        "roles": [
+          "GK"
+        ],
+        "count": 1,
+        "importance": 1.0,
+        "preferred_profiles": [
+          "GK"
+        ],
+        "why": "A dedicated goalkeeper is non-substitutable."
+      },
+      {
+        "id": "left_defender",
+        "label": "Left defensive cover",
+        "roles": [
+          "DL"
+        ],
+        "count": 1,
+        "importance": 1.15,
+        "preferred_profiles": [
+          "DL/DC",
+          "DL"
+        ],
+        "playstyles": [
+          "Full Back",
+          "Wing Back"
+        ],
+        "why": "Keeps direct coverage against right-sided opposition threats and enables a back four."
+      },
+      {
+        "id": "centre_back_1",
+        "label": "Central defender",
+        "roles": [
+          "DC"
+        ],
+        "count": 1,
+        "importance": 1.35,
+        "preferred_profiles": [
+          "DC"
+        ],
+        "playstyles": [
+          "Stopper",
+          "No-Nonsense DC",
+          "Ball Playing DC"
+        ],
+        "why": "Core central-defence slot."
+      },
+      {
+        "id": "centre_back_2",
+        "label": "Second central defender",
+        "roles": [
+          "DC"
+        ],
+        "count": 1,
+        "importance": 1.3,
+        "preferred_profiles": [
+          "DC",
+          "DC/DMC"
+        ],
+        "playstyles": [
+          "Stopper",
+          "No-Nonsense DC",
+          "Ball Playing DC"
+        ],
+        "why": "Gives the minimum two-DC base used by resilient shapes."
+      },
+      {
+        "id": "right_defender",
+        "label": "Right defensive cover",
+        "roles": [
+          "DR"
+        ],
+        "count": 1,
+        "importance": 1.15,
+        "preferred_profiles": [
+          "DC/DR",
+          "DR"
+        ],
+        "playstyles": [
+          "Full Back",
+          "Wing Back"
+        ],
+        "why": "Keeps direct coverage against left-sided opposition threats and enables a back four."
+      },
+      {
+        "id": "screen",
+        "label": "Defensive midfield screen",
+        "roles": [
+          "DMC"
+        ],
+        "count": 1,
+        "importance": 1.45,
+        "preferred_profiles": [
+          "DC/DMC",
+          "DMC/MC",
+          "DMC"
+        ],
+        "playstyles": [
+          "Anchor Man",
+          "Ball Winner",
+          "Regista"
+        ],
+        "why": "Protects the central lane and gives direct structural cover against AMC-heavy shapes."
+      },
+      {
+        "id": "controller",
+        "label": "Central midfield connector",
+        "roles": [
+          "MC"
+        ],
+        "count": 1,
+        "importance": 1.3,
+        "preferred_profiles": [
+          "DMC/MC",
+          "MC/AMC",
+          "MC"
+        ],
+        "playstyles": [
+          "Regista",
+          "Box-to-Box",
+          "Mezzala"
+        ],
+        "why": "Links defence, buildup and attack and helps avoid midfield numerical deficits."
+      },
+      {
+        "id": "left_progression",
+        "label": "Left attacking progression",
+        "roles": [
+          "AML",
+          "ML"
+        ],
+        "count": 1,
+        "importance": 1.0,
+        "preferred_profiles": [
+          "ML/AML",
+          "AML"
+        ],
+        "playstyles": [
+          "Winger",
+          "Inside Forward",
+          "False Winger"
+        ],
+        "why": "Provides a natural left-side attacking route and preserves two-sided progression when paired with right-side width."
+      },
+      {
+        "id": "creator",
+        "label": "Central creator / between-lines threat",
+        "roles": [
+          "AMC",
+          "MC"
+        ],
+        "count": 1,
+        "importance": 1.15,
+        "preferred_profiles": [
+          "MC/AMC",
+          "AMC/ST",
+          "AMC"
+        ],
+        "playstyles": [
+          "Enganche",
+          "False Nine",
+          "Mezzala"
+        ],
+        "why": "Creates a natural central receiving/creation route between midfield and the striker line."
+      },
+      {
+        "id": "right_progression",
+        "label": "Right attacking progression",
+        "roles": [
+          "AMR",
+          "MR"
+        ],
+        "count": 1,
+        "importance": 1.0,
+        "preferred_profiles": [
+          "MR/AMR",
+          "AMR"
+        ],
+        "playstyles": [
+          "Winger",
+          "Inside Forward",
+          "False Winger"
+        ],
+        "why": "Provides a natural right-side attacking route and preserves two-sided progression when paired with left-side width."
+      },
+      {
+        "id": "forward",
+        "label": "Primary forward",
+        "roles": [
+          "ST"
+        ],
+        "count": 1,
+        "importance": 1.25,
+        "preferred_profiles": [
+          "AMC/ST",
+          "ST"
+        ],
+        "playstyles": [
+          "Poacher",
+          "Target Man",
+          "False Nine"
+        ],
+        "why": "Provides a natural final-third outlet and scoring reference."
+      }
+    ],
+    "flexibility_slots": [
+      {
+        "id": "third_centre_back",
+        "label": "Third centre-back option",
+        "roles": [
+          "DC"
+        ],
+        "count": 1,
+        "importance": 0.85,
+        "preferred_profiles": [
+          "DC/DMC",
+          "DL/DC",
+          "DC/DR"
+        ],
+        "why": "Unlocks three-centre-back systems without dismantling the rest of the squad."
+      },
+      {
+        "id": "second_central_mid",
+        "label": "Second central midfielder",
+        "roles": [
+          "MC",
+          "DMC"
+        ],
+        "count": 1,
+        "importance": 0.9,
+        "preferred_profiles": [
+          "DMC/MC",
+          "MC/AMC"
+        ],
+        "why": "Allows central overloads, double-pivot systems and safer rotation."
+      },
+      {
+        "id": "second_forward_profile",
+        "label": "Alternative forward profile",
+        "roles": [
+          "ST",
+          "AMC"
+        ],
+        "count": 1,
+        "importance": 0.8,
+        "preferred_profiles": [
+          "AMC/ST",
+          "ST"
+        ],
+        "playstyles": [
+          "Poacher",
+          "Target Man",
+          "False Nine"
+        ],
+        "why": "Gives a different route to goal when the starting forward profile does not suit the selected team plan."
+      },
+      {
+        "id": "left_midfield_depth",
+        "label": "Left mid/wing depth",
+        "roles": [
+          "ML",
+          "AML"
+        ],
+        "count": 1,
+        "importance": 0.65,
+        "preferred_profiles": [
+          "ML/AML"
+        ],
+        "why": "Keeps both advanced-width and midfield-width systems available."
+      },
+      {
+        "id": "right_midfield_depth",
+        "label": "Right mid/wing depth",
+        "roles": [
+          "MR",
+          "AMR"
+        ],
+        "count": 1,
+        "importance": 0.65,
+        "preferred_profiles": [
+          "MR/AMR"
+        ],
+        "why": "Keeps both advanced-width and midfield-width systems available."
+      }
+    ],
+    "recruitment_output_order": [
+      "missing_core",
+      "weak_core",
+      "missing_flexibility",
+      "missing_availability_depth",
+      "versatility_upgrade",
+      "profile_upgrade"
+    ],
+    "quality_gap_threshold_points": 10,
+    "availability_depth_slots": [
+      {
+        "id": "reserve_goalkeeper",
+        "label": "Reserve goalkeeper",
+        "roles": [
+          "GK"
+        ],
+        "count": 1,
+        "importance": 0.45,
+        "preferred_profiles": [
+          "GK"
+        ],
+        "why": "Prevents one unavailable goalkeeper from making the squad structurally incomplete."
+      },
+      {
+        "id": "defensive_utility_depth",
+        "label": "Defensive utility reserve",
+        "roles": [
+          "DL",
+          "DC",
+          "DR",
+          "DMC"
+        ],
+        "count": 1,
+        "importance": 0.55,
+        "preferred_profiles": [
+          "DL/DC",
+          "DC/DR",
+          "DC/DMC"
+        ],
+        "why": "Covers injuries/rotation across the defensive line or screen without using a starter twice."
+      },
+      {
+        "id": "central_midfield_depth",
+        "label": "Central midfield reserve",
+        "roles": [
+          "DMC",
+          "MC",
+          "AMC"
+        ],
+        "count": 1,
+        "importance": 0.55,
+        "preferred_profiles": [
+          "DMC/MC",
+          "MC/AMC"
+        ],
+        "why": "Preserves central structure when a first-choice midfielder is unavailable."
+      },
+      {
+        "id": "attacking_utility_depth",
+        "label": "Attacking utility reserve",
+        "roles": [
+          "AML",
+          "AMC",
+          "AMR",
+          "ST"
+        ],
+        "count": 1,
+        "importance": 0.5,
+        "preferred_profiles": [
+          "AML/AMC",
+          "AMC/ST",
+          "AMR/AMC"
+        ],
+        "why": "Maintains a credible alternative attacking route and protects against one unavailable attacker."
+      }
+    ],
+    "coverage_score": {
+      "core_weight": 0.7,
+      "flexibility_weight": 0.2,
+      "availability_depth_weight": 0.1,
+      "slot_score": "covered strong=1.0; covered but weak=0.6; missing=0.0; multiply by slot importance then normalise inside each layer",
+      "note": "Versatility is reported as a benefit but never creates a second simultaneous player."
+    }
+  },
+  "formation": {
+    "candidate_policy": "Use the game/legal role assignment plus the 12 curated structural families. Rank only by the manager own fieldable squad; no matchup/scouting input exists.",
+    "candidates": [
+      {
+        "id": "41131",
+        "name": "4-1-1-3-1",
+        "slots": [
+          "GK",
+          "DL",
+          "DC",
+          "DC",
+          "DR",
+          "DMC",
+          "MC",
+          "AML",
+          "AMC",
+          "AMR",
+          "ST"
+        ],
+        "source": "native-frontier-7",
+        "family": [
+          "back4",
+          "dmc",
+          "advanced-width",
+          "amc",
+          "single-st"
+        ],
+        "baseline": true
+      },
+      {
+        "id": "41311",
+        "name": "4-1-3-1-1",
+        "slots": [
+          "GK",
+          "DL",
+          "DC",
+          "DC",
+          "DR",
+          "DMC",
+          "ML",
+          "MC",
+          "MR",
+          "AMC",
+          "ST"
+        ],
+        "source": "native-frontier-9",
+        "family": [
+          "back4",
+          "dmc",
+          "midfield-width",
+          "amc",
+          "single-st"
+        ]
+      },
+      {
+        "id": "4231",
+        "name": "4-2-3-1",
+        "slots": [
+          "GK",
+          "DL",
+          "DC",
+          "DC",
+          "DR",
+          "DMC|MC",
+          "DMC|MC",
+          "AML",
+          "AMC",
+          "AMR",
+          "ST"
+        ],
+        "source": "build-30527-template",
+        "family": [
+          "back4",
+          "double-pivot",
+          "advanced-width",
+          "amc",
+          "single-st"
+        ]
+      },
+      {
+        "id": "4123",
+        "name": "4-1-2-3",
+        "slots": [
+          "GK",
+          "DL",
+          "DC",
+          "DC",
+          "DR",
+          "DMC",
+          "MC",
+          "MC",
+          "AML",
+          "ST",
+          "AMR"
+        ],
+        "source": "companion-family-from-frontier",
+        "family": [
+          "back4",
+          "dmc",
+          "central-midfield",
+          "advanced-width",
+          "single-st"
+        ]
+      },
+      {
+        "id": "433",
+        "name": "4-3-3",
+        "slots": [
+          "GK",
+          "DL",
+          "DC",
+          "DC",
+          "DR",
+          "MC",
+          "MC",
+          "MC",
+          "AML",
+          "ST",
+          "AMR"
+        ],
+        "source": "build-30527-template",
+        "family": [
+          "back4",
+          "central-midfield",
+          "advanced-width",
+          "single-st"
+        ]
+      },
+      {
+        "id": "4141",
+        "name": "4-1-4-1",
+        "slots": [
+          "GK",
+          "DL",
+          "DC",
+          "DC",
+          "DR",
+          "DMC",
+          "ML",
+          "MC",
+          "MC",
+          "MR",
+          "ST"
+        ],
+        "source": "community-2026",
+        "family": [
+          "back4",
+          "dmc",
+          "midfield-width",
+          "central-midfield",
+          "single-st"
+        ]
+      },
+      {
+        "id": "442",
+        "name": "4-4-2",
+        "slots": [
+          "GK",
+          "DL",
+          "DC",
+          "DC",
+          "DR",
+          "ML",
+          "MC",
+          "MC",
+          "MR",
+          "ST",
+          "ST"
+        ],
+        "source": "build-30527-template",
+        "family": [
+          "back4",
+          "midfield-width",
+          "two-st"
+        ]
+      },
+      {
+        "id": "41212",
+        "name": "4-1-2-1-2",
+        "slots": [
+          "GK",
+          "DL",
+          "DC",
+          "DC",
+          "DR",
+          "DMC",
+          "MC",
+          "MC",
+          "AMC",
+          "ST",
+          "ST"
+        ],
+        "source": "build-30527-template",
+        "family": [
+          "back4",
+          "dmc",
+          "narrow",
+          "amc",
+          "two-st"
+        ]
+      },
+      {
+        "id": "31411",
+        "name": "3-1-4-1-1",
+        "slots": [
+          "GK",
+          "DC",
+          "DC",
+          "DC",
+          "DMC",
+          "ML",
+          "MC",
+          "MC",
+          "MR",
+          "AMC",
+          "ST"
+        ],
+        "source": "community-2026",
+        "family": [
+          "back3",
+          "dmc",
+          "midfield-width",
+          "amc",
+          "single-st"
+        ]
+      },
+      {
+        "id": "3142",
+        "name": "3-1-4-2",
+        "slots": [
+          "GK",
+          "DC",
+          "DC",
+          "DC",
+          "DMC",
+          "ML",
+          "MC",
+          "MC",
+          "MR",
+          "ST",
+          "ST"
+        ],
+        "source": "companion-family",
+        "family": [
+          "back3",
+          "dmc",
+          "midfield-width",
+          "two-st"
+        ]
+      },
+      {
+        "id": "352",
+        "name": "3-5-2",
+        "slots": [
+          "GK",
+          "DC",
+          "DC",
+          "DC",
+          "ML",
+          "MC",
+          "MC",
+          "MC",
+          "MR",
+          "ST",
+          "ST"
+        ],
+        "source": "build-30527-template",
+        "family": [
+          "back3",
+          "midfield-width",
+          "central-midfield",
+          "two-st"
+        ]
+      },
+      {
+        "id": "31213",
+        "name": "3-1-2-1-3",
+        "slots": [
+          "GK",
+          "DC",
+          "DC",
+          "DC",
+          "DMC",
+          "MC",
+          "MC",
+          "AMC",
+          "AML",
+          "ST",
+          "AMR"
+        ],
+        "source": "community-2026",
+        "family": [
+          "back3",
+          "dmc",
+          "central-midfield",
+          "advanced-width",
+          "amc",
+          "single-st"
+        ]
+      }
+    ],
+    "score_components": {
+      "lineup_quality": 40,
+      "playstyle_role_fit": 10,
+      "weak_link": 20,
+      "core_structure": 30,
+      "formation_flexibility": 0
+    },
+    "rules": [
+      {
+        "id": "F-OWN-DC2",
+        "kind": "score",
+        "scope": "own_structure",
+        "bucket": "core_structure",
+        "points": 6,
+        "when": "own.centralDef >= 2",
+        "message": "formation.dc_pair",
+        "confidence": "high",
+        "evidence": [
+          "native-formation-frontier",
+          "community-midfield-structure"
+        ]
+      },
+      {
+        "id": "F-OWN-NODC2",
+        "kind": "penalty",
+        "scope": "own_structure",
+        "bucket": "core_structure",
+        "points": -12,
+        "when": "own.centralDef < 2",
+        "message": "formation.dc_pair_missing",
+        "confidence": "high",
+        "evidence": [
+          "native-formation-frontier"
+        ]
+      },
+      {
+        "id": "F-OWN-DMC",
+        "kind": "score",
+        "scope": "own_structure",
+        "bucket": "core_structure",
+        "points": 4,
+        "when": "own.hasDMC",
+        "message": "formation.dmc_screen",
+        "confidence": "high",
+        "evidence": [
+          "native-frontier",
+          "COMM-DMC-001"
+        ]
+      },
+      {
+        "id": "F-OWN-CMID",
+        "kind": "scaled",
+        "scope": "own_structure",
+        "bucket": "core_structure",
+        "table": {
+          "0": -10,
+          "1": -6,
+          "2": 1,
+          "3": 5,
+          "4": 6,
+          "5": 6
+        },
+        "feature": "own.centralMid",
+        "message": "formation.central_presence",
+        "confidence": "high",
+        "evidence": [
+          "COMM-MID-001"
+        ]
+      },
+      {
+        "id": "F-OWN-WIDTH",
+        "kind": "score",
+        "scope": "own_structure",
+        "bucket": "core_structure",
+        "points": 4,
+        "when": "own.hasLeftProgression && own.hasRightProgression",
+        "message": "formation.two_sided_progression",
+        "confidence": "medium-high",
+        "evidence": [
+          "native-frontier",
+          "COMM-LANE-001"
+        ]
+      },
+      {
+        "id": "F-OWN-FULLBACKS",
+        "kind": "score",
+        "scope": "own_structure",
+        "bucket": "core_structure",
+        "points": 3,
+        "when": "own.hasLeftDef && own.hasRightDef",
+        "message": "formation.two_sided_defence",
+        "confidence": "medium-high",
+        "evidence": [
+          "native-frontier"
+        ]
+      },
+      {
+        "id": "F-OWN-REST5",
+        "kind": "score",
+        "scope": "own_structure",
+        "bucket": "core_structure",
+        "points": 3,
+        "when": "own.restDefense >= 5",
+        "message": "formation.rest_defence",
+        "confidence": "medium",
+        "evidence": [
+          "companion-structure"
+        ]
+      },
+      {
+        "id": "F-OWN-REST3",
+        "kind": "penalty",
+        "scope": "own_structure",
+        "bucket": "core_structure",
+        "points": -4,
+        "when": "own.restDefense <= 3",
+        "message": "formation.rest_defence_thin",
+        "confidence": "medium",
+        "evidence": [
+          "companion-structure"
+        ]
+      },
+      {
+        "id": "F-OWN-AMC",
+        "kind": "score",
+        "scope": "own_structure",
+        "bucket": "core_structure",
+        "points": 2,
+        "when": "own.hasAMC",
+        "message": "formation.central_creator",
+        "confidence": "medium",
+        "evidence": [
+          "companion-role-coverage"
+        ]
+      },
+      {
+        "id": "F-OWN-NOST",
+        "kind": "penalty",
+        "scope": "own_structure",
+        "bucket": "core_structure",
+        "points": -6,
+        "when": "own.strikers == 0 && own.advancedScorers < 2",
+        "message": "formation.no_forward_outlet",
+        "confidence": "high",
+        "evidence": [
+          "native-role-structure"
+        ]
+      },
+      {
+        "id": "F-OWN-ADV3",
+        "kind": "score",
+        "scope": "own_structure",
+        "bucket": "core_structure",
+        "points": 2,
+        "when": "own.advancedScorers >= 3",
+        "message": "formation.advanced_threats",
+        "confidence": "medium",
+        "evidence": [
+          "companion-structure"
+        ]
+      }
+    ],
+    "assignment_policy": {
+      "best_available": "Use 11 unique players. A slot may be filled only by a role currently listed for that player. Do not solve a missing role by silently placing a player out of position.",
+      "dynamic_fallback": "During automatic selection, if none of the best curated XI assignments is entirely Natural, generate legal shapes from the squad natural-role pool and score them with the same rules. Related-role curated plans remain candidates, but theoretical natural fieldability by an unused weak player does not suppress the natural fallback. Curated formations are candidates, not a whitelist.",
+      "multi_role": "A multi-role player may be assigned to only one slot in a candidate XI. Their other roles count only as flexibility after that assignment.",
+      "playstyle_role_fit": "Each correctly deployed active Playstyle contributes 10/11 points to the Formation Playstyle-fit component. A natural role that is not Playstyle-eligible remains legal but receives no Playstyle-fit bonus; players without an active Playstyle are neutral.",
+      "out_of_position": "Emergency wrong-position use is never part of the normal optimiser. If the user explicitly enables emergency mode, show it as a warning and keep it outside the normal score comparison."
+    },
+    "component_normalization": {
+      "lineup_quality": "Best fieldable candidate receives 40. Other candidates lose one point for each percentage-point gap in mean assigned-role white-skill quality versus that best candidate, clamped to 0..40. Tiny quality differences therefore stay tiny.",
+      "playstyle_role_fit": "10 × (active Playstyle starters assigned to an eligible Playstyle role / 11 starters). Players without an active Playstyle and active Playstyles used outside an eligible role contribute 0 rather than receiving a bonus or an invented penalty.",
+      "weak_link": "Best fieldable candidate weak-link receives 20. Other candidates lose one point for each percentage-point gap in weakest assigned-role white-skill mean versus that best weak-link, clamped to 0..20.",
+      "core_structure": "Fixed global mapping from the proven active-rule range: raw -13 = 0/30, raw 0 = neutral 15/30, raw +30 = 30/30; linear on each side of neutral. This avoids positive-score saturation and never depends on the current candidate set.",
+      "formation_flexibility": "Reported as 0..10 natural-role versatility but contributes 0 additive match-plan points. It is used only after score/quality/Playstyle ties and in Squad Blueprint coverage."
+    },
+    "tie_break_order": [
+      "higher weak-link score",
+      "higher lineup quality",
+      "higher Playstyle-role fit",
+      "higher natural-role flexibility",
+      "baseline/native-frontier stability",
+      "stable candidate id"
+    ],
+    "structure_raw_range": {
+      "min": -13,
+      "neutral": 0,
+      "max": 30,
+      "source": "Exhaustive evaluation of all 2,843 build-30527 hard-legal fallback role-count shapes under the active 11 formation rules.",
+      "mapping": "Piecewise fixed global scale: min -> 0/30, neutral -> 15/30, max -> 30/30. Candidate-relative min/max normalization is forbidden."
+    }
+  },
+  "tactics": {
+    "selection": "Enumerate legal 11-dimension tactic combinations under the chosen drain ceiling; score lineup fit + structural context + coherence + Playstyle/SA semantic fit + drain efficiency.",
+    "score_components": {
+      "native_lineup_fit": 32,
+      "own_squad_structure": 26,
+      "internal_coherence": 18,
+      "playstyle_and_sa_fit": 14,
+      "drain_efficiency": 10
+    },
+    "drain_policy": "Drain is a hard user ceiling first; within the ceiling it is a secondary efficiency preference, not the primary objective.",
+    "rules": [
+      {
+        "id": "T-MENT-NORMAL",
+        "dimension": "mentality",
+        "option": "normal",
+        "points": 2,
+        "when": "true",
+        "message": "tactic.mentality_neutral",
+        "bucket": "own_squad_structure",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.12"
+        ]
+      },
+      {
+        "id": "T-MENT-ATTACK",
+        "dimension": "mentality",
+        "option": "attacking",
+        "points": 3,
+        "when": "own.attackDefenseDelta > margin && own.advancedScorers >= 3 && own.restDefense >= 4",
+        "message": "tactic.attacking_supported",
+        "bucket": "own_squad_structure",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.12"
+        ]
+      },
+      {
+        "id": "T-MENT-DEFEND",
+        "dimension": "mentality",
+        "option": "defending",
+        "points": 3,
+        "when": "own.attackDefenseDelta < -margin && own.restDefense >= 5",
+        "message": "tactic.defending_transition",
+        "bucket": "own_squad_structure",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.12"
+        ]
+      },
+      {
+        "id": "T-MENT-HARDATT-THIN",
+        "dimension": "mentality",
+        "option": "hardAttacking",
+        "points": -6,
+        "when": "own.restDefense <= 3",
+        "message": "tactic.hard_attacking_thin_restdef",
+        "bucket": "own_squad_structure",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.12"
+        ]
+      },
+      {
+        "id": "T-MENT-HARDATT-SUP",
+        "dimension": "mentality",
+        "option": "hardAttacking",
+        "points": 2,
+        "when": "own.attackDefenseDelta > 10 && own.advancedScorers >= 4 && own.restDefense >= 4 && own.pressCapacity != low",
+        "message": "tactic.hard_attacking_supported",
+        "bucket": "own_squad_structure",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.12"
+        ]
+      },
+      {
+        "id": "T-MENT-HARDDEF",
+        "dimension": "mentality",
+        "option": "hardDefending",
+        "points": -2,
+        "when": "true",
+        "message": "tactic.hard_defending_prematch",
+        "bucket": "own_squad_structure",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.12"
+        ]
+      },
+      {
+        "id": "T-PASS-SHORT-SUPPORT",
+        "dimension": "passing",
+        "option": "short",
+        "points": 4,
+        "when": "own.centralSupport >= 3",
+        "message": "tactic.short_support",
+        "bucket": "own_squad_structure",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.12"
+        ]
+      },
+      {
+        "id": "T-PASS-SHORT-BUILD",
+        "dimension": "passing",
+        "option": "short",
+        "points": 4,
+        "when": "values.won == buildup && own.technicalBuild == high",
+        "message": "tactic.short_buildup",
+        "bucket": "internal_coherence",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.15-calibration"
+        ]
+      },
+      {
+        "id": "T-PASS-LONG-COUNTER",
+        "dimension": "passing",
+        "option": "long",
+        "points": 4,
+        "when": "values.won == counter && own.counterOutletStrong",
+        "message": "tactic.long_counter",
+        "bucket": "internal_coherence",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.15-calibration"
+        ]
+      },
+      {
+        "id": "T-PASS-LONG-OUTLET",
+        "dimension": "passing",
+        "option": "long",
+        "points": 3,
+        "when": "own.directOutletStrong",
+        "message": "tactic.long_outlet",
+        "bucket": "own_squad_structure",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.12"
+        ]
+      },
+      {
+        "id": "T-PASS-LONG-NOOUTLET",
+        "dimension": "passing",
+        "option": "long",
+        "points": -4,
+        "when": "!own.directOutlet",
+        "message": "tactic.long_no_outlet",
+        "bucket": "own_squad_structure",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.12"
+        ]
+      },
+      {
+        "id": "T-PASS-MIXED-NEUTRAL",
+        "dimension": "passing",
+        "option": "mixed",
+        "points": 2,
+        "when": "abs(own.technicalBuildValue - own.directSupport) <= margin",
+        "message": "tactic.mixed_passing_neutral",
+        "bucket": "own_squad_structure",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.12"
+        ]
+      },
+      {
+        "id": "T-FOCUS-CENTER-SUPPORT",
+        "dimension": "focus",
+        "option": "center",
+        "points": 4,
+        "when": "own.hasAMC || own.centralSupport >= 3",
+        "message": "tactic.center_supported",
+        "bucket": "own_squad_structure",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.12"
+        ]
+      },
+      {
+        "id": "T-FOCUS-BOTH-WIDTH",
+        "dimension": "focus",
+        "option": "both",
+        "points": 4,
+        "when": "own.hasLeftProgression && own.hasRightProgression",
+        "message": "tactic.both_supported",
+        "bucket": "own_squad_structure",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.12"
+        ]
+      },
+      {
+        "id": "T-FOCUS-LEFT-SOLO",
+        "dimension": "focus",
+        "option": "left",
+        "points": 3,
+        "when": "own.hasLeftProgression && !own.hasRightProgression",
+        "message": "tactic.left_supported",
+        "bucket": "own_squad_structure",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.12"
+        ]
+      },
+      {
+        "id": "T-FOCUS-RIGHT-SOLO",
+        "dimension": "focus",
+        "option": "right",
+        "points": 3,
+        "when": "own.hasRightProgression && !own.hasLeftProgression",
+        "message": "tactic.right_supported",
+        "bucket": "own_squad_structure",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.12"
+        ]
+      },
+      {
+        "id": "T-FOCUS-LANE-GAP-L",
+        "dimension": "focus",
+        "option": "left",
+        "points": -6,
+        "when": "!own.hasLeftProgression",
+        "message": "tactic.left_no_players",
+        "bucket": "own_squad_structure",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.12"
+        ]
+      },
+      {
+        "id": "T-FOCUS-LANE-GAP-R",
+        "dimension": "focus",
+        "option": "right",
+        "points": -6,
+        "when": "!own.hasRightProgression",
+        "message": "tactic.right_no_players",
+        "bucket": "own_squad_structure",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.12"
+        ]
+      },
+      {
+        "id": "T-FOCUS-LANE-GAP-B",
+        "dimension": "focus",
+        "option": "both",
+        "points": -5,
+        "when": "!(own.hasLeftProgression && own.hasRightProgression)",
+        "message": "tactic.both_incomplete_width",
+        "bucket": "own_squad_structure",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.12"
+        ]
+      },
+      {
+        "id": "T-FOCUS-CENTER-NOCREATOR",
+        "dimension": "focus",
+        "option": "center",
+        "points": -4,
+        "when": "!own.hasAMC && own.centralSupport < 2",
+        "message": "tactic.center_no_creator",
+        "bucket": "own_squad_structure",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.12"
+        ]
+      },
+      {
+        "id": "T-FOCUS-BAL-NEUTRAL",
+        "dimension": "focus",
+        "option": "balanced",
+        "points": 2,
+        "when": "true",
+        "message": "tactic.balanced_focus_neutral",
+        "bucket": "internal_coherence",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.12"
+        ]
+      },
+      {
+        "id": "T-CROSS-HIGH-TM",
+        "dimension": "cross",
+        "option": "high",
+        "points": 6,
+        "when": "playstyles.TargetMan > 0 && own.aerialOutlet",
+        "message": "tactic.high_cross_target_man",
+        "bucket": "playstyle_and_sa_fit",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.12"
+        ]
+      },
+      {
+        "id": "T-CROSS-WINGER",
+        "dimension": "cross",
+        "option": "medium",
+        "points": 3,
+        "when": "playstyles.Winger > 0",
+        "message": "tactic.cross_winger",
+        "bucket": "playstyle_and_sa_fit",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.12"
+        ]
+      },
+      {
+        "id": "T-CROSS-HIGH-WINGER",
+        "dimension": "cross",
+        "option": "high",
+        "points": 2,
+        "when": "playstyles.Winger > 0 && own.aerialOutlet",
+        "message": "tactic.high_cross_winger",
+        "bucket": "playstyle_and_sa_fit",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.12"
+        ]
+      },
+      {
+        "id": "T-CROSS-EXPERT",
+        "dimension": "cross",
+        "option": "high",
+        "points": 3,
+        "when": "abilities.CrossExpert > 0 && (own.hasLeftProgression || own.hasRightProgression)",
+        "message": "tactic.high_cross_expert",
+        "bucket": "playstyle_and_sa_fit",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.12"
+        ]
+      },
+      {
+        "id": "T-CROSS-HIGH-NOTARGET",
+        "dimension": "cross",
+        "option": "high",
+        "points": -5,
+        "when": "!own.aerialOutlet",
+        "message": "tactic.high_cross_no_target",
+        "bucket": "own_squad_structure",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.12"
+        ]
+      },
+      {
+        "id": "T-CROSS-MED-NEUTRAL",
+        "dimension": "cross",
+        "option": "medium",
+        "points": 2,
+        "when": "playstyles.TargetMan == 0 && abilities.CrossExpert == 0",
+        "message": "tactic.medium_cross_neutral",
+        "bucket": "internal_coherence",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.12"
+        ]
+      },
+      {
+        "id": "T-CROSS-HIGH-NOWIDTH",
+        "dimension": "cross",
+        "option": "high",
+        "points": -3,
+        "when": "!(own.hasLeftProgression || own.hasRightProgression)",
+        "message": "tactic.high_cross_no_width",
+        "bucket": "own_squad_structure",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.12"
+        ]
+      },
+      {
+        "id": "T-WON-COUNTER-OUTLET",
+        "dimension": "won",
+        "option": "counter",
+        "points": 4,
+        "when": "own.counterOutletStrong",
+        "message": "tactic.counter_outlet",
+        "bucket": "own_squad_structure",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.12"
+        ]
+      },
+      {
+        "id": "T-WON-COUNTER-DIRECT",
+        "dimension": "won",
+        "option": "counter",
+        "points": 2,
+        "when": "values.passing in [long,mixed] && own.counterOutletStrong",
+        "message": "tactic.counter_direct_coherence",
+        "bucket": "internal_coherence",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.15-calibration"
+        ]
+      },
+      {
+        "id": "T-WON-COUNTER-NOOUTLET",
+        "dimension": "won",
+        "option": "counter",
+        "points": -5,
+        "when": "!own.counterOutlet",
+        "message": "tactic.counter_no_outlet",
+        "bucket": "own_squad_structure",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.12"
+        ]
+      },
+      {
+        "id": "T-WON-BUILD-SHORT",
+        "dimension": "won",
+        "option": "buildup",
+        "points": 2,
+        "when": "values.passing == short && own.technicalBuild == high",
+        "message": "tactic.buildup_short_coherence",
+        "bucket": "internal_coherence",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.15-calibration"
+        ]
+      },
+      {
+        "id": "T-WON-BUILD-LOWTECH",
+        "dimension": "won",
+        "option": "buildup",
+        "points": -3,
+        "when": "own.technicalBuild == low",
+        "message": "tactic.buildup_low_technical",
+        "bucket": "own_squad_structure",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.12"
+        ]
+      },
+      {
+        "id": "T-LOST-REGROUP-LOW",
+        "dimension": "lost",
+        "option": "regroup",
+        "points": 5,
+        "when": "values.pressing == low && own.pressCapacity == low",
+        "message": "tactic.regroup_lowblock",
+        "bucket": "internal_coherence",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.15-calibration"
+        ]
+      },
+      {
+        "id": "T-LOST-CP-HIGH",
+        "dimension": "lost",
+        "option": "counterPress",
+        "points": 5,
+        "when": "values.pressing == high && own.pressCapacity == high",
+        "message": "tactic.counterpress_highpress",
+        "bucket": "internal_coherence",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.15-calibration"
+        ]
+      },
+      {
+        "id": "T-LOST-CP-FIT",
+        "dimension": "lost",
+        "option": "counterPress",
+        "points": 2,
+        "when": "own.pressCapacity == high",
+        "message": "tactic.counterpress_capacity",
+        "bucket": "own_squad_structure",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.12"
+        ]
+      },
+      {
+        "id": "T-LOST-REGROUP-LOWCAP",
+        "dimension": "lost",
+        "option": "regroup",
+        "points": 3,
+        "when": "own.pressCapacity == low",
+        "message": "tactic.regroup_low_capacity",
+        "bucket": "own_squad_structure",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.12"
+        ]
+      },
+      {
+        "id": "T-LOST-CP-LOWCAP",
+        "dimension": "lost",
+        "option": "counterPress",
+        "points": -5,
+        "when": "own.pressCapacity == low",
+        "message": "tactic.counterpress_low_capacity",
+        "bucket": "own_squad_structure",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.12"
+        ]
+      },
+      {
+        "id": "T-PRESS-LOW-CAP",
+        "dimension": "pressing",
+        "option": "low",
+        "points": 3,
+        "when": "own.pressCapacity == low",
+        "message": "tactic.lowpress_capacity",
+        "bucket": "own_squad_structure",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.12"
+        ]
+      },
+      {
+        "id": "T-PRESS-MID-CAP",
+        "dimension": "pressing",
+        "option": "mid",
+        "points": 2,
+        "when": "own.pressCapacity == medium",
+        "message": "tactic.midpress_capacity",
+        "bucket": "own_squad_structure",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.12"
+        ]
+      },
+      {
+        "id": "T-PRESS-HIGH-CAP",
+        "dimension": "pressing",
+        "option": "high",
+        "points": 3,
+        "when": "own.pressCapacity == high",
+        "message": "tactic.highpress_capacity",
+        "bucket": "own_squad_structure",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.12"
+        ]
+      },
+      {
+        "id": "T-PRESS-HIGH-LOWCAP",
+        "dimension": "pressing",
+        "option": "high",
+        "points": -5,
+        "when": "own.pressCapacity == low",
+        "message": "tactic.highpress_low_capacity",
+        "bucket": "own_squad_structure",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.12"
+        ]
+      },
+      {
+        "id": "T-OFFSIDE-HIGH",
+        "dimension": "backLine",
+        "option": "offside",
+        "points": 4,
+        "when": "values.pressing == high",
+        "message": "tactic.offside_highpress",
+        "bucket": "internal_coherence",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.12"
+        ]
+      },
+      {
+        "id": "T-OFFSIDE-SWEEPER",
+        "dimension": "backLine",
+        "option": "offside",
+        "points": 2,
+        "when": "playstyles.SweeperKeeper > 0",
+        "message": "tactic.offside_sweeper",
+        "bucket": "playstyle_and_sa_fit",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.12"
+        ]
+      },
+      {
+        "id": "T-OFFSIDE-FASTLINE",
+        "dimension": "backLine",
+        "option": "offside",
+        "points": 3,
+        "when": "own.lineSpeed == high",
+        "message": "tactic.offside_fast_line",
+        "bucket": "own_squad_structure",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.12"
+        ]
+      },
+      {
+        "id": "T-OFFSIDE-LOW",
+        "dimension": "backLine",
+        "option": "offside",
+        "points": -10,
+        "when": "values.pressing == low",
+        "message": "tactic.offside_lowblock_contradiction",
+        "bucket": "internal_coherence",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.12"
+        ]
+      },
+      {
+        "id": "T-OFFSIDE-SLOWLINE",
+        "dimension": "backLine",
+        "option": "offside",
+        "points": -5,
+        "when": "own.lineSpeed == low",
+        "message": "tactic.offside_slow_line",
+        "bucket": "own_squad_structure",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.12"
+        ]
+      },
+      {
+        "id": "T-TRACK-LOW",
+        "dimension": "backLine",
+        "option": "track",
+        "points": 4,
+        "when": "values.pressing == low || values.lost == regroup",
+        "message": "tactic.track_lowblock",
+        "bucket": "internal_coherence",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.12"
+        ]
+      },
+      {
+        "id": "T-TRACK-NEUTRAL",
+        "dimension": "backLine",
+        "option": "track",
+        "points": 1,
+        "when": "true",
+        "message": "tactic.track_neutral",
+        "bucket": "internal_coherence",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.12"
+        ]
+      },
+      {
+        "id": "T-MARK-ZONAL-NEUTRAL",
+        "dimension": "marking",
+        "option": "zonal",
+        "points": 2,
+        "when": "true",
+        "message": "tactic.zonal_neutral",
+        "bucket": "internal_coherence",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.12"
+        ]
+      },
+      {
+        "id": "T-MARK-MAN-CAP",
+        "dimension": "marking",
+        "option": "man",
+        "points": 2,
+        "when": "own.markerCapacity == high",
+        "message": "tactic.man_capacity",
+        "bucket": "own_squad_structure",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.12"
+        ]
+      },
+      {
+        "id": "T-MARK-MAN-LOWCAP",
+        "dimension": "marking",
+        "option": "man",
+        "points": -4,
+        "when": "own.markerCapacity == low",
+        "message": "tactic.man_low_capacity",
+        "bucket": "own_squad_structure",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.12"
+        ]
+      },
+      {
+        "id": "T-TACKLE-BAL",
+        "dimension": "tackling",
+        "option": "balanced",
+        "points": 2,
+        "when": "true",
+        "message": "tactic.balanced_tackling_default",
+        "bucket": "internal_coherence",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.12"
+        ]
+      },
+      {
+        "id": "T-TACKLE-AGG-DISRUPT",
+        "dimension": "tackling",
+        "option": "aggressive",
+        "points": 2,
+        "when": "playstyles.BallWinner > 0 || playstyles.Stopper > 0",
+        "message": "tactic.aggressive_disruptors",
+        "bucket": "playstyle_and_sa_fit",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.12"
+        ]
+      },
+      {
+        "id": "T-TACKLE-STAY-CONTROL",
+        "dimension": "tackling",
+        "option": "stay",
+        "points": 2,
+        "when": "own.markerCapacity == low || own.lineSpeed == low",
+        "message": "tactic.stay_control",
+        "bucket": "own_squad_structure",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.12"
+        ]
+      },
+      {
+        "id": "T-SHOOT-SIGHT-SA",
+        "dimension": "shooting",
+        "option": "sight",
+        "points": 4,
+        "when": "abilities.ShadowStriker > 0",
+        "message": "tactic.shoot_on_sight_shadow",
+        "bucket": "playstyle_and_sa_fit",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.12"
+        ]
+      },
+      {
+        "id": "T-SHOOT-BOX-FINISH",
+        "dimension": "shooting",
+        "option": "box",
+        "points": 3,
+        "when": "own.boxFinishing > own.longShotThreat + margin",
+        "message": "tactic.work_box_finishers",
+        "bucket": "own_squad_structure",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.12"
+        ],
+        "calibration_note": "Requires the same 5-point separation margin used by Shoot On Sight so tiny attribute perturbations cannot activate a specialist shooting bonus."
+      },
+      {
+        "id": "T-SHOOT-SIGHT-THREAT",
+        "dimension": "shooting",
+        "option": "sight",
+        "points": 3,
+        "when": "own.longShotThreat > own.boxFinishing + margin",
+        "message": "tactic.shoot_on_sight_threat",
+        "bucket": "own_squad_structure",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.12"
+        ]
+      },
+      {
+        "id": "T-SHOOT-BAL-NEUTRAL",
+        "dimension": "shooting",
+        "option": "balanced",
+        "points": 2,
+        "when": "abs(own.boxFinishing - own.longShotThreat) <= margin",
+        "message": "tactic.balanced_shooting_neutral",
+        "bucket": "internal_coherence",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.12"
+        ]
+      },
+      {
+        "id": "T-SHOOT-BOX-SHORT",
+        "dimension": "shooting",
+        "option": "box",
+        "points": 2,
+        "when": "values.passing == short && own.centralSupport >= 2",
+        "message": "tactic.box_short_combinations",
+        "bucket": "internal_coherence",
+        "confidence": "medium",
+        "evidence": [
+          "companion-own-squad-v0.5.12"
+        ]
+      }
+    ],
+    "playstyle_affinities": {
+      "Poacher": {
+        "supports": [
+          {
+            "dimension": "shooting",
+            "options": [
+              "box",
+              "balanced"
+            ],
+            "points": 2
+          },
+          {
+            "dimension": "focus",
+            "options": [
+              "center",
+              "balanced"
+            ],
+            "points": 1
+          }
+        ],
+        "opposes": []
+      },
+      "False Nine": {
+        "supports": [
+          {
+            "dimension": "passing",
+            "options": [
+              "short"
+            ],
+            "points": 3
+          },
+          {
+            "dimension": "won",
+            "options": [
+              "buildup"
+            ],
+            "points": 2
+          },
+          {
+            "dimension": "focus",
+            "options": [
+              "center",
+              "balanced"
+            ],
+            "points": 2
+          },
+          {
+            "dimension": "cross",
+            "options": [
+              "low",
+              "medium"
+            ],
+            "points": 1
+          }
+        ],
+        "opposes": [
+          {
+            "dimension": "passing",
+            "options": [
+              "long"
+            ],
+            "points": -1
+          }
+        ]
+      },
+      "Target Man": {
+        "supports": [
+          {
+            "dimension": "passing",
+            "options": [
+              "long",
+              "mixed"
+            ],
+            "points": 3
+          },
+          {
+            "dimension": "cross",
+            "options": [
+              "high"
+            ],
+            "points": 4
+          },
+          {
+            "dimension": "focus",
+            "options": [
+              "left",
+              "right",
+              "both"
+            ],
+            "points": 2
+          }
+        ],
+        "opposes": [
+          {
+            "dimension": "cross",
+            "options": [
+              "low"
+            ],
+            "points": -2
+          }
+        ]
+      },
+      "Enganche": {
+        "supports": [
+          {
+            "dimension": "passing",
+            "options": [
+              "short"
+            ],
+            "points": 3
+          },
+          {
+            "dimension": "won",
+            "options": [
+              "buildup"
+            ],
+            "points": 2
+          },
+          {
+            "dimension": "focus",
+            "options": [
+              "center"
+            ],
+            "points": 2
+          }
+        ],
+        "opposes": []
+      },
+      "Inside Forward": {
+        "supports": [
+          {
+            "dimension": "shooting",
+            "options": [
+              "box",
+              "balanced"
+            ],
+            "points": 2
+          },
+          {
+            "dimension": "focus",
+            "options": [
+              "center",
+              "balanced"
+            ],
+            "points": 1
+          },
+          {
+            "dimension": "passing",
+            "options": [
+              "short",
+              "mixed"
+            ],
+            "points": 1
+          }
+        ],
+        "opposes": []
+      },
+      "Winger": {
+        "supports": [
+          {
+            "dimension": "focus",
+            "options": [
+              "left",
+              "right",
+              "both"
+            ],
+            "points": 3
+          },
+          {
+            "dimension": "cross",
+            "options": [
+              "medium",
+              "high"
+            ],
+            "points": 3
+          }
+        ],
+        "opposes": []
+      },
+      "False Winger": {
+        "supports": [
+          {
+            "dimension": "passing",
+            "options": [
+              "short"
+            ],
+            "points": 2
+          },
+          {
+            "dimension": "won",
+            "options": [
+              "buildup"
+            ],
+            "points": 2
+          },
+          {
+            "dimension": "focus",
+            "options": [
+              "center",
+              "balanced"
+            ],
+            "points": 1
+          }
+        ],
+        "opposes": []
+      },
+      "Mezzala": {
+        "supports": [
+          {
+            "dimension": "passing",
+            "options": [
+              "short",
+              "mixed"
+            ],
+            "points": 2
+          },
+          {
+            "dimension": "won",
+            "options": [
+              "buildup"
+            ],
+            "points": 1
+          },
+          {
+            "dimension": "lost",
+            "options": [
+              "counterPress"
+            ],
+            "points": 1
+          }
+        ],
+        "opposes": []
+      },
+      "Box-to-Box": {
+        "supports": [
+          {
+            "dimension": "pressing",
+            "options": [
+              "mid",
+              "high"
+            ],
+            "points": 2
+          },
+          {
+            "dimension": "lost",
+            "options": [
+              "counterPress"
+            ],
+            "points": 2
+          }
+        ],
+        "opposes": []
+      },
+      "Regista": {
+        "supports": [
+          {
+            "dimension": "passing",
+            "options": [
+              "short"
+            ],
+            "points": 3
+          },
+          {
+            "dimension": "won",
+            "options": [
+              "buildup"
+            ],
+            "points": 2
+          },
+          {
+            "dimension": "focus",
+            "options": [
+              "center",
+              "balanced"
+            ],
+            "points": 1
+          }
+        ],
+        "opposes": []
+      },
+      "Ball Winner": {
+        "supports": [
+          {
+            "dimension": "lost",
+            "options": [
+              "counterPress"
+            ],
+            "points": 3
+          },
+          {
+            "dimension": "pressing",
+            "options": [
+              "mid",
+              "high"
+            ],
+            "points": 2
+          },
+          {
+            "dimension": "tackling",
+            "options": [
+              "balanced",
+              "aggressive"
+            ],
+            "points": 1
+          }
+        ],
+        "opposes": []
+      },
+      "Anchor Man": {
+        "supports": [
+          {
+            "dimension": "pressing",
+            "options": [
+              "low",
+              "mid"
+            ],
+            "points": 2
+          },
+          {
+            "dimension": "lost",
+            "options": [
+              "regroup"
+            ],
+            "points": 2
+          },
+          {
+            "dimension": "backLine",
+            "options": [
+              "track"
+            ],
+            "points": 1
+          }
+        ],
+        "opposes": []
+      },
+      "No-Nonsense DC": {
+        "supports": [
+          {
+            "dimension": "pressing",
+            "options": [
+              "low",
+              "mid"
+            ],
+            "points": 1
+          },
+          {
+            "dimension": "lost",
+            "options": [
+              "regroup"
+            ],
+            "points": 1
+          },
+          {
+            "dimension": "backLine",
+            "options": [
+              "track"
+            ],
+            "points": 1
+          }
+        ],
+        "opposes": []
+      },
+      "Stopper": {
+        "supports": [
+          {
+            "dimension": "tackling",
+            "options": [
+              "balanced",
+              "aggressive"
+            ],
+            "points": 2
+          },
+          {
+            "dimension": "marking",
+            "options": [
+              "man",
+              "zonal"
+            ],
+            "points": 1
+          }
+        ],
+        "opposes": []
+      },
+      "Ball Playing DC": {
+        "supports": [
+          {
+            "dimension": "passing",
+            "options": [
+              "short"
+            ],
+            "points": 2
+          },
+          {
+            "dimension": "won",
+            "options": [
+              "buildup"
+            ],
+            "points": 2
+          }
+        ],
+        "opposes": []
+      },
+      "Full Back": {
+        "supports": [
+          {
+            "dimension": "backLine",
+            "options": [
+              "track"
+            ],
+            "points": 1
+          },
+          {
+            "dimension": "marking",
+            "options": [
+              "zonal"
+            ],
+            "points": 1
+          }
+        ],
+        "opposes": []
+      },
+      "Wing Back": {
+        "supports": [
+          {
+            "dimension": "focus",
+            "options": [
+              "left",
+              "right",
+              "both"
+            ],
+            "points": 2
+          },
+          {
+            "dimension": "cross",
+            "options": [
+              "medium",
+              "high"
+            ],
+            "points": 2
+          },
+          {
+            "dimension": "pressing",
+            "options": [
+              "mid",
+              "high"
+            ],
+            "points": 1
+          }
+        ],
+        "opposes": []
+      },
+      "Sweeper Keeper": {
+        "supports": [
+          {
+            "dimension": "pressing",
+            "options": [
+              "high"
+            ],
+            "points": 2
+          },
+          {
+            "dimension": "backLine",
+            "options": [
+              "offside"
+            ],
+            "points": 2
+          }
+        ],
+        "opposes": []
+      },
+      "Box Commander": {
+        "supports": [
+          {
+            "dimension": "pressing",
+            "options": [
+              "low",
+              "mid"
+            ],
+            "points": 2
+          },
+          {
+            "dimension": "backLine",
+            "options": [
+              "track"
+            ],
+            "points": 2
+          },
+          {
+            "dimension": "marking",
+            "options": [
+              "zonal"
+            ],
+            "points": 1
+          }
+        ],
+        "opposes": []
+      }
+    },
+    "special_ability_affinities": {
+      "Playmaker": {
+        "active": true,
+        "confidence": "medium",
+        "supports": [
+          {
+            "dimension": "passing",
+            "options": [
+              "short"
+            ],
+            "points": 1
+          },
+          {
+            "dimension": "won",
+            "options": [
+              "buildup"
+            ],
+            "points": 1
+          }
+        ]
+      },
+      "Shadow Striker": {
+        "active": true,
+        "confidence": "medium-high",
+        "supports": [
+          {
+            "dimension": "shooting",
+            "options": [
+              "sight"
+            ],
+            "points": 2
+          }
+        ]
+      },
+      "Cross Expert": {
+        "active": true,
+        "confidence": "medium",
+        "supports": [
+          {
+            "dimension": "cross",
+            "options": [
+              "medium",
+              "high"
+            ],
+            "points": 2
+          },
+          {
+            "dimension": "focus",
+            "options": [
+              "left",
+              "right",
+              "both"
+            ],
+            "points": 1
+          }
+        ]
+      },
+      "Counter Attack Stopper": {
+        "active": false,
+        "confidence": "unresolved",
+        "supports": [],
+        "note": "Effect mapping remains unresolved, so it contributes zero to pre-match tactic ranking."
+      },
+      "Rebound Specialist": {
+        "active": false,
+        "confidence": "unresolved",
+        "supports": []
+      },
+      "Aerial Defender": {
+        "active": false,
+        "confidence": "low",
+        "supports": []
+      },
+      "One-on-One Scorer": {
+        "active": false,
+        "confidence": "low",
+        "supports": []
+      },
+      "One-on-One Stopper": {
+        "active": false,
+        "confidence": "low",
+        "supports": []
+      },
+      "Defensive Wall": {
+        "active": false,
+        "confidence": "low",
+        "supports": []
+      },
+      "Dribbler": {
+        "active": false,
+        "confidence": "low",
+        "supports": []
+      },
+      "Intercepting Specialist": {
+        "active": false,
+        "confidence": "low",
+        "supports": []
+      },
+      "Blocker": {
+        "active": false,
+        "confidence": "low",
+        "supports": []
+      }
+    },
+    "option_domains": {
+      "passing": [
+        "short",
+        "long",
+        "mixed"
+      ],
+      "shooting": [
+        "sight",
+        "box",
+        "balanced"
+      ],
+      "focus": [
+        "left",
+        "right",
+        "both",
+        "center",
+        "balanced"
+      ],
+      "cross": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "lost": [
+        "counterPress",
+        "regroup"
+      ],
+      "won": [
+        "buildup",
+        "counter"
+      ],
+      "mentality": [
+        "hardDefending",
+        "defending",
+        "normal",
+        "attacking",
+        "hardAttacking"
+      ],
+      "marking": [
+        "man",
+        "zonal"
+      ],
+      "pressing": [
+        "low",
+        "mid",
+        "high"
+      ],
+      "backLine": [
+        "track",
+        "offside"
+      ],
+      "tackling": [
+        "balanced",
+        "stay",
+        "aggressive"
+      ]
+    },
+    "neutral_policy": "Neutral/default options are explicit candidates. Lack of a specialist bonus is not itself a penalty. Balanced/Mixed/Mid options receive small fallback support when evidence for either extreme is weak.",
+    "component_normalization": {
+      "native_lineup_fit": "For each non-mentality dimension, the best own-XI support option receives 1.0. Options lose support linearly by their absolute skill-point gap from that best option, reaching 0 after 25 points; mean across 10 dimensions and scale to 0..32. This avoids min-max hypersensitivity to tiny differences while preserving meaningful squad-strength separation.",
+      "own_squad_structure": "Sum own-XI structural rule points. Raw 0 maps to 13/26; negative points keep the strong original -13-to-zero penalty scale, while positive points use the full +31 attainable rule-catalogue range before reaching 26/26. This prevents routine positive stacks from saturating the component.",
+      "internal_coherence": "Sum tactic-to-tactic coherence rule points. Raw 0 maps to 9/18; the recovered companion-rule range -10..+26 maps piecewise to 0..9..18. Contradictions therefore remain strong while positive coherence no longer saturates after only +9 raw points.",
+      "playstyle_and_sa_fit": "No active semantic match scores 0. Positive active Playstyle/Special Ability rule points use the catalogue +19 upper range to map linearly to 0..14. There is no invented neutral +7 baseline.",
+      "drain_efficiency": "After the Drain Limit hard gate, map raw condition-drain score from the theoretical minimum eligible plan to the selected limit ceiling: minimum=10 points and ceiling=0 points. Ceilings are Low 40, Medium 65, High 100."
+    },
+    "tie_break_order": [
+      "higher core tactic score outside 0.5-point semantic near-tie band",
+      "fewer contradiction penalties inside the near-tie band",
+      "higher semantic fit inside the near-tie band (for example both flanks when both own lanes are equally strongest)",
+      "higher exact tactic score when semantic fit ties",
+      "lower condition drain on exact score/semantic ties",
+      "more neutral/default settings",
+      "stable canonical option order"
+    ],
+    "component_calibration": {
+      "own_squad_structure": {
+        "negative_cap": 13,
+        "positive_cap": 31,
+        "neutral_score": 13,
+        "max_score": 26
+      },
+      "internal_coherence": {
+        "negative_cap": 10,
+        "positive_cap": 26,
+        "neutral_score": 9,
+        "max_score": 18
+      },
+      "playstyle_and_sa_fit": {
+        "negative_cap": 1,
+        "positive_cap": 19,
+        "neutral_score": 0,
+        "max_score": 14
+      },
+      "provenance": "Caps are derived from the active v2 rule catalogue upper/lower ranges, preserving strong contradiction penalties while preventing routine positive saturation."
+    },
+    "auto_approach_near_tie_points": 1.5,
+    "auto_approach_policy": "Score every Approach normally. If the own XI attacking-unit quality exceeds defensive-unit quality by more than the 5-point comparison margin, prefer Attacking only when it is within 1.5 tactic-score points of the numeric best. Mirror this for Defending; otherwise prefer Balanced within the same near-tie band. Hard Attacking/Hard Defending are never force-preferred without opponent context.",
+    "semantic_near_tie_points": 0.5,
+    "semantic_near_tie_policy": "Use semantic fallback only when tactic scores are within 0.5 points and contradiction counts are equal. This resolves practically tied own-squad choices such as Both Flanks when left and right lanes are equally strongest, or Balanced focus when all lanes are equal. Outside the band the numeric tactic score wins; semantic preference never overrides a material score difference."
+  },
+  "mentors": {
+    "unlock_levels": {
+      "tactical": 1,
+      "attribute": 5,
+      "signature": 10
+    },
+    "prestige": {
+      "stages": 3,
+      "policy": "Prestige upgrades Signature Move. Do not invent extra recommendation points from Prestige unless actual CurrentEffects are available; report it as stronger current Signature state only."
+    },
+    "scoring": {
+      "tactical_max": 40,
+      "attribute_max": 25,
+      "signature_max": 30,
+      "tradeoff_range": [
+        -10,
+        0
+      ],
+      "locked_family_points": 0,
+      "formula": {
+        "tactical": "0 or tactical_max according to the Mentor tactical condition. If a Mentor entry uses a graded feature rather than a boolean condition, low/medium/high map to 0/20/40 unless the entry supplies a different table.",
+        "attribute": "For the two boosted attributes, sum role-hierarchy tier weights only where that attribute is white for the starter assigned to that role, then apply active tactic-context multipliers. Convert raw relevance to 0..25 using target raw relevance 24; score = 25*min(1,raw/24). Grey occurrences contribute 0.",
+        "signature": "0 or signature_max only when its explicit activation/context condition is known true. Unknown/live-only conditions receive 0 prematch rather than guessed partial credit.",
+        "tradeoffs": "Apply only when the relevant family is unlocked and context active. Tradeoff penalties never unlock before their family.",
+        "plan_adjustment": "mentor_adjustment = 10 * clamp((raw_total + tradeoffs)/95,0,1). This adjustment is applied only inside the viable core-plan band."
+      }
+    },
+    "attribute_impact_policy": "Attribute boost score uses current XI assigned-role white-skill coverage and current plan relevance, not raw count alone.",
+    "mentors": {
+      "saboteur": {
+        "name": "Rubén Herrera",
+        "unlock_levels": {
+          "tactical": 1,
+          "attribute": 5,
+          "signature": 10
+        },
+        "tactical": {
+          "id": "tacticCounterAttackEffectiveness",
+          "max_points": 40,
+          "when": "values.won == counter",
+          "message": "mentor.herrera.tactical"
+        },
+        "attribute": {
+          "attributes": [
+            "Creativity",
+            "Passing"
+          ],
+          "max_points": 25,
+          "message": "mentor.herrera.attribute"
+        },
+        "signature": {
+          "id": "signatureBlindSide",
+          "max_points": 30,
+          "when": "values.won == counter",
+          "message": "mentor.herrera.signature"
+        },
+        "tradeoffs": []
+      },
+      "wing_commander": {
+        "name": "Lewis Green",
+        "unlock_levels": {
+          "tactical": 1,
+          "attribute": 5,
+          "signature": 10
+        },
+        "tactical": {
+          "id": "tacticWingAttacksEffectiveness",
+          "max_points": 40,
+          "when": "values.focus in [left,right,both]",
+          "message": "mentor.green.tactical"
+        },
+        "attribute": {
+          "attributes": [
+            "Crossing",
+            "Heading"
+          ],
+          "max_points": 25,
+          "message": "mentor.green.attribute"
+        },
+        "signature": {
+          "id": "signatureAerialDominance",
+          "max_points": 30,
+          "when": "values.focus in [left,right,both] && values.cross in [medium,high] && own.aerialOutlet",
+          "message": "mentor.green.signature"
+        },
+        "tradeoffs": []
+      },
+      "analyst": {
+        "name": "Jonas Braun",
+        "unlock_levels": {
+          "tactical": 1,
+          "attribute": 5,
+          "signature": 10
+        },
+        "tactical": {
+          "id": "tacticLongPassEffectiveness",
+          "max_points": 40,
+          "when": "values.passing == long",
+          "message": "mentor.braun.tactical"
+        },
+        "attribute": {
+          "attributes": [
+            "Strength",
+            "Positioning"
+          ],
+          "max_points": 25,
+          "message": "mentor.braun.attribute"
+        },
+        "signature": {
+          "id": "signatureAdaptiveBlueprint",
+          "max_points": 30,
+          "message": "mentor.braun.signature",
+          "prematch_points": 0,
+          "scoring": "unavailable_in_prematch_own_squad_mode"
+        },
+        "tradeoffs": []
+      },
+      "architect": {
+        "name": "Cesc Fàbregas",
+        "unlock_levels": {
+          "tactical": 1,
+          "attribute": 5,
+          "signature": 10
+        },
+        "tactical": {
+          "id": "tacticShortPassEffectiveness",
+          "max_points": 40,
+          "when": "values.passing == short",
+          "message": "mentor.cesc.tactical"
+        },
+        "attribute": {
+          "attributes": [
+            "Dribbling",
+            "Shooting"
+          ],
+          "max_points": 25,
+          "message": "mentor.cesc.attribute"
+        },
+        "signature": {
+          "id": "signatureMomentumChain",
+          "max_points": 30,
+          "when": "values.passing == short && values.won == buildup",
+          "message": "mentor.cesc.signature"
+        },
+        "tradeoffs": [
+          {
+            "when": "signatureActive",
+            "penalty_max": 6,
+            "severity_by_drain_limit": {
+              "Low": 6,
+              "Medium": 3,
+              "High": 1
+            },
+            "message": "mentor.cesc.stamina_tradeoff"
+          }
+        ]
+      },
+      "deadball_specialist": {
+        "name": "Alan Shearer",
+        "unlock_levels": {
+          "tactical": 1,
+          "attribute": 5,
+          "signature": 10
+        },
+        "tactical": {
+          "id": "tacticSoloDribbleEffectiveness",
+          "max_points": 40,
+          "feature": "dribbleReliance",
+          "message": "mentor.shearer.tactical"
+        },
+        "attribute": {
+          "attributes": [
+            "Strength",
+            "Shooting"
+          ],
+          "max_points": 25,
+          "message": "mentor.shearer.attribute"
+        },
+        "signature": {
+          "id": "signatureAnkleBreaker",
+          "max_points": 30,
+          "message": "mentor.shearer.signature",
+          "scoring": "unavailable_in_prematch_own_squad_mode",
+          "prematch_points": 0
+        },
+        "tradeoffs": []
+      },
+      "iron_guard": {
+        "name": "Nemanja Vidić",
+        "unlock_levels": {
+          "tactical": 1,
+          "attribute": 5,
+          "signature": 10
+        },
+        "tactical": {
+          "id": "tacticDefensiveActionsEffectivenessWithStaminaPenalty",
+          "max_points": 40,
+          "feature": "defensiveActionDemand",
+          "message": "mentor.vidic.tactical"
+        },
+        "attribute": {
+          "attributes": [
+            "Tackling",
+            "Bravery"
+          ],
+          "max_points": 25,
+          "message": "mentor.vidic.attribute"
+        },
+        "signature": {
+          "id": "signatureIronCheck",
+          "max_points": 30,
+          "feature": "defensiveActionDemand",
+          "message": "mentor.vidic.signature"
+        },
+        "tradeoffs": [
+          {
+            "when": "tacticalActive",
+            "penalty_max": 6,
+            "severity_by_drain_limit": {
+              "Low": 6,
+              "Medium": 3,
+              "High": 1
+            },
+            "message": "mentor.vidic.condition_tradeoff"
+          }
+        ]
+      },
+      "enforcer": {
+        "name": "Claude Makélélé",
+        "unlock_levels": {
+          "tactical": 1,
+          "attribute": 5,
+          "signature": 10
+        },
+        "tactical": {
+          "id": "tacticDefensiveActionsEffectivenessAgainstShortPasses",
+          "max_points": 40,
+          "unknown_points": 0,
+          "message": "mentor.makelele.tactical",
+          "scoring": "unavailable_in_prematch_own_squad_mode",
+          "prematch_points": 0
+        },
+        "attribute": {
+          "attributes": [
+            "Bravery",
+            "Positioning"
+          ],
+          "max_points": 25,
+          "message": "mentor.makelele.attribute"
+        },
+        "signature": {
+          "id": "signatureParkingTheBus",
+          "max_points": 30,
+          "message": "mentor.makelele.signature",
+          "scoring": "unavailable_in_prematch_own_squad_mode",
+          "prematch_points": 0
+        },
+        "tradeoffs": []
+      }
+    },
+    "state_policy": {
+      "manual_state": "The manager manually records each Mentor level/Prestige. Level 0 or missing means unavailable and must not be recommended.",
+      "unlock_gate": "Tactical contributes only at level >=1; Attribute only at >=5; Signature only at >=10. Locked families contribute exactly zero and are shown as locked.",
+      "prestige": "Prestige changes the real Signature CurrentEffects if/when those values are captured. Prestige number alone never creates guessed recommendation points.",
+      "halftime": "Research-only note: some real Mentor effects can change with later match context, but the v0.5.12 pre-match own-squad runtime does not accept halftime/live state and gives those conditions zero pre-match credit."
+    },
+    "output_contract": [
+      "mentor_name",
+      "saved_level",
+      "saved_prestige",
+      "tactical_status",
+      "attribute_status",
+      "signature_status",
+      "tradeoffs",
+      "raw_score",
+      "plan_adjustment",
+      "next_unlock_level",
+      "next_unlock_family",
+      "why_now",
+      "why_not_higher"
+    ],
+    "runtime_context": "Own XI + selected tactic + saved Mentor unlock/level state only. No scouting or live-match state is accepted."
+  },
+  "set_pieces": {
+    "status": "CALIBRATION WORKING — COMPLETE XI SET-PIECE PACKAGE + GAMEPLAY-NEUTRAL CAPTAIN",
+    "provenance": "The game proves the assignment slots and specialist ability identities. No official automatic ranking formula has been recovered for set pieces. For Captain specifically, historical Nordeus Support stated the choice does not make a player stronger or change stats, and the recovered current build exposes assignment/save state but no captain performance formula. Current-client enum still contains Set Piece Taker; historical community evidence consistently describes it as a combined penalty/free-kick/corner ability. Because exact current comparative strength is unresolved, the dedicated role-specific specialist remains first and Set Piece Taker is a conservative second specialist tier for all three dead-ball families.",
+    "slots": [
+      "cornerRight",
+      "freeRight",
+      "penalty1",
+      "freeLeft",
+      "cornerLeft",
+      "penalty2",
+      "penalty3",
+      "penalty4",
+      "penalty5",
+      "captain"
+    ],
+    "penalty": {
+      "order": [
+        "Penalty Kick Specialist",
+        "Set Piece Taker",
+        "Finishing+Shooting mean",
+        "Creativity",
+        "stable player key"
+      ],
+      "backups": 5
+    },
+    "free_kick": {
+      "order": [
+        "Free Kick Specialist",
+        "Set Piece Taker",
+        "Shooting+Finishing+Passing+Creativity mean",
+        "stable player key"
+      ],
+      "left_right_policy": "Evaluate both slots from the same proven inputs. Without a captured preferred-foot field the optimiser must not invent a left/right-foot advantage, so the same best player may legitimately lead both lists."
+    },
+    "corner": {
+      "order": [
+        "Corner Specialist",
+        "Set Piece Taker",
+        "Crossing+Passing+Creativity mean",
+        "stable player key"
+      ],
+      "left_right_policy": "Evaluate both slots from the same proven inputs. Without a captured preferred-foot field the optimiser must not invent a left/right-foot advantage, so the same best player may legitimately lead both lists."
+    },
+    "captain": {
+      "status": "GAMEPLAY-NEUTRAL DEFAULT — NO PROVEN CAPTAINCY EFFECT",
+      "gameplay_effect_points": 0,
+      "default_order": [
+        "highest OVR starter",
+        "assigned-role mean",
+        "assigned-role floor/weakest key skill",
+        "stable player key"
+      ],
+      "reason": "Because Captain has no proven gameplay effect, the optimiser must not invent Bravery, age, leadership, personality or hidden captain coefficients. Top Eleven Tool auto-fills the highest-OVR starter as a convenient cosmetic default, using assigned-role quality only as deterministic tie-breaks. Any manual Captain choice is treated as performance-equivalent."
+    },
+    "team_plan_influence": "Penalty/free-kick/corner readiness is calculated for every candidate XI and used only as a late deterministic tie-break after final/core plan score. Captain is explicitly excluded from readiness and contributes zero to Team Plan selection.",
+    "manual_override_policy": "Every automatic assignment may be manually overridden. Manual choices persist until the user explicitly refreshes recommendations or the assigned player leaves the XI."
+  },
+  "training": {
+    "selection_hierarchy": [
+      "development_role",
+      "role_specific_playstyle_profile",
+      "target_attribute_shape",
+      "actual_white_skill_union",
+      "tactic_context",
+      "current_target_gap",
+      "verified_drill_gain_strength",
+      "session_diversity"
+    ],
+    "playstyle_activation": "Locked/no Playstyle level uses the base role profile. Standard/Intermediate/Advanced/Master use the role-specific Playstyle profile. Do not scale priority further by level without evidence.",
+    "tier_weights": {
+      "S": 1.7,
+      "A": 1.4,
+      "B": 1.15,
+      "C": 1.0
+    },
+    "role_profiles": {
+      "GK": {
+        "S": [
+          "Reflexes",
+          "Agility",
+          "Anticipation",
+          "Concentration"
+        ],
+        "A": [
+          "Rushing Out",
+          "Communication",
+          "Aerial Reach"
+        ],
+        "B": [
+          "Throwing",
+          "Kicking",
+          "Punching",
+          "Fitness"
+        ],
+        "C": []
+      },
+      "DL": {
+        "S": [
+          "Tackling",
+          "Marking",
+          "Positioning",
+          "Speed"
+        ],
+        "A": [
+          "Crossing",
+          "Fitness",
+          "Bravery"
+        ],
+        "B": [
+          "Aggression"
+        ],
+        "C": []
+      },
+      "DC": {
+        "S": [
+          "Tackling",
+          "Marking",
+          "Positioning",
+          "Heading"
+        ],
+        "A": [
+          "Strength",
+          "Bravery",
+          "Fitness"
+        ],
+        "B": [
+          "Aggression"
+        ],
+        "C": []
+      },
+      "DR": {
+        "S": [
+          "Tackling",
+          "Marking",
+          "Positioning",
+          "Speed"
+        ],
+        "A": [
+          "Crossing",
+          "Fitness",
+          "Bravery"
+        ],
+        "B": [
+          "Aggression"
+        ],
+        "C": []
+      },
+      "DMC": {
+        "S": [
+          "Positioning",
+          "Marking",
+          "Tackling",
+          "Passing"
+        ],
+        "A": [
+          "Bravery",
+          "Strength",
+          "Creativity",
+          "Fitness"
+        ],
+        "B": [
+          "Heading",
+          "Aggression"
+        ],
+        "C": []
+      },
+      "ML": {
+        "S": [
+          "Passing",
+          "Crossing",
+          "Dribbling",
+          "Speed"
+        ],
+        "A": [
+          "Positioning",
+          "Creativity",
+          "Fitness"
+        ],
+        "B": [],
+        "C": []
+      },
+      "MC": {
+        "S": [
+          "Passing",
+          "Positioning",
+          "Creativity",
+          "Fitness"
+        ],
+        "A": [
+          "Dribbling",
+          "Speed",
+          "Tackling",
+          "Marking"
+        ],
+        "B": [
+          "Shooting",
+          "Bravery"
+        ],
+        "C": []
+      },
+      "MR": {
+        "S": [
+          "Passing",
+          "Crossing",
+          "Dribbling",
+          "Speed"
+        ],
+        "A": [
+          "Positioning",
+          "Creativity",
+          "Fitness"
+        ],
+        "B": [],
+        "C": []
+      },
+      "AML": {
+        "S": [
+          "Dribbling",
+          "Speed",
+          "Passing",
+          "Crossing"
+        ],
+        "A": [
+          "Shooting",
+          "Finishing",
+          "Creativity"
+        ],
+        "B": [
+          "Fitness"
+        ],
+        "C": []
+      },
+      "AMC": {
+        "S": [
+          "Passing",
+          "Creativity",
+          "Dribbling"
+        ],
+        "A": [
+          "Shooting",
+          "Finishing",
+          "Speed"
+        ],
+        "B": [
+          "Heading",
+          "Fitness"
+        ],
+        "C": []
+      },
+      "AMR": {
+        "S": [
+          "Dribbling",
+          "Speed",
+          "Passing",
+          "Crossing"
+        ],
+        "A": [
+          "Shooting",
+          "Finishing",
+          "Creativity"
+        ],
+        "B": [
+          "Fitness"
+        ],
+        "C": []
+      },
+      "ST": {
+        "S": [
+          "Shooting",
+          "Finishing",
+          "Positioning"
+        ],
+        "A": [
+          "Speed",
+          "Dribbling",
+          "Strength",
+          "Heading"
+        ],
+        "B": [
+          "Passing",
+          "Creativity"
+        ],
+        "C": []
+      }
+    },
+    "playstyle_role_profiles": {
+      "Poacher": {
+        "ST": {
+          "S": [
+            "Shooting",
+            "Finishing",
+            "Positioning",
+            "Speed"
+          ],
+          "A": [
+            "Dribbling",
+            "Creativity"
+          ],
+          "B": [
+            "Passing",
+            "Heading",
+            "Strength"
+          ],
+          "C": []
+        }
+      },
+      "False Nine": {
+        "ST": {
+          "S": [
+            "Passing",
+            "Dribbling",
+            "Creativity"
+          ],
+          "A": [
+            "Positioning",
+            "Shooting",
+            "Finishing",
+            "Speed"
+          ],
+          "B": [
+            "Heading",
+            "Strength"
+          ],
+          "C": []
+        },
+        "AMC": {
+          "S": [
+            "Passing",
+            "Creativity",
+            "Dribbling"
+          ],
+          "A": [
+            "Shooting",
+            "Finishing",
+            "Speed"
+          ],
+          "B": [
+            "Heading",
+            "Fitness"
+          ],
+          "C": []
+        }
+      },
+      "Target Man": {
+        "ST": {
+          "S": [
+            "Heading",
+            "Strength",
+            "Positioning",
+            "Finishing"
+          ],
+          "A": [
+            "Shooting",
+            "Passing",
+            "Creativity"
+          ],
+          "B": [
+            "Dribbling",
+            "Speed"
+          ],
+          "C": []
+        }
+      },
+      "Enganche": {
+        "AMC": {
+          "S": [
+            "Passing",
+            "Creativity",
+            "Dribbling"
+          ],
+          "A": [
+            "Shooting",
+            "Finishing"
+          ],
+          "B": [
+            "Speed",
+            "Heading",
+            "Fitness"
+          ],
+          "C": []
+        }
+      },
+      "Inside Forward": {
+        "AML": {
+          "S": [
+            "Dribbling",
+            "Speed",
+            "Shooting",
+            "Finishing"
+          ],
+          "A": [
+            "Passing",
+            "Creativity"
+          ],
+          "B": [
+            "Crossing",
+            "Fitness"
+          ],
+          "C": []
+        },
+        "AMR": {
+          "S": [
+            "Dribbling",
+            "Speed",
+            "Shooting",
+            "Finishing"
+          ],
+          "A": [
+            "Passing",
+            "Creativity"
+          ],
+          "B": [
+            "Crossing",
+            "Fitness"
+          ],
+          "C": []
+        }
+      },
+      "Winger": {
+        "AML": {
+          "S": [
+            "Crossing",
+            "Speed",
+            "Dribbling",
+            "Passing"
+          ],
+          "A": [
+            "Creativity",
+            "Shooting",
+            "Finishing"
+          ],
+          "B": [
+            "Fitness"
+          ],
+          "C": []
+        },
+        "AMR": {
+          "S": [
+            "Crossing",
+            "Speed",
+            "Dribbling",
+            "Passing"
+          ],
+          "A": [
+            "Creativity",
+            "Shooting",
+            "Finishing"
+          ],
+          "B": [
+            "Fitness"
+          ],
+          "C": []
+        },
+        "ML": {
+          "S": [
+            "Crossing",
+            "Speed",
+            "Dribbling",
+            "Passing"
+          ],
+          "A": [
+            "Positioning",
+            "Creativity",
+            "Fitness"
+          ],
+          "B": [],
+          "C": []
+        },
+        "MR": {
+          "S": [
+            "Crossing",
+            "Speed",
+            "Dribbling",
+            "Passing"
+          ],
+          "A": [
+            "Positioning",
+            "Creativity",
+            "Fitness"
+          ],
+          "B": [],
+          "C": []
+        }
+      },
+      "False Winger": {
+        "ML": {
+          "S": [
+            "Passing",
+            "Creativity",
+            "Dribbling",
+            "Positioning"
+          ],
+          "A": [
+            "Speed",
+            "Fitness",
+            "Crossing"
+          ],
+          "B": [],
+          "C": []
+        },
+        "MR": {
+          "S": [
+            "Passing",
+            "Creativity",
+            "Dribbling",
+            "Positioning"
+          ],
+          "A": [
+            "Speed",
+            "Fitness",
+            "Crossing"
+          ],
+          "B": [],
+          "C": []
+        }
+      },
+      "Mezzala": {
+        "MC": {
+          "S": [
+            "Passing",
+            "Dribbling",
+            "Creativity",
+            "Speed"
+          ],
+          "A": [
+            "Positioning",
+            "Shooting",
+            "Fitness"
+          ],
+          "B": [
+            "Tackling",
+            "Marking",
+            "Bravery"
+          ],
+          "C": []
+        }
+      },
+      "Box-to-Box": {
+        "MC": {
+          "S": [
+            "Fitness",
+            "Positioning",
+            "Passing",
+            "Speed"
+          ],
+          "A": [
+            "Tackling",
+            "Marking",
+            "Dribbling",
+            "Shooting",
+            "Bravery"
+          ],
+          "B": [
+            "Creativity"
+          ],
+          "C": []
+        }
+      },
+      "Regista": {
+        "MC": {
+          "S": [
+            "Passing",
+            "Creativity",
+            "Positioning"
+          ],
+          "A": [
+            "Dribbling",
+            "Fitness",
+            "Marking",
+            "Speed"
+          ],
+          "B": [
+            "Tackling",
+            "Shooting",
+            "Bravery"
+          ],
+          "C": []
+        },
+        "DMC": {
+          "S": [
+            "Passing",
+            "Creativity",
+            "Positioning"
+          ],
+          "A": [
+            "Marking",
+            "Fitness",
+            "Strength"
+          ],
+          "B": [
+            "Tackling",
+            "Bravery",
+            "Heading",
+            "Aggression"
+          ],
+          "C": []
+        }
+      },
+      "Ball Winner": {
+        "DMC": {
+          "S": [
+            "Tackling",
+            "Marking",
+            "Positioning",
+            "Bravery",
+            "Aggression"
+          ],
+          "A": [
+            "Fitness",
+            "Strength",
+            "Passing"
+          ],
+          "B": [
+            "Heading",
+            "Creativity"
+          ],
+          "C": []
+        }
+      },
+      "Anchor Man": {
+        "DMC": {
+          "S": [
+            "Positioning",
+            "Marking",
+            "Tackling",
+            "Strength"
+          ],
+          "A": [
+            "Heading",
+            "Bravery",
+            "Fitness"
+          ],
+          "B": [
+            "Passing",
+            "Aggression",
+            "Creativity"
+          ],
+          "C": []
+        }
+      },
+      "No-Nonsense DC": {
+        "DC": {
+          "S": [
+            "Tackling",
+            "Marking",
+            "Heading",
+            "Strength",
+            "Bravery"
+          ],
+          "A": [
+            "Positioning",
+            "Fitness"
+          ],
+          "B": [
+            "Aggression"
+          ],
+          "C": []
+        }
+      },
+      "Stopper": {
+        "DC": {
+          "S": [
+            "Tackling",
+            "Marking",
+            "Bravery",
+            "Aggression",
+            "Strength"
+          ],
+          "A": [
+            "Positioning",
+            "Heading",
+            "Fitness"
+          ],
+          "B": [],
+          "C": []
+        }
+      },
+      "Ball Playing DC": {
+        "DC": {
+          "S": [
+            "Positioning",
+            "Marking",
+            "Tackling"
+          ],
+          "A": [
+            "Strength",
+            "Heading",
+            "Fitness"
+          ],
+          "B": [
+            "Bravery",
+            "Aggression"
+          ],
+          "C": [],
+          "latent_if_white_via_secondary_role": [
+            "Passing",
+            "Creativity"
+          ]
+        }
+      },
+      "Full Back": {
+        "DL": {
+          "S": [
+            "Marking",
+            "Tackling",
+            "Positioning",
+            "Speed"
+          ],
+          "A": [
+            "Fitness",
+            "Bravery"
+          ],
+          "B": [
+            "Crossing",
+            "Aggression"
+          ],
+          "C": []
+        },
+        "DR": {
+          "S": [
+            "Marking",
+            "Tackling",
+            "Positioning",
+            "Speed"
+          ],
+          "A": [
+            "Fitness",
+            "Bravery"
+          ],
+          "B": [
+            "Crossing",
+            "Aggression"
+          ],
+          "C": []
+        }
+      },
+      "Wing Back": {
+        "DL": {
+          "S": [
+            "Crossing",
+            "Speed",
+            "Fitness",
+            "Positioning"
+          ],
+          "A": [
+            "Tackling",
+            "Marking",
+            "Bravery"
+          ],
+          "B": [
+            "Aggression"
+          ],
+          "C": []
+        },
+        "DR": {
+          "S": [
+            "Crossing",
+            "Speed",
+            "Fitness",
+            "Positioning"
+          ],
+          "A": [
+            "Tackling",
+            "Marking",
+            "Bravery"
+          ],
+          "B": [
+            "Aggression"
+          ],
+          "C": []
+        }
+      },
+      "Sweeper Keeper": {
+        "GK": {
+          "S": [
+            "Rushing Out",
+            "Anticipation",
+            "Kicking",
+            "Agility"
+          ],
+          "A": [
+            "Reflexes",
+            "Concentration",
+            "Communication",
+            "Fitness"
+          ],
+          "B": [
+            "Aerial Reach",
+            "Throwing",
+            "Punching"
+          ],
+          "C": []
+        }
+      },
+      "Box Commander": {
+        "GK": {
+          "S": [
+            "Aerial Reach",
+            "Communication",
+            "Punching",
+            "Concentration"
+          ],
+          "A": [
+            "Reflexes",
+            "Anticipation",
+            "Agility",
+            "Rushing Out"
+          ],
+          "B": [
+            "Throwing",
+            "Kicking",
+            "Fitness"
+          ],
+          "C": []
+        }
+      }
+    },
+    "tactic_modifiers": [
+      {
+        "id": "TR-TAC-SHORT-CENTRAL",
+        "when": "passing == short",
+        "roles": [
+          "DMC",
+          "MC",
+          "AMC",
+          "AML",
+          "AMR",
+          "ST"
+        ],
+        "skills": [
+          "Passing",
+          "Creativity",
+          "Dribbling"
+        ],
+        "multiplier_add": 0.08,
+        "message": "training.tactic.short"
+      },
+      {
+        "id": "TR-TAC-LONG-PASSER",
+        "when": "passing == long",
+        "roles": [
+          "GK",
+          "DC",
+          "DMC",
+          "MC"
+        ],
+        "skills": [
+          "Kicking",
+          "Passing",
+          "Creativity"
+        ],
+        "multiplier_add": 0.08,
+        "message": "training.tactic.long_passer"
+      },
+      {
+        "id": "TR-TAC-LONG-OUTLET",
+        "when": "passing == long",
+        "roles": [
+          "AMC",
+          "ST"
+        ],
+        "skills": [
+          "Heading",
+          "Strength",
+          "Positioning",
+          "Speed"
+        ],
+        "multiplier_add": 0.08,
+        "message": "training.tactic.long_outlet"
+      },
+      {
+        "id": "TR-TAC-FLANK-CARRIER",
+        "when": "focus in [left,right,both]",
+        "roles": [
+          "DL",
+          "DR",
+          "ML",
+          "MR",
+          "AML",
+          "AMR"
+        ],
+        "skills": [
+          "Crossing",
+          "Speed",
+          "Dribbling",
+          "Passing"
+        ],
+        "multiplier_add": 0.08,
+        "message": "training.tactic.flank_carrier"
+      },
+      {
+        "id": "TR-TAC-FLANK-TARGET",
+        "when": "focus in [left,right,both] && cross in [medium,high]",
+        "roles": [
+          "AMC",
+          "ST"
+        ],
+        "skills": [
+          "Heading",
+          "Strength",
+          "Positioning",
+          "Finishing"
+        ],
+        "multiplier_add": 0.08,
+        "message": "training.tactic.flank_target"
+      },
+      {
+        "id": "TR-TAC-CENTER",
+        "when": "focus == center",
+        "roles": [
+          "DMC",
+          "MC",
+          "AMC",
+          "ST"
+        ],
+        "skills": [
+          "Passing",
+          "Creativity",
+          "Dribbling",
+          "Shooting",
+          "Finishing"
+        ],
+        "multiplier_add": 0.08,
+        "message": "training.tactic.center"
+      },
+      {
+        "id": "TR-TAC-COUNTER",
+        "when": "won == counter",
+        "roles": [
+          "ML",
+          "MR",
+          "AML",
+          "AMC",
+          "AMR",
+          "ST"
+        ],
+        "skills": [
+          "Speed",
+          "Dribbling",
+          "Passing",
+          "Finishing",
+          "Positioning"
+        ],
+        "multiplier_add": 0.08,
+        "message": "training.tactic.counter"
+      },
+      {
+        "id": "TR-TAC-HIGHPRESS",
+        "when": "pressing == high",
+        "roles": [
+          "DL",
+          "DC",
+          "DR",
+          "DMC",
+          "ML",
+          "MC",
+          "MR"
+        ],
+        "skills": [
+          "Fitness",
+          "Aggression",
+          "Tackling",
+          "Bravery",
+          "Speed"
+        ],
+        "multiplier_add": 0.08,
+        "message": "training.tactic.highpress"
+      },
+      {
+        "id": "TR-TAC-LOWBLOCK",
+        "when": "pressing == low",
+        "roles": [
+          "GK",
+          "DL",
+          "DC",
+          "DR",
+          "DMC"
+        ],
+        "skills": [
+          "Marking",
+          "Tackling",
+          "Positioning",
+          "Heading",
+          "Strength",
+          "Bravery",
+          "Concentration",
+          "Aerial Reach"
+        ],
+        "multiplier_add": 0.08,
+        "message": "training.tactic.lowblock"
+      },
+      {
+        "id": "TR-TAC-BUILDUP",
+        "when": "won == buildup",
+        "roles": [
+          "DC",
+          "DMC",
+          "MC",
+          "AMC"
+        ],
+        "skills": [
+          "Passing",
+          "Creativity",
+          "Dribbling",
+          "Positioning"
+        ],
+        "multiplier_add": 0.05,
+        "message": "training.tactic.buildup"
+      },
+      {
+        "id": "TR-TAC-COUNTERPRESS",
+        "when": "lost == counterPress",
+        "roles": [
+          "DL",
+          "DC",
+          "DR",
+          "DMC",
+          "ML",
+          "MC",
+          "MR",
+          "AML",
+          "AMC",
+          "AMR"
+        ],
+        "skills": [
+          "Fitness",
+          "Aggression",
+          "Tackling",
+          "Bravery",
+          "Speed"
+        ],
+        "multiplier_add": 0.05,
+        "message": "training.tactic.counterpress"
+      },
+      {
+        "id": "TR-TAC-REGROUP",
+        "when": "lost == regroup",
+        "roles": [
+          "DL",
+          "DC",
+          "DR",
+          "DMC",
+          "MC"
+        ],
+        "skills": [
+          "Positioning",
+          "Marking",
+          "Fitness",
+          "Strength",
+          "Bravery"
+        ],
+        "multiplier_add": 0.05,
+        "message": "training.tactic.regroup"
+      },
+      {
+        "id": "TR-TAC-OFFSIDE",
+        "when": "backLine == offside",
+        "roles": [
+          "GK",
+          "DL",
+          "DC",
+          "DR",
+          "DMC"
+        ],
+        "skills": [
+          "Positioning",
+          "Speed",
+          "Communication",
+          "Rushing Out",
+          "Anticipation"
+        ],
+        "multiplier_add": 0.04,
+        "message": "training.tactic.offside"
+      },
+      {
+        "id": "TR-TAC-MANMARK",
+        "when": "marking == man",
+        "roles": [
+          "DL",
+          "DC",
+          "DR",
+          "DMC"
+        ],
+        "skills": [
+          "Marking",
+          "Speed",
+          "Strength",
+          "Positioning"
+        ],
+        "multiplier_add": 0.04,
+        "message": "training.tactic.manmark"
+      },
+      {
+        "id": "TR-TAC-ZONAL",
+        "when": "marking == zonal",
+        "roles": [
+          "GK",
+          "DL",
+          "DC",
+          "DR",
+          "DMC"
+        ],
+        "skills": [
+          "Positioning",
+          "Marking",
+          "Communication",
+          "Concentration"
+        ],
+        "multiplier_add": 0.04,
+        "message": "training.tactic.zonal"
+      },
+      {
+        "id": "TR-TAC-AGGRESSIVE",
+        "when": "tackling == aggressive",
+        "roles": [
+          "DL",
+          "DC",
+          "DR",
+          "DMC",
+          "MC"
+        ],
+        "skills": [
+          "Tackling",
+          "Bravery",
+          "Aggression",
+          "Strength"
+        ],
+        "multiplier_add": 0.04,
+        "message": "training.tactic.aggressive"
+      },
+      {
+        "id": "TR-TAC-STAY",
+        "when": "tackling == stay",
+        "roles": [
+          "DL",
+          "DC",
+          "DR",
+          "DMC"
+        ],
+        "skills": [
+          "Positioning",
+          "Marking",
+          "Speed"
+        ],
+        "multiplier_add": 0.04,
+        "message": "training.tactic.stay"
+      },
+      {
+        "id": "TR-TAC-BOX",
+        "when": "shooting == box",
+        "roles": [
+          "ML",
+          "MC",
+          "MR",
+          "AML",
+          "AMC",
+          "AMR",
+          "ST"
+        ],
+        "skills": [
+          "Passing",
+          "Dribbling",
+          "Finishing",
+          "Positioning",
+          "Creativity"
+        ],
+        "multiplier_add": 0.04,
+        "message": "training.tactic.box"
+      },
+      {
+        "id": "TR-TAC-SIGHT",
+        "when": "shooting == sight",
+        "roles": [
+          "MC",
+          "AML",
+          "AMC",
+          "AMR",
+          "ST"
+        ],
+        "skills": [
+          "Shooting",
+          "Creativity"
+        ],
+        "multiplier_add": 0.04,
+        "message": "training.tactic.sight"
+      },
+      {
+        "id": "TR-TAC-HIGHCROSS",
+        "when": "cross == high",
+        "roles": [
+          "ML",
+          "MR",
+          "AML",
+          "AMR",
+          "AMC",
+          "ST"
+        ],
+        "skills": [
+          "Crossing",
+          "Heading",
+          "Strength",
+          "Positioning",
+          "Finishing"
+        ],
+        "multiplier_add": 0.04,
+        "message": "training.tactic.highcross"
+      },
+      {
+        "id": "TR-TAC-LOWCROSS",
+        "when": "cross == low",
+        "roles": [
+          "ML",
+          "MR",
+          "AML",
+          "AMR",
+          "AMC",
+          "ST"
+        ],
+        "skills": [
+          "Crossing",
+          "Passing",
+          "Dribbling",
+          "Speed",
+          "Finishing"
+        ],
+        "multiplier_add": 0.03,
+        "message": "training.tactic.lowcross"
+      }
+    ],
+    "special_ability_modifiers": {
+      "Playmaker": {
+        "active": true,
+        "confidence": "medium",
+        "skills": [
+          "Passing",
+          "Creativity"
+        ],
+        "multiplier_add": 0.04
+      },
+      "Shadow Striker": {
+        "active": true,
+        "confidence": "medium",
+        "skills": [
+          "Shooting"
+        ],
+        "multiplier_add": 0.04
+      },
+      "Cross Expert": {
+        "active": true,
+        "confidence": "medium",
+        "skills": [
+          "Crossing"
+        ],
+        "multiplier_add": 0.04
+      },
+      "Dribbler": {
+        "active": false,
+        "confidence": "low",
+        "skills": [
+          "Dribbling"
+        ],
+        "multiplier_add": 0.03
+      },
+      "Aerial Defender": {
+        "active": false,
+        "confidence": "low",
+        "skills": [
+          "Heading",
+          "Positioning"
+        ],
+        "multiplier_add": 0.03
+      },
+      "Intercepting Specialist": {
+        "active": false,
+        "confidence": "low",
+        "skills": [
+          "Tackling",
+          "Marking",
+          "Positioning"
+        ],
+        "multiplier_add": 0.03
+      }
+    },
+    "deficiency": {
+      "reference": "Role+Playstyle target-shape normalized reference, not the raw top-three white-skill mean.",
+      "formula": "desired_ratio by tier -> normalized current values -> mean(top three normalized development-role whites) -> per-skill target -> positive target gap -> hierarchy/context weighted need.",
+      "reason": "Creates specialists by making the most valuable white skills intentionally higher than lower-value white skills while still reacting to the player actual current profile."
+    },
+    "drill_scoring": {
+      "verified_intensity_xp_per_player": {
+        "Very Easy": 1,
+        "Easy": 2,
+        "Medium": 3,
+        "Hard": 4,
+        "Very Hard": 5
+      },
+      "verified_condition_drop": {
+        "Very Easy": 0.75,
+        "Easy": 1.5,
+        "Medium": 2.25,
+        "Hard": 3.0,
+        "Very Hard": 3.75
+      },
+      "regular_level_effect_percent": {
+        "Semi-pro": 10,
+        "Pro": 20,
+        "World-class": 30
+      },
+      "strength": "xp_per_player * (1 + training_effect_percent/100)",
+      "harder_drill_policy": "With identical targeted useful white skills and the same level/effect, a higher-intensity drill has strictly higher max-growth utility because its verified base XP is higher.",
+      "base_utility": "strength * sum(remaining_weighted_need for targeted white skills)",
+      "grey_utility": 0,
+      "master_stock": "hard stock limit",
+      "condition_efficient_mode": "compare utility / condition_drop after all legality rules; the base XP/condition ratio is proportional across Very Easy→Very Hard, so intensity alone does not create a fake condition-efficiency advantage.",
+      "exact_gain_boundary": "ExecuteTraining returns the server-authoritative final per-player AttributeGain. The companion ranks drills by verified XP/effect strength but does not claim an exact predicted +X attribute result."
+    },
+    "multi_role_policy": "Use one development role for the main hierarchy; secondary natural roles expand the white-skill union and can add small support value, but do not replace the primary role hierarchy.",
+    "context_caps": {
+      "max_tactic_multiplier_add": 0.2,
+      "max_special_ability_multiplier_add": 0.08,
+      "reason": "Long-term training identity must remain role/Playstyle-led; a current match plan may tune priorities but must not completely redefine the player."
+    },
+    "priority_labels": {
+      "S": "Identity / primary development",
+      "A": "High-value support",
+      "B": "Useful secondary",
+      "C": "Maintenance / lowest white-skill priority"
+    },
+    "gap_labels": {
+      "critical": "weighted need >= 1.35 × median weighted need for this player",
+      "high": "weighted need >= 1.10 × median weighted need",
+      "normal": "between 0.90 and 1.10 × median weighted need",
+      "maintenance": "weighted need < 0.90 × median weighted need",
+      "note": "Labels are relative within the player; they are not claims about hidden game caps."
+    },
+    "output_contract": [
+      "development_role",
+      "active_playstyle_profile",
+      "white_skill_union",
+      "priority_tiers",
+      "target_shape_ratios",
+      "target_by_skill",
+      "target_gap_by_skill",
+      "context_modifiers",
+      "weighted_need_by_skill",
+      "top_development_gaps",
+      "recommended_drills",
+      "drill_reasons",
+      "grey_skills_excluded",
+      "secondary_role_white_support"
+    ],
+    "target_shape": {
+      "status": "CALIBRATION WORKING — ROLE+PLAYSTYLE ATTRIBUTE TILT + VERIFIED INTENSITY GAIN",
+      "provenance": "Transparent companion development model; these are desired relative attribute proportions, not recovered hidden Nordeus coefficients or hard caps.",
+      "tier_target_ratios": {
+        "S": 1.18,
+        "A": 1.05,
+        "B": 0.92,
+        "C": 0.85
+      },
+      "secondary_role_only_ratio": 0.82,
+      "reference": "Maximum current normalized level among the selected development-role white skills that are not S-tier, where normalized level = current skill / desired tier ratio. If the profile has no non-S development skill, use the maximum across all selected development-role white skills.",
+      "target_formula": "normalized_reference = max(current(skill) / desired_ratio(skill)) across non-S development whites; target(skill) = normalized_reference * desired_ratio(skill)",
+      "gap_formula": "target_gap(skill) = max(0, target(skill) - current(skill))",
+      "need_formula": "(target_gap > 0 ? target_gap + 1 : maintenance_floor) * hierarchy_weight * context_multiplier",
+      "maintenance_floor": 0.25,
+      "behaviour": "A flat player is deliberately tilted toward S then A skills relative to the median normalized non-signature white-skill development level. One freak lower-priority attribute cannot move the whole target upward. Once an S skill reaches the desired Role+Playstyle shape, it no longer raises its own reference and therefore collapses to the small maintenance floor. As the supporting white-skill group later improves, the signature targets can rise again to preserve the desired specialist shape.",
+      "no_absolute_cap": "The model does not invent an absolute 180/200/etc player-skill cap. It controls relative shape only.",
+      "reference_policy": "median_normalized_non_signature_development_whites"
+    }
+  },
+  "joint_selection": {
+    "status": "LIVE v0.5.14 COMPLETE OWN-SQUAD TEAM-PLAN SELECTION — FINAL PRE-CALIBRATION",
+    "core_plan_score": "0.50 × formation total + 0.50 × tactics total",
+    "viable_band": "A candidate is Mentor-eligible only when its core plan score is within 10 points of the best core plan.",
+    "mentor_adjustment": "0..10 from the best unlocked Mentor own-plan fit. It is applied only inside the viable band.",
+    "final_score": "core_plan_score + mentor_adjustment for viable candidates; non-viable candidates retain core_plan_score and cannot be rescued by Mentor fit.",
+    "no_mentor_policy": "If no Mentor is unlocked, adjustment is 0 and the plan remains valid.",
+    "tie_break_order": [
+      "higher final score outside 0.5-point near-tie band",
+      "higher core plan score outside 0.5-point near-tie band",
+      "higher set-piece readiness tuple inside the near-tie band",
+      "higher exact final/core score when readiness ties",
+      "lower condition drain",
+      "higher formation weak-link score",
+      "stable formation candidate order"
+    ],
+    "set_piece_integration": "A complete automatic set-piece/captain package is generated for every candidate XI. Penalty/free-kick/corner readiness is a non-additive late tie-break only when both final and core plan scores are within 0.5 points; Captain is gameplay-neutral and excluded. Set pieces cannot rescue a materially weaker plan.",
+    "set_piece_near_tie_points": 0.5
+  },
+  "feature_model": {
+    "status": "AUTHORITATIVE OWN-SQUAD FEATURE DEFINITIONS",
+    "principle": "Every symbolic rule feature resolves from the selected own XI, its current player data, or the selected tactic. Unknown or external information is never requested, inferred or guessed.",
+    "skill_reference": {
+      "assigned_role_white_mean": "Mean of the current player skill values in the build-30527 white-skill map for the role the player is assigned to in this candidate XI.",
+      "xi_quality_median": "Median assigned_role_white_mean across the 11 assigned starters.",
+      "action_cluster": "Mean of the explicitly named current skill values for the eligible players. Match-plan analysis may read any real skill value; the white/grey restriction applies to training utility and Mentor attribute relevance, not to whether a skill value exists.",
+      "strong_cluster": "A player is a strong outlet for a cluster when the cluster is at or above the 67th percentile of eligible own players and is not more than 10 points below xi_quality_median. With fewer than three eligible players, use xi_quality_median - 10 as the floor.",
+      "comparison_margin_points": 5,
+      "quality_gap_points": 10,
+      "tactic_option_full_separation_points": 25
+    },
+    "shape_features": {
+      "centralDef": "count(DC)",
+      "wideDef": "count(DL)+count(DR)",
+      "centralMid": "count(DMC)+count(MC)+count(AMC)",
+      "centralSupport": "count(DMC)+count(MC)",
+      "wideMid": "count(ML)+count(MR)+count(AML)+count(AMR)",
+      "strikers": "count(ST)",
+      "advancedScorers": "count(ST)+count(AMC)+count(AML)+count(AMR)",
+      "restDefense": "count(DL)+count(DC)+count(DR)+count(DMC)",
+      "hasDMC": "count(DMC)>0",
+      "hasAMC": "count(AMC)>0",
+      "hasLeftDef": "count(DL)>0",
+      "hasRightDef": "count(DR)>0",
+      "hasLeftProgression": "count(ML)+count(AML)>0",
+      "hasRightProgression": "count(MR)+count(AMR)>0",
+      "narrow": "count(ML)+count(MR)+count(AML)+count(AMR)==0",
+      "centralHeavy": "centralMid>=3",
+      "leftThreat": "hasLeftProgression",
+      "rightThreat": "hasRightProgression"
+    },
+    "quality_features": {
+      "aerialOutlet": {
+        "eligible_roles": [
+          "ST",
+          "AMC"
+        ],
+        "skills": [
+          "Heading",
+          "Strength",
+          "Positioning"
+        ],
+        "true_when": "credible when any eligible ST/AMC has Target Man or satisfies the existing credible-cluster gate; this prevents false no-target penalties",
+        "reason": "Used only to decide whether deliberate aerial service has a credible receiver."
+      },
+      "counterOutlet": {
+        "eligible_roles": [
+          "ST",
+          "AMC",
+          "AML",
+          "AMR"
+        ],
+        "skills": [
+          "Speed",
+          "Dribbling",
+          "Passing",
+          "Finishing",
+          "Positioning"
+        ],
+        "true_when": "credible when any eligible transition row satisfies the existing credible-cluster gate OR a Poacher/Inside Forward has adequate Speed; this prevents false no-outlet penalties",
+        "reason": "Represents a credible first transition receiver/runner, not a hidden counter-attack multiplier."
+      },
+      "directOutlet": {
+        "true_when": "credible aerial outlet OR credible ST direct cluster OR credible counter outlet; used for no-outlet safety penalties",
+        "reason": "Required before long/direct distribution receives contextual credit."
+      },
+      "technicalBuild": {
+        "eligible_roles": [
+          "DMC",
+          "MC",
+          "AMC",
+          "ML",
+          "MR",
+          "AML",
+          "AMR"
+        ],
+        "skills": [
+          "Passing",
+          "Creativity",
+          "Dribbling"
+        ],
+        "value": "mean action_cluster of eligible starters",
+        "bands": "low < xi_quality_median-5; medium within ±5; high > xi_quality_median+5"
+      },
+      "pressCapacity": {
+        "eligible_roles": [
+          "DL",
+          "DC",
+          "DR",
+          "DMC",
+          "ML",
+          "MC",
+          "MR",
+          "AML",
+          "AMC",
+          "AMR",
+          "ST"
+        ],
+        "skills": [
+          "Fitness",
+          "Aggression",
+          "Tackling",
+          "Bravery",
+          "Speed"
+        ],
+        "value": "mean action_cluster of outfield starters",
+        "bands": "low < xi_quality_median-5; medium within ±5; high > xi_quality_median+5"
+      },
+      "lineSpeed": {
+        "eligible_roles": [
+          "DL",
+          "DC",
+          "DR",
+          "DMC"
+        ],
+        "skills": [
+          "Speed",
+          "Positioning",
+          "Bravery"
+        ],
+        "value": "mean action_cluster of defensive-line/screen starters",
+        "bands": "low < xi_quality_median-5; medium within ±5; high > xi_quality_median+5"
+      },
+      "markerCapacity": {
+        "eligible_roles": [
+          "DL",
+          "DC",
+          "DR",
+          "DMC"
+        ],
+        "skills": [
+          "Marking",
+          "Speed",
+          "Strength",
+          "Positioning"
+        ],
+        "value": "mean action_cluster of defensive markers",
+        "bands": "low < xi_quality_median-5; medium within ±5; high > xi_quality_median+5"
+      },
+      "boxFinishing": {
+        "eligible_roles": [
+          "ST",
+          "AMC",
+          "AML",
+          "AMR"
+        ],
+        "skills": [
+          "Shooting",
+          "Finishing",
+          "Positioning",
+          "Dribbling"
+        ],
+        "value": "mean of best two eligible action_cluster values, or the only value if one exists"
+      },
+      "longShotThreat": {
+        "eligible_roles": [
+          "ST",
+          "AMC",
+          "AML",
+          "AMR",
+          "MC"
+        ],
+        "skills": [
+          "Shooting",
+          "Creativity"
+        ],
+        "value": "mean of best two eligible action_cluster values. Shadow Striker is handled separately as semantic evidence and does not secretly inflate this number."
+      },
+      "dribbleReliance": {
+        "true_when": "at least two advanced starters (AMC/AML/AMR/ST) have Dribbling >= their assigned_role_white_mean OR use False Nine, Enganche or Inside Forward",
+        "reason": "Pre-match context for Shearer tactical-family relevance; it is not assumed from his identity alone."
+      },
+      "defensiveActionDemand": {
+        "bands": "high when selected mentality is defending/hardDefending OR pressing is high with Counter Press; medium when pressing is mid OR tackling is aggressive; low otherwise",
+        "reason": "Own-plan demand feature for Vidić. It describes how defensive-action-heavy the selected tactic is; it does not estimate events from another team."
+      },
+      "directSupport": {
+        "value": "mean of the best available directOutlet/counterOutlet/aerialOutlet cluster; categorical comparison helper only",
+        "bands": "same ±5 banding around xi_quality_median"
+      },
+      "technicalBuildValue": {
+        "value": "same numeric action_cluster mean used to band technicalBuild",
+        "reason": "Numeric companion used only for transparent Mixed-vs-direct support comparison."
+      },
+      "attackUnitQuality": {
+        "eligible_roles": [
+          "AML",
+          "AMC",
+          "AMR",
+          "ST"
+        ],
+        "value": "mean assigned_role_white_mean of advanced starters",
+        "reason": "Own-squad attacking-unit quality used only to choose Auto mentality without opponent information."
+      },
+      "defenseUnitQuality": {
+        "eligible_roles": [
+          "GK",
+          "DL",
+          "DC",
+          "DR",
+          "DMC"
+        ],
+        "value": "mean assigned_role_white_mean of goalkeeper/back-line/screen starters",
+        "reason": "Own-squad defensive-unit quality used only to choose Auto mentality without opponent information."
+      },
+      "attackDefenseDelta": {
+        "value": "attackUnitQuality - defenseUnitQuality",
+        "bands": "attacking support above +margin; defending support below -margin",
+        "reason": "Prevents Auto mentality from choosing Attack/Defend merely because a shape contains enough role labels."
+      },
+      "aerialOutletStrong": {
+        "eligible_roles": [
+          "ST",
+          "AMC"
+        ],
+        "skills": [
+          "Heading",
+          "Strength",
+          "Positioning"
+        ],
+        "true_when": "credible active Target Man OR any eligible aerial cluster > xi_quality_median + comparison margin",
+        "reason": "Positive direct/aerial squad-fit credit requires a real own-XI strength; mere feasibility is not itself a bonus."
+      },
+      "counterOutletStrong": {
+        "eligible_roles": [
+          "ST",
+          "AMC",
+          "AML",
+          "AMR"
+        ],
+        "skills": [
+          "Speed",
+          "Dribbling",
+          "Passing",
+          "Finishing",
+          "Positioning"
+        ],
+        "true_when": "active credible Poacher/Inside Forward OR any eligible transition cluster > xi_quality_median + comparison margin",
+        "reason": "Positive counter squad-fit credit requires a real own-XI transition strength; generic forward existence is only feasibility."
+      },
+      "directOutletStrong": {
+        "true_when": "aerialOutletStrong OR strong ST Strength+Positioning+Heading cluster OR counterOutletStrong",
+        "reason": "Positive Long-passing squad-fit credit requires an actual direct/transition strength, not merely a playable forward."
+      }
+    },
+    "evaluation_context": {
+      "mode": "prematch_own_squad_only",
+      "runtime_inputs": [
+        "own squad",
+        "candidate XI assignments",
+        "player skills",
+        "active Playstyles",
+        "Special Abilities",
+        "saved Mentor unlock/level",
+        "Approach",
+        "Drain Limit"
+      ],
+      "external_context_policy": "Unavailable external or live-match conditions contribute zero rather than being estimated."
+    }
+  },
+  "recommendation_output": {
+    "best_available_now": {
+      "formation": [
+        "name",
+        "assigned_xi",
+        "score_components",
+        "rule_reasons",
+        "warnings"
+      ],
+      "tactics": [
+        "11_values",
+        "drain_raw",
+        "drain_class",
+        "score_components",
+        "rule_reasons",
+        "contradictions"
+      ],
+      "mentor": [
+        "name",
+        "level",
+        "prestige",
+        "unlocked_effects_used",
+        "locked_effects_ignored",
+        "tradeoffs",
+        "next_unlock",
+        "why"
+      ],
+      "alternatives": "Keep at least two strategically different viable core plans when their final scores are close."
+    },
+    "squad_blueprint": [
+      "coverage_score",
+      "core_slots",
+      "weak_slots",
+      "missing_slots",
+      "flexibility_gaps",
+      "availability_depth_gaps",
+      "recommended_player_profiles",
+      "versatile_players"
+    ],
+    "training": [
+      "per-player development role",
+      "role/Playstyle hierarchy",
+      "desired attribute tilt",
+      "current target gaps",
+      "Team Plan tactic context",
+      "six-drill recommendation"
+    ],
+    "explainability": "Every non-zero companion rule contribution must surface a valid message key. Scores without reasons are test failures.",
+    "runtime_scope": "Own-squad pre-match planning only. Formation, Tactics, Set Pieces/Captain, Mentor and player-development context are derived from the manager own squad; Captain is treated as gameplay-neutral; no scouting fields are produced or consumed.",
+    "set_pieces": [
+      "corner_right",
+      "corner_left",
+      "free_kick_right",
+      "free_kick_left",
+      "ordered_penalties",
+      "captain",
+      "ranking_reasons",
+      "manual_override_state"
+    ]
+  }
+}

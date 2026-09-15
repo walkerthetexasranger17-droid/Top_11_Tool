@@ -11,6 +11,8 @@
   const ATTRIBUTE_IDS={...OD.whiteSkillMap.attribute_ids};
   const ATTRIBUTE_NAMES_BY_ID=Object.fromEntries(Object.entries(ATTRIBUTE_IDS).map(([name,id])=>[String(id),name]));
   function normaliseRole(role){const r=String(role||'').trim().toUpperCase();return ALL_POSITIONS.includes(r)?r:'';}
+  function skillValue(skills,attribute){const raw=skills?.[attribute];if(raw===undefined||raw===null||raw==='')return null;const n=Number(raw);return Number.isFinite(n)?n:null;}
+  function missingSkills(skills,attributes){return (attributes||[]).filter(a=>skillValue(skills,a)===null);}
   function whiteSkillsForRoles(roles){const out=[];for(const role of Array.isArray(roles)?roles:[roles]){const r=normaliseRole(role);if(!r)continue;for(const skill of POSITION_WHITE[r]||[])if(!out.includes(skill))out.push(skill);}return out;}
   function isGoalkeeperRoles(roles){return (Array.isArray(roles)?roles:[roles]).map(normaliseRole).includes('GK');}
   function applicableSkillsForRoles(roles){return isGoalkeeperRoles(roles)?[...GK_SKILLS,...GK_PHYSICAL]:[...OUTFIELD_SKILLS];}
@@ -23,5 +25,5 @@
   function playstylesForRoles(roles){const set=new Set((Array.isArray(roles)?roles:[roles]).map(normaliseRole).filter(Boolean));return B.PLAYSTYLES.filter(x=>x.id!==1&&x.offer!==false&&x.roles.some(r=>set.has(r))).map(x=>x.name);}
   function playstyleDefinition(value){if(!value)return B.PLAYSTYLES[0];const s=typeof value==='object'?(value.type||value.name):value;return B.PLAYSTYLES.find(x=>x.type===s||x.name===s)||null;}
   const TEAM_GROUPS={defence:{title:'GK & Defence',positions:['GK','DL','DC','DR']},midfield:{title:'Defence & Midfield',positions:['DL','DC','DR','DMC','ML','MC','MR']},attack:{title:'Attacking Mid & Strikers',positions:['AML','AMC','AMR','ST']},all:{title:'All Positions',positions:[...ALL_POSITIONS]}};
-  TE.Data={GAME_DATA_VERSION:B.GAME_DATA_VERSION,OUTFIELD_SKILLS,GK_SKILLS,GK_PHYSICAL,GROUPS_OUTFIELD,GROUPS_GK,POSITION_WHITE,ATTRIBUTE_IDS,ATTRIBUTE_NAMES_BY_ID,NORMAL_DRILLS,MASTER_CAMPUS_DRILLS,POSITION_ORDER,ALL_POSITIONS,SPECIAL_ABILITIES,SPECIAL_ABILITY_DISPLAY_ALIASES,PLAYSTYLES,LEGACY_PLAYSTYLES,PLAYSTYLE_LEVELS:B.PLAYSTYLE_LEVELS,TEAM_GROUPS,normaliseRole,whiteSkillsForRoles,isGoalkeeperRoles,applicableSkillsForRoles,playstylesForRoles,playstyleDefinition,DRILL_LEVELS:OD.drillLevels,INTENSITY_SYSTEM:OD.intensitySystem,ROLE_RECTS:B.ROLE_RECTS,ROLE_IDS:B.ROLE_IDS};
+  TE.Data={GAME_DATA_VERSION:B.GAME_DATA_VERSION,OUTFIELD_SKILLS,GK_SKILLS,GK_PHYSICAL,GROUPS_OUTFIELD,GROUPS_GK,POSITION_WHITE,ATTRIBUTE_IDS,ATTRIBUTE_NAMES_BY_ID,NORMAL_DRILLS,MASTER_CAMPUS_DRILLS,POSITION_ORDER,ALL_POSITIONS,SPECIAL_ABILITIES,SPECIAL_ABILITY_DISPLAY_ALIASES,PLAYSTYLES,LEGACY_PLAYSTYLES,PLAYSTYLE_LEVELS:B.PLAYSTYLE_LEVELS,TEAM_GROUPS,normaliseRole,skillValue,missingSkills,whiteSkillsForRoles,isGoalkeeperRoles,applicableSkillsForRoles,playstylesForRoles,playstyleDefinition,DRILL_LEVELS:OD.drillLevels,INTENSITY_SYSTEM:OD.intensitySystem,ROLE_RECTS:B.ROLE_RECTS,ROLE_IDS:B.ROLE_IDS};
 })();

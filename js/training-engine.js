@@ -1,7 +1,7 @@
 (() => {
   const TE=window.TE5=window.TE5||{};const D=TE.Data,STRAT=TE.Strategy;
   if(!D||!STRAT)throw new Error('data.js and strategy-logic.js must load before training-engine.js');
-  const MODEL_VERSION='30527-white-beam-v4-intensity-gain',BEAM_WIDTH=250;
+  const MODEL_VERSION='30527-white-beam-v5-mode-depth',BEAM_WIDTH=250,CONDITION_BEAM_WIDTH=1000;
 
   function rolesFor(player,roles,position){
     const raw=Array.isArray(roles)?roles:(Array.isArray(player?.roles)?player.roles:[position||player?.position]);
@@ -11,15 +11,21 @@
   function whiteSkillsFor(player,roles,position){return D.whiteSkillsForRoles(rolesFor(player,roles,position));}
   function applicableSkillsFor(player,roles,position){return D.applicableSkillsForRoles(rolesFor(player,roles,position));}
   function buildNeeds(white,skills,priorityProfile={},developmentWhite=null){
-    const missing=white.filter(a=>skills?.[a]===undefined||skills?.[a]===null||skills?.[a]==='');
-    const values=Object.fromEntries(white.map(a=>[a,Number(skills?.[a]??0)]));
+    const missing=white.filter(a=>D.skillValue(skills,a)===null);
+    const values=Object.fromEntries(white.map(a=>[a,D.skillValue(skills,a)??0]));
     const rows=Array.isArray(priorityProfile)?priorityProfile:[],rowMap=Object.fromEntries(rows.map(r=>[r.attribute,r]));
     const legacyWeights=!rows.length&&priorityProfile&&typeof priorityProfile==='object'?priorityProfile:{};
     const primary=(Array.isArray(developmentWhite)&&developmentWhite.length?developmentWhite:white).filter(a=>white.includes(a));
     const ratios={},normalisedLevels={};
     for(const a of white){const row=rowMap[a],ratio=Math.max(.01,Number(row?.targetRatio??1));ratios[a]=ratio;normalisedLevels[a]=values[a]/ratio;}
-    const refPool=primary.map(a=>normalisedLevels[a]).filter(Number.isFinite).sort((a,b)=>b-a),top=refPool.slice(0,Math.min(3,refPool.length));
-    const normalizedReference=top.length?top.reduce((a,b)=>a+b,0)/top.length:0,targets={},gaps={},need={};
+    // Anchor the target shape to the median normalized non-signature (non-S) development skill.
+    // Median anchoring keeps the player's underlying development level stable while resisting a single
+    // freakishly high lower-tier white. Excluding S prevents a newly developed signature skill from
+    // moving its own goalpost upward. If a profile has only S skills, fall back to all development whites.
+    const primaryRows=primary.map(a=>({attribute:a,row:rowMap[a],level:normalisedLevels[a]})).filter(x=>Number.isFinite(x.level));
+    const anchorRows=primaryRows.filter(x=>(x.row?.tier||'C')!=='S'),refRows=anchorRows.length?anchorRows:primaryRows;
+    const sortedReferenceLevels=refRows.map(x=>x.level).sort((a,b)=>a-b);
+    const mid=Math.floor(sortedReferenceLevels.length/2),normalizedReference=sortedReferenceLevels.length?(sortedReferenceLevels.length%2?sortedReferenceLevels[mid]:(sortedReferenceLevels[mid-1]+sortedReferenceLevels[mid])/2):0,targets={},gaps={},need={};
     const maintenanceFloor=Math.max(.01,Number(STRAT.TARGET_SHAPE?.maintenance_floor??.25));
     for(const a of white){
       const row=rowMap[a],ratio=ratios[a],target=normalizedReference*ratio,gap=Math.max(0,target-values[a]);
@@ -75,6 +81,7 @@
   }
   function initialMasterRemaining(candidates){const out={};for(const c of candidates)if(c.isMaster)out[c.drillId]=Math.max(0,Math.trunc(Number(c.quantity)||0));return out;}
   function beamSearch(candidates,need,masterStock,slots=6,mode='maxGrowth'){
+    const beamWidth=mode==='conditionEfficient'?CONDITION_BEAM_WIDTH:BEAM_WIDTH;
     const weakSet=new Set(Object.keys(need||{}).filter(a=>Number(need[a])>1));
     let beam=[{selected:[],credit:{},masterUsage:{},remainingMasterStock:initialMasterRemaining(candidates),utility:0,covered:new Set(),weakCovered:new Set(),totalCondition:0,totalXp:0}];
     for(let slot=0;slot<slots;slot++){
@@ -91,7 +98,7 @@
           totalCondition:state.totalCondition+(Number(c.conditionDrop)||0),totalXp:state.totalXp+(Number(c.xpPerPlayer)||0)
         });
       }}
-      if(!next.length)break;next.sort((a,b)=>compareStates(a,b,mode));beam=next.slice(0,BEAM_WIDTH);
+      if(!next.length)break;next.sort((a,b)=>compareStates(a,b,mode));beam=next.slice(0,beamWidth);
     }
     return beam.sort((a,b)=>compareStates(a,b,mode))[0]||null;
   }
@@ -109,7 +116,7 @@
     return{
       drills:best.selected,error:best.selected.length===slots?null:'insufficient-legal-drills',
       meta:{
-        model:MODEL_VERSION,gameDataVersion:D.GAME_DATA_VERSION,beamWidth:BEAM_WIDTH,mode,roles:resolvedRoles,whiteAttributes:white,applicableAttributes:applicable,
+        model:MODEL_VERSION,gameDataVersion:D.GAME_DATA_VERSION,beamWidth:mode==='conditionEfficient'?CONDITION_BEAM_WIDTH:BEAM_WIDTH,mode,roles:resolvedRoles,whiteAttributes:white,applicableAttributes:applicable,
         target:needs.target,normalizedReference:needs.normalizedReference,targetByAttribute:needs.targets,targetGapByAttribute:needs.gaps,targetRatioByAttribute:needs.ratios,baseNeed:needs.need,sessionCredit:best.credit,priorityAttributes,weakWhiteAttributes:[...needs.weakAttributes],
         coveredWhiteAttributes:[...best.covered],coveredWeakWhiteAttributes:[...best.weakCovered],totalUsefulScore:best.utility,totalCondition:best.totalCondition,totalXp:best.totalXp,
         masterUsage:best.masterUsage,remainingMasterStock,normalCandidateCount:normalCandidates.length,masterCandidateCount:masterCandidates.length,
@@ -118,11 +125,12 @@
     };
   }
   function evaluateCatalogue({player,roles,position,skills,normalProfile,masterStock,tactics=null,developmentRole=null}={}){
-    const resolvedRoles=rolesFor(player,roles,position),white=whiteSkillsFor(player,resolvedRoles),applicable=applicableSkillsFor(player,resolvedRoles),hierarchy=STRAT.trainingPriorityProfile(player,{roles:resolvedRoles,tactics,developmentRole}),developmentWhite=D.POSITION_WHITE[hierarchy.developmentRole]||white,needs=buildNeeds(white,skills||player?.skills||{},hierarchy.priorities,developmentWhite),whiteSet=new Set(white),applicableSet=new Set(applicable);
-    const rows=[...D.NORMAL_DRILLS.map(d=>candidateFromNormal(d,normalProfile,whiteSet,applicableSet)),...D.MASTER_CAMPUS_DRILLS.map(d=>candidateFromMaster(d,masterStock,whiteSet,applicableSet))]
+    const resolvedRoles=rolesFor(player,roles,position),white=whiteSkillsFor(player,resolvedRoles),applicable=applicableSkillsFor(player,resolvedRoles),hierarchy=STRAT.trainingPriorityProfile(player,{roles:resolvedRoles,tactics,developmentRole}),developmentWhite=D.POSITION_WHITE[hierarchy.developmentRole]||white,needs=buildNeeds(white,skills||player?.skills||{},hierarchy.priorities,developmentWhite);
+    if(needs.missing.length)return{roles:resolvedRoles,white,applicable,needs,hierarchy,rows:[],error:'missing-white-attributes',missingAttributes:needs.missing};
+    const whiteSet=new Set(white),applicableSet=new Set(applicable),rows=[...D.NORMAL_DRILLS.map(d=>candidateFromNormal(d,normalProfile,whiteSet,applicableSet)),...D.MASTER_CAMPUS_DRILLS.map(d=>candidateFromMaster(d,masterStock,whiteSet,applicableSet))]
       .filter(Boolean).map(candidate=>({candidate,metric:scoreCandidate(candidate,needs.need,{})}))
       .sort((a,b)=>b.metric.score-a.metric.score||b.metric.whiteCoverageCount-a.metric.whiteCoverageCount||a.candidate.catalogueOrder-b.candidate.catalogueOrder);
-    return{roles:resolvedRoles,white,applicable,needs,hierarchy,rows};
+    return{roles:resolvedRoles,white,applicable,needs,hierarchy,rows,error:null};
   }
-  TE.Training={MODEL_VERSION,BEAM_WIDTH,rolesFor,whiteSkillsFor,applicableSkillsFor,buildNeeds,levelEffectPct,levelName,trainingStrength,buildIndividualSession,evaluateCatalogue,scoreCandidate,beamSearch,compareStates};
+  TE.Training={MODEL_VERSION,BEAM_WIDTH,CONDITION_BEAM_WIDTH,rolesFor,whiteSkillsFor,applicableSkillsFor,buildNeeds,levelEffectPct,levelName,trainingStrength,buildIndividualSession,evaluateCatalogue,scoreCandidate,beamSearch,compareStates};
 })();

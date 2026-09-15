@@ -100,11 +100,12 @@ assert not missing_strings,missing_strings
 assert len(strings)>=len(set(refs)), (len(strings),len(set(refs)))
 
 
-# v0.5.14 architecture boundary: active contract accepts no external-team, relative-strength or live-state symbols.
-assert logic['version']=='v0.5.14'
+# v0.5.15 calibration architecture boundary: active contract accepts no external-team, relative-strength or live-state symbols.
+assert logic['version']=='v0.5.15-calibration'
 assert 'strength_bands' not in logic
 assert 'opponent_features' not in logic['feature_model']
-assert logic['formation']['score_components']=={'lineup_quality':35,'playstyle_role_fit':10,'weak_link':15,'core_structure':30,'formation_flexibility':10}
+assert logic['formation']['score_components']=={'lineup_quality':40,'playstyle_role_fit':10,'weak_link':20,'core_structure':30,'formation_flexibility':0}
+assert logic['formation']['structure_raw_range']['min']==-13 and logic['formation']['structure_raw_range']['neutral']==0 and logic['formation']['structure_raw_range']['max']==30
 assert logic['tactics']['score_components']=={'native_lineup_fit':32,'own_squad_structure':26,'internal_coherence':18,'playstyle_and_sa_fit':14,'drain_efficiency':10}
 assert len(logic['formation']['candidates'])==12
 assert {r.get('bucket') for r in logic['tactics']['rules']}<={'own_squad_structure','internal_coherence','playstyle_and_sa_fit'}
@@ -135,7 +136,7 @@ assert logic['mentors']['state_policy']['unlock_gate']
 assert logic['mentors']['scoring']['formula']['attribute']
 assert logic['recommendation_output']['explainability']
 
-# v0.5.14 target-shape Training contract deliberately tilts higher-value white skills.
+# v0.5.15 calibration target-shape Training contract deliberately tilts higher-value white skills.
 target=logic['training']['target_shape']
 assert target['tier_target_ratios']=={'S':1.18,'A':1.05,'B':0.92,'C':0.85}
 assert target['secondary_role_only_ratio']<target['tier_target_ratios']['C']
@@ -152,7 +153,7 @@ assert 'server-authoritative' in scoring['exact_gain_boundary']
 sp=logic['set_pieces']
 assert 'captain' in sp['slots'] and sp['captain']['status'].startswith('GAMEPLAY-NEUTRAL') and sp['captain']['gameplay_effect_points']==0
 assert 'late deterministic tie-break' in sp['team_plan_influence'] and 'Captain is explicitly excluded' in sp['team_plan_influence']
-assert 'higher set-piece readiness tuple' in logic['joint_selection']['tie_break_order']
+assert any('higher set-piece readiness tuple' in x for x in logic['joint_selection']['tie_break_order'])
 assert logic['recommendation_output']['set_pieces']
 # All coverage layers must use distinct IDs and known roles.
 coverage_ids=[]

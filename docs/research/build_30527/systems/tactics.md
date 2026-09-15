@@ -9,7 +9,7 @@ Native addresses:
 - `ResolveIntensity` — `0x44C2450`
 - `ResolveTotalDrainIntensity` — `0x44C2498`
 
-Exact defaults:
+Exact **constructor/default** values (not automatically authoritative for a live 2027 session):
 - base/min drain `15`
 - normalize factor `100`
 - Low `0`
@@ -30,6 +30,14 @@ else => Low
 ```
 
 Threshold comparisons are strict `>`.
+
+### Live-2027 calibration boundary
+
+The current client can receive `TacticsConditionDrainSpec`/override state at runtime. Therefore the constructor/default map above proves the fallback algorithm and defaults, **not that the live service is still using those option intensities today**.
+
+On 2026-09-15 the user performed a controlled UI drain-bar sweep. The observed relative ordering/cost steps are preserved in `docs/research/calibration/V0515_TACTICS_DRAIN_LIVE_RECALIBRATION.md` and `data/calibration/live_tactics_drain_observation_2026-09-15.json`. The most important direct contradiction is Tackling: live UI shows Stay On Feet cheapest, Balanced next, Aggressive highest, whereas the constructor/default map has Balanced Low, Aggressive Medium, Stay On Feet High.
+
+Until the live Low→Medium and Medium→High transition anchors are measured, calibration may use the observed relative costs to rank condition expense under an unconstrained High budget, but must **not guess the current class thresholds**. Production fallback/default calculations remain separately identifiable as legacy/default evidence.
 
 ## Current 11 dimensions
 
@@ -54,7 +62,7 @@ The verbatim extract is in `../source_archive/TACTICS_V2_TOOLTIP_EXTRACT.txt`.
 
 ## Recommendation boundary
 
-No authoritative numerical “best tactics for this XI” score has been recovered. The app's XI-fit recommendation is **COMPANION LOGIC** constrained by exact drain and supported semantics.
+No authoritative numerical “best tactics for this XI” score has been recovered. The app's XI-fit recommendation is **COMPANION LOGIC** constrained by the best currently verified drain evidence and supported semantics.
 
 v0.5.2 deliberately removed the old hand-authored Approach aggression/style index from the ten non-Mentality dimensions. Approach now locks Mentality; other settings are driven by XI support and evidence-backed ties.
 

@@ -6,14 +6,16 @@
       "id": "TACTICS-001",
       "system": "tactics",
       "status": "GAME_FACT",
-      "title": "Exact condition drain arithmetic",
-      "summary": "11 tactic dimensions are summed from Low/Medium/High option intensities using defaults 0/5/7 plus base 15, normalized by 100; classification thresholds are strict >0.40 and >0.65.",
+      "title": "Exact condition drain arithmetic and constructor defaults",
+      "summary": "Client arithmetic is proven: 11 tactic dimensions are resolved through Low/Medium/High intensity values, added to MinConditionDrain, normalized, then classified by strict thresholds. Build-30527 constructor defaults are 0/5/7 + base 15 with >0.40/>0.65 thresholds; these are fallback/default facts, not proof of the current live-2027 runtime override state.",
       "confidence": "high",
       "sources": [
         "source_archive/NATIVE_FORMULAS_PASS1.md",
         "source_archive/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.1_VERIFIED.md"
       ],
-      "unresolved": []
+      "unresolved": [
+        "Current live runtime overrides/settings, if any"
+      ]
     },
     {
       "id": "TACTICS-002",
@@ -448,15 +450,18 @@
     {
       "id": "TACTICS-004",
       "system": "tactics",
-      "status": "COMPANION_LOGIC",
-      "title": "Target formation should be a tactic-flexible platform, not a fixed tactic preset",
-      "summary": "The DMC+MC target keeps both flanks and a full central spine occupied, so tactic selection can remain XI/context-driven under exact drain constraints. No single passing/focus/cross/pressing preset is hard-coded from formation alone.",
-      "confidence": "high as companion design boundary",
+      "status": "LIVE_CALIBRATION_OBSERVATION",
+      "title": "2026-09-15 live UI drain intensities and pure-class transition counts supersede constructor defaults for current calibration",
+      "summary": "Controlled live UI testing classified every current tactic option as observed Low/Medium/High intensity (0/1/2 labels only, not linear points). Tackling is Stay On Feet Low, Balanced Medium, Aggressive High. From an all-Low baseline, Medium-only plans first become overall Medium at 3 choices and High at 9; High-only plans first become Medium at 2 choices and High at 6. Mixed Medium/High weighting remains unresolved, so the live profile must not invent a numeric total.",
+      "confidence": "high for per-option intensity classes and pure Medium-only/High-only transition counts; mixed Medium/High numeric weighting remains unresolved",
       "sources": [
-        "docs/research/build_30527/systems/tactics_target_integration.md"
+        "data/calibration/live_tactics_drain_observation_2026-09-15.json",
+        "docs/research/calibration/V0515_TACTICS_DRAIN_LIVE_RECALIBRATION.md"
       ],
       "unresolved": [
-        "Private option effectiveness weights"
+        "mixed Medium/High exchange rate / class boundaries",
+        "exact runtime numeric Low/Medium/High contribution values and normalization",
+        "exact per-match condition percentage caused by each tactic package"
       ]
     },
     {

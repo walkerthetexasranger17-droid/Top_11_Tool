@@ -1,14 +1,26 @@
+# v0.5.15 CALIBRATION HANDOFF SNAPSHOT
+
+**IMPORTANT:** This folder is the current pre-release calibration working state built on the frozen v0.5.14 runtime baseline. It is packaged as **v0.5.15 calibration handoff** so another chat can resume the exact work. It is **not yet a release-frozen v0.5.15**.
+
+**Read first:** `CALIBRATION_RECOVERY_HANDOFF_v0.5.15.md`
+
+That handoff is the authoritative recovery map for all calibration changes, live drain findings, unresolved boundaries, regression status, and the precise next task. Preserve the whole folder when passing the project to another chat.
+
+---
+
 # START HERE — Top Eleven Tool
 
-**Current app version: v0.5.14**  
+**Current working app: v0.5.15 CALIBRATION HANDOFF (release baseline v0.5.14)**  
 **Game reference: Top Eleven build 30527 / Windows package 27.3.0.0**
 
 This is the single recovery entry point for a new chat/session.
 
 ## Read in this order before changing code
 
-1. `docs/continuity/CURRENT_STATE.md`
-2. `docs/research/build_30527/V0514_FINAL_PRECALIBRATION_CHECKPOINT.md`
+1. `CALIBRATION_RECOVERY_HANDOFF_v0.5.15.md`
+2. `docs/continuity/CURRENT_STATE.md`
+3. `docs/research/build_30527/V0515_AFFINITY_RUNTIME_CALIBRATION_CHECKPOINT.md`
+4. `docs/research/build_30527/V0514_FINAL_PRECALIBRATION_CHECKPOINT.md`
 3. `docs/research/build_30527/V0513_COMPLETE_TEAM_PLAN_STITCHING_CHECKPOINT.md`
 4. `docs/research/build_30527/V0512_OWN_SQUAD_EVALUATOR_CHECKPOINT.md`
 5. `docs/research/build_30527/V0511_DECISION_LOGIC_BIBLE.md`
@@ -36,7 +48,7 @@ Do not ask the user to reconstruct the project history.
 
 ## One-line checkpoint
 
-v0.5.14 is the **final pre-calibration logic checkpoint**. It preserves the complete own-squad Team Plan stitching from v0.5.13, locks the recovered 1/2/3/4/5 regular-drill base-XP intensity ladder into Training selection, and treats Captain as gameplay-neutral with zero Team Plan score. Highest OVR is only the automatic convenience default; any starter may be selected manually. Role+Playstyle target-shape logic still deliberately tilts signature white skills above lower-value whites. Scanner v0.4.18 remains frozen.
+v0.5.14 remains the **frozen release baseline**; the current v0.5.15 handoff is an active calibration working tree. The latest completed pass confirmed the declared Playstyle/SA tactic affinities are genuine runtime logic, enforced assigned-role eligibility, removed pure identity-only double counting against existing explicit tactic rules, and proved the exact post-de-dup semantic range is 74 raw -> 14 points. Winger/Wing Back focus affinity remains side-aware and named Playstyle levels remain normalized at the shared runtime boundary. It preserves the complete own-squad Team Plan stitching from v0.5.13, locks the recovered 1/2/3/4/5 regular-drill base-XP intensity ladder into Training selection, and treats Captain as gameplay-neutral with zero Team Plan score. Highest OVR is only the automatic convenience default; any starter may be selected manually. Role+Playstyle target-shape logic still deliberately tilts signature white skills above lower-value whites. Scanner v0.4.18 remains frozen.
 
 ## Permanent architecture rules
 

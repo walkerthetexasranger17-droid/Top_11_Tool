@@ -1,0 +1,74 @@
+const fs=require('fs'),vm=require('vm'),path=require('path');
+global.window=global;global.localStorage={_m:new Map(),getItem(k){return this._m.has(k)?this._m.get(k):null},setItem(k,v){this._m.set(k,String(v))},removeItem(k){this._m.delete(k)},key(i){return [...this._m.keys()][i]||null},clear(){this._m.clear()},get length(){return this._m.size}};
+const ROOT=path.join(__dirname,'..');for(const f of ['optimizer-data.js','bible-data.js','data.js','recommendations.js'])vm.runInThisContext(fs.readFileSync(path.join(ROOT,'js',f),'utf8'),{filename:f});
+const {Data:D,Recommendations:R}=global.TE5;let failures=[],assertions=0;
+function ok(cond,msg){assertions++;if(!cond)failures.push(msg)}
+const attrs=Object.keys(D.ATTRIBUTE_IDS);
+function p(key,{role='ST',ovr=100,base=100,sa=[],skills={}}={}){return{key,name:key,position:role,roles:[role],ovr,skills:{...Object.fromEntries(attrs.map(a=>[a,base])),...skills},specialAbilities:sa};}
+function e(player,role=player.position){const whites=D.POSITION_WHITE[role]||[],vals=whites.map(a=>Number(player.skills[a])).filter(Number.isFinite);return{player,assignedRole:role,roleMean:vals.length?vals.reduce((a,b)=>a+b,0)/vals.length:0,roleFloor:vals.length?Math.min(...vals):0};}
+function starters(list){return list.map(x=>e(x));}
+// 1. Real specialist identity is lexicographically first: a moderately weaker specialist must beat a better raw non-specialist.
+{
+ const spec=p('pen-spec',{ovr:95,base:95,sa:['Penalty Kick Specialist'],skills:{Finishing:95,Shooting:95,Creativity:95}}),raw=p('raw-star',{ovr:110,base:110,skills:{Finishing:110,Shooting:110,Creativity:110}});
+ const r=R.rankPenalty(starters([raw,spec]));ok(r[0].player.key==='pen-spec','Penalty specialist did not outrank stronger raw non-specialist');
+}
+{
+ const spec=p('fk-spec',{ovr:95,base:95,sa:['Free Kick Specialist']}),raw=p('raw-star',{ovr:110,base:110});
+ const r=R.rankFreeKick(starters([raw,spec]));ok(r[0].player.key==='fk-spec','Free-kick specialist did not outrank stronger raw non-specialist');
+}
+{
+ const corner=p('corner-spec',{ovr:90,base:90,sa:['Corner Specialist']}),setpiece=p('setpiece',{ovr:105,base:105,sa:['Set Piece Taker']}),raw=p('raw-star',{ovr:120,base:120});
+ const r=R.rankCorner(starters([raw,setpiece,corner]));ok(r[0].player.key==='corner-spec','Corner Specialist did not outrank Set Piece Taker/raw player');ok(r[1].player.key==='setpiece','Set Piece Taker did not outrank raw non-specialist');
+}
+// 1b. Set Piece Taker is a conservative second specialist tier for all three dead-ball families.
+{
+ const dedicatedPen=p('ded-pen',{ovr:90,base:90,sa:['Penalty Kick Specialist']}),combined=p('combined',{ovr:105,base:105,sa:['Set Piece Taker']}),raw=p('raw',{ovr:120,base:120});
+ const rp=R.rankPenalty(starters([raw,combined,dedicatedPen]));ok(rp[0].player.key==='ded-pen'&&rp[1].player.key==='combined','Penalty hierarchy did not rank dedicated specialist > Set Piece Taker > raw');
+ const dedicatedFk=p('ded-fk',{ovr:90,base:90,sa:['Free Kick Specialist']}),rf=R.rankFreeKick(starters([raw,combined,dedicatedFk]));ok(rf[0].player.key==='ded-fk'&&rf[1].player.key==='combined','Free-kick hierarchy did not rank dedicated specialist > Set Piece Taker > raw');
+}
+// 2. Within the same specialist tier, the relevant skill cluster must decide the order.
+{
+ const a=p('pen-a',{sa:['Penalty Kick Specialist'],skills:{Finishing:130,Shooting:120,Creativity:80}}),b=p('pen-b',{sa:['Penalty Kick Specialist'],skills:{Finishing:110,Shooting:110,Creativity:200}});
+ const r=R.rankPenalty(starters([b,a]));ok(r[0].player.key==='pen-a','Penalty relevant Finishing/Shooting cluster did not beat Creativity within same specialist tier');
+}
+{
+ const a=p('fk-a',{sa:['Free Kick Specialist'],skills:{Shooting:130,Finishing:125,Passing:120,Creativity:115}}),b=p('fk-b',{sa:['Free Kick Specialist'],skills:{Shooting:100,Finishing:100,Passing:100,Creativity:100}});
+ const r=R.rankFreeKick(starters([b,a]));ok(r[0].player.key==='fk-a','Free-kick skill cluster did not rank correctly within same specialist tier');
+}
+{
+ const a=p('corner-a',{sa:['Corner Specialist'],skills:{Crossing:140,Passing:120,Creativity:120}}),b=p('corner-b',{sa:['Corner Specialist'],skills:{Crossing:100,Passing:100,Creativity:100}});
+ const r=R.rankCorner(starters([b,a]));ok(r[0].player.key==='corner-a','Corner skill cluster did not rank correctly within same specialist tier');
+}
+// 3. Full automatic package: five unique penalties and captain auto-filled.
+{
+ const list=Array.from({length:11},(_,i)=>p(`p${i+1}`,{role:i<4?'DC':i<8?'MC':'ST',ovr:100+i,base:100+i,sa:i===0?['Penalty Kick Specialist']:i===1?['Free Kick Specialist']:i===2?['Corner Specialist']:[]}));
+ const plan=R.buildSetPiecePlan(starters(list)),pens=['penalty1','penalty2','penalty3','penalty4','penalty5'].map(k=>plan.assignments[k]);
+ ok(pens.every(Boolean),'Automatic package left a penalty slot empty');ok(new Set(pens).size===5,'Automatic penalty hierarchy contains duplicate players');ok(Boolean(plan.assignments.captain),'Automatic package left captain empty');ok(plan.assignments.captain==='p11','Captain convenience default is not highest OVR starter');
+}
+// 4. Captain is performance-neutral: changing only captain convenience ordering cannot change readiness tie tuple.
+{
+ const base=[p('a',{ovr:120,base:100}),p('b',{ovr:110,base:100,sa:['Penalty Kick Specialist']}),p('c',{ovr:105,base:100,sa:['Free Kick Specialist']}),p('d',{ovr:100,base:100,sa:['Corner Specialist']})];
+ const x=R.buildSetPiecePlan(starters(base)),changed=base.map(z=>({...z,skills:{...z.skills}}));changed[0].ovr=80;changed[3].ovr=140;const y=R.buildSetPiecePlan(starters(changed));
+ ok(x.assignments.captain!==y.assignments.captain,'Captain fixture did not actually change captain default');ok(JSON.stringify(x.readiness.tieTuple)===JSON.stringify(y.readiness.tieTuple),'Captain change leaked into Set-Piece readiness/Team Plan tie-break');ok(R.compareReadiness(x,y)===0,'Captain change affected compareReadiness');
+}
+
+// 4b. Team-plan readiness preserves dedicated-specialist superiority over generic Set Piece Taker.
+{
+ const dedicated=[p('pen',{sa:['Penalty Kick Specialist'],base:100}),p('fk',{sa:['Free Kick Specialist'],base:100}),p('corner',{sa:['Corner Specialist'],base:100}),...Array.from({length:8},(_,i)=>p(`d${i}`,{base:100}))];
+ const generic=[p('pen',{sa:['Set Piece Taker'],base:100}),p('fk',{sa:['Set Piece Taker'],base:100}),p('corner',{sa:['Set Piece Taker'],base:100}),...Array.from({length:8},(_,i)=>p(`g${i}`,{base:100}))];
+ const a=R.buildSetPiecePlan(starters(dedicated)),b=R.buildSetPiecePlan(starters(generic));
+ ok(a.readiness.specialistCoverage===3&&b.readiness.specialistCoverage===3,'Dedicated/generic readiness fixture did not preserve equal family coverage');
+ ok(a.readiness.specialistTierSum>b.readiness.specialistTierSum,'Dedicated specialist tiers were collapsed into generic Set Piece Taker readiness');
+ ok(R.compareReadiness(a,b)<0,'Team-plan set-piece tie-break did not prefer dedicated specialist package when coverage is equal');
+}
+
+// 5. Manual overrides persist, stale starters self-heal, refresh explicitly restores auto recommendation.
+{
+ const a=p('a',{ovr:110,base:110}),b=p('b',{ovr:100,base:100,sa:['Penalty Kick Specialist']}),c=p('c',{ovr:90,base:90});let es=starters([a,b,c]);
+ let state=R.normaliseSetPieceState(null,es);ok(state.assignments.penalty1==='b','Initial automatic penalty recommendation incorrect');
+ state=R.setManualSetPiece(state,'penalty1','a',es);ok(state.assignments.penalty1==='a'&&state.sources.penalty1==='manual','Manual set-piece override was not stored');
+ state=R.normaliseSetPieceState(state,es);ok(state.assignments.penalty1==='a'&&state.sources.penalty1==='manual','Manual set-piece override did not persist');
+ state=R.refreshSetPieceRecommendations(state,es);ok(state.assignments.penalty1==='b'&&state.sources.penalty1==='auto','Explicit refresh did not restore automatic recommendation');
+ state=R.setManualSetPiece(state,'penalty1','b',es);es=starters([a,c]);state=R.normaliseSetPieceState(state,es);ok(state.assignments.penalty1==='a'&&state.sources.penalty1==='auto','Stale manual starter did not self-heal to current automatic recommendation');
+}
+console.log(JSON.stringify({assertions,failures},null,2));if(failures.length)process.exitCode=1;
