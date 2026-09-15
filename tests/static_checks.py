@@ -42,7 +42,7 @@ for phase in ['possession','transition','out']:
     if not soup.select_one(f'[data-tactic-phase="{phase}"]'): errs.append(f'Tactics missing {phase} phase')
 if not soup.select_one('[data-training-tab="individual"]') or not soup.select_one('[data-training-tab="team"]'):
     errs.append('Training does not expose Individual | Team tabs on one page')
-if 'v0.5.10' not in html: errs.append('visible version is not v0.5.10')
+if 'v0.5.14' not in html: errs.append('visible version is not v0.5.14')
 if re.search(r'BUILD\s*30527|Build\s*30527',html): errs.append('internal build 30527 is still visible in product HTML')
 if 'verified scanner' in html.lower(): errs.append('technical scanner provenance is exposed in normal UI')
 
@@ -85,8 +85,10 @@ if not account_btn or account_btn.get('title')!='Profile & Security': errs.appen
 css_text=(ROOT/'css/app.css').read_text(encoding='utf-8')
 if '.account-button' not in css_text or 'cursor:pointer' not in css_text: errs.append('profile button does not advertise clickability with a pointer cursor')
 sw_text=(ROOT/'sw.js').read_text(encoding='utf-8')
-if "const CACHE='te-v0-5-10" not in sw_text or "e.request.mode==='navigate'" not in sw_text or "cache:'no-store'" not in sw_text: errs.append('v0.4.12 service-worker update/navigation freshness guard missing')
+if "const CACHE='te-v0-5-14" not in sw_text or "e.request.mode==='navigate'" not in sw_text or "cache:'no-store'" not in sw_text: errs.append('v0.4.12 service-worker update/navigation freshness guard missing')
 if "toast('App initialisation failed','err')" in js: errs.append('generic app-initialisation error toast survived GitHub testing hotfix')
+if 'loadMentorLevels' in js: errs.append('stale loadMentorLevels startup call survived; Mentor state must hydrate through loadMentorState')
+if "startupStep('mentor state',()=>loadMentorState())" not in js: errs.append('Mentor state is not hydrated during startup')
 if not (ROOT/'firestore.rules').is_file(): errs.append('firestore.rules missing')
 rules=(ROOT/'firestore.rules').read_text(encoding='utf-8') if (ROOT/'firestore.rules').is_file() else ''
 if 'request.auth.uid == userId' not in rules: errs.append('Firestore rules do not restrict user data to matching auth uid')
@@ -165,10 +167,15 @@ ref_manifest=json.loads((ROOT/'assets/scanner/reference-manifest.json').read_tex
 if len(ref_manifest.get('playstyles',[]))!=20: errs.append('exact playstyle reference pack incomplete')
 if len(ref_manifest.get('specialAbilities',[]))!=19: errs.append('coloured Special Ability reference pack incomplete')
 
-# Automatic formation selection + current community candidate expansion.
-for needle in ["templateId:null","3-1-4-1-1","3-1-2-1-3","4-1-4-1"]:
-    if needle not in js+formation: errs.append(f'missing automatic/current formation hook: {needle}')
-if 'source:\'community-2026\'' not in formation: errs.append('community formation candidates are not provenance-labelled')
+# Automatic formation selection is data-driven from the v2 contract.
+strategy_logic=json.loads((ROOT/'data/build_30527/index/decision_logic_v2.json').read_text(encoding='utf-8'))
+if "templateId:null" not in js+formation: errs.append('missing automatic formation hook')
+if 'CFG.formation?.candidates' not in formation: errs.append('formation engine is not consuming authoritative v2 candidates')
+formation_names={x['name'] for x in strategy_logic['formation']['candidates']}
+for needle in ['3-1-4-1-1','3-1-2-1-3','4-1-4-1']:
+    if needle not in formation_names: errs.append(f'missing current formation candidate: {needle}')
+community=[x for x in strategy_logic['formation']['candidates'] if x.get('source')=='community-2026']
+if {x['id'] for x in community}!={'4141','31411','31213'}: errs.append('community formation candidates are not provenance-labelled')
 
 # Product/display name consistency.
 manifest=json.loads((ROOT/'manifest.json').read_text())

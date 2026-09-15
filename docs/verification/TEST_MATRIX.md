@@ -1,6 +1,6 @@
-# Top Eleven Tool v0.4.12 — Test Matrix
+# Top Eleven Tool v0.5.14 — Test Matrix
 
-This is the current release-test record for the GitHub-testing cleanup build.
+This is the current final pre-calibration release-test record.
 
 ## Automated release checks
 
@@ -9,55 +9,48 @@ Run from the project root:
 ```bash
 node tests/core-tests.js
 node tests/scanner_failover_tests.js
+node tests/cloud_local_first_runtime.js
+python tests/strategy_logic_data_contract.py
 python tests/scanner_regression.py
 python tests/scanner_image_contract.py
 python tests/navigation_queue_contract.py
+python tests/navigation_render_contract.py
 python tests/static_checks.py
 python tests/package_integrity.py
+python tests/cloud_hydration_contract.py
+python tests/v0412_patch_contract.py
+python tests/v0413_reference_contract.py
+python tests/v0414_scanner_level_contract.py
+python tests/v0414_badge_locator_fixtures.py
+python tests/v0415_compact_reference_contract.py
+python tests/v0416_pixel_level_guard_contract.py
+python tests/v0417_native_source_playstyle_contract.py
+python tests/v0418_all_native_resolution_contract.py
 ```
 
 Also run `node --check` against every `js/*.js` file and `sw.js`.
 
-## v0.4.12 result
+## v0.5.14 source-tree result
 
-- Deterministic/core suite: **PASS — 264 assertions**.
-- Scanner Live/failover contract: **PASS — 12 assertions**.
-- Scanner regression contract: **PASS** — HIGH-thinking Live pipeline, four visual indexes, no benchmark answers.
-- Scanner image contract: **PASS** — goalkeeper role colour and Special Ability learning-widget detection.
-- Navigation/queue contract: **PASS** — six-screen IA, contextual scanner/profile and 17 queue/navigation hooks.
-- Static checks: **PASS — 181 DOM IDs / 9 pages**.
-- Service-worker/package integrity: **PASS — 117 precached runtime files / 114 required runtime files**.
+- Core deterministic suite: **PASS — 337 assertions**.
+- Strategy data contract: **PASS — 12 roles / 28 Role+Playstyle profiles / 11 Formation rules / 60 Tactic rules / 143 strings**.
+- Scanner Live/failover and scanner regression/reference contracts: **PASS**.
+- Cloud local-first and hydration contracts: **PASS**.
+- Navigation/render/queue contracts: **PASS**.
+- Static checks and service-worker/package integrity: **PASS**.
 - JavaScript syntax: **PASS** for every runtime JS file and `sw.js`.
 
-## Protected-engine check
+## v0.5.14 specific protected behaviours
 
-The following v0.4.12 files are byte-identical to v0.4.10:
-
-- `js/scanner-engine.js`
-- `js/training-engine.js`
-- `js/tactics-engine.js`
-- `js/team-plan-engine.js`
-- `js/formation.js`
-- `js/data.js`
-
-The scanner-engine SHA-256 remains:
-
-`9a1e8a8da125ea83451ddcdb802d04d908932b16c365690707451e04ee1c3326`
-
-## Manual GitHub/browser smoke checklist
-
-1. Open the hosted build and confirm the visible version is **v0.4.12**.
-2. Sign out and confirm the first auth screen shows only **Continue with Google** and **Continue with Email & Password**.
-3. Confirm there is no Facebook, phone/SMS MFA, Blaze or paid-authentication UI.
-4. Complete Google sign-in and confirm the account loads successfully.
-5. Open **Profile & Security** from the top-right account button; on desktop confirm the pointer/hover/tooltip affordance is visible.
-6. Confirm cloud-sync status appears and the signed-in user's squad is loaded from their Firestore account.
-7. Test email/password sign-in and password reset with a disposable test account.
-8. If TOTP is enabled in the Firebase project, enrol an authenticator app and verify protected account-change behaviour.
-9. Add or update one player by scan and confirm the proven scanner flow still reaches Review without altered field behaviour.
-10. Reload while on Squad, Training, Team Plan and Profile & Security and confirm navigation/state behaviour remains correct.
-11. Test the installed PWA after one successful online load and confirm the shell/runtime still opens from cache.
+- Verified drill intensity ladder is exactly Very Easy/Easy/Medium/Hard/Very Hard = **1/2/3/4/5 XP per player** and **0.75/1.5/2.25/3.0/3.75 condition**.
+- With identical useful target-gap coverage and drill-level effect, harder drills strictly outrank easier drills in **Max Growth**.
+- Harder intensity is not a blanket override: better Role+Playstyle target-gap coverage can outrank a harder low-need drill.
+- Captain is auto-filled for UX completeness but contributes **zero** to Formation/Tactics/Mentor/Set-Piece-readiness/final Team Plan scoring.
+- The pre-match decision runtime contains no opponent/scouting/relative-strength/live-state inputs.
+- Scanner v0.4.18 native-resolution/reference contracts remain frozen.
 
 ## External-runtime limitation
 
-Real Firebase sign-in, provider redirects/popups, Firestore account creation and cross-device sync require the actual Firebase project and a browser. Offline package tests cannot certify that external round trip, so the GitHub-hosted smoke test is still required before treating the account/cloud work as fully accepted.
+Real Firebase sign-in/provider redirects, Firestore cross-device sync and real Gemini scanner calls require their external services and a browser/network. Offline package tests certify the packaged runtime contracts, not those external round trips.
+
+Before release, create the ZIP, extract that exact ZIP into a fresh directory and re-run this matrix from the extracted bytes.

@@ -17,7 +17,7 @@ These are deliberately unresolved boundaries. A future coding session must not s
 - Causal match-outcome magnitude from Alan/Green captures; observed match-stat changes are evidence, not controlled causation.
 
 ## Set Pieces
-- Official automatic Captain ranking formula.
+- Captain performance is currently modeled as **resolved gameplay-neutral** from historical Nordeus Support plus absence of a recovered current-client performance consumer. Do not invent a ranking/effect formula; only reopen if a future game update or direct current evidence proves captaincy now affects play.
 - Official hidden ranking formula for free kick/corner/penalty takers beyond explicit abilities/state.
 - Any dominant-foot rule unless recovered.
 

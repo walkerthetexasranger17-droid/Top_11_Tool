@@ -1,0 +1,38 @@
+{
+  "version": "v0.5.14",
+  "status": "AUTHORITATIVE FINAL PRE-CALIBRATION OWN-SQUAD COMPANION LOGIC MANIFEST",
+  "generated_date": "2026-09-15",
+  "files": {
+    "decision_logic_v2.json": {
+      "sha256": "e2904e25ae7caef992ae6682dfc59a71d144da5e8e98168da7f147eb3edbb670",
+      "bytes": 113667
+    },
+    "strategy_strings_v2.json": {
+      "sha256": "6f0b1cf6f87baa7f6df8152948ab6dd620aed5a929909d4c0f7fee6d3b5ef80d",
+      "bytes": 18627
+    }
+  },
+  "counts": {
+    "feature_quality_definitions": 13,
+    "core_coverage_slots": 11,
+    "flexibility_slots": 5,
+    "availability_depth_slots": 4,
+    "formation_candidates": 12,
+    "formation_rules": 11,
+    "tactic_dimensions": 11,
+    "tactic_options": 33,
+    "tactic_rules": 60,
+    "playstyle_tactic_affinities": 19,
+    "special_ability_tactic_affinities": 12,
+    "mentors": 7,
+    "role_training_profiles": 12,
+    "role_playstyle_profiles": 28,
+    "training_tactic_modifiers": 21,
+    "training_sa_modifiers": 6,
+    "set_piece_slots": 10,
+    "target_shape_tiers": 4,
+    "explanation_strings": 143
+  },
+  "runtime_boundary": "v0.5.14 preserves the stitched own-squad Formation/Tactics/Set Pieces/Mentor/Training pipeline, explicitly models recovered drill-intensity XP strength, and treats Captain as gameplay-neutral with zero Team Plan ranking value. No scouting, opponent, relative-strength or live-state input exists in the active pre-match decision runtime.",
+  "next_step": "Controlled whole-system own-squad fixture calibration. Tune only transparent companion rules when a concrete recommendation is demonstrably poor; do not add opponent inputs, invented exact training outcomes or captain performance effects."
+}

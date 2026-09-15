@@ -2,32 +2,25 @@
 
 ## Game facts
 
-Current client state explicitly stores:
-- Captain
-- Left Corner Kicker
-- Right Corner Kicker
-- Left Free Kicker
-- Right Free Kicker
-- Penalty Kicker
-- ordered penalty takers
+Current client state explicitly stores Captain, Left/Right Corner Kicker, Left/Right Free Kicker, Penalty Kicker and ordered penalty takers. Current Special Ability enum includes Penalty Kick Specialist, Free Kick Specialist, Corner Specialist and Set Piece Taker.
 
-Current Special Ability enum includes:
-- Penalty Kick Specialist
-- Free Kick Specialist
-- Corner Specialist
-- Set Piece Taker
+The inspected client proves assignment/display/save behaviour and specialist identities, **not** an official automatic ranking or Captain formula.
 
-The inspected current path proves assignment/display/save behaviour, not an official automatic ranking formula.
+## v0.5.14 companion logic
 
-## Companion logic
+Every candidate XI receives a complete automatic package before Team Plan selection:
 
-v0.5.1 introduced provenance-aware assignments:
-- `auto`
-- `manual`
-- migrated `legacy`
+- penalties: Penalty Kick Specialist -> Finishing/Shooting -> Creativity;
+- free kicks: Free Kick Specialist -> Shooting/Finishing/Passing/Creativity;
+- corners: Corner Specialist -> Set Piece Taker -> Crossing/Passing/Creativity;
+- Captain: highest OVR -> assigned-role mean -> assigned-role floor -> stable key **for convenience only**.
 
-Automatic non-Captain slots recalculate; manual choices survive. Captain remains manual.
+Captaincy is treated as **gameplay-neutral**. Historical Nordeus Support explicitly stated that choosing a captain does not make him stronger/better and does not change player stats, while the recovered current client exposes Captain assignment/save state but no performance consumer/ranking formula. Therefore Captain contributes **zero** to Formation, Tactics, Mentor, Set-Piece readiness and final Team Plan ranking. Highest OVR is only a deterministic auto-fill default; any starter can be manually selected without a modeled performance penalty. No age, Bravery, invented leadership/personality or hidden captain coefficient is used.
 
-## Unresolved
+Set-piece readiness is a late deterministic Team Plan tie-break only, never an additive score. Captain is explicitly excluded from that tie-break. Manual assignments persist until explicit refresh/off-XI.
 
-No authoritative Captain-selection formula has been recovered. Do not use age/OVR/leadership-like guesses unless explicitly labelled as optional companion logic.
+Left and right slots are independent state, but preferred foot is not captured; therefore the optimiser may legitimately choose the same player for both and must not invent a foot advantage.
+
+## Current boundary
+
+No captain-performance formula is required by the current evidence: Captain is modeled as performance-neutral unless a future game update or direct current evidence proves a new effect. An official hidden ranking formula for the other set-piece takers and any dominant-foot rule remain unresolved.

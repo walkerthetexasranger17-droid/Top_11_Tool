@@ -1,7 +1,7 @@
 (() => {
   const TE=window.TE5=window.TE5||{};const D=TE.Data,T=TE.Training;
   if(!D||!T)throw new Error('data.js and training-engine.js must load before team-training-engine.js');
-  const MODEL_VERSION='30527-team-white-beam-v1',BEAM_WIDTH=250;
+  const MODEL_VERSION='30527-team-white-beam-v2-intensity-gain',BEAM_WIDTH=250;
 
   function settingFor(profile,d){return profile?.drills?.[d.drillId]||{unlocked:!!d.capturedUnlocked,level:Number(d.capturedLevelId||0)};}
   function playerInGroup(p,group){return (Array.isArray(p?.roles)?p.roles:[p?.position]).some(r=>group.positions.includes(D.normaliseRole(r)));}
@@ -18,7 +18,7 @@
   function candidates(profile){
     return D.NORMAL_DRILLS.map(d=>{
       const s=settingFor(profile,d),level=Number(s.level)||0;if(!s.unlocked||level<1||level>3)return null;
-      const effectPct=T.levelEffectPct(level),strength=Number(d.xpPerPlayer)*(1+effectPct/100);
+      const effectPct=T.levelEffectPct(level),strength=T.trainingStrength(d.xpPerPlayer,effectPct);
       return{...d,isMaster:false,level,effectPct,levelName:T.levelName(level),strength,catalogueOrder:d.index};
     }).filter(Boolean);
   }

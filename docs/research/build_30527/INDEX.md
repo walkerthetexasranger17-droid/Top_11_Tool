@@ -1,7 +1,7 @@
 # Top Eleven Build 30527 — Game Research Index
 
-**Index version:** 8  
-**Last updated:** 14 September 2026  
+**Index version:** 9  
+**Last updated:** 15 September 2026  
 **Purpose:** permanent, embedded reference for future Top Eleven Tool logic work.
 
 This index prevents repeated reverse-engineering and stops assumptions from being promoted into “game facts”.
@@ -50,10 +50,14 @@ See `data/build_30527/index/source_manifest.json`.
 - `data/build_30527/index/protocol_fields.json` — high-value protocol fields.
 - `data/build_30527/index/source_manifest.json` — build/source hashes.
 - `data/build_30527/index/ui_todo.json` — parked responsive Player Profile design constraints and references.
+- `data/build_30527/index/decision_logic_v2.json` — authoritative deep companion decision contract: features, squad coverage, Formation, Tactics, Mentor and Training logic.
+- `data/build_30527/index/strategy_strings_v2.json` — human-readable reason strings required by the v2 rule contract.
 
 ## Current highest-value checkpoint
 
-The current recovery checkpoint is **v0.5.10**. Read `V0510_DECISION_ENGINE_CHECKPOINT.md` first for the implemented joint logic contract, then `V059_COMMUNITY_LOGIC_CHECKPOINT.md`, `V059_FULL_WINDOWS_GAME_CHECKPOINT.md`, `V058_MENTOR_ST_COMMUNITY_CHECKPOINT.md`, and the closed v0.5.7 Formation + Tactics baseline. The v0.5.9 research remains the evidence basis; v0.5.10 converts it into transparent COMPANION LOGIC. Do not use Lineup Balance as a weighting oracle and do not promote community outcomes to GAME FACT.
+The current recovery checkpoint is **v0.5.14**. Read `V0514_FINAL_PRECALIBRATION_CHECKPOINT.md` first, then `V0513_COMPLETE_TEAM_PLAN_STITCHING_CHECKPOINT.md`, `V0512_OWN_SQUAD_EVALUATOR_CHECKPOINT.md` and `V0511_DECISION_LOGIC_BIBLE.md` for the evaluator/research foundation. v0.5.14 preserves the complete own-squad stitch, locks the recovered normal-drill intensity XP ladder into Training selection and removes Captain from all performance scoring because no captaincy performance effect is proven. The active optimiser remains own-squad-only; unknown external/live context receives zero rather than a guess.
+
+**Captain supersession warning:** the old source-archive v1.1 Bible contains a clearly labelled companion-only legacy `OVR + broad skill mean + age` Captain score. v0.5.14 supersedes it. Do not restore that formula: Captain is performance-neutral in the active model and has zero Team Plan ranking value.
 
 ## Research rule
 
@@ -80,7 +84,7 @@ Key preserved source additions:
 
 Current companion Target Formation: `GK / DL DC DC DR / DMC MC / AML AMC AMR / ST`. This is a transparent app target, not a Nordeus best-formation claim. Tactics remain XI/context-driven under the exact native drain constraint.
 
-**Active next target:** evidence-backed role/Playstyle attribute priorities, starting with ST. Do not use Lineup Balance as the weighting oracle and do not promote companion weights to GAME FACT.
+**Historical next target (completed by later checkpoints):** role/Playstyle attribute priorities are now represented by the v0.5.14 target-shape/intensity model. The private Nordeus numeric weighting formula remains unresolved.
 
 
 ## v0.5.8 Mentor + ST / community checkpoint

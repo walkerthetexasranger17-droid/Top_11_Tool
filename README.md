@@ -1,10 +1,10 @@
-# Top Eleven Tool v0.5.10
+# Top Eleven Tool v0.5.14
 
 > **Project recovery:** a new chat/session must read [`START_HERE.md`](START_HERE.md) before modifying code. The app now embeds a permanent build-30527 Game Research Index under `docs/research/build_30527/` and machine-readable findings under `data/build_30527/index/`.
 
 Top Eleven Tool is a mobile-first PWA companion for managing a Top Eleven squad, scanning player cards, planning training, selecting a formation, assigning set pieces and presenting tactics in a simpler form.
 
-`v0.5.10` is the first production decision-engine build on top of the completed game/native and 2024–26 community research. It adds a transparent joint Formation + Tactics + Mentor planner, a separate squad-coverage/recruitment blueprint, strict Mentor Level 1/5/10 boost-family gating, and full role + Playstyle Individual Training priority hierarchies. The numerical plan weights are explicitly **COMPANION LOGIC** and are documented in `data/build_30527/index/decision_logic_v1.json`; they are not claimed Nordeus match-engine coefficients.
+`v0.5.14` is the **final pre-calibration logic checkpoint**. The complete own-squad Team Plan stitch remains intact, with two final evidence corrections locked before calibration: Training explicitly models the recovered drill-intensity gain ladder (Very Easy/Easy/Medium/Hard/Very Hard = 1/2/3/4/5 base XP per player before drill-level effect), and Captain is treated as gameplay-neutral. Captain contributes zero Team Plan ranking value; the app defaults to the highest-OVR starter only for convenience and any starter may be selected manually without a modeled performance penalty. Exact final normal-training AttributeGain remains server/runtime-owned. All numerical ranking weights remain **COMPANION LOGIC**, never claimed as Nordeus coefficients.
 
 ## Main navigation
 
@@ -81,15 +81,23 @@ From the project root:
 ```bash
 node tests/core-tests.js
 node tests/scanner_failover_tests.js
-python tests/scanner_regression.py
-python tests/scanner_image_contract.py
-python tests/v0414_scanner_level_contract.py
-python tests/v0414_badge_locator_fixtures.py
-python tests/v0416_pixel_level_guard_contract.py
-python tests/v0417_native_source_playstyle_contract.py
-python tests/navigation_queue_contract.py
+node tests/cloud_local_first_runtime.js
+python tests/strategy_logic_data_contract.py
 python tests/static_checks.py
 python tests/package_integrity.py
+python tests/navigation_render_contract.py
+python tests/navigation_queue_contract.py
+python tests/cloud_hydration_contract.py
+python tests/scanner_image_contract.py
+python tests/scanner_regression.py
+python tests/v0412_patch_contract.py
+python tests/v0413_reference_contract.py
+python tests/v0414_scanner_level_contract.py
+python tests/v0414_badge_locator_fixtures.py
+python tests/v0415_compact_reference_contract.py
+python tests/v0416_pixel_level_guard_contract.py
+python tests/v0417_native_source_playstyle_contract.py
+python tests/v0418_all_native_resolution_contract.py
 ```
 
 The Firebase end-to-end sign-in/sync path still needs a real browser and the actual Firebase project, so that remains part of the manual GitHub test pass.

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-09-14",
+  "updated": "2026-09-15",
   "findings": [
     {
       "id": "TACTICS-001",
@@ -108,14 +108,20 @@
     {
       "id": "SETPIECE-002",
       "system": "set_pieces",
-      "status": "UNRESOLVED",
-      "title": "Automatic captain ranking",
-      "summary": "No authoritative automatic captain-selection formula has been recovered. Companion keeps captain manual.",
-      "confidence": "high",
+      "status": "GAME_FACT_PLUS_COMPANION_DEFAULT",
+      "title": "Captaincy effect and automatic default",
+      "summary": "Historical Nordeus Support explicitly stated that assigning Captain does not make a player stronger or change stats, and later community reports consistently describe captaincy as cosmetic. The recovered current build stores Captain assignment but exposes no captain performance/ranking formula. v0.5.14 therefore gives Captain zero Team Plan value and auto-fills the highest-OVR starter only as a convenient cosmetic default; manual choices are performance-equivalent.",
+      "confidence": "high that no proven positive gameplay effect should be modelled; automatic default is companion UX only",
       "sources": [
-        "source_archive/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.1_VERIFIED.md"
+        "source_archive/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.1_VERIFIED.md",
+        "docs/research/build_30527/V0513_COMPLETE_TEAM_PLAN_STITCHING_CHECKPOINT.md",
+        "TEAM_PLAN_EVIDENCE_LEDGER_PREINDEX.md",
+        "external: Nordeus Support reply archived on Top Eleven Forum (2015-10-30)",
+        "external: later Top Eleven community threads reporting captaincy as cosmetic"
       ],
-      "unresolved": []
+      "unresolved": [
+        "Whether Nordeus ever changes captaincy behaviour in a future build; re-audit if new client code or official documentation appears."
+      ]
     },
     {
       "id": "PLAYER-001",
@@ -351,17 +357,19 @@
     {
       "id": "TRAIN-003",
       "system": "training",
-      "status": "COMPANION_DESIGN_PENDING_EVIDENCE",
-      "title": "Future training should support evidence-backed skill priority tiers",
-      "summary": "If unequal role-specific white-skill importance is proven, training should prioritise primary role attributes while keeping secondary/supporting white skills strong instead of forcing every white skill toward one equal target. Numeric examples such as 250/180 are illustrative only and are not approved constants.",
-      "confidence": "design-intent",
+      "status": "COMPANION_LOGIC",
+      "title": "Role+Playstyle target-shape Training creates deliberate specialists",
+      "summary": "v0.5.14 ranks every current role and offered Role+Playstyle white-skill set and applies transparent relative target-shape ratios (S 1.18, A 1.05, B 0.92, C 0.85; secondary-role-only 0.82). Training closes target-shape gaps rather than equalising all white skills. These ratios are companion logic, not official Nordeus caps or coefficients.",
+      "confidence": "transparent-companion-design",
       "sources": [
-        "docs/research/build_30527/V054_ROLE_PRIORITY_CHECKPOINT.md"
+        "docs/research/build_30527/V054_ROLE_PRIORITY_CHECKPOINT.md",
+        "docs/research/build_30527/V0513_COMPLETE_TEAM_PLAN_STITCHING_CHECKPOINT.md",
+        "data/build_30527/index/decision_logic_v2.json"
       ],
       "unresolved": [
-        "Per-role priority hierarchy",
-        "Target ratios/values",
-        "Interaction with playstyle and tactics"
+        "Private Nordeus numeric per-attribute weighting, if any",
+        "Exact normal-training final gains remain server/runtime-owned",
+        "Calibration of companion target-shape ratios against controlled own-squad fixtures"
       ]
     },
     {
@@ -715,6 +723,23 @@
         "numeric companion score calibration",
         "universal current-meta backline winner",
         "fixed pressing/offside/man-marking recipe"
+      ]
+    },
+    {
+      "id": "TRAIN-004",
+      "system": "training",
+      "status": "GAME_FACT",
+      "title": "Harder regular drills carry greater base training XP",
+      "summary": "Captured build-30527 intensity data maps Very Easy/Easy/Medium/Hard/Very Hard to XP per player 1/2/3/4/5 and condition drop 0.75/1.5/2.25/3.0/3.75. Regular drill level adds +10/+20/+30% effect. v0.5.14 uses strength = XP × (1 + effect%) so, for the same useful white-skill coverage and drill level, harder drills rank above easier drills in Max Growth. Exact final AttributeGain remains server-authoritative.",
+      "confidence": "high",
+      "sources": [
+        "data/build_30527/intensity_system.json",
+        "data/build_30527/drill_level_system.json",
+        "docs/reference/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.md",
+        "docs/research/build_30527/source_archive/NATIVE_FORMULAS_PASS5.md"
+      ],
+      "unresolved": [
+        "Exact server-side final per-attribute percentage gain for a completed normal session."
       ]
     }
   ]

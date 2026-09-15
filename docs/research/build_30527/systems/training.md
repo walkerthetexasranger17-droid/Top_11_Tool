@@ -1,48 +1,58 @@
 # Training — Build 30527
 
-This page records training findings because the research index should cover established game logic beyond the immediate Team Plan task.
+## Proven native/runtime boundary
 
-## Proven native local distributor
+The client contains a deterministic local attribute distributor, but normal `ExecuteTraining` returns final per-player `AttributeGain` from the server/runtime path. Therefore exact per-session normal-training gains remain server/runtime-owned unless captured. Do not present the local distributor as an exact normal-training predictor.
 
-Recovered:
-- three-way attribute-category split with deterministic remainder;
-- Java-style 48-bit LCG constants in `DeterministicRandom`;
-- per-attribute index depends on RNG state + current attribute integer sums;
-- goalkeeper category path is distinct;
-- local/global cap logic exists;
-- stored increment path uses positive-infinity rounding / ceil.
+See `data/build_30527/index/native_methods.json` and source archive `NATIVE_FORMULAS_PASS5.md` / `PASS6.md`.
 
-High-value symbols are in `data/build_30527/index/native_methods.json`.
+## White-skill rule
 
-## Important architecture correction
+Only actual white skills receive Training utility; grey skills remain zero-utility. White does **not** mean all white skills should be equalised.
 
-The existence of the local distributor does **not** mean normal `ExecuteTraining` final gains are purely calculated locally.
+## v0.5.14 Role+Playstyle target-shape model
 
-Current normal training response returns per-player:
-- ConditionBefore/After
-- final `AttributeGain(Attribute[], Gain[])`
-- boosts
-- playstyle progress
-- critical information
+The app uses 12 base-role profiles plus all 28 offered Role+Playstyle combinations. S/A/B/C are relative development tiers and now also define a desired attribute shape:
 
-The client consumes this server-returned final gain in the normal report/update path.
+- S = 1.18
+- A = 1.05
+- B = 0.92
+- C = 0.85
+- white only because of another natural role = 0.82
 
-Therefore exact normal-training outcome remains server/runtime-owned unless captured. Do not turn the local skill-point distributor into a false “exact normal training predictor”.
+These are transparent **COMPANION LOGIC ratios**, not Nordeus caps or official target percentages.
 
-See source archive `NATIVE_FORMULAS_PASS5.md` and `PASS6.md`.
+For a player:
+1. normalise each white skill by its desired ratio;
+2. use the best three normalised development-role whites to establish a relative reference;
+3. calculate target and positive gap for each white skill;
+4. weight that gap by Role+Playstyle hierarchy and capped context;
+5. choose six legal drills by useful gap reduction.
 
+An under-target skill uses `(gap + 1) × hierarchy/context weight`; a zero-gap skill uses only the small maintenance floor. This preserves deliberate specialization. A Poacher is pushed toward higher Shooting/Finishing/Positioning/Speed instead of dragging Passing/Heading/Strength up to the same level.
 
-## v0.5.4 role-priority training boundary
+No absolute 180/200/etc player-skill cap is invented.
 
-The optimiser currently knows exact white/key-skill membership by role, but not a proven importance hierarchy within that set.
+## Team Plan context
 
-If build/native/live evidence establishes primary vs secondary role attributes, future training should prioritise those primary skills while keeping the remaining white skills strong rather than forcing every white skill toward one identical target.
+Training receives the winning Team Plan tactics. Tactic context can add at most +20%; approved active Special Ability training context can add at most +8%. Role+Playstyle identity remains dominant.
 
-Values such as primary skills at 250 and others at 180 are **illustrative user examples only**. They are not game facts, targets or approved constants.
+The Team Plan assigned role becomes the development role only when it is natural for that player. If Formation uses a related-only role, Training falls back to a natural development role and reports the reason.
 
-See `../V054_ROLE_PRIORITY_CHECKPOINT.md` and `data/build_30527/index/role_attribute_priority_hypotheses.json`.
+## Verified drill intensity / gain model
 
+Recovered build-30527 data provides the normal drill base training-XP ladder directly:
 
-## v0.5.5 training research boundary
+- Very Easy = 1 XP/player; 0.75 condition
+- Easy = 2 XP/player; 1.50 condition
+- Medium = 3 XP/player; 2.25 condition
+- Hard = 4 XP/player; 3.00 condition
+- Very Hard = 5 XP/player; 3.75 condition
 
-Do not use the historical Roelandt/Lataille Lineup Balance result to set training priorities. Unequal role-skill importance remains plausible, but priorities must come from direct role/action evidence. Continue to preserve every white skill and avoid hard-coded primary targets until that hierarchy is proven.
+Normal drill-level effect is then applied to that base: Semi-Pro +10%, Pro +20%, World Class +30%. Master/Campus drills use their recovered catalogue training-effect percentage. The companion strength signal is therefore `base XP × (1 + training-effect %)`.
+
+**Max Growth:** if two drills hit the same useful white skills and have the same effect percentage, the higher-intensity drill must rank higher because it carries more verified XP. Example: at World Class, Easy models 2.6 strength while Very Hard models 6.5.
+
+**Condition Efficient:** condition rises in the same 1:2:3:4:5 proportion as base XP, so intensity alone is not treated as magically more condition-efficient. Coverage of the right target-gap whites and drill-level effect still matter.
+
+**Boundary:** this XP ladder is proven input data; the exact final percentage-point normal `AttributeGain` remains server/runtime-owned. Do not convert XP into invented +attribute percentages.

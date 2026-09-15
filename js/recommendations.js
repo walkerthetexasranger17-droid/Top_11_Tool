@@ -3,59 +3,35 @@
   if(!D||!B)throw new Error('data.js and bible-data.js must load first');
   const abilities=p=>Array.isArray(p?.specialAbilities)?p.specialAbilities:[];
   const val=(p,s)=>{const n=Number(p?.skills?.[s]);return Number.isFinite(n)?n:0;};
-  const mean=(p,names)=>names.reduce((s,n)=>s+val(p,n),0)/names.length;
-  const stable=(p)=>String(p?.key||p?.name||'');
+  const mean=(p,names)=>names.length?names.reduce((s,n)=>s+val(p,n),0)/names.length:0;
+  const stable=p=>String(p?.key||p?.name||'');
   const SET_PIECE_KEYS=['cornerRight','freeRight','penalty1','freeLeft','cornerLeft','penalty2','penalty3','penalty4','penalty5','captain'];
-  const AUTO_SET_PIECE_KEYS=SET_PIECE_KEYS.filter(k=>k!=='captain');
-  function lexSort(rows,fields){return rows.sort((a,b)=>{for(const [k,dir=1] of fields){if(a[k]!==b[k])return (a[k]>b[k]?-1:1)*dir;}return stable(a.player).localeCompare(stable(b.player));});}
-  function rankPenalty(players){return lexSort(players.map(player=>({player,specialist:abilities(player).includes('Penalty Kick Specialist')?1:0,skill:mean(player,['Finishing','Shooting']),creativity:val(player,'Creativity'),score:mean(player,['Finishing','Shooting'])})),[['specialist'],['skill'],['creativity']]);}
-  function rankFreeKick(players){return lexSort(players.map(player=>({player,specialist:abilities(player).includes('Free Kick Specialist')?1:0,skill:mean(player,['Shooting','Finishing','Passing','Creativity']),score:mean(player,['Shooting','Finishing','Passing','Creativity'])})),[['specialist'],['skill']]);}
-  function rankCorner(players){return lexSort(players.map(player=>({player,specialist:abilities(player).includes('Corner Specialist')?2:abilities(player).includes('Set Piece Taker')?1:0,skill:mean(player,['Crossing','Passing','Creativity']),score:mean(player,['Crossing','Passing','Creativity'])})),[['specialist'],['skill']]);}
-  function rankPlaymakers(players){const penalties=rankPenalty(players),corners=rankCorner(players),free=rankFreeKick(players);return{penalties:penalties.slice(0,5),corner:corners[0]||null,freeKick:free[0]||null,captain:null,captainNote:'No authoritative captain formula is known; captain is user-selected.',evidence:'TOP ELEVEN TOOL CALCULATION'};}
-  function recommendedSetPieces(players){
-    const ranked=rankPlaymakers(players),penalties=ranked.penalties||[];
-    return{
-      cornerRight:ranked.corner?.player?.key||'',
-      freeRight:ranked.freeKick?.player?.key||'',
-      penalty1:penalties[0]?.player?.key||'',
-      freeLeft:ranked.freeKick?.player?.key||'',
-      cornerLeft:ranked.corner?.player?.key||'',
-      penalty2:penalties[1]?.player?.key||'',
-      penalty3:penalties[2]?.player?.key||'',
-      penalty4:penalties[3]?.player?.key||'',
-      penalty5:penalties[4]?.player?.key||'',
-      captain:''
-    };
+  const AUTO_SET_PIECE_KEYS=[...SET_PIECE_KEYS];
+  function entry(raw){const player=raw?.player||raw||{},assignedRole=D.normaliseRole(raw?.assignedRole||player?.position||player?.roles?.[0]),white=D.POSITION_WHITE[assignedRole]||[];const roleValues=white.map(a=>Number(player?.skills?.[a])).filter(Number.isFinite),roleMean=Number.isFinite(Number(raw?.roleMean))?Number(raw.roleMean):(roleValues.length?roleValues.reduce((a,b)=>a+b,0)/roleValues.length:0),roleFloor=Number.isFinite(Number(raw?.roleFloor))?Number(raw.roleFloor):(Number.isFinite(Number(raw?.weakest))?Number(raw.weakest):(roleValues.length?Math.min(...roleValues):0));return{raw,player,assignedRole,roleMean,roleFloor,ovr:Number(player?.ovr)||0};}
+  function lexSort(rows,fields){return rows.sort((a,b)=>{for(const [k,dir=1] of fields){if(a[k]!==b[k])return(a[k]>b[k]?-1:1)*dir;}return stable(a.player).localeCompare(stable(b.player));});}
+  function rankPenalty(entries){return lexSort(entries.map(entry).map(e=>({...e,specialist:abilities(e.player).includes('Penalty Kick Specialist')?1:0,skill:mean(e.player,['Finishing','Shooting']),creativity:val(e.player,'Creativity'),score:mean(e.player,['Finishing','Shooting'])})),[['specialist'],['skill'],['creativity']]);}
+  function rankFreeKick(entries){return lexSort(entries.map(entry).map(e=>({...e,specialist:abilities(e.player).includes('Free Kick Specialist')?1:0,skill:mean(e.player,['Shooting','Finishing','Passing','Creativity']),score:mean(e.player,['Shooting','Finishing','Passing','Creativity'])})),[['specialist'],['skill']]);}
+  function rankCorner(entries){return lexSort(entries.map(entry).map(e=>({...e,specialist:abilities(e.player).includes('Corner Specialist')?2:abilities(e.player).includes('Set Piece Taker')?1:0,skill:mean(e.player,['Crossing','Passing','Creativity']),score:mean(e.player,['Crossing','Passing','Creativity'])})),[['specialist'],['skill']]);}
+  function rankCaptain(entries){return lexSort(entries.map(entry).map(e=>({...e,score:e.ovr,note:'Captaincy has no proven gameplay effect. Top Eleven Tool defaults to the highest-OVR starter for convenience, then assigned-role quality/reliability; any manual choice is equally valid for match performance.'})),[['ovr'],['roleMean'],['roleFloor']]);}
+  function rankPlaymakers(entries){const penalties=rankPenalty(entries),corners=rankCorner(entries),free=rankFreeKick(entries),captains=rankCaptain(entries);return{penalties:penalties.slice(0,5),corners,freeKicks:free,captains,corner:corners[0]||null,freeKick:free[0]||null,captain:captains[0]||null,captainNote:'Captaincy has no proven gameplay effect. Nordeus Support historically confirmed it does not strengthen players or change stats; the current client exposes an assignment but no recovered performance/ranking formula. Top Eleven Tool therefore defaults to the highest-OVR starter for convenience, and manual override is performance-equivalent.',evidence:'TOP ELEVEN TOOL CALCULATION'};}
+  function buildSetPiecePlan(entries){
+    const ranked=rankPlaymakers(entries),penalties=ranked.penalties||[],cornerR=ranked.corners?.[0]||null,cornerL=ranked.corners?.[0]||null,freeR=ranked.freeKicks?.[0]||null,freeL=ranked.freeKicks?.[0]||null,captain=ranked.captain||null;
+    const assignments={cornerRight:cornerR?.player?.key||'',freeRight:freeR?.player?.key||'',penalty1:penalties[0]?.player?.key||'',freeLeft:freeL?.player?.key||'',cornerLeft:cornerL?.player?.key||'',penalty2:penalties[1]?.player?.key||'',penalty3:penalties[2]?.player?.key||'',penalty4:penalties[3]?.player?.key||'',penalty5:penalties[4]?.player?.key||'',captain:captain?.player?.key||''};
+    const specialistCoverage=(Number(penalties[0]?.specialist>0)+Number(freeR?.specialist>0)+Number(cornerR?.specialist>0)),skillSum=Number(penalties[0]?.skill||0)+Number(freeR?.skill||0)+Number(cornerR?.skill||0),captainDefaultOvr=Number(captain?.ovr||0);
+    return{model:'set-piece-companion-v3-captain-neutral',evidence:'TOP ELEVEN TOOL CALCULATION',evidencePolicy:'Official assignment slots and specialist identities are game facts. Automatic penalty/free-kick/corner ordering is transparent companion logic. Captaincy has no proven gameplay effect and is excluded from Team Plan ranking.',assignments,readiness:{specialistCoverage,skillSum,captainDefaultOvr,tieTuple:[specialistCoverage,skillSum]},rankings:{penalties:penalties.map(x=>({playerKey:x.player.key,specialist:x.specialist,skill:x.skill,creativity:x.creativity})),freeKicks:(ranked.freeKicks||[]).map(x=>({playerKey:x.player.key,specialist:x.specialist,skill:x.skill})),corners:(ranked.corners||[]).map(x=>({playerKey:x.player.key,specialist:x.specialist,skill:x.skill})),captains:(ranked.captains||[]).map(x=>({playerKey:x.player.key,assignedRole:x.assignedRole,roleMean:x.roleMean,roleFloor:x.roleFloor,ovr:x.ovr}))},notes:{leftRight:'Left/right free-kick and corner rankings use the same proven inputs because preferred foot is not captured; the same best taker may lead both.',captain:ranked.captainNote}};
   }
-  function normaliseSetPieceState(stored,players){
-    const recommendations=recommendedSetPieces(players),starterKeys=new Set(players.map(p=>String(p?.key||'')).filter(Boolean));
-    let assignments={},sources={};
-    if(stored?.version===4&&stored.assignments&&typeof stored.assignments==='object'){
-      assignments={...stored.assignments};sources={...(stored.sources||{})};
-    }else if(stored&&typeof stored==='object'){
-      const legacy={...stored};if(legacy.penalty&&!legacy.penalty1)legacy.penalty1=legacy.penalty;delete legacy.penalty;
-      for(const key of SET_PIECE_KEYS){const value=String(legacy[key]||'');assignments[key]=value;sources[key]=value?'legacy':(key==='captain'?'manual':'auto');}
-    }else{
-      assignments={...recommendations};for(const key of AUTO_SET_PIECE_KEYS)sources[key]='auto';sources.captain='manual';
-    }
-    for(const key of SET_PIECE_KEYS){
-      let source=['auto','manual','legacy'].includes(sources[key])?sources[key]:(assignments[key]?'legacy':(key==='captain'?'manual':'auto'));
-      let playerKey=String(assignments[key]||'');
-      if(playerKey&&!starterKeys.has(playerKey)){playerKey='';source=key==='captain'?'manual':'auto';}
-      if(source==='auto')playerKey=String(recommendations[key]||'');
-      assignments[key]=playerKey;sources[key]=source;
-    }
-    sources.captain=sources.captain==='auto'?'manual':sources.captain;
-    return{version:4,assignments,sources};
+  function compareReadiness(a,b){const aa=a?.readiness?.tieTuple||[0,0,0],bb=b?.readiness?.tieTuple||[0,0,0];for(let i=0;i<Math.max(aa.length,bb.length);i++){const av=Number(aa[i]||0),bv=Number(bb[i]||0);if(Math.abs(av-bv)>1e-12)return bv-av;}return 0;}
+  function recommendedSetPieces(entries){return buildSetPiecePlan(entries).assignments;}
+  function normaliseSetPieceState(stored,entries){
+    const recommendations=recommendedSetPieces(entries),starterKeys=new Set(entries.map(entry).map(e=>String(e.player?.key||'')).filter(Boolean));let assignments={},sources={};
+    if(stored?.version===5&&stored.assignments&&typeof stored.assignments==='object'){assignments={...stored.assignments};sources={...(stored.sources||{})};}
+    else if(stored?.version===4&&stored.assignments&&typeof stored.assignments==='object'){assignments={...stored.assignments};sources={...(stored.sources||{})};if(assignments.captain){sources.captain='manual';}else{sources.captain='auto';}}
+    else if(stored&&typeof stored==='object'){const legacy={...stored};if(legacy.penalty&&!legacy.penalty1)legacy.penalty1=legacy.penalty;delete legacy.penalty;for(const key of SET_PIECE_KEYS){const value=String(legacy[key]||'');assignments[key]=value;sources[key]=value?'legacy':'auto';}}
+    else{assignments={...recommendations};for(const key of AUTO_SET_PIECE_KEYS)sources[key]='auto';}
+    for(const key of SET_PIECE_KEYS){let source=['auto','manual','legacy'].includes(sources[key])?sources[key]:(assignments[key]?'legacy':'auto'),playerKey=String(assignments[key]||'');if(playerKey&&!starterKeys.has(playerKey)){playerKey='';source='auto';}if(source==='auto')playerKey=String(recommendations[key]||'');assignments[key]=playerKey;sources[key]=source;}
+    return{version:5,assignments,sources};
   }
-  function setManualSetPiece(state,key,playerKey,players){
-    const next=normaliseSetPieceState(state,players);if(!SET_PIECE_KEYS.includes(key))return next;
-    next.assignments[key]=String(playerKey||'');next.sources[key]='manual';return next;
-  }
-  function refreshSetPieceRecommendations(state,players){
-    const next=normaliseSetPieceState(state,players),recommendations=recommendedSetPieces(players);
-    for(const key of AUTO_SET_PIECE_KEYS){next.assignments[key]=String(recommendations[key]||'');next.sources[key]='auto';}
-    return next;
-  }
-  TE.Recommendations={rankPlaymakers,rankPenalty,rankFreeKick,rankCorner,recommendedSetPieces,normaliseSetPieceState,setManualSetPiece,refreshSetPieceRecommendations,SET_PIECE_KEYS,AUTO_SET_PIECE_KEYS,MENTORS:B.MENTORS};
+  function setManualSetPiece(state,key,playerKey,entries){const next=normaliseSetPieceState(state,entries);if(!SET_PIECE_KEYS.includes(key))return next;next.assignments[key]=String(playerKey||'');next.sources[key]='manual';return next;}
+  function refreshSetPieceRecommendations(state,entries){const next=normaliseSetPieceState(state,entries),recommendations=recommendedSetPieces(entries);for(const key of AUTO_SET_PIECE_KEYS){next.assignments[key]=String(recommendations[key]||'');next.sources[key]='auto';}return next;}
+  TE.Recommendations={rankPlaymakers,rankPenalty,rankFreeKick,rankCorner,rankCaptain,buildSetPiecePlan,compareReadiness,recommendedSetPieces,normaliseSetPieceState,setManualSetPiece,refreshSetPieceRecommendations,SET_PIECE_KEYS,AUTO_SET_PIECE_KEYS,MENTORS:B.MENTORS};
 })();
