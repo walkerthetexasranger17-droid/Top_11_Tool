@@ -1,5 +1,5 @@
 (() => {
-  window.__TE_RUNTIME__='0.5.17';
+  window.__TE_RUNTIME__='0.6.1';
   const TE=window.TE5;const D=TE.Data,P=TE.Players,S=TE.Storage,DP=TE.DrillProfile,T=TE.Training,TT=TE.TeamTraining,SC=TE.Scanner,R=TE.Recommendations,F=TE.Formation,TP=TE.TeamPlan,TAC=TE.Tactics,M=TE.Mentor,B=TE.BibleData,C=TE.Cloud,BIS=TE.BestInSlot;
   const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
   const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -74,7 +74,33 @@
   $('#confirmDeleteBtn')?.addEventListener('click',async()=>{const target=deleteTarget;if(!target)return;hideDeleteDialog();if(history.state?.overlay==='delete')history.back();await P.remove(target.key);if(state.playerKey===target.key)state.playerKey='';closeOpenSquadSwipe();await renderSquad();await renderDashboard();toast(`${target.name||'Player'} deleted`);persistUiState();});
 
   // ---------- Dashboard / Squad ----------
-  async function renderDashboard(){const players=await P.all(),avg=players.length?players.reduce((a,p)=>a+Number(p.ovr||0),0)/players.length:0,high=players.length?Math.max(...players.map(p=>Number(p.ovr||0))):0;$('#dashboardStats').innerHTML=`<div class="stat lime"><b>${players.length}</b><span>Players</span></div><div class="stat"><b>${players.length?Math.round(avg):'—'}</b><span>Avg OVR</span></div><div class="stat"><b>${players.length?high:'—'}</b><span>Highest</span></div>`;$('#dashboardSquadLabel').textContent=players.length?`${players.length} saved player${players.length===1?'':'s'}`:'Add your first player';}
+  async function renderDashboard(){
+    const players=await P.all(),avg=players.length?players.reduce((a,p)=>a+Number(p.ovr||0),0)/players.length:0,high=players.length?Math.max(...players.map(p=>Number(p.ovr||0))):0;
+    let drillSetup=null,plan=null;
+    try{drillSetup=await DP.ensure();}catch(_){/* dashboard intelligence is best effort */}
+    try{plan=await TP.load();}catch(_){/* no saved plan yet */}
+    const unlockedNormal=drillSetup?Object.values(drillSetup.normal?.drills||{}).filter(x=>x?.unlocked).length:0;
+    const masterStock=drillSetup?Object.values(drillSetup.master?.stock||{}).reduce((a,v)=>a+Math.max(0,Number(v)||0),0):0;
+    const highPlayer=players.slice().sort((a,b)=>Number(b.ovr||0)-Number(a.ovr||0))[0];
+    const stats=$('#dashboardStats');
+    if(stats)stats.innerHTML=`
+      <button class="dashboard-stat" data-go="squad"><span class="dashboard-stat-icon"><img src="assets/icons/squad.svg" alt=""></span><span><small>Players</small><b>${players.length}</b><em>in your squad</em></span><i>›</i></button>
+      <button class="dashboard-stat" data-go="squad"><span class="dashboard-stat-icon blue">▥</span><span><small>Avg OVR</small><b>${players.length?Math.round(avg):'—'}</b><em>squad average</em></span><i>›</i></button>
+      <button class="dashboard-stat" ${highPlayer?`data-player-open="${esc(highPlayer.key)}"`:'data-go="squad"'}><span class="dashboard-stat-icon lime">☆</span><span><small>Highest OVR</small><b>${players.length?high:'—'}</b><em>${highPlayer?esc(highPlayer.name||'Top player'):'add players'}</em></span><i>›</i></button>
+      <button class="dashboard-stat" data-go="training"><span class="dashboard-stat-icon lime">ϟ</span><span><small>Training Ready</small><b>${unlockedNormal}</b><em>saved drill levels</em></span><i>›</i></button>`;
+    const recent=$('#dashboardRecentPlayers');
+    if(recent)recent.innerHTML=players.length?players.slice().sort((a,b)=>Number(b.ovr||0)-Number(a.ovr||0)).slice(0,5).map((p,i)=>`<button class="dashboard-player-row" data-player-open="${esc(p.key)}"><span class="dashboard-player-rank">${i+1}</span><img src="${roleAsset(p.position)}" alt=""><span class="dashboard-player-copy"><b>${esc(p.name||'Unnamed Player')}</b><small><i>${esc(p.position||'?')}</i>${p.age?` Age ${esc(p.age)}`:''}${psLabel(p)?` · ${esc(psLabel(p))}`:''}</small></span><span class="dashboard-player-ovr"><small>OVR</small><b>${esc(p.ovr||'—')}</b></span><span class="dashboard-row-arrow">›</span></button>`).join(''):`<div class="dashboard-empty"><b>No players yet</b><span>Add your first player to bring the dashboard to life.</span><button class="btn primary" data-go="add-player">Add Player</button></div>`;
+    const training=$('#dashboardTrainingStats');
+    if(training)training.innerHTML=`<div><b>${unlockedNormal}</b><span>Normal drills</span></div><div><b>${masterStock}</b><span>Master cards</span></div><div><b>6</b><span>Session slots</span></div>`;
+    const snap=$('#dashboardPlanSnapshot');
+    if(snap){
+      if(plan&&!plan.error){const form=esc(plan.formationName||'Saved plan'),approach=esc(plan.approach||'Balanced'),starters=Array.isArray(plan.starters)?plan.starters.length:0;snap.innerHTML=`<div class="dashboard-mini-pitch"><span class="p p1"></span><span class="p p2"></span><span class="p p3"></span><span class="p p4"></span><span class="p p5"></span><span class="p p6"></span><span class="p p7"></span><span class="p p8"></span><span class="p p9"></span><span class="p p10"></span><span class="p p11"></span></div><div class="dashboard-plan-copy"><small>Formation</small><b>${form}</b><span>${starters}/11 starters</span><small>Approach</small><b>${approach}</b><button class="btn ghost compact" data-go="team-plan">View team plan →</button></div>`;}else snap.innerHTML=`<div class="dashboard-empty"><b>No saved Team Plan</b><span>Build your XI, tactics, set pieces and Mentor plan from your current squad.</span><button class="btn primary" data-go="team-plan">Build Team Plan</button></div>`;
+    }
+    const insight=$('#dashboardInsight');
+    if(insight){
+      if(players.length){const complete=players.filter(p=>p.skills&&Object.keys(p.skills).length>=15).length;const missing=Math.max(0,players.length-complete);insight.innerHTML=`<div class="dashboard-insight-score"><b>${players.length?Math.round((complete/players.length)*100):0}%</b><span>profile coverage</span></div><div><b>${complete} players ready for full analysis</b><p>${missing?`${missing} player${missing===1?' needs':'s need'} a complete Skills update before every optimiser can use them.`:'Your saved squad has complete attribute data for every player.'}</p><button class="section-link" data-go="squad">Review squad →</button></div>`;}else insight.innerHTML='<div class="dashboard-empty compact"><b>Start with your squad</b><span>Your training and team-plan intelligence will appear here.</span></div>';
+    }
+  }
   function category(pos){if(pos==='GK')return'GK';if(['DL','DC','DR','DMC'].includes(pos))return'DEF';if(['ML','MC','MR'].includes(pos))return'MID';return'ATT';}
   async function renderSquad(){
     let players=await P.all();
@@ -174,6 +200,7 @@
   });
   $('#profileDeleteBtn')?.addEventListener('click',async()=>{const b=$('#profileDeleteBtn');if(!b.dataset.armed){b.dataset.armed='1';b.textContent='Tap again to delete';$('#profileEditNote').textContent='This permanently removes the player and their saved training session.';setTimeout(()=>{delete b.dataset.armed;b.textContent='Delete Player';},3500);return;}const p=await P.get(state.playerKey);await P.remove(state.playerKey);state.playerKey='';state.trainingKey='';delete b.dataset.armed;b.textContent='Delete Player';toast(`${p?.name||'Player'} deleted`);await renderDashboard();go('squad',{historyMode:'replace'});});
   $('#squadBulkUpdateBtn')?.addEventListener('click',async()=>{state.scanMode='update';state.scanUpdateKey='';state.scanAutoSavedCount=0;await go('add-player');if($('#scanProgressText'))$('#scanProgressText').textContent='Choose Skills screenshots · names will be matched and saved automatically';toast('Automatic squad update ready');});
+  $('#dashboardUpdatePlayers')?.addEventListener('click',()=>$('#squadBulkUpdateBtn')?.click());
 
   // ---------- Refresh-safe scanner queue persistence ----------
   function openQueueDb(){return new Promise((resolve,reject)=>{if(!('indexedDB'in window)){resolve(null);return;}const req=indexedDB.open(QUEUE_DB_NAME,1);req.onupgradeneeded=()=>{if(!req.result.objectStoreNames.contains(QUEUE_STORE))req.result.createObjectStore(QUEUE_STORE);};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);});}

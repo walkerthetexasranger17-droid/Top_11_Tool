@@ -2,7 +2,8 @@ from pathlib import Path
 import hashlib, json, re, sys
 
 ROOT=Path(__file__).resolve().parents[1]
-VERSION='0.5.17'
+VERSION='0.6.1'
+DECISION_VERSION='0.5.17'
 MODEL='companion-strategy-v2-own-squad-runtime-v0515'  # scoring/calibration deliberately unchanged from v0.5.15
 errs=[]
 
@@ -22,20 +23,20 @@ manifest=json.loads(manifest_path.read_text(encoding='utf-8'))
 if f'data-runtime="{VERSION}"' not in html: errs.append('index runtime marker is not release version')
 if f'v{VERSION}' not in html: errs.append('visible HTML does not expose release version')
 if f"window.__TE_RUNTIME__='{VERSION}'" not in app: errs.append('app runtime marker is not release version')
-if "const CACHE='te-v0-5-17-p11'" not in sw: errs.append('service-worker cache is not release cache')
-if '?r=0517' not in html: errs.append('release cache-buster missing')
+if "const CACHE='te-v0-6-1-design-p1'" not in sw: errs.append('service-worker cache is not v0.6.1 design cache')
+if '?r=0601' not in html: errs.append('v0.6.1 cache-buster missing')
 for q in re.findall(r'(?:src|href)="([^\"]+\?r=([^\"]+))"', html):
-    if q[1] != '0517': errs.append(f'stale runtime query marker: {q[0]}')
-if '?build=0.5.17' not in (ROOT/'START_APP.ps1').read_text(encoding='utf-8'): errs.append('PowerShell launcher build marker is stale')
-if 'Top Eleven Tool v0.5.17' not in (ROOT/'START_APP.bat').read_text(encoding='utf-8'): errs.append('Windows launcher title is stale')
-if "runtime:'0.5.17'" not in cloud: errs.append('cloud ready diagnostic runtime is stale')
+    if q[1] != '0601': errs.append(f'stale runtime query marker: {q[0]}')
+if '?build=0.6.1' not in (ROOT/'START_APP.ps1').read_text(encoding='utf-8'): errs.append('PowerShell launcher build marker is stale')
+if 'Top Eleven Tool v0.6.1' not in (ROOT/'START_APP.bat').read_text(encoding='utf-8'): errs.append('Windows launcher title is stale')
+if "runtime:'0.6.1'" not in cloud: errs.append('cloud ready diagnostic runtime is stale')
 
-if logic.get('version')!='v0.5.17': errs.append('canonical decision contract version is not v0.5.17')
+if logic.get('version')!=f'v{DECISION_VERSION}': errs.append('canonical decision contract version changed during design branch')
 if logic.get('model')!=MODEL: errs.append('canonical decision model fingerprint changed unexpectedly')
-if not str(logic.get('status','')).startswith('RELEASE-FROZEN v0.5.17'): errs.append('canonical decision contract is not release-frozen')
-if strings.get('version')!='v0.5.17': errs.append('strategy strings version is stale')
-if manifest.get('version')!='v0.5.17': errs.append('decision manifest version is stale')
-if not str(manifest.get('status','')).startswith('RELEASE-FROZEN v0.5.17'): errs.append('decision manifest is not release-frozen')
+if not str(logic.get('status','')).startswith(f'RELEASE-FROZEN v{DECISION_VERSION}'): errs.append('canonical decision contract is not release-frozen')
+if strings.get('version')!=f'v{DECISION_VERSION}': errs.append('strategy strings decision version changed')
+if manifest.get('version')!=f'v{DECISION_VERSION}': errs.append('decision manifest version changed')
+if not str(manifest.get('status','')).startswith(f'RELEASE-FROZEN v{DECISION_VERSION}'): errs.append('decision manifest is not release-frozen')
 
 prefix='(()=>{const TE=window.TE5=window.TE5||{};TE.StrategyData='
 suffix=';})();'
@@ -57,9 +58,9 @@ for name,path in [('decision_logic_v2.json',logic_path),('strategy_strings_v2.js
     if rec.get('sha256')!=hashlib.sha256(raw).hexdigest(): errs.append(f'{name} manifest SHA-256 mismatch')
     if rec.get('bytes')!=len(raw): errs.append(f'{name} manifest byte count mismatch')
 
-for doc in ['START_HERE.md','V0517_HANDOFF_VALIDATION.md','CALIBRATION_RECOVERY_HANDOFF_v0.5.17.md','docs/continuity/CURRENT_STATE.md','docs/continuity/NEW_CHAT_RECOVERY.md','docs/releases/v0.5.17.md']:
+for doc in ['START_HERE.md','DESIGN_RECOVERY_HANDOFF_v0.6.1.md','docs/continuity/CURRENT_STATE.md']:
     text=(ROOT/doc).read_text(encoding='utf-8')
-    if 'v0.5.17' not in text: errs.append(f'{doc} does not identify v0.5.17')
+    if 'v0.6.1' not in text: errs.append(f'{doc} does not identify v0.6.1 design branch')
 
 root_handoff=(ROOT/'CALIBRATION_RECOVERY_HANDOFF_v0.5.17.md').read_bytes()
 mirror_handoff=(ROOT/'docs/continuity/CALIBRATION_RECOVERY_HANDOFF_v0.5.17.md').read_bytes()
@@ -67,7 +68,7 @@ if root_handoff!=mirror_handoff: errs.append('root and continuity v0.5.17 handof
 if b'**Status:** RELEASE-FROZEN TACTIC UI-LABEL HOTFIX' not in root_handoff: errs.append('embedded v0.5.17 handoff is not release-frozen')
 
 if errs:
-    print('FAIL v0.5.17 release identity contract')
+    print('FAIL v0.6.1 design/runtime identity contract')
     for e in errs: print('-',e)
     sys.exit(1)
-print('PASS v0.5.17 release identity contract: UI/runtime/cache/data bundle/manifest/docs synchronized; v0.5.15 scoring fingerprint preserved')
+print('PASS v0.6.1 design/runtime identity: UI/runtime/cache synchronized; v0.5.17 decision contract and v0.5.15 scoring fingerprint preserved')

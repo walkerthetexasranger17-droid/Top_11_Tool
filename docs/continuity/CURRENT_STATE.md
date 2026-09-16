@@ -1,3 +1,16 @@
+# CURRENT DESIGN OVERLAY — v0.6.1-dev-pass1
+
+**State:** UNPUBLISHED / USER REVIEW.  
+**UI/runtime:** v0.6.1.  
+**Decision contract:** v0.5.17 unchanged.  
+**Calibrated Match Ready scoring:** v0.5.15 unchanged.
+
+The v0.6 design direction is now locked to the approved dark navy/neon-lime/cyan football-intelligence system. v0.6.1 is the first implementation pass: a responsive desktop sidebar / tablet / mobile shell, redesigned auth presentation and a rebuilt Home dashboard using real saved squad, drill and saved Team Plan data. Approved visual targets are preserved in `docs/design/reference/v060/`; read `DESIGN_RECOVERY_HANDOFF_v0.6.1.md` before any further UI work.
+
+Next intended pass: Squad + scanner surfaces, unless user testing requests another Home/shell refinement first.
+
+---
+
 # CURRENT DEVELOPMENT OVERLAY — v0.5.17-dev-pass11
 
 **State:** UNPUBLISHED / TESTING — do not publish.  

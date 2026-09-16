@@ -16,7 +16,7 @@ for rel in assets:
 # Pass11 intentionally keeps the install-time precache small. Large scanner references,
 # mentor art and other feature assets are still packaged and are runtime-cached on demand.
 required={
-    './index.html','./manifest.json','./icon-192.png','./icon-512.png','./css/app.css',
+    './index.html','./manifest.json','./icon-192.png','./icon-512.png','./css/app.css','./css/v060.css',
     *{f'./js/{p.name}' for p in (ROOT/'js').glob('*.js')},
     *{f'./assets/{p.relative_to(ROOT/"assets").as_posix()}' for d in ('brands','icons','scenes','roles','drills') for p in (ROOT/'assets'/d).rglob('*') if p.is_file()},
 }

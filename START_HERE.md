@@ -1,3 +1,13 @@
+# v0.6.1 UNPUBLISHED DESIGN PASS1 — START HERE
+
+**CURRENT UI BRANCH:** v0.6.1 — responsive redesign implementation.  
+**Stable logic base:** v0.5.17 decision contract / v0.5.15 calibrated Match Ready model.  
+**Read first:** `DESIGN_RECOVERY_HANDOFF_v0.6.1.md`.
+
+The user has approved the v0.6 dark neon football-intelligence direction. v0.6.1 introduces the responsive shell, redesigned auth experience and first production Home dashboard. Football/scanner recommendation logic is intentionally unchanged. The older v0.5.17 material below remains the calibration/recovery history and must not be discarded.
+
+---
+
 # v0.5.17 UNPUBLISHED DEV PASS11 RECOVERY SNAPSHOT
 
 **CURRENT WORKING BRANCH:** v0.5.17-dev-pass11 — **DO NOT PUBLISH YET**.  
