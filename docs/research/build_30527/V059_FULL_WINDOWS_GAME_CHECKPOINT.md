@@ -29,7 +29,7 @@ The current client proves the intended interpretation:
 - `{sa-long-shots} Shadow striker`
 - inventory title: `Shadow striker`
 
-Therefore **LongShots is a historical/internal identifier and Shadow Striker is its current display identity**. The production app was already safer than the research note because it aliases `Long Shots -> Shadow Striker`; this checkpoint corrects the research layer.
+Therefore **Shadow Striker is the current player-facing Special Ability**. `LongShots` is only a historical/internal enum/localisation token for that entry and must never be presented as a separate ability. This checkpoint corrects the earlier research-layer naming confusion.
 
 Current client also contains **Rebound Specialist, Cross Expert and Counter Attack Stopper**, and supports first/second/third Special Ability slots.
 

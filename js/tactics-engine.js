@@ -1,7 +1,7 @@
 (() => {
   const TE=window.TE5=window.TE5||{};const B=TE.BibleData,D=TE.Data,STRAT=TE.Strategy;
   if(!B||!D||!STRAT)throw new Error('bible-data.js, data.js and strategy-logic.js must load before tactics-engine.js');
-  const MODEL_VERSION='30527-drain-fit-v5-calibrated-v0515-affinity-dedup';
+  const MODEL_VERSION='30527-drain-fit-v5-calibrated-v0515-affinity-dedup-sa-canonical-ps-gate';
   const DIMENSIONS=['passing','shooting','focus','cross','lost','won','mentality','marking','pressing','backLine','tackling'];
   const SEARCH_DIMS=DIMENSIONS.filter(x=>x!=='mentality');
   const DRAIN_RANK={Low:0,Medium:1,High:2};

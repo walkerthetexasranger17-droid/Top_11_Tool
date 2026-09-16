@@ -54,7 +54,7 @@ If a new capture or binary pass resolves one of these, update this file and the 
 
 ## v0.5.9 current Windows-client boundaries
 
-- **RESOLVED correction:** Shadow Striker is current; `LongShots` is the internal/raw identifier and is localized as Shadow Striker.
+- **RESOLVED correction:** Shadow Striker is current and is the only player-facing Special Ability identity. `LongShots` is an internal/localisation token only; do not present it as a separate ability.
 - **RESOLVED:** three Mentor Prestige stages and Signature Seal gating are now present in the supplied current client, not only official web documentation.
 - **UNRESOLVED:** one universal static role→Special-Ability eligibility matrix. Runtime/protocol eligibility is explicit, but the static table has not been recovered.
 - **UNRESOLVED:** inherent numeric Special Ability effectiveness multipliers. Exact activation events are observable in the match stream, enabling controlled tests.

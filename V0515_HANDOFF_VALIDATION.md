@@ -1,51 +1,63 @@
-# v0.5.15 Calibration Handoff — Latest Validation Record
+# v0.5.15 Release Freeze — Validation Record
 
-This is a **working calibration snapshot**, not a release-frozen v0.5.15.
+**Release state:** RELEASE-FROZEN  
+**Freeze date:** 2026-09-16
 
-Primary recovery file:
-`CALIBRATION_RECOVERY_HANDOFF_v0.5.15.md`
+Primary recovery file: `CALIBRATION_RECOVERY_HANDOFF_v0.5.15.md`
 
-Latest verified checkpoint before backup packaging:
+## Frozen source-tree gate
 
-- Core deterministic suite: PASS — 347 assertions
-- Tactics calibration: PASS — 174 assertions
-- Live-drain calibration: PASS — 52 assertions
-- Formation calibration: PASS — 27 assertions
-- Formation assignment calibration: PASS — 4 assertions
-- Formation natural fallback: PASS — 4 assertions
-- Formation fallback monotonicity: PASS — 5 assertions
-- Formation Playstyle calibration: PASS — 3 assertions
-- Squad Blueprint calibration: PASS — 21 assertions
-- Data completeness calibration: PASS — 10 assertions
-- Team Plan completeness: PASS — 5 assertions
-- Training matrix: PASS — 40 profiles (12 base + 28 Role+Playstyle)
-- Team Training: PASS — 14 assertions
-- Set Pieces: PASS — 29 assertions
-- Mentors: PASS — 14 assertions
-- Stitched pipeline: PASS — 25 assertions
-- Stitched monotonicity: PASS — 8 assertions
-- Roster-order invariance: PASS — 4 assertions
-- Strategy/data contract: PASS — 12 roles, 28 role+Playstyle profiles, 11 formation rules, 56 tactic rules, 143 strings
-- Package integrity: PASS — 464 precached runtime files; 461 required runtime files
-- Static/cloud/navigation contracts: PASS
-- Scanner v12 Live contract: PASS — 11 assertions
-- Scanner image + compact-reference + native-resolution contracts: PASS
+- Core deterministic suite: **PASS — 353 assertions**
+- Tactics calibration: **PASS — 178 assertions**
+- Live-drain profile: **PASS — 52 assertions**
+- Formation calibration invariants: **PASS — 27 assertions**
+- Formation assignment: **PASS — 4 assertions**
+- Formation natural fallback: **PASS — 4 assertions**
+- Formation fallback monotonicity: **PASS — 5 assertions**
+- Formation Playstyle: **PASS — 3 assertions**
+- Squad Blueprint: **PASS — 21 assertions**
+- Data completeness: **PASS — 10 assertions**
+- Team Plan completeness: **PASS — 5 assertions**
+- Training matrix: **PASS — 40 profiles (12 base + 28 Role+Playstyle)**
+- Team Training: **PASS — 14 assertions**
+- Set Pieces: **PASS — 29 assertions**
+- Mentors: **PASS — 18 assertions**
+- Stitched pipeline: **PASS — 26 assertions**
+- Stitched plan monotonicity: **PASS — 8 assertions**
+- Roster-order invariance: **PASS — 4 assertions**
+- Direct all-in-one `TeamPlan.buildOptimalPlan()`: **PASS — 5 assertions**
+- Strategy/data contract: **PASS — 12 roles, 28 role+Playstyle profiles, 11 formation rules, 56 tactic rules, 143 strings**
+- Release identity/synchronisation contract: **PASS**
+- Package integrity: **PASS — 464 precached runtime files; 461 required runtime files**
+- Static/cloud/navigation contracts: **PASS**
+- Scanner v12/failover/image/reference/level/badge/compact-reference/pixel/native-source/all-native-resolution contracts: **PASS**
+- JavaScript syntax for active `js/*.js` and `sw.js`: **PASS**
 
-Latest semantic calibration:
+## Release identity
 
-- A Playstyle contributes to Tactics only when active and the player's current assigned role is eligible for that Playstyle.
-- Legal Related/Natural assignment is not penalised or invalidated; only the ineligible Playstyle identity contribution becomes zero.
-- Declared current Playstyle/active-SA affinity tables are confirmed runtime companion data rather than documentation-only data.
-- Exact identity-only duplicate paths are suppressed for Winger→Medium Cross, Sweeper Keeper→Offside, Ball Winner/Stopper→Aggressive Tackling, and Shadow Striker→Shoot on Sight.
-- Contextual overlays remain additive where they add extra squad evidence rather than restating identity alone.
-- Exact hard-legal post-dedup Playstyle/SA semantic maximum is **74 raw**, mapped to **14 points**. A legal runtime XI reaches 74 and is regression-locked.
-- Strategy generation: `companion-strategy-v2-own-squad-runtime-v0515-calibration-4`.
-- Tactics generation: `30527-drain-fit-v5-calibrated-v0515-affinity-dedup`.
-- Team Plan schema remains v6 with model fingerprinting.
-- Shadow Striker remains a current Special Ability; raw/internal `Long Shots` / `LongShots` canonicalises to Shadow Striker.
+- Public/runtime version: `0.5.15`
+- Strategy generation: `companion-strategy-v2-own-squad-runtime-v0515`
+- Tactics generation: `30527-drain-fit-v5-calibrated-v0515-affinity-dedup-sa-canonical-ps-gate`
+- Team Plan schema: `6`
+- Service-worker cache: `te-v0-5-15`
+- Runtime cache-buster: `r=0515`
+- Canonical `decision_logic_v2.json` and browser `js/strategy-data.js`: **deep-equal at freeze**
+- Decision manifest SHA-256/byte counts: **verified by release identity contract**
 
-Important unresolved boundary:
-Mixed Medium/High live tactic-drain exchange rate is still unresolved. The runtime uses only categorical option intensity plus the established safe ordering; it does not invent a numeric Medium↔High conversion.
+## Frozen decision state
 
-Mandatory workflow from this checkpoint onward:
-every development/calibration pass must reserve end-of-session time to refresh the embedded handoff, run relevant regressions, create the entire current-app backup ZIP, extract/verify it, and give that ZIP to the user before the ~25–26 minute working window is exhausted.
+- All-in-one own-squad planner is stitched and directly regression-tested.
+- Active Playstyle semantics require active state **and** eligible current assigned role everywhere they influence match planning.
+- Declared Playstyle/active-SA affinities are active with proven identity-only duplicate paths suppressed.
+- Exact hard-legal Playstyle/SA semantic maximum is **74 raw → 14 points**.
+- Weak unused reserves, unavailable players and incomplete players are protected from leaking into the Match Ready plan.
+- Shadow Striker is the sole player-facing SA identity; `LongShots` is internal/provenance compatibility only.
+- Opponent information remains permanently out of scope.
+
+## Intentionally unresolved, safely contained
+
+Mixed Medium/High live tactic-drain exchange rate remains unresolved. Runtime uses categorical intensities and proven safe ordering only; no numeric exchange rate is invented. Exact Mentor per-level server magnitudes, exact current Set Piece specialist magnitude and Training age-rate values also remain unresolved rather than guessed.
+
+## Release rule
+
+v0.5.15 is frozen. Any subsequent product/scoring change starts **v0.5.16**. Historical `.pre_*` files are recovery evidence only and are not active runtime code.

@@ -167,7 +167,7 @@
       "system": "special_abilities",
       "status": "SUPERSEDED_BY_CURRENT_CLIENT",
       "title": "Current special ability enum is 1..19",
-      "summary": "Older build-30527 interpretation treated raw Long Shots as distinct and concluded Shadow Striker absent. Current Windows/WSA client proves raw LongShots is localized/displayed as Shadow striker. See v0.5.9 current-client evidence.",
+      "summary": "Older build-30527 interpretation incorrectly treated the raw Long Shots/LongShots token as a player-facing Special Ability name. Current Windows/WSA client evidence shows the player-facing identity is Shadow Striker; the raw token is provenance only. See v0.5.9 current-client evidence.",
       "confidence": "high",
       "sources": [
         "source_archive/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.1_VERIFIED.md",
@@ -577,7 +577,7 @@
       "system": "special_abilities",
       "status": "RESEARCH_BOUNDARY",
       "title": "Current ST Special Ability weighting cannot be safely recovered from static/community evidence",
-      "summary": "Current client explicitly represents role/player SA eligibility and exact live-match SA activation events, but no universal static role→SA table or comparable inherent effect multiplier/ranking has yet been recovered. Shadow Striker is current via the LongShots internal alias. Community rankings remain contradictory, so ST SA numeric weighting stays unresolved pending deeper native/static work or controlled event captures.",
+      "summary": "Current client explicitly represents role/player SA eligibility and exact live-match SA activation events, but no universal static role→SA table or comparable inherent effect multiplier/ranking has yet been recovered. Shadow Striker is current; LongShots is only the internal enum/localisation token for that entry. Community rankings remain contradictory, so ST SA numeric weighting stays unresolved pending deeper native/static work or controlled event captures.",
       "confidence": "high as boundary",
       "sources": [
         "data/build_30527/special_abilities_30527.json",
@@ -631,8 +631,8 @@
       "id": "SA-004",
       "system": "special_abilities",
       "status": "GAME_STATIC_CLIENT",
-      "title": "LongShots is the current internal alias for Shadow Striker",
-      "summary": "Current client localizes special_ability_6 and LongShots UI keys as Shadow striker; the production alias was correct and v0.5.8 research wording was not.",
+      "title": "LongShots is an internal enum/localisation token for Shadow Striker",
+      "summary": "Current client localizes special_ability_6 and LongShots keys as Shadow Striker. LongShots is not a separate player-facing Special Ability name and must never be presented as one.",
       "confidence": "high",
       "sources": [
         "data/current_windows_client_2026-09-14",

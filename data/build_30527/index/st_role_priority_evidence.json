@@ -141,7 +141,7 @@
       "current_enum_relevant_attacker_names": [
         "Playmaker",
         "One-on-One Scorer",
-        "Long Shots",
+        "Shadow Striker",
         "Dribbler",
         "Penalty Kick Specialist",
         "Free Kick Specialist",
@@ -161,7 +161,7 @@
       "quality": "CONTRADICTORY_AND_PARTLY_STALE",
       "observations": [
         "One-on-One Scorer, Free Kick Specialist and Versatile Attacker are each promoted as 'best' ST options in different player reports.",
-        "Some community advice still references Shadow Striker for attackers while older raw enums name it Long Shots; current Windows client confirms the display identity is Shadow Striker.",
+        "Shadow Striker is the current player-facing attacker Special Ability; older raw client/build tokens named Long Shots/LongShots are provenance only, not a separate ability.",
         "Versatile Attacker activation/effect descriptions are anecdotal and inconsistent across reports."
       ],
       "safe_use": "Do not add an ST SA weight or recommend training a specific SA from role alone. For an already-owned SA, only surface context where current game/official evidence can support it."

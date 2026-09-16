@@ -1,8 +1,8 @@
 {
   "schema_version": 2,
-  "version": "v0.5.15-calibration",
-  "model": "companion-strategy-v2-own-squad-runtime-v0515-calibration-4",
-  "status": "ACTIVE v0.5.15 CALIBRATION CONTRACT — NOT YET RELEASE-FROZEN",
+  "version": "v0.5.15",
+  "model": "companion-strategy-v2-own-squad-runtime-v0515",
+  "status": "RELEASE-FROZEN v0.5.15 OWN-SQUAD DECISION CONTRACT",
   "principles": [
     "Game/native data controls legality, white skills, tactic-option identity, drain-calculation architecture, Playstyle eligibility and Mentor effect identity. Current live drain intensity classes remain separate LIVE FACTS until the server numeric mapping is recovered.",
     "The decision system uses only the manager own squad, assigned XI, player skills, Playstyles, Special Abilities, saved Mentor unlock/level state, Approach and Drain Limit.",
@@ -984,7 +984,7 @@
         "bucket": "own_squad_structure",
         "confidence": "medium",
         "evidence": [
-          "companion-own-squad-v0.5.15-calibration"
+          "companion-own-squad-v0.5.15"
         ]
       },
       {
@@ -997,7 +997,7 @@
         "bucket": "internal_coherence",
         "confidence": "medium",
         "evidence": [
-          "companion-own-squad-v0.5.15-calibration"
+          "companion-own-squad-v0.5.15"
         ]
       },
       {
@@ -1010,7 +1010,7 @@
         "bucket": "internal_coherence",
         "confidence": "medium",
         "evidence": [
-          "companion-own-squad-v0.5.15-calibration"
+          "companion-own-squad-v0.5.15"
         ]
       },
       {
@@ -1231,7 +1231,7 @@
         "bucket": "internal_coherence",
         "confidence": "medium",
         "evidence": [
-          "companion-own-squad-v0.5.15-calibration"
+          "companion-own-squad-v0.5.15"
         ]
       },
       {
@@ -1257,7 +1257,7 @@
         "bucket": "internal_coherence",
         "confidence": "medium",
         "evidence": [
-          "companion-own-squad-v0.5.15-calibration"
+          "companion-own-squad-v0.5.15"
         ]
       },
       {
@@ -1283,7 +1283,7 @@
         "bucket": "internal_coherence",
         "confidence": "medium",
         "evidence": [
-          "companion-own-squad-v0.5.15-calibration"
+          "companion-own-squad-v0.5.15"
         ]
       },
       {
@@ -1296,7 +1296,7 @@
         "bucket": "internal_coherence",
         "confidence": "medium",
         "evidence": [
-          "companion-own-squad-v0.5.15-calibration"
+          "companion-own-squad-v0.5.15"
         ]
       },
       {
@@ -3984,7 +3984,7 @@
     }
   },
   "joint_selection": {
-    "status": "LIVE v0.5.14 COMPLETE OWN-SQUAD TEAM-PLAN SELECTION — FINAL PRE-CALIBRATION",
+    "status": "LIVE v0.5.15 COMPLETE OWN-SQUAD TEAM-PLAN SELECTION — CALIBRATED RELEASE",
     "core_plan_score": "0.50 × formation total + 0.50 × tactics total",
     "viable_band": "A candidate is Mentor-eligible only when its core plan score is within 10 points of the best core plan.",
     "mentor_adjustment": "0..10 from the best unlocked Mentor own-plan fit. It is applied only inside the viable band.",

@@ -1,6 +1,6 @@
 # TOP ELEVEN TOOL BIBLE — BUILD 30527
 
-> **v0.5.9 cross-client correction (2026-09-14):** the supplied current Windows/WSA client proves the raw/internal `LongShots` Special Ability is localized and displayed as **Shadow Striker**. Older build-30527 passages below that say “Shadow Striker absent” describe the earlier raw-enum interpretation and are superseded for current display identity. See `docs/research/build_30527/V059_FULL_WINDOWS_GAME_CHECKPOINT.md`.
+> **Current identity correction:** **Shadow Striker** is the player-facing Special Ability. The supplied Windows/WSA client contains `LongShots` only as an internal enum/localisation token for that entry; it is not a separate player-facing ability named “Long Shots”. Older raw build tables below retain source provenance and must not be copied into UI/current SA lists. See `docs/research/build_30527/V059_FULL_WINDOWS_GAME_CHECKPOINT.md`.
 
 
 **Document version:** 1.1 — provenance-audited correction  

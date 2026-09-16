@@ -1,10 +1,10 @@
-# Top Eleven Tool v0.5.14
+# Top Eleven Tool v0.5.15
 
 > **Project recovery:** a new chat/session must read [`START_HERE.md`](START_HERE.md) before modifying code. The app now embeds a permanent build-30527 Game Research Index under `docs/research/build_30527/` and machine-readable findings under `data/build_30527/index/`.
 
 Top Eleven Tool is a mobile-first PWA companion for managing a Top Eleven squad, scanning player cards, planning training, selecting a formation, assigning set pieces and presenting tactics in a simpler form.
 
-`v0.5.14` is the **final pre-calibration logic checkpoint**. The complete own-squad Team Plan stitch remains intact, with two final evidence corrections locked before calibration: Training explicitly models the recovered drill-intensity gain ladder (Very Easy/Easy/Medium/Hard/Very Hard = 1/2/3/4/5 base XP per player before drill-level effect), and Captain is treated as gameplay-neutral. Captain contributes zero Team Plan ranking value; the app defaults to the highest-OVR starter only for convenience and any starter may be selected manually without a modeled performance penalty. Exact final normal-training AttributeGain remains server/runtime-owned. All numerical ranking weights remain **COMPANION LOGIC**, never claimed as Nordeus coefficients.
+`v0.5.15` is the **release-frozen whole-system calibration build**. The own-squad decision engine is stitched end to end: eligible squad → Formation/XI → Tactics → Set Pieces/Captain → Mentor → final Team Plan → Training context. The release freezes the calibrated Formation/XI model, assigned-role-gated Playstyle/SA semantics, de-duplicated Tactics affinity scoring, exact 74 raw → 14 Playstyle/SA component scale, player-pool isolation, and the existing Training/Set Piece/Mentor containment rules. Mixed Medium/High live tactic-drain arithmetic remains explicitly unresolved and is never guessed; exact server-owned Mentor magnitudes, Set Piece magnitude and Training age-rate values remain unresolved as documented. All numerical optimiser weights are **COMPANION LOGIC**, never claimed as Nordeus coefficients.
 
 ## Main navigation
 
@@ -83,6 +83,7 @@ node tests/core-tests.js
 node tests/scanner_failover_tests.js
 node tests/cloud_local_first_runtime.js
 python tests/strategy_logic_data_contract.py
+python tests/release_identity_contract.py
 python tests/static_checks.py
 python tests/package_integrity.py
 python tests/navigation_render_contract.py

@@ -1,5 +1,5 @@
 {
-  "source": "TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.md \u00a78",
+  "source": "TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.md §8",
   "eligibility": "server-specific; do not infer a universal role matrix",
   "special_abilities": [
     {
@@ -28,7 +28,10 @@
     },
     {
       "id": 7,
-      "name": "Long Shots"
+      "name": "Shadow Striker",
+      "raw_build_label": "Long Shots",
+      "raw_internal_enum": "LongShots",
+      "note": "Long Shots/LongShots is retained only as raw/internal build provenance; the player-facing Special Ability is Shadow Striker."
     },
     {
       "id": 8,
@@ -78,5 +81,6 @@
       "id": 19,
       "name": "Counter Attack Stopper"
     }
-  ]
+  ],
+  "identity_policy": "Player-facing Special Ability names use the current display identity. Raw/internal enum labels are provenance only and must never be shown as separate abilities."
 }

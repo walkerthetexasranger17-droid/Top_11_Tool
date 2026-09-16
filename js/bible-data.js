@@ -16,7 +16,7 @@
   ];
   const PLAYSTYLE_LEVELS=[{id:0,name:'No Playstyle Level'},{id:1,name:'Locked'},{id:2,name:'Standard'},{id:3,name:'Intermediate'},{id:4,name:'Advanced'},{id:5,name:'Master'}];
   const SPECIAL_ABILITIES=[
-    {id:1,name:'Penalty Kick Stopper'},{id:2,name:'One-on-One Stopper'},{id:3,name:'Aerial Defender'},{id:4,name:'Defensive Wall'},{id:5,name:'Playmaker'},{id:6,name:'One-on-One Scorer'},{id:7,name:'Long Shots'},{id:8,name:'Dribbler'},{id:9,name:'Penalty Kick Specialist'},{id:10,name:'Free Kick Specialist'},
+    {id:1,name:'Penalty Kick Stopper'},{id:2,name:'One-on-One Stopper'},{id:3,name:'Aerial Defender'},{id:4,name:'Defensive Wall'},{id:5,name:'Playmaker'},{id:6,name:'One-on-One Scorer'},{id:7,name:'Shadow Striker'},{id:8,name:'Dribbler'},{id:9,name:'Penalty Kick Specialist'},{id:10,name:'Free Kick Specialist'},
     {id:11,name:'Corner Specialist'},{id:12,name:'Set Piece Taker'},{id:13,name:'Versatile Attacker'},{id:14,name:'Intercepting Specialist'},{id:15,name:'Set Piece Stopper'},{id:16,name:'Blocker'},{id:17,name:'Rebound Specialist'},{id:18,name:'Cross Expert'},{id:19,name:'Counter Attack Stopper'}
   ];
   const FORMATION_TEMPLATES=[

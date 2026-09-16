@@ -1,15 +1,15 @@
 {
-  "version": "v0.5.15-calibration",
-  "status": "ACTIVE v0.5.15 CALIBRATION CONTRACT — AFFINITY RUNTIME ROLE-GATED + EXACT IDENTITY OVERLAPS DE-DUPED; NOT YET FROZEN FOR RELEASE",
-  "generated_date": "2026-09-15",
+  "version": "v0.5.15",
+  "status": "RELEASE-FROZEN v0.5.15 CONTRACT — ROLE-GATED PLAYSTYLE/SA RUNTIME, DE-DUPED SEMANTICS, OWN-SQUAD ONLY",
+  "generated_date": "2026-09-16",
   "files": {
     "decision_logic_v2.json": {
-      "sha256": "c24395f743ae3ed396e291d8521b6849fe7e4cda8c0ddfa077ef2551bebff974",
-      "bytes": 121983
+      "sha256": "7150630d5e479fb3285506e96022d2707c9cc0d95d296c815f0a6c860d1c8abf",
+      "bytes": 121858
     },
     "strategy_strings_v2.json": {
-      "sha256": "6f0b1cf6f87baa7f6df8152948ab6dd620aed5a929909d4c0f7fee6d3b5ef80d",
-      "bytes": 18627
+      "sha256": "88c4bfcbc0a4e1ecc258920a1a75aafa17a8ade4995eb0a52136f7f1efd0e5c9",
+      "bytes": 18590
     }
   },
   "counts": {
@@ -33,6 +33,6 @@
     "target_shape_tiers": 4,
     "explanation_strings": 143
   },
-  "runtime_boundary": "Calibration preserves the stitched own-squad Formation/Tactics/Set Pieces/Mentor/Training pipeline. Current live tactic drain is represented by observed Low/Medium/High option intensities and pure-class transition facts; mixed-intensity numeric weighting remains unresolved and is not fabricated. Captain remains gameplay-neutral and opponent/scouting/live-state inputs remain absent.",
-  "next_step": "Continue controlled cross-system calibration from the role-gated, de-duplicated affinity runtime with exact Playstyle/SA semantic cap 74 -> 14. Mixed live drain weighting remains unresolved and must stay nonnumeric."
+  "runtime_boundary": "v0.5.15 freezes the stitched own-squad Formation/Tactics/Set Pieces/Mentor/Training pipeline. Current live tactic drain is represented by observed Low/Medium/High option intensities and pure-class transition facts; mixed-intensity numeric weighting remains unresolved and is not fabricated. Captain remains gameplay-neutral and opponent/scouting/live-state inputs remain absent.",
+  "next_step": "v0.5.15 is release-frozen. Reopen calibrated scoring only for a controlled regression or new native/live evidence; any subsequent product change should advance to v0.5.16."
 }

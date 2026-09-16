@@ -61,8 +61,7 @@
   function levelId(name){const hit=B.PLAYSTYLE_LEVELS.find(x=>x.name.toLowerCase()===normaliseText(name).toLowerCase());return hit?.id||0}
   function levelFromSegmentCount(count){const n=Number(count);return n===0?'Standard':n===1?'Intermediate':n===2?'Advanced':n===3?'Master':''}
   function levelFromSegmentFlags(right,bottom,left){if(!right&&!bottom&&!left)return'Standard';if(right&&!bottom&&!left)return'Intermediate';if(right&&bottom&&!left)return'Advanced';if(right&&bottom&&left)return'Master';return''}
-  const CURRENT_SHADOW_STRIKER_IDENTITY='Shadow Striker';
-  function canonicalAbility(name){const canonical=D.canonicalSpecialAbilityName(normaliseText(name));return canonical===CURRENT_SHADOW_STRIKER_IDENTITY?CURRENT_SHADOW_STRIKER_IDENTITY:canonical}
+  function canonicalAbility(name){const n=normaliseText(name);if(/^long shots$/i.test(n))return'Shadow Striker';const hit=D.SPECIAL_ABILITIES.find(x=>x.toLowerCase()===n.toLowerCase());return hit||n}
   function canonicalSkillName(k){const raw=String(k||'').replace(/([a-z])([A-Z])/g,'$1 $2').replace(/_/g,' ').trim();return D.OUTFIELD_SKILLS.find(x=>x.toLowerCase()===raw.toLowerCase())||D.GK_SKILLS.find(x=>x.toLowerCase()===raw.toLowerCase())||D.GK_PHYSICAL.find(x=>x.toLowerCase()===raw.toLowerCase())||raw}
 
   function dataUrlToMedia(dataUrl){const m=String(dataUrl||'').match(/^data:(image\/(?:png|jpe?g|webp));base64,([A-Za-z0-9+/=\r\n]+)$/i);if(!m)throw scannerError('INVALID_IMAGE','Choose a valid PNG, JPEG or WebP screenshot.',{scanFailure:true});return{mimeType:m[1].toLowerCase().replace('jpg','jpeg'),data:m[2].replace(/\s+/g,'')}}

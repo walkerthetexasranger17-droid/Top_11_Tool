@@ -17,6 +17,20 @@ stateOnly('wing_commander',10);r=M.recommend(starters,tactics);ok(r.best.activeF
 stateOnly('enforcer',10);r=M.recommend(starters,tactics);ok(r.best.tacticalPoints===0,'Makélélé unavailable opponent-context Tactical effect received speculative points');ok(r.best.signaturePoints===0,'Makélélé unavailable Signature effect received speculative points');ok(r.best.attributeScore>0,'Makélélé valid own-XI Attribute family was incorrectly zeroed');
 // Special Ability training modifiers must never leak into Mentor Attribute relevance.
 stateOnly('wing_commander',10);const before=M.recommend(starters,tactics).best.attributeRawRelevance;starters[7].player.specialAbilities=['Corner Specialist','Dribbler'];const after=M.recommend(starters,tactics).best.attributeRawRelevance;ok(Math.abs(before-after)<1e-12,'Special Ability changed Mentor attribute relevance');starters[7].player.specialAbilities=[];
+// Locked or wrong-role Playstyles must not create Shearer dribble-reliance relevance.
+{
+  const low=roles.map((r,i)=>({player:p('lr'+i,r),assignedRole:r}));
+  for(const s of low.filter(x=>['AML','AMC','AMR','ST'].includes(x.assignedRole)))s.player.skills.Dribbling=50;
+  stateOnly('deadball_specialist',10);
+  let sr=M.recommend(low,tactics).best;ok(sr.tacticalPoints===0,'Low-dribble XI unexpectedly activated Shearer tactical relevance');
+  low.find(x=>x.assignedRole==='AMC').player.playstyle={type:'ENGANCHE',level:1};low.find(x=>x.assignedRole==='ST').player.playstyle={type:'FALSE_NINE',level:1};
+  sr=M.recommend(low,tactics).best;ok(sr.tacticalPoints===0,'Locked Playstyles leaked into Shearer tactical relevance');
+  low.find(x=>x.assignedRole==='AMC').player.playstyle={type:'ENGANCHE',level:3};low.find(x=>x.assignedRole==='ST').player.playstyle={type:'FALSE_NINE',level:3};
+  sr=M.recommend(low,tactics).best;ok(sr.tacticalPoints===40,'Active eligible Enganche + False Nine failed to activate Shearer tactical relevance');
+  low.find(x=>x.assignedRole==='AMC').player.playstyle={type:'INSIDE_FORWARD',level:3};low.find(x=>x.assignedRole==='ST').player.playstyle={type:'ENGANCHE',level:3};
+  sr=M.recommend(low,tactics).best;ok(sr.tacticalPoints===0,'Role-ineligible Playstyles leaked into Shearer tactical relevance');
+}
+
 // Known stamina/condition tradeoffs become less punitive as the user accepts a higher drain budget.
 stateOnly('iron_guard',10);const low=M.recommend(starters,tactics,{drainLimit:'Low'}).best,med=M.recommend(starters,tactics,{drainLimit:'Medium'}).best,high=M.recommend(starters,tactics,{drainLimit:'High'}).best;ok(low.tradeoffPoints<=med.tradeoffPoints&&med.tradeoffPoints<=high.tradeoffPoints,'Vidić drain tradeoff is not monotonic Low -> Medium -> High');
 // Plan adjustment remains bounded 0..10 regardless of raw relevance.

@@ -1,17 +1,12 @@
-Top Eleven Tool v0.5.15 — CALIBRATION HANDOFF SNAPSHOT
-Latest recovery checkpoint refreshed: 2026-09-15
-Frozen release baseline underneath this branch: v0.5.14
-Working package is NOT release-frozen v0.5.15.
+Top Eleven Tool v0.5.15 — FINAL CALIBRATION / RELEASE FREEZE SNAPSHOT
+
+Release state: RELEASE-FROZEN 2026-09-16
 Primary recovery file: CALIBRATION_RECOVERY_HANDOFF_v0.5.15.md
+Strategy generation: companion-strategy-v2-own-squad-runtime-v0515
+Tactics generation: 30527-drain-fit-v5-calibrated-v0515-affinity-dedup-sa-canonical-ps-gate
 Team Plan schema: v6
-Strategy generation: companion-strategy-v2-own-squad-runtime-v0515-calibration-4
-Tactics generation: 30527-drain-fit-v5-calibrated-v0515-affinity-dedup
 Playstyle/SA semantic calibration: exact hard-legal raw maximum 74 -> 14 points
-Core regression: 347 assertions PASS
-Tactics calibration: 174 assertions PASS
-Live-drain: 52 assertions PASS
-Assigned-role Playstyle gating: PASS, including legal Related Wing Back at DC = zero Wing Back tactic identity
-Affinity audit: runtime data confirmed; exact identity-only duplicate paths suppressed; contextual overlays remain additive
-Shadow Striker: current; Long Shots / LongShots canonical alias preserved
-Mixed Medium/High live tactic-drain exchange rate: UNRESOLVED; no numeric guess
-Mandatory: refresh full backup ZIP at end of every future pass before the practical ~25–26 minute session window expires.
+Shadow Striker: sole player-facing identity; LongShots internal/provenance only
+Opponent information: permanently out of scope
+Mixed Medium/High live drain weighting: unresolved; no numeric exchange rate fabricated
+Future scoring/product changes: v0.5.16+

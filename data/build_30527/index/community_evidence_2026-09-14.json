@@ -137,7 +137,7 @@
         "community claims Versatile Attacker can complement/stack with One-on-One",
         "explanations reference legacy Shadow Striker concepts"
       ],
-      "use": "historical anecdote only; raw build-30527 enum says Long Shots, while v0.5.9 current-client localisation proves the live display identity is Shadow Striker",
+      "use": "historical anecdote only; Shadow Striker is the live player-facing identity. Raw Long Shots/LongShots text is internal/historical provenance only and is not a separate Special Ability",
       "evidence": "COMMUNITY_STALE_SCHEMA_WARNING"
     },
     {

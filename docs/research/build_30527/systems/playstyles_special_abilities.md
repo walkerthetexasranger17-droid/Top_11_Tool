@@ -20,7 +20,7 @@ Exact performance multipliers remain unresolved.
 4 Defensive Wall  
 5 Playmaker  
 6 One-on-One Scorer  
-7 Long Shots  
+7 Shadow Striker  
 8 Dribbler  
 9 Penalty Kick Specialist  
 10 Free Kick Specialist  

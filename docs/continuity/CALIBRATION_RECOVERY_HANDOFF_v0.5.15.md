@@ -1,8 +1,8 @@
 # Top Eleven Tool — Calibration Recovery Handoff
 **Recovery point:** September 2026  
-**Current release baseline:** v0.5.14  
-**Current working branch:** pre-v0.5.15 calibration branch  
-**Status:** DO NOT package/freeze v0.5.15 yet.
+**Current release:** v0.5.15  
+**Current branch state:** release-frozen v0.5.15  
+**Status:** RELEASE-FROZEN on 16 September 2026. Any subsequent product/scoring change starts v0.5.16.
 
 ---
 
@@ -41,7 +41,7 @@ Use numeric versioning only:
 
 No `r1/r2` suffixes.
 
-The current phase is **calibration**, not architecture redesign.
+The v0.5.15 calibration phase is complete and **release-frozen**. Do not reopen calibrated scoring without a controlled failing fixture or new native/live evidence. Any new product/scoring work starts v0.5.16.
 
 ---
 
@@ -1378,9 +1378,9 @@ drain component remains neutral during calibration.
 
 ---
 
-## Next Task E — Final calibration freeze criteria
+## Historical Next Task E — Final calibration freeze criteria — SATISFIED BY SECTION 25
 
-Do not package v0.5.15 until:
+Historical gate, now satisfied at release freeze:
 
 1. Long/Counter universal-bias investigation resolved
 2. remaining tactic role-pool leakage audit complete
@@ -1446,7 +1446,7 @@ First determine whether the test is stale or runtime is wrong.
 
 # 17. SHORT COPY/PASTE STARTER PROMPT FOR A NEW CHAT
 
-> Continue the Top Eleven Tool project from the attached Calibration Recovery Handoff. Do not restart the project. Current frozen release is v0.5.14; we are on the pre-v0.5.15 calibration branch. Preserve all calibrated Formation, Training, Blueprint, Set Piece, Mentor, drain-boundary and invariant fixes described in the handoff. Do not invent Top Eleven formulas. Opponent data is permanently out of scope. The immediate next task is to investigate the remaining Long Passing + Counter Attack population bias, especially rule `T-WON-COUNTER-DIRECT`, and determine through controlled fixtures whether it should require `counterOutletStrong` rather than merely `counterOutlet`. Keep live drain mixed weighting unresolved until the user provides enough evidence. Do not package v0.5.15 until the final calibration gates in the handoff are satisfied.
+> **HISTORICAL continuation prompt — superseded by section 25.** Continue the Top Eleven Tool project from the attached Calibration Recovery Handoff. Do not restart the project. Current frozen release is v0.5.14; we are on the pre-v0.5.15 calibration branch. Preserve all calibrated Formation, Training, Blueprint, Set Piece, Mentor, drain-boundary and invariant fixes described in the handoff. Do not invent Top Eleven formulas. Opponent data is permanently out of scope. The immediate next task is to investigate the remaining Long Passing + Counter Attack population bias, especially rule `T-WON-COUNTER-DIRECT`, and determine through controlled fixtures whether it should require `counterOutletStrong` rather than merely `counterOutlet`. Keep live drain mixed weighting unresolved until the user provides enough evidence. Do not package v0.5.15 until the final calibration gates in the handoff are satisfied.
 
 ---
 
@@ -1495,14 +1495,9 @@ Neutral squads receive neither strong-style semantic bonus.
 
 **Shadow Striker is definitely a current in-game Special Ability.** The user has a current player with it.
 
-Current client research also proves the raw/internal `Long Shots` / `LongShots` identity maps to the displayed **Shadow Striker** ability.
+Current client research proves **Shadow Striker** is the player-facing Special Ability. The client also contains a historical/internal `LongShots` enum/localisation token for that entry. That token is provenance only and must never be presented as a separate Special Ability named “Long Shots”.
 
-Regression now proves both stored forms:
-
-- `Shadow Striker`
-- `Long Shots`
-
-canonicalise to `abilities.ShadowStriker` and activate the same `T-SHOOT-SIGHT-SA` tactic synergy.
+Runtime scoring uses the current player-facing identity **Shadow Striker**. Import/storage normalization may silently translate the internal token to Shadow Striker, but Tactics/Training/UI must not describe “Long Shots” as an ability.
 
 Do NOT remove Shadow Striker as legacy/stale.
 
@@ -1644,12 +1639,12 @@ This prevents unsupported styles returning through the near-tie back door.
 
 Shadow Striker is definitely a current in-game Special Ability. The user owns a current player with it.
 
-Current alias boundary:
+Current identity boundary:
 
-- raw/internal `Long Shots` / `LongShots`
-- live/display `Shadow Striker`
+- player-facing/live identity: `Shadow Striker`
+- internal/historical client enum/localisation token: `LongShots`
 
-Both canonicalise to the same current ability trigger.
+The internal token may be normalized silently at import boundaries, but it is **not** a separate Special Ability name and must never appear as one in UI/recommendation text.
 
 Do NOT remove Shadow Striker as legacy/stale.
 
@@ -1787,7 +1782,7 @@ Verified directly from the current full v0.5.15 calibration working tree before 
 
 Resume calibration from here:
 
-1. **finish the canonical current Special Ability / Playstyle trigger audit** across Tactics and Training; Shadow Striker/Long Shots alias is already locked and must remain valid;
+1. **finish the canonical current Special Ability / Playstyle trigger audit** across Tactics and Training; Shadow Striker is the locked player-facing identity and internal `LongShots` normalization is provenance/import compatibility only;
 2. continue objective cross-system calibration only where a controlled fixture demonstrates a real wrong decision or semantic/player-pool leak;
 3. preserve the current neutral-style, strong-outlet, strict-data and cache-fingerprint fixes;
 4. keep mixed live Medium/High drain weighting unresolved until the user supplies enough live evidence;
@@ -1816,7 +1811,7 @@ This section supersedes the older "next task" wording above where it conflicts.
 
 ## 20.2 Shadow Striker remains locked as current
 
-Do not regress this: **Shadow Striker is current**. Raw/internal `Long Shots` / `LongShots` maps to displayed Shadow Striker. Both identities canonicalize to the same current ability and tactic trigger.
+Do not regress this: **Shadow Striker is current and is the sole player-facing identity**. `LongShots` is only an internal/historical client token for that entry. Silent import normalization is allowed; user-facing logic must never call “Long Shots” a Special Ability.
 
 ## 20.3 Current verified counts
 
@@ -1879,7 +1874,7 @@ De-duplicated relationships:
 
 Policy: keep the established explicit rule and suppress only the duplicate generic affinity. Contextual explicit rules with extra own-squad conditions remain additive (Target Man aerial outlet, Winger aerial outlet, Cross Expert + real wide progression).
 
-Shadow Striker remains current. `Long Shots` / `LongShots` still canonicalises to Shadow Striker and activates the same current rule.
+Shadow Striker remains current and is the only player-facing identity. Internal `LongShots` normalization may occur at import boundaries but must never be described as a separate ability.
 
 ## 21.3 Exact Playstyle/SA semantic range — PROVEN
 
@@ -1940,3 +1935,371 @@ The frozen state above was re-tested before packaging. Verified results:
 - Scanner image, compact-reference, patch/badge/level, pixel guard, native-source and all-native-resolution contracts: **PASS**
 
 No opponent-dependent logic was introduced. Mixed live Medium/High drain weighting remains unresolved and unchanged.
+
+---
+
+# 22. Latest mandatory-backup checkpoint — internal SA token normalization boundary
+
+This section supersedes section 21 only where model generations or validation counts differ. All role-gated affinity, de-duplication and 74→14 semantic calibration from section 21 remain active.
+
+## 22.1 Cross-system defect found and fixed
+
+The current-game player-facing identity is **Shadow Striker**. Current-client extraction also contains the internal enum/localisation token `LongShots` for that same entry.
+
+The earlier pass correctly protected import compatibility but described the token too loosely as though “Long Shots” were itself a Special Ability. That wording is superseded.
+
+Current rule:
+
+- **Shadow Striker** is the only player-facing Special Ability identity.
+- `LongShots` / historical `Long Shots` spellings may be silently normalized only when encountered as imported/internal legacy data.
+- The internal token must never be shown in the ability picker, scanner result, profile, Tactics explanation, Training explanation or Team Plan as a separate ability.
+
+The canonical import boundary remains in player cleaning/storage and Strategy identity extraction only to protect old/native data. Scanner reference identity remains **Shadow Striker**.
+
+## 22.2 Stitched runtime regression
+
+The stitched Team Plan regression now uses the real player-facing **Shadow Striker** identity. Internal-token normalization is tested separately at the data/storage boundary so the optimizer never treats `LongShots` as a user-owned ability name.
+
+## 22.3 Boundaries deliberately NOT invented
+
+No universal role→Special Ability eligibility matrix was added. The recovered current-client evidence treats Special Ability availability as player-specific and does not prove a universal role restriction table. Do not infer one.
+
+The seven current abilities without open-play tactic-affinity rows remain dead-ball-specific or unresolved. Do not create open-play effects for them without evidence.
+
+Opponent information remains permanently out of scope. Mixed live Medium↔High tactic-drain weighting remains unresolved and nonnumeric.
+
+## 22.4 Current model generations
+
+The behaviour boundary changed, so Team Plan model fingerprinting is intentionally advanced to invalidate stale cached recommendations:
+
+- Strategy: `companion-strategy-v2-own-squad-runtime-v0515-calibration-5`
+- Tactics: `30527-drain-fit-v5-calibrated-v0515-affinity-dedup-sa-canonical`
+- Team Plan cache schema: v6
+
+The exact post-de-dup Playstyle/SA semantic calibration remains **74 raw → 14 points**.
+
+## 22.5 Verified regression gate for this packaged checkpoint
+
+- Core deterministic suite: **PASS — 353 assertions**
+- Tactics calibration: **PASS — 176 assertions**
+- Live-drain profile: **PASS — 52 assertions**
+- Formation calibration invariants: **PASS — 27 assertions**
+- Formation assignment: **PASS — 4 assertions**
+- Formation natural fallback: **PASS — 4 assertions**
+- Formation fallback monotonicity: **PASS — 5 assertions**
+- Formation Playstyle: **PASS — 3 assertions**
+- Data completeness: **PASS — 10 assertions**
+- Squad Blueprint: **PASS — 21 assertions**
+- Team Plan completeness: **PASS — 5 assertions**
+- Training calibration matrix: **PASS — 40 profiles**
+- Team Training: **PASS — 14 assertions**
+- Set Pieces: **PASS — 29 assertions**
+- Mentors: **PASS — 14 assertions**
+- Stitched pipeline: **PASS — 26 assertions**
+- Stitched plan monotonicity: **PASS — 8 assertions**
+- Roster-order invariance: **PASS — 4 assertions**
+- Strategy/data contract: **PASS — 12 roles, 28 role+Playstyle profiles, 11 formation rules, 56 tactic rules, 143 strings**
+- Package integrity: **PASS — 464 precached runtime files; 461 required runtime files**
+- Static/cloud/navigation contracts: **PASS**
+- Scanner v12 compact-reference contract and image/native-resolution/reference contracts: **PASS**
+
+The broad regression command reached its execution-time ceiling only after stitched-plan monotonicity had passed; the remaining tests were then run in smaller batches and passed. This was an execution batching limit, not an application assertion failure.
+
+## 22.6 Next calibration direction
+
+Continue only with objective cross-system or player-pool defects that can be demonstrated by a controlled fixture. Do not frequency-balance tactic outputs, invent Special Ability role restrictions, add effects for unresolved abilities, or guess the live Medium↔High drain exchange rate.
+
+Before every future work window ends: update this handoff, run the relevant regression gate, create the complete current-app ZIP, extract/verify that exact ZIP, and give it to the user.
+
+
+---
+
+# 23. Latest mandatory-backup checkpoint — LongShots display-identity correction
+
+This section supersedes any earlier wording that calls **Long Shots** a player-facing Special Ability.
+
+## 23.1 Correction
+
+Public Top Eleven evidence and the recovered current Windows client are consistent on the important distinction:
+
+- **Shadow Striker** is the actual player-facing Special Ability.
+- `LongShots` exists in recovered client data as an internal enum/localisation token for the entry that displays as Shadow Striker.
+- There is **no separate player-facing “Long Shots” Special Ability** in the current app model.
+
+The application has been corrected so the current SA catalogue itself stores **Shadow Striker** directly at the corresponding slot. `LongShots` is retained only inside the internal import/provenance normalization layer.
+
+## 23.2 Runtime/UI changes
+
+- `js/bible-data.js` now lists `Shadow Striker` directly; it no longer lists `Long Shots` as a current ability.
+- `js/data.js` distinguishes `SPECIAL_ABILITY_INTERNAL_ALIASES` from the player-facing catalogue.
+- Scanner normalization delegates to the shared current identity boundary and carries no scanner-local “Long Shots ability” rule.
+- The Tactics explanation no longer says “Long Shots ability”; it refers only to Shadow Striker.
+- Tactics and stitched Team Plan regression fixtures now use `Shadow Striker` as the actual player ability identity.
+- Historical/internal `LongShots` normalization remains covered at the storage/data boundary only.
+
+No Tactics weights, Training weights, Formation logic, Mentor logic, Set Pieces, Playstyle affinity, 74→14 semantic calibration, opponent boundary, or mixed live drain assumptions were changed by this correction.
+
+## 23.3 Next calibration boundary
+
+Continue the controlled cross-system/player-pool audit. Mixed Medium↔High live tactic-drain weighting remains unresolved and must not be guessed.
+
+
+## 23.4 Verified regression gate for this checkpoint
+
+- Core deterministic suite: **PASS — 353 assertions**
+- Tactics calibration: **PASS — 172 assertions**
+- Live-drain profile: **PASS — 52 assertions**
+- Formation calibration invariants: **PASS — 27 assertions**
+- Formation assignment: **PASS — 4 assertions**
+- Formation natural fallback: **PASS — 4 assertions**
+- Formation fallback monotonicity: **PASS — 5 assertions**
+- Formation Playstyle: **PASS — 3 assertions**
+- Data completeness: **PASS — 10 assertions**
+- Squad Blueprint: **PASS — 21 assertions**
+- Team Plan completeness: **PASS — 5 assertions**
+- Training calibration matrix: **PASS — 40 profiles**
+- Team Training: **PASS — 14 assertions**
+- Set Pieces: **PASS — 29 assertions**
+- Mentors: **PASS — 14 assertions**
+- Stitched pipeline: **PASS — 26 assertions**
+- Stitched plan monotonicity: **PASS — 8 assertions**
+- Roster-order invariance: **PASS — 4 assertions**
+- Strategy/data contract: **PASS — 12 roles, 28 role+Playstyle profiles, 11 formation rules, 56 tactic rules, 143 strings**
+- Package integrity: **PASS — 464 precached runtime files; 461 required runtime files**
+- Static/cloud/navigation contracts: **PASS**
+- Scanner v12 compact-reference, image, reference, level, badge, pixel-guard, native-source and all-native-resolution contracts: **PASS**
+
+The Tactics assertion count is lower than pass4 because the two internal-token variants were deliberately removed from the **Tactics player-ability fixture**. Internal-token compatibility is now tested only at the data/storage boundary, while Tactics tests use the actual player-facing ability **Shadow Striker**. No scoring assertions were removed.
+
+Recovery note: files matching `.pre_*` are historical source snapshots only. They are **not active runtime code** and may contain superseded terminology from earlier calibration passes; always audit the unsuffixed current files first.
+
+---
+
+# 24. Latest mandatory-backup checkpoint — all-in-one Playstyle semantic gate
+
+This section supersedes section 23 only where model generations, validation counts, or the cross-system audit status differ. The Shadow Striker display-identity correction, 74→14 Playstyle/SA semantic calibration, Formation calibration, Training calibration, Set Pieces, Mentor containment rules, opponent-data prohibition and unresolved live-drain boundary remain active.
+
+## 24.1 Real stitched-decision defect found and fixed
+
+The primary Playstyle affinity scorer already required both:
+
+1. the Playstyle is active; and
+2. the player's **current assigned role** is eligible for that Playstyle.
+
+Two secondary own-XI semantic features did not use that same boundary:
+
+- `semanticRunner` could read Poacher / Inside Forward by name even when the Playstyle was Locked or role-ineligible;
+- `dribbleReliance` could read False Nine / Enganche / Inside Forward by name even when the Playstyle was Locked or role-ineligible.
+
+That meant a Playstyle which correctly earned zero Formation/affinity credit could still influence Tactics and, through `dribbleReliance`, Mentor relevance.
+
+This was proven to alter a real recommendation. In a controlled neutral XI, a **Locked Poacher** incorrectly created a strong counter-runner signal and pushed the pre-fix Tactics result to **Long Passing + Force Counter Attack**. With the Playstyle removed, the same XI selected **Mixed Passing + Focus on Buildup**.
+
+The fix centralises all secondary Playstyle semantics through `activeEligiblePlaystyleName(starter)`. A Playstyle can now contribute to these features only when it is active **and** the currently assigned role is one of that Playstyle's eligible roles. Legal Natural/Related assignment is unchanged; an ineligible Playstyle simply contributes zero semantic identity for that assignment.
+
+The same boundary is now regression-protected through Mentor. Locked or wrong-role Enganche / False Nine / Inside Forward can no longer manufacture Shearer dribble-reliance relevance.
+
+## 24.2 All-in-one runtime regression added
+
+A permanent `tests/all_in_one_system_calibration.js` now calls the real `TeamPlan.buildOptimalPlan()` pipeline rather than manually composing modules.
+
+It verifies across the complete chain:
+
+`eligible squad -> Formation/XI -> Tactics -> Mentor -> Set Pieces -> final Team Plan`
+
+that:
+
+- a Locked Poacher cannot alter the final Team Plan decision;
+- a genuinely unused weak reserve, even carrying an active Winger Playstyle and Shadow Striker SA, cannot alter the final plan;
+- an unavailable elite player cannot leak into Match Ready XI or downstream decisions;
+- an incomplete elite player cannot leak into the all-in-one plan.
+
+This is in addition to the existing stitched-pipeline and monotonicity suites.
+
+## 24.3 Cross-system player-pool / Playstyle shortcut audit status
+
+The active scoring runtime was traced again after the fix.
+
+- Tactics, Mentor, Set Pieces and player-development context consume the **chosen XI**, not unused reserves.
+- Full-squad data remains intentionally used by Formation candidate selection and Squad Blueprint/coverage only.
+- Current scoring paths no longer read a Playstyle identity outside the active+assigned-role eligibility boundary.
+- Remaining raw Playstyle reads are development/profile selection paths; inactive Playstyles already fall back to role-only profiles and do not create tactic or Mentor scoring credit.
+- Existing role-pool regressions continue to protect WideAttack, AerialTarget, Transition, PressingUnit, DefensiveUnit and defensive Positioning against unrelated-player leakage.
+
+No further defensible player-pool scoring defect was found in this pass. The **remaining tactic role-pool / Playstyle leakage audit is therefore closed for the current model**, subject to reopening only if a future controlled fixture demonstrates a wrong decision.
+
+## 24.4 Model generations
+
+The semantic boundary changed, so model fingerprinting was advanced to invalidate stale cached Team Plans:
+
+- Strategy: `companion-strategy-v2-own-squad-runtime-v0515-calibration-6`
+- Tactics: `30527-drain-fit-v5-calibrated-v0515-affinity-dedup-sa-canonical-ps-gate`
+- Team Plan cache schema: v6
+
+Exact Playstyle/SA semantic calibration remains **74 raw → 14 points**.
+
+## 24.5 Unresolved boundaries deliberately unchanged
+
+- Mixed live Medium↔High tactic-drain weighting remains unresolved. Runtime still uses categorical intensity counts, proven pure-class anchors, a safe partial ordering, and a neutral drain score where a numeric exchange rate would otherwise be required.
+- Exact Mentor per-level server magnitudes remain unresolved but contained by the existing unlock-family/relevance model.
+- Exact current Set Piece specialist magnitude remains unresolved and contained by the near-tie-only Team Plan influence.
+- Training age-rate server values remain unresolved; no age multiplier is invented.
+- No opponent information is accepted or inferred.
+
+## 24.6 Verified regression gate for this checkpoint
+
+- Core deterministic suite: **PASS — 353 assertions**
+- Tactics calibration: **PASS — 178 assertions**
+- Live-drain profile: **PASS — 52 assertions**
+- Formation calibration invariants: **PASS — 27 assertions**
+- Formation assignment: **PASS — 4 assertions**
+- Formation natural fallback: **PASS — 4 assertions**
+- Formation fallback monotonicity: **PASS — 5 assertions**
+- Formation Playstyle: **PASS — 3 assertions**
+- Squad Blueprint: **PASS — 21 assertions**
+- Data completeness: **PASS — 10 assertions**
+- Team Plan completeness: **PASS — 5 assertions**
+- Training calibration matrix: **PASS — 40 profiles**
+- Team Training: **PASS — 14 assertions**
+- Set Pieces: **PASS — 29 assertions**
+- Mentors: **PASS — 18 assertions**
+- Stitched pipeline: **PASS — 26 assertions**
+- Stitched plan monotonicity: **PASS — 8 assertions**
+- Roster-order invariance: **PASS — 4 assertions**
+- Direct all-in-one `buildOptimalPlan()` calibration: **PASS — 5 assertions**
+- Strategy/data contract: **PASS — 12 roles, 28 role+Playstyle profiles, 11 formation rules, 56 tactic rules, 143 strings**
+- Package integrity before packaging: **PASS — 464 precached runtime files; 461 required runtime files**
+- Static/cloud/navigation contracts: **PASS**
+- Scanner v12, image, patch, reference, level/badge, compact-reference, pixel-guard, native-source and all-native-resolution contracts: **PASS**
+
+A first scanner batch referenced historical test filenames that no longer exist; the actual current scanner contract filenames were then run and all passed. This was a command-name mismatch, not an application/test assertion failure.
+
+## 24.7 Next calibration direction
+
+Do not reopen already-proven systems merely to vary recommendation frequency. The all-in-one architecture, XI player-pool isolation and Playstyle activation boundary are now regression-locked.
+
+Remaining evidence-limited items should stay explicitly unresolved unless new game/native/live evidence appears. The next work should be a **release-candidate/final-freeze audit** of versioning, cache/schema fingerprints, UI-displayed version, recovery docs and package state, unless the user supplies new live drain or other game evidence first.
+
+Before every future work window ends, refresh this handoff and provide a newly extracted/verified complete backup ZIP.
+
+---
+
+# 25. FINAL v0.5.15 RELEASE-FREEZE CHECKPOINT — 16 September 2026
+
+**This section supersedes every earlier “next task”, “do not freeze”, pre-release branch, or v0.5.14-current instruction in this handoff.** Earlier sections remain historical evidence for how the calibration was reached.
+
+## 25.1 Release decision
+
+The v0.5.15 whole-system calibration gates are satisfied and the build is now **RELEASE-FROZEN**.
+
+All criteria from the historical freeze checklist are closed:
+
+1. Long/Counter universal-bias investigation — **resolved**.
+2. Tactic role-pool / Playstyle leakage audit — **closed for the current model**.
+3. Mixed live drain — **explicitly unresolved with safe nonnumeric runtime behaviour**; no guessed Medium↔High exchange rate.
+4. Calibration suites — **green**.
+5. Scanner/cloud/navigation frozen systems — **green**.
+6. Active docs/handoff — **synchronized to v0.5.15 release state**.
+7. Final ZIP — must still be created/extracted/verified at the end of each work pass; this checkpoint records the source-tree freeze before the final package step.
+8. Version/schema/cache state — **synchronized**.
+9. Embedded handoff — **updated to this release checkpoint**.
+
+The remaining server-owned unknowns are evidence boundaries, not blockers requiring invented values.
+
+## 25.2 Release-identity audit defect found and fixed
+
+The final-freeze audit found one release-state mismatch:
+
+- canonical `data/build_30527/index/decision_logic_v2.json` still carried Strategy model metadata `...calibration-4`;
+- active browser `js/strategy-data.js` carried `...calibration-6`.
+
+A deep object comparison proved that the **only difference was the model-generation label**; no Formation, Tactics, Training, Mentor, Set Piece or Playstyle/SA rule/value differed.
+
+The release now uses one synchronized Strategy fingerprint everywhere:
+
+`companion-strategy-v2-own-squad-runtime-v0515`
+
+The canonical JSON is now the source for the browser strategy bundle, and a new `tests/release_identity_contract.py` permanently checks deep equality plus release metadata/hashes.
+
+## 25.3 Frozen public/runtime/cache identity
+
+- Visible app version: **v0.5.15**
+- `index.html` runtime marker: `0.5.15`
+- `js/app.js` runtime marker: `0.5.15`
+- Local runtime asset cache-buster: `r=0515`
+- Service-worker cache: `te-v0-5-15`
+- Local launcher build query: `0.5.15`
+- Canonical decision contract: `v0.5.15`, release-frozen
+- Strategy strings: `v0.5.15`
+- Strategy model: `companion-strategy-v2-own-squad-runtime-v0515`
+- Tactics model: `30527-drain-fit-v5-calibrated-v0515-affinity-dedup-sa-canonical-ps-gate`
+- Team Plan persistence schema: **v6**
+
+Changing the Strategy fingerprint at freeze intentionally invalidates cached calibration-generation Team Plans so the released app rebuilds them under the frozen model identity.
+
+## 25.4 All-in-one system frozen state
+
+The release chain remains:
+
+`eligible squad -> Formation/XI -> Tactics -> Set Pieces/Captain -> Mentor -> final Team Plan -> Training context`
+
+Frozen guarantees include:
+
+- Playstyle match-plan contribution requires **active Playstyle + eligible current assigned role**;
+- secondary counter-runner/dribble-reliance signals use the same eligibility boundary;
+- current Playstyle/active-SA affinity data is live in Tactics without the four proven identity-only double counts;
+- exact hard-legal Playstyle/SA semantic maximum remains **74 raw -> 14 points**;
+- unused weak reserves, unavailable players and incomplete players cannot leak into the Match Ready plan;
+- Shadow Striker is the sole player-facing SA identity; internal `LongShots` remains provenance/import compatibility only;
+- Captain remains gameplay-neutral;
+- opponent/scouting/relative-strength/live-match inputs remain permanently absent.
+
+## 25.5 Unresolved boundaries deliberately retained
+
+Do **not** guess these in v0.5.15 or later:
+
+- mixed Medium↔High live tactic-drain exchange rate;
+- exact Mentor per-level server magnitudes;
+- exact current Set Piece specialist magnitude;
+- Training age-rate server values.
+
+The released runtime contains these uncertainties safely: unknown numeric live-drain arithmetic is not fabricated, external/live-only Mentor conditions score zero pre-match, Set Pieces remain near-tie-only, and Training does not invent an age multiplier.
+
+## 25.6 Frozen source-tree validation
+
+Release-freeze source tree passed:
+
+- Core deterministic: **353 assertions**
+- Tactics calibration: **178 assertions**
+- Live drain: **52 assertions**
+- Formation calibration: **27 assertions**
+- Formation assignment: **4 assertions**
+- Formation natural fallback: **4 assertions**
+- Formation fallback monotonicity: **5 assertions**
+- Formation Playstyle: **3 assertions**
+- Squad Blueprint: **21 assertions**
+- Data completeness: **10 assertions**
+- Team Plan completeness: **5 assertions**
+- Training: **40 profiles**
+- Team Training: **14 assertions**
+- Set Pieces: **29 assertions**
+- Mentors: **18 assertions**
+- Stitched pipeline: **26 assertions**
+- Stitched monotonicity: **8 assertions**
+- Roster-order invariance: **4 assertions**
+- Direct all-in-one `buildOptimalPlan()`: **5 assertions**
+- Strategy/data contract: **12 roles, 28 role+Playstyle profiles, 11 formation rules, 56 tactic rules, 143 strings**
+- Release identity/synchronisation contract: **PASS**
+- Package integrity: **464 precached runtime files; 461 required runtime files**
+- Static/cloud/navigation contracts: **PASS**
+- Scanner frozen contract matrix: **PASS**
+- Active JavaScript syntax: **PASS**
+
+## 25.7 Version discipline after this freeze
+
+**Do not modify released v0.5.15 scoring in place.**
+
+If a new controlled regression, new native/live evidence, UI feature or product fix requires a change, start **v0.5.16**. Preserve this handoff and the v0.5.15 release notes as the rollback/recovery baseline.
+
+The mandatory end-of-pass disaster-recovery rule remains active: stop new work early enough to refresh the current handoff, run relevant regression gates, create the complete app ZIP, extract/verify that exact ZIP, and provide it to the user.
+

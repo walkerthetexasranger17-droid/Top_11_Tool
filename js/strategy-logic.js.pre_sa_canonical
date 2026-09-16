@@ -1,7 +1,7 @@
 (() => {
   const TE=window.TE5=window.TE5||{};const D=TE.Data,CFG=TE.StrategyData;
   if(!D||!CFG)throw new Error('data.js and strategy-data.js must load before strategy-logic.js');
-  const MODEL_VERSION='companion-strategy-v2-own-squad-runtime-v0515';
+  const MODEL_VERSION='companion-strategy-v2-own-squad-runtime-v0515-calibration-4';
   const EVIDENCE='TOP ELEVEN TOOL CALCULATION';
   const TIER_WEIGHT={...CFG.training.tier_weights};
   const ROLE_TIERS=CFG.training.role_profiles;
@@ -23,7 +23,7 @@
   }
   function playstyleActive(player){const name=playstyleName(player);if(!name)return false;const raw=player?.playstyle;if(!raw||typeof raw!=='object')return true;const level=playstyleLevelId(player);return level==null?true:level>=2;}
   function developmentRoleFor(player,roles,requested=null){const resolved=normaliseRoles(player,roles),req=D.normaliseRole(requested);if(req&&resolved.includes(req))return req;const primary=D.normaliseRole(player?.position);if(primary&&resolved.includes(primary))return primary;const ps=playstyleName(player),roleMap=CFG.training.playstyle_role_profiles?.[ps]||{};const psRole=resolved.find(r=>roleMap[r]);return psRole||resolved[0]||'';}
-  function abilityNames(player){const arr=Array.isArray(player?.specialAbilities)?player.specialAbilities:(player?.specialAbility?[player.specialAbility]:[]);return new Set(arr.map(D.canonicalSpecialAbilityName).filter(Boolean));}
+  function abilityNames(player){const arr=Array.isArray(player?.specialAbilities)?player.specialAbilities:(player?.specialAbility?[player.specialAbility]:[]);return new Set(arr.map(x=>String(x||'').trim()==='Long Shots'?'Shadow Striker':String(x||'').trim()).filter(Boolean));}
   function tacticValues(tactics){return tactics?.values||tactics||{};}
   function inList(v,raw){return raw.split(',').map(x=>x.trim()).includes(String(v));}
   function simpleClause(clause,v){const s=clause.trim();let m=s.match(/^(\w+)\s*==\s*(\w+)$/);if(m)return String(v[m[1]])===m[2];m=s.match(/^(\w+)\s+in\s+\[([^\]]+)\]$/);if(m)return inList(v[m[1]],m[2]);return false;}
@@ -64,8 +64,7 @@
   function assignedRoleMean(starter){return skillMean(starter,D.POSITION_WHITE[starter?.assignedRole]||[]);}
   function eligible(starters,roles){return starters.filter(s=>(roles||[]).includes(s.assignedRole));}
   function band(value,base,margin=5){if(!Number.isFinite(value)||!Number.isFinite(base))return'medium';return value<base-margin?'low':value>base+margin?'high':'medium';}
-  function activeEligiblePlaystyleName(starter){if(!playstyleActive(starter?.player))return null;const def=D.playstyleDefinition(starter?.player?.playstyle||starter?.player?.playstyleType),role=D.normaliseRole(starter?.assignedRole);if(!def?.name||!role||!(def.roles||[]).includes(role))return null;return def.name;}
-  function activePlaystyleCounts(starters){const out={};for(const s of starters){const name=activeEligiblePlaystyleName(s);if(!name)continue;out[alias(name)]=(out[alias(name)]||0)+1;}return out;}
+  function activePlaystyleCounts(starters){const out={};for(const s of starters){if(!playstyleActive(s.player))continue;const def=D.playstyleDefinition(s.player?.playstyle||s.player?.playstyleType),role=D.normaliseRole(s?.assignedRole);if(!def?.name||!role||!(def.roles||[]).includes(role))continue;out[alias(def.name)]=(out[alias(def.name)]||0)+1;}return out;}
   function activeAbilityCounts(starters){const out={};for(const s of starters)for(const n of abilityNames(s.player)){const k=alias(n);out[k]=(out[k]||0)+1;}return out;}
   function clusterRows(starters,roles,skills){return eligible(starters,roles).map(s=>({starter:s,value:skillMean(s,skills)})).filter(x=>Number.isFinite(x.value));}
   function strongRows(rows,xiMedian){if(!rows.length)return[];const threshold=rows.length<3?xiMedian-10:percentile(rows.map(x=>x.value),.67);return rows.filter(x=>x.value>=threshold&&x.value>=xiMedian-10);}
@@ -74,7 +73,7 @@
     const shape=startersShape(starters),roleMeans=starters.map(assignedRoleMean).filter(Number.isFinite),xiMedian=median(roleMeans),margin=Number(CFG.feature_model?.skill_reference?.comparison_margin_points)||5,playstyles=activePlaystyleCounts(starters),abilities=activeAbilityCounts(starters);
     const aerialRows=clusterRows(starters,['ST','AMC'],['Heading','Strength','Positioning']),aerialCredible=strongRows(aerialRows,xiMedian),targetManCredible=!!playstyles.TargetMan&&aerialCredible.length>0,aerialOutlet=targetManCredible||aerialCredible.length>0,aerialOutletStrong=targetManCredible||aerialRows.some(x=>x.value>xiMedian+margin);
     const transitionRows=clusterRows(starters,['ST','AMC','AML','AMR'],['Speed','Dribbling','Passing','Finishing','Positioning']),transitionCredible=strongRows(transitionRows,xiMedian);
-    const semanticRunner=eligible(starters,['ST','AMC','AML','AMR']).some(s=>{const n=activeEligiblePlaystyleName(s);return['Poacher','Inside Forward'].includes(n)&&speedAtLeast(s,xiMedian-10);});
+    const semanticRunner=eligible(starters,['ST','AMC','AML','AMR']).some(s=>{const n=playstyleName(s.player);return['Poacher','Inside Forward'].includes(n)&&speedAtLeast(s,xiMedian-10);});
     const counterOutlet=transitionCredible.length>0||semanticRunner,counterOutletStrong=semanticRunner||transitionRows.some(x=>x.value>xiMedian+margin);
     const stDirectRows=clusterRows(starters,['ST'],['Strength','Positioning','Heading']),stDirectCredible=strongRows(stDirectRows,xiMedian).length>0,stDirectStrong=stDirectRows.some(x=>x.value>xiMedian+margin),directOutlet=aerialOutlet||stDirectCredible||counterOutlet,directOutletStrong=aerialOutletStrong||stDirectStrong||counterOutletStrong;
     const technicalRows=clusterRows(starters,['DMC','MC','AMC','ML','MR','AML','AMR'],['Passing','Creativity','Dribbling']),technicalBuildValue=mean(technicalRows.map(x=>x.value));
@@ -83,7 +82,7 @@
     const markerRows=clusterRows(starters,['DL','DC','DR','DMC'],['Marking','Speed','Strength','Positioning']),markerValue=mean(markerRows.map(x=>x.value));
     const finishRows=clusterRows(starters,['ST','AMC','AML','AMR'],['Shooting','Finishing','Positioning','Dribbling']).map(x=>x.value).sort((a,b)=>b-a),longRows=clusterRows(starters,['ST','AMC','AML','AMR','MC'],['Shooting','Creativity']).map(x=>x.value).sort((a,b)=>b-a);
     const boxFinishing=mean(finishRows.slice(0,2)),longShotThreat=mean(longRows.slice(0,2));
-    const advanced=eligible(starters,['AMC','AML','AMR','ST']),dribbleReliance=advanced.filter(s=>{const dr=D.skillValue(s.player?.skills,'Dribbling'),rm=assignedRoleMean(s),n=activeEligiblePlaystyleName(s);return dr!==null&&Number.isFinite(rm)&&dr>=rm||['False Nine','Enganche','Inside Forward'].includes(n);}).length>=2;
+    const advanced=eligible(starters,['AMC','AML','AMR','ST']),dribbleReliance=advanced.filter(s=>{const dr=D.skillValue(s.player?.skills,'Dribbling'),rm=assignedRoleMean(s),n=playstyleName(s.player);return dr!==null&&Number.isFinite(rm)&&dr>=rm||['False Nine','Enganche','Inside Forward'].includes(n);}).length>=2;
     const directValues=[...aerialRows.map(x=>x.value),...transitionRows.map(x=>x.value)].filter(Number.isFinite).sort((a,b)=>b-a),directSupport=mean(directValues.slice(0,2));
     const attackUnitQuality=mean(eligible(starters,['AML','AMC','AMR','ST']).map(assignedRoleMean)),defenseUnitQuality=mean(eligible(starters,['GK','DL','DC','DR','DMC']).map(assignedRoleMean)),attackDefenseDelta=attackUnitQuality-defenseUnitQuality;
     const v=values||{},defensiveActionDemand=['defending','hardDefending'].includes(v.mentality)||(v.pressing==='high'&&v.lost==='counterPress')?'high':(v.pressing==='mid'||v.tackling==='aggressive')?'medium':'low';
@@ -196,5 +195,5 @@
     return{score,buckets,reasons:contributions.map(x=>({points:x.points,reason:x.message,id:x.id,bucket:x.bucket})),own:context.own,contributions};
   }
 
-  TE.Strategy={MODEL_VERSION,EVIDENCE,TIER_WEIGHT,ROLE_TIERS,PLAYSTYLE_TIERS,TARGET_SHAPE,TARGET_RATIOS,SECONDARY_TARGET_RATIO,trainingPriorityProfile,tacticTrainingSignals,abilityTrainingSignals,analyseShape,startersShape,ownFeatures,contextualOwn,buildContext,tokenize,parseExpression,conditionMatches,evaluateRules,scoreFormationStructure,activeEligiblePlaystyleName,activePlaystylePlacements,directionalFocusOptions,tacticAffinityByChoice,prepareTacticRuleContext,scoreTacticContext,playstyleName,playstyleLevelId,developmentRoleFor,playstyleActive,abilityNames,CONFIG:CFG};
+  TE.Strategy={MODEL_VERSION,EVIDENCE,TIER_WEIGHT,ROLE_TIERS,PLAYSTYLE_TIERS,TARGET_SHAPE,TARGET_RATIOS,SECONDARY_TARGET_RATIO,trainingPriorityProfile,tacticTrainingSignals,abilityTrainingSignals,analyseShape,startersShape,ownFeatures,contextualOwn,buildContext,tokenize,parseExpression,conditionMatches,evaluateRules,scoreFormationStructure,activePlaystylePlacements,directionalFocusOptions,tacticAffinityByChoice,prepareTacticRuleContext,scoreTacticContext,playstyleName,playstyleLevelId,developmentRoleFor,playstyleActive,abilityNames,CONFIG:CFG};
 })();

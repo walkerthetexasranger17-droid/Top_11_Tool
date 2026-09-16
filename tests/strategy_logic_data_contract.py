@@ -100,8 +100,8 @@ assert not missing_strings,missing_strings
 assert len(strings)>=len(set(refs)), (len(strings),len(set(refs)))
 
 
-# v0.5.15 calibration architecture boundary: active contract accepts no external-team, relative-strength or live-state symbols.
-assert logic['version']=='v0.5.15-calibration'
+# v0.5.15 release architecture boundary: active contract accepts no external-team, relative-strength or live-state symbols.
+assert logic['version']=='v0.5.15'
 assert 'strength_bands' not in logic
 assert 'opponent_features' not in logic['feature_model']
 assert logic['formation']['score_components']=={'lineup_quality':40,'playstyle_role_fit':10,'weak_link':20,'core_structure':30,'formation_flexibility':0}
