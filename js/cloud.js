@@ -22,6 +22,7 @@
   function qs(sel){return document.querySelector(sel)}
   function qsa(sel){return [...document.querySelectorAll(sel)]}
   function text(el,v){if(el)el.textContent=v??''}
+  function escHtml(v){return String(v??'').replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c]))}
   function show(el,on=true){if(el)el.hidden=!on}
   function cleanConfig(raw){
     if(!raw)return null;
@@ -162,7 +163,7 @@
       state.status='ready';hideGate();updateCloudChrome();
       scheduleFlush(0);
       if(localReady)syncDown().then(()=>scheduleFlush(0)).catch(err=>console.warn('Background cloud hydration',err));
-      console.info('[Top Eleven Tool] Cloud sync ready',{runtime:'0.5.8',source:state.lastSyncSource,records:state.syncCount,pending:state.pendingWrites,localFirst:localReady});
+      console.info('[Top Eleven Tool] Cloud sync ready',{runtime:'0.5.17',source:state.lastSyncSource,records:state.syncCount,pending:state.pendingWrites,localFirst:localReady});
       return true;
     }catch(err){state.error=err;state.status='error';showGate('setup');setAuthMessage(`Firebase setup error: ${friendlyAuthError(err)}`,'err');return false;}
   }
@@ -345,8 +346,8 @@
     const user=state.auth?.currentUser;if(!user)return;
     text(qs('#accountDisplayName'),user.displayName||'Top Eleven Manager');text(qs('#accountEmail'),user.email||'No email');const av=qs('#accountAvatar');if(av)text(av,(user.displayName||user.email||'?').trim().slice(0,1).toUpperCase());
     const verified=qs('#accountVerified');if(verified){text(verified,user.emailVerified?'Verified':'Not verified');verified.classList.toggle('ok',!!user.emailVerified)}
-    const providerBox=qs('#accountProviders');if(providerBox)providerBox.innerHTML=providerIds(user).map(p=>`<span class="provider-pill">${p==='google.com'?'Google':p==='password'?'Email + password':p}</span>`).join('');
-    const factorBox=qs('#accountMfaStatus');const fs=factors();if(factorBox)factorBox.innerHTML=fs.length?fs.map(f=>`<div class="account-factor"><span><b>Authenticator app</b><small>${f.displayName}</small></span><button class="btn ghost compact" data-remove-mfa="${f.uid}">Remove</button></div>`).join(''):'<span class="mini-note security-warning">No authenticator app is enrolled. Email and password changes are locked until two-step verification is enabled.</span>';
+    const providerBox=qs('#accountProviders');if(providerBox)providerBox.innerHTML=providerIds(user).map(p=>`<span class="provider-pill">${escHtml(p==='google.com'?'Google':p==='password'?'Email + password':p)}</span>`).join('');
+    const factorBox=qs('#accountMfaStatus');const fs=factors();if(factorBox)factorBox.innerHTML=fs.length?fs.map(f=>`<div class="account-factor"><span><b>Authenticator app</b><small>${escHtml(f.displayName)}</small></span><button class="btn ghost compact" data-remove-mfa="${escHtml(f.uid)}">Remove</button></div>`).join(''):'<span class="mini-note security-warning">No authenticator app is enrolled. Email and password changes are locked until two-step verification is enabled.</span>';
     const sync=qs('#accountSyncStatus');if(sync){sync.classList.toggle('ok',state.status==='ready');const label=sync.querySelector('span');text(label,state.status==='ready'?`Cloud sync active · ${state.syncCount} records${state.pendingWrites?` · ${state.pendingWrites} pending`:''}`:'Cloud sync connecting…')}
     const nameInput=qs('#accountNameInput');if(nameInput)nameInput.value=user.displayName||'';
     const emailInput=qs('#accountNewEmail');if(emailInput)emailInput.value=user.email||'';

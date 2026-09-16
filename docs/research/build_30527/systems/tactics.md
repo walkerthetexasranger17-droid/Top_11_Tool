@@ -39,6 +39,12 @@ On 2026-09-15 the user performed a controlled UI drain-bar sweep. The observed r
 
 Until the live Low→Medium and Medium→High transition anchors are measured, calibration may use the observed relative costs to rank condition expense under an unconstrained High budget, but must **not guess the current class thresholds**. Production fallback/default calculations remain separately identifiable as legacy/default evidence.
 
+### Focus Passing display identity — live UI 2026-09-16
+
+A current live Top Eleven screenshot supplied by the user proves the visible Focus Passing choices are **Left Flank, Right Flank, Both Flanks, Through the Middle, Balanced**. The current client/static enum still exposes `FocusPassingCenter`; therefore active companion logic keeps internal key `center` but maps its user-facing label to **Through the Middle**.
+
+This is a display-identity correction only. It does not change lane scoring or condition-drain identity. See `docs/research/calibration/V0517_FOCUS_PASSING_LIVE_UI_LABEL.md`.
+
 ## Current 11 dimensions
 
 Passing, Shooting Tendency, Focus Passing, Cross Tendency, Possession Lost, Possession Won, Mentality, Marking, Pressing, Back Line, Tackling.

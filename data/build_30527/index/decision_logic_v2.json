@@ -1,8 +1,8 @@
 {
   "schema_version": 2,
-  "version": "v0.5.15",
+  "version": "v0.5.17",
   "model": "companion-strategy-v2-own-squad-runtime-v0515",
-  "status": "RELEASE-FROZEN v0.5.15 OWN-SQUAD DECISION CONTRACT",
+  "status": "RELEASE-FROZEN v0.5.17 OWN-SQUAD DECISION CONTRACT — v0.5.15 CALIBRATION UNCHANGED; LIVE TACTIC UI LABEL HOTFIX",
   "principles": [
     "Game/native data controls legality, white skills, tactic-option identity, drain-calculation architecture, Playstyle eligibility and Mentor effect identity. Current live drain intensity classes remain separate LIVE FACTS until the server numeric mapping is recovered.",
     "The decision system uses only the manager own squad, assigned XI, player skills, Playstyles, Special Abilities, saved Mentor unlock/level state, Approach and Drain Limit.",

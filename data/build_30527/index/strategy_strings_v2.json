@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "version": "v0.5.15",
+  "version": "v0.5.17",
   "strings": {
     "formation.dc_pair": "At least two natural central-defence slots protect the middle.",
     "formation.dc_pair_missing": "This shape does not provide the minimum resilient central-defence base.",

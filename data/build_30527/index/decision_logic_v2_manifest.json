@@ -1,14 +1,14 @@
 {
-  "version": "v0.5.15",
-  "status": "RELEASE-FROZEN v0.5.15 CONTRACT — ROLE-GATED PLAYSTYLE/SA RUNTIME, DE-DUPED SEMANTICS, OWN-SQUAD ONLY",
+  "version": "v0.5.17",
+  "status": "RELEASE-FROZEN v0.5.17 UI-LABEL HOTFIX — v0.5.15 CALIBRATED DECISION MODEL UNCHANGED",
   "generated_date": "2026-09-16",
   "files": {
     "decision_logic_v2.json": {
-      "sha256": "7150630d5e479fb3285506e96022d2707c9cc0d95d296c815f0a6c860d1c8abf",
-      "bytes": 121858
+      "sha256": "edcbe61455865565e0623ebc4dda64ea6cdf5ac97e6cd0ae1af2ec5662e9f698",
+      "bytes": 121921
     },
     "strategy_strings_v2.json": {
-      "sha256": "88c4bfcbc0a4e1ecc258920a1a75aafa17a8ade4995eb0a52136f7f1efd0e5c9",
+      "sha256": "0a105c205556ab86749c1145d7bfdd142e712a06709e3b80424c1ca5e3e6ec77",
       "bytes": 18590
     }
   },
@@ -33,6 +33,6 @@
     "target_shape_tiers": 4,
     "explanation_strings": 143
   },
-  "runtime_boundary": "v0.5.15 freezes the stitched own-squad Formation/Tactics/Set Pieces/Mentor/Training pipeline. Current live tactic drain is represented by observed Low/Medium/High option intensities and pure-class transition facts; mixed-intensity numeric weighting remains unresolved and is not fabricated. Captain remains gameplay-neutral and opponent/scouting/live-state inputs remain absent.",
-  "next_step": "v0.5.15 is release-frozen. Reopen calibrated scoring only for a controlled regression or new native/live evidence; any subsequent product change should advance to v0.5.16."
+  "runtime_boundary": "v0.5.17 preserves the v0.5.15 calibrated own-squad Formation/Tactics/Set Pieces/Mentor/Training decision model unchanged. Internal FocusPassingCenter remains the client/data key, while the user-facing selectable label is corrected to the live Top Eleven UI wording Through the Middle. Mixed-intensity live drain weighting remains unresolved and is not fabricated.",
+  "next_step": "v0.5.17 is release-frozen after tactic UI-label correction. Reopen calibrated scoring only for a controlled regression or new native/live evidence."
 }

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-09-15",
+  "updated": "2026-09-16",
   "findings": [
     {
       "id": "TACTICS-001",
@@ -746,6 +746,19 @@
       "unresolved": [
         "Exact server-side final per-attribute percentage gain for a completed normal session."
       ]
+    },
+    {
+      "id": "TACTICS-011",
+      "system": "tactics",
+      "status": "LIVE_FACT",
+      "title": "FocusPassingCenter is displayed as Through the Middle in the current live UI",
+      "summary": "A current live Top Eleven tactics screenshot supplied by the user shows Focus Passing choices Left Flank, Right Flank, Both Flanks, Through the Middle and Balanced. The recovered current client still exposes internal enum FocusPassingCenter, so companion key center is retained internally and mapped to user-facing Through the Middle.",
+      "confidence": "high",
+      "sources": [
+        "docs/research/calibration/V0517_FOCUS_PASSING_LIVE_UI_LABEL.md",
+        "data/current_windows_client_2026-09-14/tactics_condition_drain_schema.json"
+      ],
+      "unresolved": []
     }
   ]
 }

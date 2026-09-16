@@ -1,5 +1,5 @@
 {
-  "source": "TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.md \u00a7\u00a710-11",
+  "source": "TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.md §§10-11",
   "min_condition_drain": 15,
   "normalize_factor": 100,
   "medium_threshold": 0.4,
@@ -67,5 +67,12 @@
     "Low": 963,
     "Medium": 77823,
     "High": 18414
+  },
+  "ui_display_aliases": {
+    "source": "LIVE Top Eleven UI screenshot supplied by user on 2026-09-16",
+    "focus": {
+      "Center": "Through the Middle"
+    },
+    "boundary": "Center is retained here as the recovered client/internal enum identity; the companion UI must display Through the Middle."
   }
 }

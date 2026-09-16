@@ -26,7 +26,7 @@ expected_nav=['Home','Squad','Training','Team Plan','Drills','Settings']
 if nav!=expected_nav: errs.append(f'bottom nav does not match v0.4.12 product structure: {nav}')
 if len(soup.select('.bottom-nav .nav-btn'))!=6: errs.append('bottom navigation must expose exactly six destinations')
 for rid in [
-    'formationPitch','setPiecePitch','setPiecePicker','setPieceCandidates','tacticPlan','mentorLevels','profilePlaystyleState',
+    'formationPitch','setPiecePitch','setPieceCoverage','setPieceCoverageGrid','tacticPlan','mentorLevels','profilePlaystyleState',
     'profileRelatedPicker','scanRelatedPicker','profileRescanBtn','scanReviewPlayerCard','scanSkills','squadList'
 ]:
     if rid not in ids: errs.append(f'missing v0.4.12 UI control: {rid}')
@@ -42,7 +42,7 @@ for phase in ['possession','transition','out']:
     if not soup.select_one(f'[data-tactic-phase="{phase}"]'): errs.append(f'Tactics missing {phase} phase')
 if not soup.select_one('[data-training-tab="individual"]') or not soup.select_one('[data-training-tab="team"]'):
     errs.append('Training does not expose Individual | Team tabs on one page')
-if 'v0.5.15' not in html: errs.append('visible version is not v0.5.15')
+if 'v0.5.17' not in html: errs.append('visible version is not v0.5.17')
 if re.search(r'BUILD\s*30527|Build\s*30527',html): errs.append('internal build 30527 is still visible in product HTML')
 if 'verified scanner' in html.lower(): errs.append('technical scanner provenance is exposed in normal UI')
 
@@ -85,7 +85,7 @@ if not account_btn or account_btn.get('title')!='Profile & Security': errs.appen
 css_text=(ROOT/'css/app.css').read_text(encoding='utf-8')
 if '.account-button' not in css_text or 'cursor:pointer' not in css_text: errs.append('profile button does not advertise clickability with a pointer cursor')
 sw_text=(ROOT/'sw.js').read_text(encoding='utf-8')
-if "const CACHE='te-v0-5-15" not in sw_text or "e.request.mode==='navigate'" not in sw_text or "cache:'no-store'" not in sw_text: errs.append('v0.4.12 service-worker update/navigation freshness guard missing')
+if "const CACHE='te-v0-5-17" not in sw_text or "e.request.mode==='navigate'" not in sw_text or "cache:'no-store'" not in sw_text: errs.append('v0.4.12 service-worker update/navigation freshness guard missing')
 if "toast('App initialisation failed','err')" in js: errs.append('generic app-initialisation error toast survived GitHub testing hotfix')
 if 'loadMentorLevels' in js: errs.append('stale loadMentorLevels startup call survived; Mentor state must hydrate through loadMentorState')
 if "startupStep('mentor state',()=>loadMentorState())" not in js: errs.append('Mentor state is not hydrated during startup')

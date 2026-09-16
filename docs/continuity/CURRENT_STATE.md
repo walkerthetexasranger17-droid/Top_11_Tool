@@ -1,6 +1,24 @@
+# CURRENT DEVELOPMENT OVERLAY — v0.5.17-dev-pass2
+
+**State:** UNPUBLISHED / TESTING — do not publish as the finished v0.5.17 release yet.  
+**Release base:** v0.5.17.  
+**Calibrated decision model:** unchanged v0.5.15 engine.
+
+Pass1 product work remains: age+skills-only update scanning, bulk update queue, Master Cards above normal drills, and the Luiu integrity fixture.
+
+DEV PASS2 adds:
+- automatic-only Set Piece UI with **Current XI Coverage / Who covers what**; old manual picker/overrides removed from the runtime UI;
+- deterministic 400-session Training repetition audit. No maxGrowth penalty was added: repetition is a real consequence of the stated objective, not a Luiu-specific bug.
+
+Next planned dev work: deliberate implementation of the separate long-term best-in-slot squad-goal engine.
+
+The historical frozen-release state follows below.
+
+---
+
 # Top Eleven Tool — Current State
 
-**App version:** v0.5.15  
+**App version:** v0.5.17  
 **Release state:** RELEASE-FROZEN  
 **Freeze date:** 16 September 2026  
 **Stable scanner baseline:** v0.4.18 recognition pipeline / Scanner v12 runtime  
@@ -11,7 +29,7 @@
 - The optimiser is **own-squad-only**. Never add opponent formation, strength, tactics, scouting, relative-strength or live-match-state inputs.
 - Do not invent private Top Eleven formulas, hidden multipliers, server values, Mentor magnitudes, Set Piece magnitudes, Training age rates or mixed live drain weights.
 - Keep GAME FACT / LIVE FACT / COMPANION LOGIC / UNRESOLVED PRIVATE-SERVER LOGIC separate.
-- v0.5.15 is frozen; subsequent product/scoring changes use **v0.5.16**.
+- v0.5.17 is frozen after the live tactic UI-label hotfix; the v0.5.15 calibrated decision model is unchanged. Subsequent product/scoring changes use **v0.5.18**.
 
 ## Frozen all-in-one decision chain
 
@@ -79,14 +97,33 @@ Tactics, Mentors, Set Pieces and development context consume the chosen XI. Full
 
 ## Persistence / cache identity
 
-- public/runtime version: **0.5.15**;
+- public/runtime version: **0.5.17**;
 - Strategy model: `companion-strategy-v2-own-squad-runtime-v0515`;
 - Tactics model: `30527-drain-fit-v5-calibrated-v0515-affinity-dedup-sa-canonical-ps-gate`;
 - Team Plan persistence schema: **v6**;
-- service-worker cache: `te-v0-5-15`;
-- all local runtime asset query markers: `r=0515`.
+- service-worker cache: `te-v0-5-17`;
+- all local runtime asset query markers: `r=0517`.
 
 Model fingerprints invalidate older cached Team Plans automatically.
+
+## v0.5.16 runtime hardening (preserved in v0.5.17)
+
+No Formation, Tactics, Mentor, Set Piece, Training or all-in-one scoring coefficient changed from v0.5.15. This release only hardens the shipped application:
+
+- inline hero asset paths are subdirectory-safe;
+- service-worker runtime fallback ignores version query strings when matching the precache;
+- scanner skill values are rejected outside the app's existing 0–520 input contract and the Gemini schema carries the same limits;
+- account/MFA strings inserted through `innerHTML` are HTML-escaped;
+- stale launcher/cloud diagnostic version labels are synchronized;
+- the malformed obsolete calibration scratch probe is archived as non-executable historical evidence.
+
+## v0.5.17 live tactic UI-label hotfix
+
+- Internal `FocusPassingCenter` / companion key `center` remains unchanged for scoring and drain identity.
+- The user-facing Top Eleven selection label is **Through the Middle**, matching the user's current live game screenshot.
+- `Center` must never be displayed as a selectable Focus Passing option.
+- A 33-option UI-label regression now locks every tactic selection label.
+- No calibrated scoring changed.
 
 ## Explicit unresolved boundaries
 
@@ -105,4 +142,4 @@ These remain deliberately unresolved rather than guessed and do not require oppo
 
 ## Recovery
 
-Read `START_HERE.md`, then the final section of `CALIBRATION_RECOVERY_HANDOFF_v0.5.15.md`, then `docs/releases/v0.5.15.md`. Historical `.pre_*` files are never active runtime code.
+Read `START_HERE.md`, then the final section of `CALIBRATION_RECOVERY_HANDOFF_v0.5.17.md`, then `docs/releases/v0.5.17.md`. Historical `.pre_*` files are never active runtime code.

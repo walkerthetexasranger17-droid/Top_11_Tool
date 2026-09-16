@@ -1,7 +1,7 @@
 # Top Eleven Build 30527 — Game Research Index
 
-**Index version:** 9  
-**Last updated:** 15 September 2026  
+**Index version:** 10  
+**Last updated:** 16 September 2026  
 **Purpose:** permanent, embedded reference for future Top Eleven Tool logic work.
 
 This index prevents repeated reverse-engineering and stops assumptions from being promoted into “game facts”.
@@ -55,7 +55,7 @@ See `data/build_30527/index/source_manifest.json`.
 
 ## Current highest-value checkpoint
 
-The current recovery/release checkpoint is **v0.5.15**. Read the root `CALIBRATION_RECOVERY_HANDOFF_v0.5.15.md`, `docs/releases/v0.5.15.md`, and `docs/continuity/CURRENT_STATE.md` first. v0.5.15 freezes the complete own-squad stitch after whole-system calibration, including assigned-role Playstyle gating, active affinity runtime, semantic de-duplication, player-pool isolation and the 74 raw → 14 Playstyle/SA component. v0.5.14 remains the historical final pre-calibration baseline. The active optimiser remains own-squad-only; unknown external/live context receives zero rather than a guess.
+The current recovery/release checkpoint is **v0.5.17**. Read the root `CALIBRATION_RECOVERY_HANDOFF_v0.5.17.md`, `docs/releases/v0.5.17.md`, and `docs/continuity/CURRENT_STATE.md` first. v0.5.17 preserves the v0.5.15 calibrated own-squad stitch, the v0.5.16 runtime hardening, and the live Focus Passing UI identity correction (`center` → **Through the Middle**). v0.5.14 remains the historical final pre-calibration baseline. The active optimiser remains own-squad-only; unknown external/live context receives zero rather than a guess.
 
 **Captain supersession warning:** the old source-archive v1.1 Bible contains a clearly labelled companion-only legacy `OVR + broad skill mean + age` Captain score. v0.5.14 supersedes it. Do not restore that formula: Captain is performance-neutral in the active model and has zero Team Plan ranking value.
 
@@ -108,3 +108,8 @@ Read `V059_COMMUNITY_LOGIC_CHECKPOINT.md` together with `V059_FULL_WINDOWS_GAME_
 ## v0.5.15 Special Ability canonicalisation checkpoint
 
 Read `V0515_SPECIAL_ABILITY_CANONICALIZATION_CHECKPOINT.md` before changing current Special Ability identity handling. It documents **Shadow Striker** as the sole player-facing identity. Native/raw `LongShots` is handled only as an internal/localisation token at import boundaries and is never exposed as a separate ability. It deliberately does not invent a universal role→Special Ability restriction matrix or effects for unresolved/dead-ball-only abilities.
+
+
+## v0.5.17 live Focus Passing label checkpoint
+
+Read `../calibration/V0517_FOCUS_PASSING_LIVE_UI_LABEL.md` before changing Focus Passing option identity. Current client/internal `FocusPassingCenter` remains the runtime key, while the live user-facing option is **Through the Middle**.

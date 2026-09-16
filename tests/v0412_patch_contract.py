@@ -25,7 +25,8 @@ if "'training:normal-drills:'" not in cloud: errs.append('normal drill profile i
 for key in ['cornerRight','freeRight','penalty1','freeLeft','cornerLeft','penalty2','penalty3','penalty4','penalty5','captain']:
     if f"['{key}'" not in app: errs.append(f'missing set-piece slot {key}')
 if 'set-piece-slot' not in app: errs.append('dedicated set-piece slot renderer missing')
-if not soup.select_one('#setPieceCandidates'): errs.append('set-piece candidate picker missing')
+if not soup.select_one('#setPieceCoverageGrid'): errs.append('set-piece automatic coverage visual missing')
+if soup.select_one('#setPieceCandidates') or soup.select_one('#setPiecePicker'): errs.append('removed manual set-piece picker survived')
 if errs:
     print('FAIL v0.4.12 patch contract')
     for e in errs: print('-',e)

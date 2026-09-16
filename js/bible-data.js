@@ -19,6 +19,31 @@
     {id:1,name:'Penalty Kick Stopper'},{id:2,name:'One-on-One Stopper'},{id:3,name:'Aerial Defender'},{id:4,name:'Defensive Wall'},{id:5,name:'Playmaker'},{id:6,name:'One-on-One Scorer'},{id:7,name:'Shadow Striker'},{id:8,name:'Dribbler'},{id:9,name:'Penalty Kick Specialist'},{id:10,name:'Free Kick Specialist'},
     {id:11,name:'Corner Specialist'},{id:12,name:'Set Piece Taker'},{id:13,name:'Versatile Attacker'},{id:14,name:'Intercepting Specialist'},{id:15,name:'Set Piece Stopper'},{id:16,name:'Blocker'},{id:17,name:'Rebound Specialist'},{id:18,name:'Cross Expert'},{id:19,name:'Counter Attack Stopper'}
   ];
+  // v0.5.17 development contract: current Special Ability role eligibility supplied by the user
+  // after static client research confirmed the game has an explicit role->Special Ability eligibility system.
+  // Do not substitute the legacy Top Eleven Wiki role table. Natural roles only; related roles do not confer eligibility.
+  const OUTFIELD_ROLES=CURRENT_ROLES.filter(r=>r!=='GK');
+  const SPECIAL_ABILITY_ROLE_ELIGIBILITY={
+    'One-on-One Stopper':['GK'],
+    'Penalty Kick Stopper':['GK'],
+    'Aerial Defender':['DC','DMC'],
+    'Blocker':['DC','DL','DR'],
+    'Defensive Wall':['DC','DL','DR','DMC'],
+    'Intercepting Specialist':['DC','DMC'],
+    'Counter Attack Stopper':['DMC','MC'],
+    'Playmaker':['DMC','MC','AMC'],
+    'Dribbler':['MC','ML','MR','AMC','AML','AMR'],
+    'Corner Specialist':['DL','DR','ML','MR','MC'],
+    'Cross Expert':['DL','DR','ML','MR','AML','AMR'],
+    'Shadow Striker':['AMC','AML','AMR'],
+    'One-on-One Scorer':['AMC','AML','AMR','ST'],
+    'Versatile Attacker':['AMC','AML','AMR','ST'],
+    'Free Kick Specialist':[...OUTFIELD_ROLES],
+    'Penalty Kick Specialist':[...OUTFIELD_ROLES],
+    'Set Piece Taker':[...OUTFIELD_ROLES],
+    'Set Piece Stopper':[...CURRENT_ROLES],
+    'Rebound Specialist':[...OUTFIELD_ROLES]
+  };
   const FORMATION_TEMPLATES=[
     {id:'442',name:'4-4-2',slots:['GK','DL','DC','DC','DR','ML','MC','MC','MR','ST','ST']},
     {id:'433',name:'4-3-3',slots:['GK','DL','DC','DC','DR','MC','MC','MC','AML','ST','AMR']},
@@ -26,10 +51,12 @@
     {id:'352',name:'3-5-2',slots:['GK','DC','DC','DC','ML','MC','MC','MC','MR','ST','ST']},
     {id:'41212',name:'4-1-2-1-2',slots:['GK','DL','DC','DC','DR','DMC','MC','MC','AMC','ST','ST']}
   ];
+  // Runtime keys preserve the recovered current-client enums. User-facing labels must match the live Top Eleven UI.
+  // In particular, internal FocusPassingCenter / key `center` is displayed by the game as `Through the Middle`.
   const tactics={
     passing:[['short','Short',0,7,.50],['long','Long',1,0,.50],['mixed','Mixed',2,5,.50]],
     shooting:[['sight','Shoot On Sight',0,0,.80],['box','Work It Into The Box',1,7,.70],['balanced','Balanced',2,5,.50]],
-    focus:[['left','Left Flank',0,0,.50],['right','Right Flank',1,0,.50],['both','Both Flanks',2,7,.50],['center','Center',3,0,.50],['balanced','Balanced',4,5,.50]],
+    focus:[['left','Left Flank',0,0,.50],['right','Right Flank',1,0,.50],['both','Both Flanks',2,7,.50],['center','Through the Middle',3,0,.50],['balanced','Balanced',4,5,.50]],
     cross:[['low','Low',0,0,.35],['medium','Medium',1,0,.50],['high','High',2,0,.75]],
     lost:[['counterPress','Counter Press',0,7,.75],['regroup','Regroup',1,5,.25]],
     won:[['buildup','Focus On Buildup',0,5,.45],['counter','Force Counter Attack',1,7,.75]],
@@ -66,5 +93,5 @@
     {id:'iron_guard',displayName:'Nemanja Vidić',title:'The Iron Guard',asset:'nemanja-vidic.png',tactic:{id:'tacticDefensiveActionsEffectivenessWithStaminaPenalty'},attribute:{id:'attributeTacklingBravery',attributes:['Tackling','Bravery']},signature:{id:'signatureIronCheck'},mapping:'GAME-ASSET IDENTITY'},
     {id:'enforcer',displayName:'Claude Makélélé',title:'The Enforcer',asset:'claude-makelele.png',tactic:{id:'tacticDefensiveActionsEffectivenessAgainstShortPasses'},attribute:{id:'attributeBraveryPositioning',attributes:['Bravery','Positioning']},signature:{id:'signatureParkingTheBus'},mapping:'GAME-ASSET IDENTITY'}
   ];
-  TE.BibleData={VERSION:'1.0',GAME_DATA_VERSION:'build_30527',CURRENT_ROLES,POSITION_ORDER,ROLE_RECTS,ROLE_IDS,PLAYSTYLES,PLAYSTYLE_LEVELS,SPECIAL_ABILITIES,FORMATION_TEMPLATES,TACTICS,LIVE_DRAIN,APPROACHES,MENTORS,EVIDENCE:{GAME:'GAME FACT',LIVE:'LIVE FACT',COMPANION:'TOP ELEVEN TOOL CALCULATION',UNRESOLVED:'UNRESOLVED'}};
+  TE.BibleData={VERSION:'1.0',GAME_DATA_VERSION:'build_30527',CURRENT_ROLES,POSITION_ORDER,ROLE_RECTS,ROLE_IDS,PLAYSTYLES,PLAYSTYLE_LEVELS,SPECIAL_ABILITIES,SPECIAL_ABILITY_ROLE_ELIGIBILITY,FORMATION_TEMPLATES,TACTICS,LIVE_DRAIN,APPROACHES,MENTORS,EVIDENCE:{GAME:'GAME FACT',LIVE:'LIVE FACT',COMPANION:'TOP ELEVEN TOOL CALCULATION',UNRESOLVED:'UNRESOLVED'}};
 })();
