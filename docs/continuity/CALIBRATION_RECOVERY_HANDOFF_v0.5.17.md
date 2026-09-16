@@ -1,3 +1,52 @@
+# v0.5.17 UNPUBLISHED DEV PASS11 CHECKPOINT
+
+**CURRENT WORKING STATE:** UNPUBLISHED v0.5.17 DEV PASS11  
+**Date:** 16 September 2026  
+**Base:** user-verified v0.5.17-dev-pass10 checkpoint  
+**Match Ready decision model:** v0.5.15 calibration preserved unchanged  
+**DO NOT PUBLISH.**
+
+## Pass11 — cleanup, stability and performance hardening
+
+The user confirmed the Pass10 feature set is working and explicitly requested a maintenance pass before any visual redesign: reduce package bloat, stress-test the app, audit button/page reliability, and make the PWA feel smoother without changing calibrated football logic.
+
+### Runtime interaction fixes
+
+- Navigation rendering is serialized with a latest-request-wins queue so rapid page taps/cloud refreshes cannot overlap page renders.
+- Heavy Team Plan and Training actions use duplicate-action locks so repeated taps cannot stack identical expensive work.
+- Squad-row swipe suppression now requires a real horizontal swipe (`>=32px`) instead of treating small finger drift as a swipe and swallowing the tap.
+- Toasts are pointer-transparent and cannot sit above the bottom navigation and intercept a press.
+- Team Plan no longer performs a redundant standalone Formation calculation immediately before the complete Formation+Tactics plan search after a squad revision.
+- The complete Team Plan search yields between formation candidates so long calculations return control to the browser instead of monopolising the UI thread continuously.
+
+### Training-engine performance
+
+The six-slot beam search was rewritten to use compact temporary masks/arrays instead of cloning large Sets/metadata objects into every discarded candidate branch. The scoring, ordering, limits and final selected drill output are unchanged. A frozen 72-case comparison across all 12 roles, all three Training modes, two deterministic player seeds and Master stock produced byte-identical outputs before/after the optimisation.
+
+The mixed engine stress harness now completes successfully: **197 assertions**, **16 fresh Team Plans**, **36 Training builds** (12 roles x 3 modes) and **40 verified player update/persistence cycles** in about **34 seconds** in the verification environment.
+
+### PWA/cache hardening
+
+Install-time service-worker precache was reduced from **466 files / ~17.9 MB** to **58 essential runtime files / ~2.64 MB**. Scanner reference packs remain fully packaged and unchanged, but are runtime-cached on demand instead of making every service-worker install fetch the entire scanner library. Pass11 uses cache generation `te-v0-5-17-p11`.
+
+### Package cleanup
+
+Pass10 contained **825 files / 37,290,874 bytes**. Pass11 removes superseded `.pre_*` snapshots, old design/research binary evidence and embedded source archives already preserved by the verified Pass10 ZIP. Active runtime code, scanner references/manifests, scanner fixtures, canonical research indexes and current recovery files are preserved.
+
+Current cleaned tree: **699 files / 23,283,800 bytes** before adding this Pass11 validation note. The active package is therefore roughly **13.6 MB smaller** while retaining the full current scanner/runtime data needed by the app. Full removed-file provenance is in `docs/maintenance/pass11_removed_files.json`.
+
+### Verification
+
+Current deterministic gates are green, including: 355 core, 178 Tactics, 52 live-drain, 27 Formation invariants, 21 Squad Blueprint, 14 Team Training, 29 Set Pieces, 18 Mentor, 26 stitched, 8 stitched monotonicity, 5 direct all-in-one, 127 Best-in-Slot, 28 Best-in-Slot squad-gap, 65 SA eligibility, 31 automatic player-update, 20 persistence, 33 tactic UI labels, scanner/failover/native-resolution contracts, cloud/navigation/runtime hardening, button-binding, package cleanliness/integrity and the 197-assertion mixed engine stress harness.
+
+No Formation/Tactics/Mentor/Set Piece/Training objective coefficient or Best-in-Slot football recommendation rule was recalibrated in this pass. The Training optimisation is implementation-only and is output-equivalence guarded.
+
+### Next
+
+User-test Pass11 specifically for first-tap navigation/button reliability, rapid page switching, Training build responsiveness and Team Plan loading. Do not begin a visual redesign until this cleaned/stability baseline is accepted. Preserve the full ZIP recovery workflow on every subsequent pass.
+
+---
+
 # v0.5.17 UNPUBLISHED DEV PASS10 CHECKPOINT
 
 **CURRENT WORKING STATE:** UNPUBLISHED v0.5.17 DEV PASS10  

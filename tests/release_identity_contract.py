@@ -22,7 +22,7 @@ manifest=json.loads(manifest_path.read_text(encoding='utf-8'))
 if f'data-runtime="{VERSION}"' not in html: errs.append('index runtime marker is not release version')
 if f'v{VERSION}' not in html: errs.append('visible HTML does not expose release version')
 if f"window.__TE_RUNTIME__='{VERSION}'" not in app: errs.append('app runtime marker is not release version')
-if "const CACHE='te-v0-5-17'" not in sw: errs.append('service-worker cache is not release cache')
+if "const CACHE='te-v0-5-17-p11'" not in sw: errs.append('service-worker cache is not release cache')
 if '?r=0517' not in html: errs.append('release cache-buster missing')
 for q in re.findall(r'(?:src|href)="([^\"]+\?r=([^\"]+))"', html):
     if q[1] != '0517': errs.append(f'stale runtime query marker: {q[0]}')

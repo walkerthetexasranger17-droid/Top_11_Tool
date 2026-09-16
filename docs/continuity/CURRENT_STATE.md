@@ -1,3 +1,28 @@
+# CURRENT DEVELOPMENT OVERLAY — v0.5.17-dev-pass11
+
+**State:** UNPUBLISHED / TESTING — do not publish.  
+**Release base:** v0.5.17.  
+**Calibrated Match Ready decision model:** unchanged v0.5.15 engine.
+
+Pass11 is the cleanup/stability baseline after the user confirmed Pass10 feature behaviour. No visual redesign and no football scoring recalibration occurred. Current priorities are smooth first-tap navigation, non-overlapping async rendering/actions, lower install/cache pressure, smaller package footprint, and stress-tested Training/Team Plan execution.
+
+Key Pass11 locks:
+- service-worker install precache: 58 core files (~2.64 MB); scanner references cached on demand;
+- serialized/latest-wins page render queue + cloud-refresh deferral;
+- real-swipe threshold before click suppression;
+- duplicate locks for heavy Training/Team Plan actions;
+- toast pointer-events disabled;
+- redundant Team Plan pre-calculation removed; plan search yields between formation candidates;
+- Training beam search compacted with frozen-output equivalence;
+- package historical baggage removed with provenance in `docs/maintenance/pass11_removed_files.json`;
+- mixed stress: 197 PASS (16 fresh Team Plans, 36 Training builds, 40 persistence updates).
+
+Pass10 automatic player updates remain unchanged: visible name routes the saved player; age + 15 skills persist; OVR is derived from the 15 skills; identity fields are preserved; write/read-back is verified before queue removal.
+
+For exact verification and next steps read `V0517_DEV_PASS11_VALIDATION.md` and the top section of the root handoff.
+
+---
+
 # CURRENT DEVELOPMENT OVERLAY — v0.5.17-dev-pass10
 
 **State:** UNPUBLISHED / TESTING — do not publish.  

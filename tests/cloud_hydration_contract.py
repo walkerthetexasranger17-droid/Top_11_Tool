@@ -26,7 +26,7 @@ if 'queueSet?.(key,value)' not in storage or 'queueDelete?.(key)' not in storage
 if "window.__TE_RUNTIME__='0.5.17'" not in app: errs.append('runtime marker missing from app.js')
 if 'data-runtime="0.5.17"' not in html: errs.append('runtime marker missing from index.html')
 if '?r=0517' not in html: errs.append('runtime assets are not cache-busted')
-if "const CACHE='te-v0-5-17'" not in sw: errs.append('service-worker cache is not v0.5.17')
+if "const CACHE='te-v0-5-17-p11'" not in sw: errs.append('service-worker cache is not v0.5.17')
 if '<body class="booting">' not in html or 'body.booting .app{visibility:hidden}' not in css: errs.append('refresh boot flash guard missing')
 if 'te:post-auth:home' not in cloud or 'forceHome' not in app: errs.append('post-login Home landing guard missing')
 if "toast('App initialisation failed','err')" in app: errs.append('generic startup failure toast returned')

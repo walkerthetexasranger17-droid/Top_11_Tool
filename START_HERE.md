@@ -1,14 +1,14 @@
-# v0.5.17 UNPUBLISHED DEV PASS10 RECOVERY SNAPSHOT
+# v0.5.17 UNPUBLISHED DEV PASS11 RECOVERY SNAPSHOT
 
-**CURRENT WORKING BRANCH:** v0.5.17-dev-pass10 — **DO NOT PUBLISH YET**.  
+**CURRENT WORKING BRANCH:** v0.5.17-dev-pass11 — **DO NOT PUBLISH YET**.  
 **Stable release base:** v0.5.17.  
 **Match Ready decision model:** v0.5.15 calibration unchanged.
 
 Read `CALIBRATION_RECOVERY_HANDOFF_v0.5.17.md` first. Its top section is the authoritative current development checkpoint.
 
-Pass10 keeps the Pass9 verified persistence path and corrects the update data boundary: after age + all 15 visible skills are saved, OVR is recalculated locally as the rounded arithmetic mean of the complete visible skill set. The scanner still does not read OVR during update mode because OVR is derived deterministically from those skills. Name, natural/related roles, Playstyle state and Special Abilities remain untouched. A queue row is removed only after age + OVR + every visible skill are reloaded and verified.
+Pass11 is a maintenance/stability pass on the user-verified Pass10 feature baseline. It removes historical package baggage, reduces service-worker install precache to the essential runtime shell, serializes page rendering, hardens rapid/repeated taps, fixes swipe/tap suppression and toast interception, and optimizes Training/Team Plan execution while keeping recommendation outputs/calibrated football logic unchanged.
 
-Primary changed files: `js/players.js`, `js/app.js`, `tests/player_update_scan_contract.py`, new `tests/player_update_persistence.js`, automatic-update research/recovery documents and validation notes.
+Read `V0517_DEV_PASS11_VALIDATION.md` for the exact stress/regression/package verification.
 
 Public/runtime version strings intentionally remain **0.5.17** because this is still unpublished development work.
 

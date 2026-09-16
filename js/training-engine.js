@@ -61,54 +61,78 @@
     for(const a of candidate.whiteAttributes){const n=Math.max(.05,Number(need[a]||0)-Number(credit[a]||0));effectiveNeed[a]=n;sum+=n;}
     return{score:candidate.strength*sum,usefulNeed:sum,effectiveNeed,whiteCoverageCount:candidate.whiteAttributes.length};
   }
+  function stateSize(state,setKey,countKey){
+    if(Number.isFinite(state?.[countKey]))return Number(state[countKey]);
+    const v=state?.[setKey];return v&&typeof v.size==='number'?v.size:0;
+  }
   function stableOrderCompare(a,b){
-    const aa=a.selected.map(x=>Number(x.catalogueOrder)),bb=b.selected.map(x=>Number(x.catalogueOrder));
+    const aa=a.selectedOrders||a.selected?.map(x=>Number(x.catalogueOrder))||[],bb=b.selectedOrders||b.selected?.map(x=>Number(x.catalogueOrder))||[];
     const n=Math.max(aa.length,bb.length);for(let i=0;i<n;i++){const av=aa[i]??-1,bv=bb[i]??-1;if(av!==bv)return av-bv;}return 0;
   }
   function compareStates(a,b,mode='maxGrowth'){
-    const eps=1e-9;
+    const eps=1e-9,ac=stateSize(a,'covered','coveredCount'),bc=stateSize(b,'covered','coveredCount'),awc=stateSize(a,'weakCovered','weakCoveredCount'),bwc=stateSize(b,'weakCovered','weakCoveredCount'),auc=stateSize(a,'uniqueDrills','uniqueCount'),buc=stateSize(b,'uniqueDrills','uniqueCount');
     if(mode==='conditionEfficient'){
       const ar=a.utility/Math.max(a.totalCondition,eps),br=b.utility/Math.max(b.totalCondition,eps);
       if(Math.abs(ar-br)>eps)return br-ar;
       if(Math.abs(a.utility-b.utility)>eps)return b.utility-a.utility;
-      if(a.covered.size!==b.covered.size)return b.covered.size-a.covered.size;
+      if(ac!==bc)return bc-ac;
       return stableOrderCompare(a,b);
     }
     if(mode==='balancedDevelopment'){
-      if(a.weakCovered.size!==b.weakCovered.size)return b.weakCovered.size-a.weakCovered.size;
-      if(a.covered.size!==b.covered.size)return b.covered.size-a.covered.size;
-      if(a.uniqueDrills.size!==b.uniqueDrills.size)return b.uniqueDrills.size-a.uniqueDrills.size;
+      if(awc!==bwc)return bwc-awc;
+      if(ac!==bc)return bc-ac;
+      if(auc!==buc)return buc-auc;
       if(Math.abs(a.utility-b.utility)>eps)return b.utility-a.utility;
       if(Math.abs(a.totalCondition-b.totalCondition)>eps)return a.totalCondition-b.totalCondition;
       return stableOrderCompare(a,b);
     }
     if(Math.abs(a.utility-b.utility)>eps)return b.utility-a.utility;
-    if(a.weakCovered.size!==b.weakCovered.size)return b.weakCovered.size-a.weakCovered.size;
+    if(awc!==bwc)return bwc-awc;
     if(Math.abs(a.totalCondition-b.totalCondition)>eps)return a.totalCondition-b.totalCondition;
     return stableOrderCompare(a,b);
   }
   function initialMasterRemaining(candidates){const out={};for(const c of candidates)if(c.isMaster)out[c.drillId]=Math.max(0,Math.trunc(Number(c.quantity)||0));return out;}
+  function popcount32(x){x=x>>>0;x=x-((x>>>1)&0x55555555);x=(x&0x33333333)+((x>>>2)&0x33333333);return((((x+(x>>>4))&0x0F0F0F0F)*0x01010101)>>>24);}
+  function makeBeamContext(candidates,need){
+    const attrs=Object.keys(need||{}),attrIndex=new Map(attrs.map((a,i)=>[a,i])),needVector=attrs.map(a=>Number(need[a]||0)),weakMask=attrs.reduce((m,a,i)=>Number(need[a])>1?(m|(1<<i)):m,0)>>>0;
+    const drillIndex=new Map();let nextDrill=0;for(const c of candidates)if(!drillIndex.has(c.drillId))drillIndex.set(c.drillId,nextDrill++);
+    const masterIds=[],masterIndex=new Map();for(const c of candidates)if(c.isMaster&&!masterIndex.has(c.drillId)){masterIndex.set(c.drillId,masterIds.length);masterIds.push(c.drillId);}
+    const meta=candidates.map((c,index)=>{
+      const whiteIdx=c.whiteAttributes.map(a=>attrIndex.get(a)).filter(i=>Number.isInteger(i)),attrMask=whiteIdx.reduce((m,i)=>m|(1<<i),0)>>>0,di=drillIndex.get(c.drillId),masterIdx=c.isMaster?masterIndex.get(c.drillId):-1;
+      return{index,c,whiteIdx,attrMask,weakHitMask:(attrMask&weakMask)>>>0,drillLo:di<32?(1<<di)>>>0:0,drillHi:di>=32?(1<<(di-32))>>>0:0,masterIdx,initialMaster:c.isMaster?Math.max(0,Math.trunc(Number(c.quantity)||0)):0};
+    });
+    return{attrs,needVector,weakMask,meta,masterIds};
+  }
+  function scoreBeamCandidate(meta,needVector,credit){let sum=0;for(const i of meta.whiteIdx)sum+=Math.max(.05,Number(needVector[i]||0)-Number(credit[i]||0));return{score:meta.c.strength*sum,usefulNeed:sum};}
+  function materializeBeamWinner(raw,ctx,need){
+    const selectedCandidates=raw.selectedIdx.map(i=>ctx.meta[i].c),credit={},selected=selectedCandidates.map((c,index)=>{
+      const metric=scoreCandidate(c,need,credit);for(const a of c.whiteAttributes)credit[a]=Number(credit[a]||0)+c.strength;
+      return{...c,slot:index+1,usefulTrainingScore:metric.score,usefulNeed:metric.usefulNeed,adjustedNeed:metric.effectiveNeed,creditPerHit:c.strength,whiteCoverageCount:c.whiteAttributes.length,targetedWhiteAttributes:[...c.whiteAttributes],greyApplicableAttributes:[...c.greyAttributes]};
+    });
+    const covered=new Set(),weakCovered=new Set(),uniqueDrills=new Set(),masterUsage={},remainingMasterStock=initialMasterRemaining(ctx.meta.map(m=>m.c));
+    for(const c of selectedCandidates){uniqueDrills.add(c.drillId);for(const a of c.whiteAttributes){covered.add(a);if(Number(need[a])>1)weakCovered.add(a);}if(c.isMaster){masterUsage[c.drillId]=(masterUsage[c.drillId]||0)+1;remainingMasterStock[c.drillId]=Math.max(0,Number(remainingMasterStock[c.drillId]||0)-1);}}
+    return{selected,credit,masterUsage,remainingMasterStock,utility:raw.utility,covered,weakCovered,uniqueDrills,totalCondition:raw.totalCondition,totalXp:raw.totalXp};
+  }
   function beamSearch(candidates,need,masterStock,slots=6,mode='maxGrowth'){
-    const beamWidth=mode==='conditionEfficient'?CONDITION_BEAM_WIDTH:mode==='balancedDevelopment'?BALANCED_BEAM_WIDTH:BEAM_WIDTH;
-    const weakSet=new Set(Object.keys(need||{}).filter(a=>Number(need[a])>1));
-    let beam=[{selected:[],credit:{},masterUsage:{},remainingMasterStock:initialMasterRemaining(candidates),utility:0,covered:new Set(),weakCovered:new Set(),uniqueDrills:new Set(),totalCondition:0,totalXp:0}];
+    const beamWidth=mode==='conditionEfficient'?CONDITION_BEAM_WIDTH:mode==='balancedDevelopment'?BALANCED_BEAM_WIDTH:BEAM_WIDTH,ctx=makeBeamContext(candidates,need),attrCount=ctx.attrs.length,masterCount=ctx.masterIds.length;
+    // Compact search state: numerical masks/counts and small arrays only. This preserves the exact
+    // beam objective and stable tie ordering while avoiding Sets, expanded drill objects and copied
+    // adjusted-need maps in tens of thousands of branches. The rich public result is reconstructed
+    // once for the winning path by materializeBeamWinner().
+    const initialMasters=masterCount?Array(masterCount).fill(0):null;for(const m of ctx.meta)if(m.masterIdx>=0)initialMasters[m.masterIdx]=m.initialMaster;
+    let beam=[{selectedIdx:[],selectedOrders:[],credit:Array(attrCount).fill(0),masterRemaining:initialMasters,utility:0,coveredMask:0,coveredCount:0,weakMask:0,weakCoveredCount:0,drillLo:0,drillHi:0,uniqueCount:0,totalCondition:0,totalXp:0}];
     for(let slot=0;slot<slots;slot++){
       const next=[];
-      for(const state of beam){for(const c of candidates){
-        if(c.isMaster&&Number(state.remainingMasterStock[c.drillId]||0)<=0)continue;
-        const metric=scoreCandidate(c,need,state.credit),credit={...state.credit},covered=new Set(state.covered),weakCovered=new Set(state.weakCovered),uniqueDrills=new Set(state.uniqueDrills);
-        for(const a of c.whiteAttributes){credit[a]=Number(credit[a]||0)+c.strength;covered.add(a);if(weakSet.has(a))weakCovered.add(a);}uniqueDrills.add(c.drillId);
-        const masterUsage={...state.masterUsage},remainingMasterStock={...state.remainingMasterStock};
-        if(c.isMaster){masterUsage[c.drillId]=(masterUsage[c.drillId]||0)+1;remainingMasterStock[c.drillId]=Math.max(0,Number(remainingMasterStock[c.drillId]||0)-1);}
-        next.push({
-          selected:[...state.selected,{...c,slot:slot+1,usefulTrainingScore:metric.score,usefulNeed:metric.usefulNeed,adjustedNeed:metric.effectiveNeed,creditPerHit:c.strength,whiteCoverageCount:c.whiteAttributes.length,targetedWhiteAttributes:[...c.whiteAttributes],greyApplicableAttributes:[...c.greyAttributes]}],
-          credit,masterUsage,remainingMasterStock,utility:state.utility+metric.score,covered,weakCovered,uniqueDrills,
-          totalCondition:state.totalCondition+(Number(c.conditionDrop)||0),totalXp:state.totalXp+(Number(c.xpPerPlayer)||0)
-        });
+      for(const state of beam){for(const m of ctx.meta){
+        if(m.masterIdx>=0&&Number(state.masterRemaining?.[m.masterIdx]||0)<=0)continue;
+        const metric=scoreBeamCandidate(m,ctx.needVector,state.credit),credit=state.credit.slice();for(const i of m.whiteIdx)credit[i]=Number(credit[i]||0)+m.c.strength;
+        const coveredMask=(state.coveredMask|m.attrMask)>>>0,weakMask=(state.weakMask|m.weakHitMask)>>>0,drillLo=(state.drillLo|m.drillLo)>>>0,drillHi=(state.drillHi|m.drillHi)>>>0;
+        let masterRemaining=state.masterRemaining;if(m.masterIdx>=0){masterRemaining=state.masterRemaining.slice();masterRemaining[m.masterIdx]=Math.max(0,Number(masterRemaining[m.masterIdx]||0)-1);}
+        next.push({selectedIdx:[...state.selectedIdx,m.index],selectedOrders:[...state.selectedOrders,Number(m.c.catalogueOrder)],credit,masterRemaining,utility:state.utility+metric.score,coveredMask,coveredCount:popcount32(coveredMask),weakMask,weakCoveredCount:popcount32(weakMask),drillLo,drillHi,uniqueCount:popcount32(drillLo)+popcount32(drillHi),totalCondition:state.totalCondition+(Number(m.c.conditionDrop)||0),totalXp:state.totalXp+(Number(m.c.xpPerPlayer)||0)});
       }}
       if(!next.length)break;next.sort((a,b)=>compareStates(a,b,mode));beam=next.slice(0,beamWidth);
     }
-    return beam.sort((a,b)=>compareStates(a,b,mode))[0]||null;
+    const raw=beam.sort((a,b)=>compareStates(a,b,mode))[0]||null;return raw?materializeBeamWinner(raw,ctx,need):null;
   }
   function buildIndividualSession({player,roles,position,skills,normalProfile,masterStock,slots=6,mode='maxGrowth',tactics=null,developmentRole=null}={}){
     const resolvedRoles=rolesFor(player,roles,position);if(!resolvedRoles.length)return{drills:[],error:'invalid-position'};

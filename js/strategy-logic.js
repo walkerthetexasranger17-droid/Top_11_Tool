@@ -188,13 +188,32 @@
     for(const [choice,rows] of Object.entries(TACTIC_RULES_BY_CHOICE)){const ev=evaluateRules(rows.filter(r=>!ruleDependsOnTacticValues(r)),context);staticByChoice[choice]=ev.contributions;for(const rule of rows.filter(ruleDependsOnTacticValues)){dynamicDimensions.add(rule.dimension);for(const m of String(rule.when||'').matchAll(/values\.([A-Za-z0-9_]+)/g))dynamicDimensions.add(m[1]);}}
     return{own,staticByChoice,affinityByChoice,dynamicDimensions:[...dynamicDimensions].sort(),dynamicCache:new Map()};
   }
+  function scoreTacticContextSummary(values,starters=[],baseOwn=null,prepared=null){
+    if(!prepared){const full=scoreTacticContext(values,starters,baseOwn,null);return{score:full.score,buckets:full.buckets,contradictionCount:(full.contributions||[]).filter(x=>x.points<0).length,own:full.own};}
+    const prep=prepared,buckets={own_squad_structure:0,internal_coherence:0,playstyle_and_sa_fit:0};let score=0,contradictionCount=0,context=null;
+    const addRows=rows=>{for(const c of rows||[]){const points=Number(c.points)||0;score+=points;buckets[c.bucket]=(buckets[c.bucket]||0)+c.points;if(points<0)contradictionCount++;}};
+    for(const [dimension,option] of Object.entries(values)){const key=`${dimension}:${option}`;addRows(prep.staticByChoice?.[key]);addRows(prep.affinityByChoice?.[key]);}
+    const dynamicKey=prep.dynamicDimensions.map(d=>`${d}=${values?.[d]??''}`).join('|');let dynamicRows=prep.dynamicCache.get(dynamicKey);
+    if(!dynamicRows){context=buildContext(starters,values,prep.own||baseOwn);dynamicRows=evaluateRules(selectedTacticRules(values,true),context).contributions;prep.dynamicCache.set(dynamicKey,dynamicRows);}
+    addRows(dynamicRows);return{score,buckets,contradictionCount,own:prep.own||context?.own||baseOwn};
+  }
   function scoreTacticContext(values,starters=[],baseOwn=null,prepared=null){
-    const prep=prepared||null,context=buildContext(starters,values,prep?.own||baseOwn),contributions=[];
-    if(prep){for(const [dimension,option] of Object.entries(values)){const key=`${dimension}:${option}`,rows=prep.staticByChoice?.[key],aff=prep.affinityByChoice?.[key];if(rows)contributions.push(...rows);if(aff)contributions.push(...aff);}const dynamicKey=prep.dynamicDimensions.map(d=>`${d}=${values?.[d]??''}`).join('|');let dynamicRows=prep.dynamicCache.get(dynamicKey);if(!dynamicRows){dynamicRows=evaluateRules(selectedTacticRules(values,true),context).contributions;prep.dynamicCache.set(dynamicKey,dynamicRows);}contributions.push(...dynamicRows);contributions.sort((a,b)=>(TACTIC_RULE_ORDER.get(a.id)??1e9)-(TACTIC_RULE_ORDER.get(b.id)??1e9)||String(a.id).localeCompare(String(b.id)));}
-    else{contributions.push(...evaluateRules(selectedTacticRules(values),context).contributions);const aff=tacticAffinityByChoice(starters,context.own);for(const [dimension,option] of Object.entries(values))contributions.push(...(aff[`${dimension}:${option}`]||[]));}
+    const prep=prepared||null,contributions=[];let context=null;
+    if(prep){
+      // Static rule/affinity rows were already evaluated when the prepared context was built.
+      // Building the full contextual feature object for every one of ~20k tactic combinations
+      // was pure duplicate work. Only construct it when a dynamic-rule cache miss actually
+      // needs evaluation; the cache key already contains every tactic dimension referenced by
+      // a dynamic rule. This is an exact performance optimisation, not a scoring change.
+      for(const [dimension,option] of Object.entries(values)){const key=`${dimension}:${option}`,rows=prep.staticByChoice?.[key],aff=prep.affinityByChoice?.[key];if(rows)contributions.push(...rows);if(aff)contributions.push(...aff);}
+      const dynamicKey=prep.dynamicDimensions.map(d=>`${d}=${values?.[d]??''}`).join('|');let dynamicRows=prep.dynamicCache.get(dynamicKey);
+      if(!dynamicRows){context=buildContext(starters,values,prep.own||baseOwn);dynamicRows=evaluateRules(selectedTacticRules(values,true),context).contributions;prep.dynamicCache.set(dynamicKey,dynamicRows);}
+      contributions.push(...dynamicRows);contributions.sort((a,b)=>(TACTIC_RULE_ORDER.get(a.id)??1e9)-(TACTIC_RULE_ORDER.get(b.id)??1e9)||String(a.id).localeCompare(String(b.id)));
+    }
+    else{context=buildContext(starters,values,baseOwn);contributions.push(...evaluateRules(selectedTacticRules(values),context).contributions);const aff=tacticAffinityByChoice(starters,context.own);for(const [dimension,option] of Object.entries(values))contributions.push(...(aff[`${dimension}:${option}`]||[]));}
     const buckets={own_squad_structure:0,internal_coherence:0,playstyle_and_sa_fit:0};let score=0;for(const c of contributions){score+=Number(c.points)||0;buckets[c.bucket]=(buckets[c.bucket]||0)+c.points;}
-    return{score,buckets,reasons:contributions.map(x=>({points:x.points,reason:x.message,id:x.id,bucket:x.bucket})),own:context.own,contributions};
+    return{score,buckets,reasons:contributions.map(x=>({points:x.points,reason:x.message,id:x.id,bucket:x.bucket})),own:prep?.own||context?.own||baseOwn,contributions};
   }
 
-  TE.Strategy={MODEL_VERSION,EVIDENCE,TIER_WEIGHT,ROLE_TIERS,PLAYSTYLE_TIERS,TARGET_SHAPE,TARGET_RATIOS,SECONDARY_TARGET_RATIO,trainingPriorityProfile,tacticTrainingSignals,abilityTrainingSignals,analyseShape,startersShape,ownFeatures,contextualOwn,buildContext,tokenize,parseExpression,conditionMatches,evaluateRules,scoreFormationStructure,activeEligiblePlaystyleName,activePlaystylePlacements,directionalFocusOptions,tacticAffinityByChoice,prepareTacticRuleContext,scoreTacticContext,playstyleName,playstyleLevelId,developmentRoleFor,playstyleActive,abilityNames,CONFIG:CFG};
+  TE.Strategy={MODEL_VERSION,EVIDENCE,TIER_WEIGHT,ROLE_TIERS,PLAYSTYLE_TIERS,TARGET_SHAPE,TARGET_RATIOS,SECONDARY_TARGET_RATIO,trainingPriorityProfile,tacticTrainingSignals,abilityTrainingSignals,analyseShape,startersShape,ownFeatures,contextualOwn,buildContext,tokenize,parseExpression,conditionMatches,evaluateRules,scoreFormationStructure,activeEligiblePlaystyleName,activePlaystylePlacements,directionalFocusOptions,tacticAffinityByChoice,prepareTacticRuleContext,scoreTacticContextSummary,scoreTacticContext,playstyleName,playstyleLevelId,developmentRoleFor,playstyleActive,abilityNames,CONFIG:CFG};
 })();

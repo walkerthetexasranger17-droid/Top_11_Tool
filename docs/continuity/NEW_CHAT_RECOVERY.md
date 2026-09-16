@@ -1,16 +1,14 @@
 # New Chat Recovery Instructions
 
-## CURRENT instruction to the new chat — v0.5.17-dev-pass10
+## CURRENT instruction to the new chat — v0.5.17-dev-pass11
 
-> Read `/START_HERE.md`, then the **top/current section** of `CALIBRATION_RECOVERY_HANDOFF_v0.5.17.md`, then `docs/continuity/CURRENT_STATE.md`, then `V0517_DEV_PASS10_VALIDATION.md`.
+> Read `/START_HERE.md`, then the **top/current section** of `CALIBRATION_RECOVERY_HANDOFF_v0.5.17.md`, then `docs/continuity/CURRENT_STATE.md`, then `V0517_DEV_PASS11_VALIDATION.md`.
 >
-> The current working package is **UNPUBLISHED v0.5.17 DEV PASS10**, based on stable v0.5.17. Do not publish it or bump the visible runtime just to continue testing. The v0.5.15 calibrated Match Ready model remains unchanged.
+> The current working package is **UNPUBLISHED v0.5.17 DEV PASS11**, based on stable v0.5.17. Do not publish it or start a visual redesign unless the user asks. The v0.5.15 calibrated Match Ready model remains unchanged.
 >
-> Pass10 keeps Pass9 write/read-back verification and now recalculates OVR from the complete updated skill set. Update screenshots still scan only visible name + age + skills; name is used solely to route to the saved player, and OVR is `Math.round(mean(all 15 applicable visible skills))`. A queue row disappears only after age + OVR + all skills are reloaded successfully. Name/roles/Playstyle/SAs remain preserved.
+> Pass11 is a cleanup/stability/performance pass: package historical baggage removed; service-worker install precache reduced; navigation/page rendering serialized; swipe/tap and toast interception hardened; heavy Training/Team Plan actions de-duplicated; Team Plan redundant calculation removed/yielded; Training beam search compacted with output-equivalence protection.
 >
-> Full Edit Player remains the complete manual editor. Master Cards are above normal drills. Set Pieces are automatic-only with Current XI Coverage. Best-in-Slot remains the separate stat-free long-term squad goal with current-squad gap analysis. Training has Max Growth / Balanced Development / Condition Efficient.
->
-> Opponent information remains permanently out of scope. Mixed Medium/High live drain arithmetic remains unresolved rather than guessed.
+> Pass10 automatic update behaviour remains locked: name auto-match, age + 15 skills persisted, OVR derived from those skills, identity preserved, write/read-back verified. Best-in-Slot remains stat-free. Opponent information remains permanently out of scope. Mixed Medium/High live drain arithmetic remains unresolved rather than guessed.
 >
 > Every dev pass must end with refreshed embedded handoff + regressions + full ZIP + fresh extraction/byte verification.
 

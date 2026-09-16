@@ -1,6 +1,6 @@
 # Top Eleven Tool v0.5.17
 
-> **Current unpublished test branch: DEV PASS10.** Automatic existing-player updates now persist age + all 15 visible skills and derive the displayed OVR from that complete skill set, with immediate write/read-back verification. Public runtime version remains 0.5.17 until the development line is published.
+> **Current unpublished test branch: DEV PASS11.** This is the cleanup/stability baseline: package bloat removed, PWA precache reduced, navigation/heavy-action races hardened, and Training/Team Plan performance improved without changing calibrated football logic. Public runtime version remains 0.5.17 until the development line is published.
 
 > **Project recovery:** a new chat/session must read [`START_HERE.md`](START_HERE.md) before modifying code. The app now embeds a permanent build-30527 Game Research Index under `docs/research/build_30527/` and machine-readable findings under `data/build_30527/index/`.
 

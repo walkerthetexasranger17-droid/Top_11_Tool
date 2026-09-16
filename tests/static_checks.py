@@ -7,6 +7,7 @@ js=(ROOT/'js/app.js').read_text(encoding='utf-8')
 players=(ROOT/'js/players.js').read_text(encoding='utf-8')
 scanner=(ROOT/'js/scanner-engine.js').read_text(encoding='utf-8')
 formation=(ROOT/'js/formation.js').read_text(encoding='utf-8')
+teamplan=(ROOT/'js/team-plan-engine.js').read_text(encoding='utf-8')
 soup=BeautifulSoup(html,'html.parser')
 errs=[]
 ids=[x.get('id') for x in soup.find_all(id=True)]
@@ -174,7 +175,7 @@ if len(ref_manifest.get('specialAbilities',[]))!=19: errs.append('coloured Speci
 
 # Automatic formation selection is data-driven from the v2 contract.
 strategy_logic=json.loads((ROOT/'data/build_30527/index/decision_logic_v2.json').read_text(encoding='utf-8'))
-if "templateId:null" not in js+formation: errs.append('missing automatic formation hook')
+if 'F.rankStrategic(eligible)' not in teamplan or 'TP.buildOptimalPlan' not in js: errs.append('missing automatic full-plan formation search hook')
 if 'CFG.formation?.candidates' not in formation: errs.append('formation engine is not consuming authoritative v2 candidates')
 formation_names={x['name'] for x in strategy_logic['formation']['candidates']}
 for needle in ['3-1-4-1-1','3-1-2-1-3','4-1-4-1']:
