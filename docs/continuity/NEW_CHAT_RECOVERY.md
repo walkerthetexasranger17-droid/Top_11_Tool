@@ -1,16 +1,14 @@
 # New Chat Recovery Instructions
 
-## CURRENT instruction to the new chat — v0.5.17-dev-pass7
+## CURRENT instruction to the new chat — v0.5.17-dev-pass8
 
-> Read `/START_HERE.md`, then the **top/current section** of `CALIBRATION_RECOVERY_HANDOFF_v0.5.17.md`, then `docs/continuity/CURRENT_STATE.md`, then `V0517_DEV_PASS7_VALIDATION.md`.
+> Read `/START_HERE.md`, then the **top/current section** of `CALIBRATION_RECOVERY_HANDOFF_v0.5.17.md`, then `docs/continuity/CURRENT_STATE.md`, then `V0517_DEV_PASS8_VALIDATION.md`.
 >
-> The current working package is **UNPUBLISHED v0.5.17 DEV PASS7**, based on stable v0.5.17. Do not publish it or bump the visible runtime just to continue testing. The v0.5.15 calibrated Match Ready model remains unchanged.
+> The current working package is **UNPUBLISHED v0.5.17 DEV PASS8**, based on stable v0.5.17. Do not publish it or bump the visible runtime just to continue testing. The v0.5.15 calibrated Match Ready model remains unchanged.
 >
-> Existing-player scan updates are **age + skills only** and the bulk update queue is present. Full Edit Player remains the complete manual editor. Master Cards are above normal drills. Set Pieces are automatic-only with Current XI Coverage and assigned-role visuals.
+> Existing-player bulk updates are now **fully automatic**: screenshot name is read only to match one saved squad player; age + skills are scanned and saved automatically; successful rows remove themselves and the queue continues. There is no manual target dropdown. Saved name, OVR, roles, Playstyle and SAs are never overwritten. Ambiguous/unmatched names or dirty verification stop safely rather than guessing.
 >
-> Special Ability pickers are natural-role filtered using the current 19-row contract. Best-in-Slot is a separate stat-free long-term 4-2-3-1 goal layer; current-squad coverage is one-player-per-slot and now distinguishes trainable gaps, identity/SA-capacity gaps and recruit gaps.
->
-> Individual Training has three explicit modes: **Max Growth**, **Balanced Development**, and **Condition Efficient**. Max Growth remains the original objective (Luiu still produces six Fast Counter-Attacks); Balanced is separate and prioritises broader weak-white coverage/variety.
+> Full Edit Player remains the complete manual editor. Master Cards are above normal drills. Set Pieces are automatic-only with Current XI Coverage. Best-in-Slot remains the separate stat-free long-term squad goal with current-squad gap analysis. Training has Max Growth / Balanced Development / Condition Efficient.
 >
 > Opponent information remains permanently out of scope. Mixed Medium/High live drain arithmetic remains unresolved rather than guessed.
 >

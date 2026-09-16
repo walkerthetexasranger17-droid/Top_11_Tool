@@ -1,23 +1,24 @@
-# CURRENT DEVELOPMENT OVERLAY — v0.5.17-dev-pass7
+# CURRENT DEVELOPMENT OVERLAY — v0.5.17-dev-pass8
 
 **State:** UNPUBLISHED / TESTING — do not publish.  
 **Release base:** v0.5.17.  
 **Calibrated Match Ready decision model:** unchanged v0.5.15 engine.
 
-Pass1–6 remain preserved: age+skills-only update scanning + bulk queue, Master Cards ordering, automatic Set Piece coverage, current 19-row SA role filtering, stat-free Best-in-Slot v2 and its one-player-per-goal-slot current-squad gap guide.
+Pass1–7 remain preserved, including Balanced Development, automatic Set Piece coverage, role-filtered SAs and stat-free Best-in-Slot.
 
-DEV PASS7 fine-tunes those features without changing Match Ready scoring:
+DEV PASS8 changes only the existing-player bulk update workflow:
 
-- Individual Training now exposes **Max Growth / Balanced Development / Condition Efficient**. Max Growth and Condition Efficient outputs are regression-compared with pass6 and remain unchanged. Balanced Development is an explicit companion objective prioritising distinct weak-white coverage, then total white coverage, then distinct drills, then raw utility and lower condition.
-- Restored Training sessions synchronise the visible mode selector; changing mode clears a stale displayed session.
-- Best-in-Slot coverage separates **trainable gaps** from **identity gaps**. Wrong existing Playstyle identities and full two-SA capacity conflicts are not presented as ordinary development.
-- Set Piece pitch icons use the actual assigned XI role.
-- Update mode hides the add-player-only manual-entry hint.
-- Recovery/continuity documents are resynchronised to the current pass.
+- Update screenshots no longer require a per-image squad-player dropdown.
+- Scanner update mode reads **visible player name + age + skills** from the screenshot; name exists only to resolve one saved player and is never written back.
+- Matching is deterministic: accent/case/punctuation-insensitive exact match first, then conservative unique fuzzy OCR tolerance. Duplicate names, near ties and unrelated names are never guessed.
+- Bulk queue auto-detects GK/outfield layout when no profile is pinned and checks the matched saved player's GK/outfield identity before saving.
+- Clean scans save automatically, mutate only age + skills, remove themselves from the queue and continue to the next screenshot.
+- A failed name/verification gets one automatic retry. If it is still unsafe, the row stops for attention instead of silently updating the wrong player.
+- Old pass7 `needs-target` queue rows migrate back into the automatic scanner after refresh.
 
-Current Best-in-Slot v2 target remains **4-2-3-1** under the existing transparent stat-free package search. Official Top Eleven Squad Balance remains server-owned and is not reproduced.
+No Match Ready, Best-in-Slot, Set Piece, Mentor, Tactics or Training coefficient changed.
 
-Read `V0517_DEV_PASS7_VALIDATION.md`, `docs/research/build_30527/V0517_BEST_IN_SLOT_SQUAD_GAP.md`, and the root recovery handoff before further changes.
+Read `V0517_DEV_PASS8_VALIDATION.md`, `docs/research/build_30527/V0517_AUTOMATIC_PLAYER_UPDATE.md`, and the root recovery handoff before further changes.
 
 ---
 

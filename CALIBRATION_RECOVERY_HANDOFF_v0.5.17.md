@@ -1,3 +1,53 @@
+# v0.5.17 UNPUBLISHED DEV PASS8 CHECKPOINT
+
+**CURRENT WORKING STATE:** UNPUBLISHED v0.5.17 DEV PASS8  
+**Date:** 16 September 2026  
+**Base:** verified v0.5.17-dev-pass7 checkpoint  
+**Match Ready decision model:** v0.5.15 calibration preserved unchanged  
+**DO NOT PUBLISH.**
+
+## Pass8 correction — existing-player updates are fully automatic
+
+The user tested the Pass7 bulk update UI and rejected the manual per-screenshot player dropdown. Update mode must require no manual target selection in the normal path.
+
+The active flow is now:
+
+`screenshot → visible-name detection → safe My Squad match → age + skills scan → automatic save → queue removal → next screenshot`
+
+### Locked safety boundaries
+
+- Screenshot name is read **only** to match the correct saved player. The saved name is never overwritten.
+- Update save still mutates only `age` and `skills` (plus scanner provenance). OVR, roles, related roles, Playstyle and Special Abilities remain preserved from the existing record.
+- Exact normalised name match is preferred. Conservative fuzzy OCR tolerance is accepted only when one candidate clears 0.90 similarity and leads the runner-up by at least 0.08.
+- Duplicate exact names, near-tie fuzzy names, blank names and unrelated names are never guessed.
+- Bulk screenshots auto-detect GK/outfield layout and the result must agree with the matched saved player's GK/outfield identity.
+- Scanner validation, aggregate checks and uncertainty must all be clean for automatic save.
+- Unsafe matching/verification receives one automatic retry. If still unsafe, no save occurs and the row remains for attention.
+- Old Pass7 `needs-target` rows are migrated to automatic queued scans on restore. Old update scans from the age+skills-only v1 scope are rescanned before save.
+
+### Runtime files
+
+- `js/scanner-engine.js` — update board/schema/prompt now includes visible name for routing and supports automatic layout detection.
+- `js/players.js` — canonical Unicode-aware name normalisation and conservative match function.
+- `js/app.js` — no update target picker; auto-match, auto-verify, auto-save, row removal and continuation.
+- `tests/player_update_scan_contract.py` — 27 automatic-update assertions.
+- `tests/player_update_auto_match.js` — 11 deterministic matcher assertions.
+- `docs/research/build_30527/V0517_AUTOMATIC_PLAYER_UPDATE.md` — detailed boundary/provenance.
+
+### Regression status
+
+Dedicated auto-update contracts and the broad calibrated suite are green before packaging. No Match Ready, Best-in-Slot, Training, Set Piece, Mentor or Tactics scoring coefficient changed. Scanner v12 full-player recognition remains unchanged outside the lightweight update subpath.
+
+### Package verification
+
+A clean draft archive extracted with **822/822 files byte-identical**. The critical automatic-update, core, Tactics, all-in-one, Best-in-Slot, SA-role, Set Piece coverage, navigation, static/package and scanner contracts passed again from the extracted copy. The final pass8 archive is regenerated after this note and must be byte-verified before handoff.
+
+### Next
+
+User-test automatic bulk updating on real Skills screenshots. The normal path should require only selecting the screenshot batch. If a row stops, investigate why rather than reintroducing manual assignment as the normal workflow. Continue narrow correction passes only; do not publish or start the visual redesign yet.
+
+---
+
 # v0.5.17 UNPUBLISHED DEV PASS7 CHECKPOINT
 
 **CURRENT WORKING STATE:** UNPUBLISHED v0.5.17 DEV PASS7  
