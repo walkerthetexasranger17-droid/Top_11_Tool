@@ -1,6 +1,6 @@
 # Top Eleven Build 30527 — Game Research Index
 
-**Index version:** 10  
+**Index version:** 11  
 **Last updated:** 16 September 2026  
 **Purpose:** permanent, embedded reference for future Top Eleven Tool logic work.
 
@@ -34,6 +34,7 @@ See `data/build_30527/index/source_manifest.json`.
 - [Players, roles and key attributes](systems/players_roles.md)
 - [Playstyles and Special Abilities](systems/playstyles_special_abilities.md)
 - [Training](systems/training.md)
+- [Best-in-Slot current-squad gap/coverage](V0517_BEST_IN_SLOT_SQUAD_GAP.md)
 - [Unresolved targets](UNRESOLVED.md)
 
 ## Machine-readable indexes
@@ -52,6 +53,10 @@ See `data/build_30527/index/source_manifest.json`.
 - `data/build_30527/index/ui_todo.json` — parked responsive Player Profile design constraints and references.
 - `data/build_30527/index/decision_logic_v2.json` — authoritative deep companion decision contract: features, squad coverage, Formation, Tactics, Mentor and Training logic.
 - `data/build_30527/index/strategy_strings_v2.json` — human-readable reason strings required by the v2 rule contract.
+
+## Current unpublished development overlay
+
+The working branch is **v0.5.17-dev-pass7**. Pass7 preserves the stat-free Best-in-Slot v2 goal and hardens the current-squad gap overlay with trainable-vs-identity/SA-capacity states. It also adds the explicit Balanced Development Training mode without changing Max Growth. One current player can cover only one ideal slot; OVR/skills are not read. See `V0517_BEST_IN_SLOT_SQUAD_GAP.md`, `V0517_DEV_PASS7_VALIDATION.md` and the root recovery handoff. This is companion logic and is not official Squad Balance.
 
 ## Current highest-value checkpoint
 
@@ -113,3 +118,8 @@ Read `V0515_SPECIAL_ABILITY_CANONICALIZATION_CHECKPOINT.md` before changing curr
 ## v0.5.17 live Focus Passing label checkpoint
 
 Read `../calibration/V0517_FOCUS_PASSING_LIVE_UI_LABEL.md` before changing Focus Passing option identity. Current client/internal `FocusPassingCenter` remains the runtime key, while the live user-facing option is **Through the Middle**.
+
+## v0.5.17 Best-in-Slot long-term goal v1
+
+Read `V0517_BEST_IN_SLOT_GOAL_V1.md` before changing the long-term ideal-XI layer. It is a separate, equal-quality-normalised transparent companion model that composes current Formation, Role+Playstyle target shapes, SA role eligibility, Tactics, Set Pieces and a full-unlock Mentor comparison. It never consumes opponent information and never replaces Match Ready current-squad selection.
+

@@ -19,6 +19,7 @@ check('setManualSetPiece(currentSetPieceState' not in app,'manual Set Piece stat
 check("plan?.setPieces?.assignments" in app,'UI reads the automatic Team Plan Set Piece assignments')
 check("sources:Object.fromEntries(SET_PIECE_MODES.map(([key])=>[key,'auto']))" in app,'persisted UI state is reset to automatic coverage')
 check('.set-piece-coverage-card' in css and '.set-piece-duty-list' in css,'coverage visual styling present')
+check('starterByKey=new Map' in app and 'role=entry?.assignedRole' in app,"Set Piece pitch icons use the player's actual assigned XI role")
 failed=[msg for ok,msg in checks if not ok]
 if failed:
     print('FAIL set-piece coverage UI contract')

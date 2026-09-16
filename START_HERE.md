@@ -1,12 +1,16 @@
-# v0.5.17 UNPUBLISHED DEV PASS3 RECOVERY SNAPSHOT
+# v0.5.17 UNPUBLISHED DEV PASS7 RECOVERY SNAPSHOT
 
-**CURRENT WORKING BRANCH:** v0.5.17-dev-pass3 — **DO NOT PUBLISH YET**.  
+**CURRENT WORKING BRANCH:** v0.5.17-dev-pass7 — **DO NOT PUBLISH YET**.  
 **Stable release base:** v0.5.17.  
-**Decision model:** v0.5.15 calibration unchanged.
+**Match Ready decision model:** v0.5.15 calibration unchanged.
 
-Read `CALIBRATION_RECOVERY_HANDOFF_v0.5.17.md` first. Its top section is the authoritative current development checkpoint. The older RELEASE-FROZEN material below is historical baseline/release evidence.
+Read `CALIBRATION_RECOVERY_HANDOFF_v0.5.17.md` first. Its top section is the authoritative current development checkpoint.
 
-Pass1 and pass2 features remain. DEV PASS3 adds the current 19-row Special Ability role-eligibility contract and role-filtered Add/Edit pickers while preserving role-independent scanner recognition. Public/runtime version strings intentionally remain 0.5.17 because this is still unpublished development work.
+Pass1–6 recovery history remains. DEV PASS7 is a fine-tuning/smoke-hardening pass: explicit Balanced Development training mode without changing Max Growth, correct saved-mode restore, actionable Best-in-Slot trainable-vs-identity gap states, assigned-role Set Piece visuals, update-mode hint cleanup and refreshed continuity files.
+
+Primary changed files: `js/training-engine.js`, `js/best-in-slot-engine.js`, `js/app.js`, `index.html`, `css/app.css`, and the pass7 regression/continuity documents.
+
+Public/runtime version strings intentionally remain **0.5.17** because this is still unpublished development work.
 
 ---
 

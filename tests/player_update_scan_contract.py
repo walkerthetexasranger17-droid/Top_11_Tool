@@ -31,6 +31,7 @@ need('data-queue-update-target' in app,'queue supports per-screenshot existing-p
 need("item.updateOnly&&!item.updateKey?'needs-target':'queued'" in app,'unassigned update screenshots cannot scan before target selection')
 need("scan=await SC.scanUpdate" in app,'update queue uses lightweight scanner rather than full scanner')
 need("Save Update & Next" in app and "Save Update" in app,'review flow has update-specific save labels')
+need('id="manualEntryNote"' in html and "manualNote.style.display='none'" in app,'update mode hides the add-player-only manual-entry hint')
 need(html.find('id="masterStockConfig"') < html.find('id="normalDrillConfig"'),'Master card stock renders above normal drills')
 
 if not all(x for x,_ in checks):

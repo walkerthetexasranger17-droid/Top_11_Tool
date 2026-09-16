@@ -1,20 +1,22 @@
 # New Chat Recovery Instructions
 
-## CURRENT instruction to the new chat — v0.5.17-dev-pass2
+## CURRENT instruction to the new chat — v0.5.17-dev-pass7
 
-> Read `/START_HERE.md`, then the **top/current section** of `CALIBRATION_RECOVERY_HANDOFF_v0.5.17.md`, then `docs/continuity/CURRENT_STATE.md`.
+> Read `/START_HERE.md`, then the **top/current section** of `CALIBRATION_RECOVERY_HANDOFF_v0.5.17.md`, then `docs/continuity/CURRENT_STATE.md`, then `V0517_DEV_PASS7_VALIDATION.md`.
 >
-> The current working package is **UNPUBLISHED v0.5.17 DEV PASS2**, based on the stable v0.5.17 release. Do not publish it or bump the public version merely to continue pass2/pass3. The v0.5.15 calibrated decision model remains unchanged.
+> The current working package is **UNPUBLISHED v0.5.17 DEV PASS7**, based on stable v0.5.17. Do not publish it or bump the visible runtime just to continue testing. The v0.5.15 calibrated Match Ready model remains unchanged.
 >
-> Existing-player scan updates are intentionally **age + skills only**. Never let that path overwrite name, OVR, roles, Playstyle, Playstyle level or Special Abilities. Full `Edit Player` remains the complete manual editor.
+> Existing-player scan updates are **age + skills only** and the bulk update queue is present. Full Edit Player remains the complete manual editor. Master Cards are above normal drills. Set Pieces are automatic-only with Current XI Coverage and assigned-role visuals.
 >
-> Bulk update queue is present and Master Card Stock appears above normal drills. Set Pieces are now automatic-only with a Current XI Coverage visual. Luiu is integrity-tested; a 400-session audit confirms repetition is structural to Max Growth, so no hidden diversity penalty was added.
+> Special Ability pickers are natural-role filtered using the current 19-row contract. Best-in-Slot is a separate stat-free long-term 4-2-3-1 goal layer; current-squad coverage is one-player-per-slot and now distinguishes trainable gaps, identity/SA-capacity gaps and recruit gaps.
 >
-> Next: deliberate best-in-slot long-term squad-goal design, kept separate from current-squad Match Ready optimisation. Opponent inputs remain permanently out of scope.
+> Individual Training has three explicit modes: **Max Growth**, **Balanced Development**, and **Condition Efficient**. Max Growth remains the original objective (Luiu still produces six Fast Counter-Attacks); Balanced is separate and prioritises broader weak-white coverage/variety.
 >
-> Every dev pass must finish with refreshed embedded handoff + regression gate + full ZIP + fresh extraction verification.
+> Opponent information remains permanently out of scope. Mixed Medium/High live drain arithmetic remains unresolved rather than guessed.
+>
+> Every dev pass must end with refreshed embedded handoff + regressions + full ZIP + fresh extraction/byte verification.
 
-If documentation below says v0.5.17 is frozen and all future work must be v0.5.18, treat that as the historical release rule that the user explicitly superseded for this unpublished v0.5.17 pass1/pass2/pass3 development line.
+If historical documentation below says v0.5.17 is frozen and future work must be v0.5.18, treat that as the release rule superseded by the user's explicitly requested unpublished v0.5.17 development/testing line.
 
 ---
 

@@ -1,7 +1,7 @@
 (() => {
   const TE=window.TE5=window.TE5||{};const D=TE.Data,STRAT=TE.Strategy;
   if(!D||!STRAT)throw new Error('data.js and strategy-logic.js must load before training-engine.js');
-  const MODEL_VERSION='30527-white-beam-v5-mode-depth',BEAM_WIDTH=250,CONDITION_BEAM_WIDTH=1000;
+  const MODEL_VERSION='30527-white-beam-v6-balanced-development',BEAM_WIDTH=250,CONDITION_BEAM_WIDTH=1000,BALANCED_BEAM_WIDTH=1000;
 
   function rolesFor(player,roles,position){
     const raw=Array.isArray(roles)?roles:(Array.isArray(player?.roles)?player.roles:[position||player?.position]);
@@ -74,6 +74,14 @@
       if(a.covered.size!==b.covered.size)return b.covered.size-a.covered.size;
       return stableOrderCompare(a,b);
     }
+    if(mode==='balancedDevelopment'){
+      if(a.weakCovered.size!==b.weakCovered.size)return b.weakCovered.size-a.weakCovered.size;
+      if(a.covered.size!==b.covered.size)return b.covered.size-a.covered.size;
+      if(a.uniqueDrills.size!==b.uniqueDrills.size)return b.uniqueDrills.size-a.uniqueDrills.size;
+      if(Math.abs(a.utility-b.utility)>eps)return b.utility-a.utility;
+      if(Math.abs(a.totalCondition-b.totalCondition)>eps)return a.totalCondition-b.totalCondition;
+      return stableOrderCompare(a,b);
+    }
     if(Math.abs(a.utility-b.utility)>eps)return b.utility-a.utility;
     if(a.weakCovered.size!==b.weakCovered.size)return b.weakCovered.size-a.weakCovered.size;
     if(Math.abs(a.totalCondition-b.totalCondition)>eps)return a.totalCondition-b.totalCondition;
@@ -81,20 +89,20 @@
   }
   function initialMasterRemaining(candidates){const out={};for(const c of candidates)if(c.isMaster)out[c.drillId]=Math.max(0,Math.trunc(Number(c.quantity)||0));return out;}
   function beamSearch(candidates,need,masterStock,slots=6,mode='maxGrowth'){
-    const beamWidth=mode==='conditionEfficient'?CONDITION_BEAM_WIDTH:BEAM_WIDTH;
+    const beamWidth=mode==='conditionEfficient'?CONDITION_BEAM_WIDTH:mode==='balancedDevelopment'?BALANCED_BEAM_WIDTH:BEAM_WIDTH;
     const weakSet=new Set(Object.keys(need||{}).filter(a=>Number(need[a])>1));
-    let beam=[{selected:[],credit:{},masterUsage:{},remainingMasterStock:initialMasterRemaining(candidates),utility:0,covered:new Set(),weakCovered:new Set(),totalCondition:0,totalXp:0}];
+    let beam=[{selected:[],credit:{},masterUsage:{},remainingMasterStock:initialMasterRemaining(candidates),utility:0,covered:new Set(),weakCovered:new Set(),uniqueDrills:new Set(),totalCondition:0,totalXp:0}];
     for(let slot=0;slot<slots;slot++){
       const next=[];
       for(const state of beam){for(const c of candidates){
         if(c.isMaster&&Number(state.remainingMasterStock[c.drillId]||0)<=0)continue;
-        const metric=scoreCandidate(c,need,state.credit),credit={...state.credit},covered=new Set(state.covered),weakCovered=new Set(state.weakCovered);
-        for(const a of c.whiteAttributes){credit[a]=Number(credit[a]||0)+c.strength;covered.add(a);if(weakSet.has(a))weakCovered.add(a);}
+        const metric=scoreCandidate(c,need,state.credit),credit={...state.credit},covered=new Set(state.covered),weakCovered=new Set(state.weakCovered),uniqueDrills=new Set(state.uniqueDrills);
+        for(const a of c.whiteAttributes){credit[a]=Number(credit[a]||0)+c.strength;covered.add(a);if(weakSet.has(a))weakCovered.add(a);}uniqueDrills.add(c.drillId);
         const masterUsage={...state.masterUsage},remainingMasterStock={...state.remainingMasterStock};
         if(c.isMaster){masterUsage[c.drillId]=(masterUsage[c.drillId]||0)+1;remainingMasterStock[c.drillId]=Math.max(0,Number(remainingMasterStock[c.drillId]||0)-1);}
         next.push({
           selected:[...state.selected,{...c,slot:slot+1,usefulTrainingScore:metric.score,usefulNeed:metric.usefulNeed,adjustedNeed:metric.effectiveNeed,creditPerHit:c.strength,whiteCoverageCount:c.whiteAttributes.length,targetedWhiteAttributes:[...c.whiteAttributes],greyApplicableAttributes:[...c.greyAttributes]}],
-          credit,masterUsage,remainingMasterStock,utility:state.utility+metric.score,covered,weakCovered,
+          credit,masterUsage,remainingMasterStock,utility:state.utility+metric.score,covered,weakCovered,uniqueDrills,
           totalCondition:state.totalCondition+(Number(c.conditionDrop)||0),totalXp:state.totalXp+(Number(c.xpPerPlayer)||0)
         });
       }}
@@ -116,11 +124,11 @@
     return{
       drills:best.selected,error:best.selected.length===slots?null:'insufficient-legal-drills',
       meta:{
-        model:MODEL_VERSION,gameDataVersion:D.GAME_DATA_VERSION,beamWidth:mode==='conditionEfficient'?CONDITION_BEAM_WIDTH:BEAM_WIDTH,mode,roles:resolvedRoles,whiteAttributes:white,applicableAttributes:applicable,
+        model:MODEL_VERSION,gameDataVersion:D.GAME_DATA_VERSION,beamWidth:mode==='conditionEfficient'?CONDITION_BEAM_WIDTH:mode==='balancedDevelopment'?BALANCED_BEAM_WIDTH:BEAM_WIDTH,mode,roles:resolvedRoles,whiteAttributes:white,applicableAttributes:applicable,
         target:needs.target,normalizedReference:needs.normalizedReference,targetByAttribute:needs.targets,targetGapByAttribute:needs.gaps,targetRatioByAttribute:needs.ratios,baseNeed:needs.need,sessionCredit:best.credit,priorityAttributes,weakWhiteAttributes:[...needs.weakAttributes],
-        coveredWhiteAttributes:[...best.covered],coveredWeakWhiteAttributes:[...best.weakCovered],totalUsefulScore:best.utility,totalCondition:best.totalCondition,totalXp:best.totalXp,
+        coveredWhiteAttributes:[...best.covered],coveredWeakWhiteAttributes:[...best.weakCovered],uniqueDrillCount:best.uniqueDrills.size,totalUsefulScore:best.utility,totalCondition:best.totalCondition,totalXp:best.totalXp,
         masterUsage:best.masterUsage,remainingMasterStock,normalCandidateCount:normalCandidates.length,masterCandidateCount:masterCandidates.length,
-        exactGainPrediction:false,greyAttributesAffectScore:false,gainPolicy:{verifiedIntensityXp:{'Very Easy':1,'Easy':2,'Medium':3,'Hard':4,'Very Hard':5},strengthFormula:'xp_per_player * (1 + training_effect_percent/100)',exactFinalAttributeGainPredicted:false},rankingMode:'role-playstyle-target-shape-tactic-gap-beam',hierarchy
+        exactGainPrediction:false,greyAttributesAffectScore:false,gainPolicy:{verifiedIntensityXp:{'Very Easy':1,'Easy':2,'Medium':3,'Hard':4,'Very Hard':5},strengthFormula:'xp_per_player * (1 + training_effect_percent/100)',exactFinalAttributeGainPredicted:false},rankingMode:mode==='balancedDevelopment'?'balanced-weak-coverage-then-variety-then-utility':mode==='conditionEfficient'?'condition-efficient-utility-per-condition':'role-playstyle-target-shape-tactic-gap-beam',hierarchy
       }
     };
   }
@@ -132,5 +140,5 @@
       .sort((a,b)=>b.metric.score-a.metric.score||b.metric.whiteCoverageCount-a.metric.whiteCoverageCount||a.candidate.catalogueOrder-b.candidate.catalogueOrder);
     return{roles:resolvedRoles,white,applicable,needs,hierarchy,rows,error:null};
   }
-  TE.Training={MODEL_VERSION,BEAM_WIDTH,CONDITION_BEAM_WIDTH,rolesFor,whiteSkillsFor,applicableSkillsFor,buildNeeds,levelEffectPct,levelName,trainingStrength,buildIndividualSession,evaluateCatalogue,scoreCandidate,beamSearch,compareStates};
+  TE.Training={MODEL_VERSION,BEAM_WIDTH,CONDITION_BEAM_WIDTH,BALANCED_BEAM_WIDTH,rolesFor,whiteSkillsFor,applicableSkillsFor,buildNeeds,levelEffectPct,levelName,trainingStrength,buildIndividualSession,evaluateCatalogue,scoreCandidate,beamSearch,compareStates};
 })();

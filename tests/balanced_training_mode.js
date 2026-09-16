@@ -1,0 +1,20 @@
+const fs=require('fs'),vm=require('vm'),path=require('path');
+global.window=global;global.localStorage={_m:new Map(),getItem(k){return this._m.has(k)?this._m.get(k):null},setItem(k,v){this._m.set(k,String(v))},removeItem(k){this._m.delete(k)},key(i){return [...this._m.keys()][i]||null},clear(){this._m.clear()},get length(){return this._m.size}};
+const ROOT=path.join(__dirname,'..');
+for(const f of ['optimizer-data.js','bible-data.js','data.js','strategy-data.js','strategy-logic.js','squad-coverage-engine.js','scanner-engine.js','storage.js','drill-profile.js','players.js','training-engine.js'])vm.runInThisContext(fs.readFileSync(path.join(ROOT,'js',f),'utf8'),{filename:f});
+const {Data:D,Training:T}=global.TE5;const normalProfile={drills:Object.fromEntries(D.NORMAL_DRILLS.map(d=>[d.drillId,{unlocked:true,level:3}]))};
+let n=0;const failures=[];const ok=(v,m)=>{n++;if(!v)failures.push(m)};
+const skills={Tackling:123,Marking:121,Positioning:157,Heading:46,Bravery:122,Passing:189,Dribbling:164,Crossing:51,Shooting:118,Finishing:59,Fitness:138,Strength:33,Aggression:46,Speed:137,Creativity:99};
+const luiu={key:'luiu-balanced',name:'Stefano Luiu',position:'MC',roles:['MC'],age:22,ovr:107,skills:{...skills},playstyle:{type:'Mezzala',level:3},specialAbilities:['Playmaker']};
+const max=T.buildIndividualSession({player:luiu,roles:['MC'],position:'MC',skills:luiu.skills,normalProfile,masterStock:{},slots:6,mode:'maxGrowth',developmentRole:'MC'});
+const bal=T.buildIndividualSession({player:luiu,roles:['MC'],position:'MC',skills:luiu.skills,normalProfile,masterStock:{},slots:6,mode:'balancedDevelopment',developmentRole:'MC'});
+ok(max.drills.length===6&&bal.drills.length===6,'both modes build six slots');
+ok(max.drills.every(d=>d.name==='Fast Counter-Attacks'),'Max Growth remains the proven six Fast Counter-Attacks Luiu result');
+ok(bal.meta.mode==='balancedDevelopment'&&bal.meta.beamWidth===1000,'Balanced Development uses its explicit mode and deeper beam');
+ok(bal.meta.coveredWeakWhiteAttributes.length>max.meta.coveredWeakWhiteAttributes.length,'Balanced Development covers more distinct weak white skills for Luiu');
+ok(bal.meta.uniqueDrillCount>max.meta.uniqueDrillCount,'Balanced Development uses more distinct drills for Luiu');
+ok(bal.meta.rankingMode==='balanced-weak-coverage-then-variety-then-utility','Balanced ranking objective is explicit');
+const before=JSON.stringify(luiu.skills);T.buildIndividualSession({player:luiu,roles:['MC'],position:'MC',skills:luiu.skills,normalProfile,masterStock:{},slots:6,mode:'balancedDevelopment',developmentRole:'MC'});ok(JSON.stringify(luiu.skills)===before,'Balanced Development does not mutate player skills');
+const again=T.buildIndividualSession({player:luiu,roles:['MC'],position:'MC',skills:luiu.skills,normalProfile,masterStock:{},slots:6,mode:'balancedDevelopment',developmentRole:'MC'});ok(JSON.stringify(again.drills.map(x=>x.drillId))===JSON.stringify(bal.drills.map(x=>x.drillId)),'Balanced Development is deterministic');
+if(failures.length){console.error(`Balanced training contract: FAIL — ${failures.length}/${n}`);for(const f of failures)console.error('-',f);process.exit(1)}
+console.log(`Balanced training contract: PASS — ${n} assertions`);console.log(JSON.stringify({max:max.drills.map(x=>x.name),balanced:bal.drills.map(x=>x.name),maxWeak:max.meta.coveredWeakWhiteAttributes.length,balancedWeak:bal.meta.coveredWeakWhiteAttributes.length,maxUnique:max.meta.uniqueDrillCount,balancedUnique:bal.meta.uniqueDrillCount},null,2));

@@ -1,3 +1,296 @@
+# v0.5.17 UNPUBLISHED DEV PASS7 CHECKPOINT
+
+**CURRENT WORKING STATE:** UNPUBLISHED v0.5.17 DEV PASS7  
+**Date:** 16 September 2026  
+**Base:** verified v0.5.17-dev-pass6 checkpoint  
+**Match Ready decision model:** v0.5.15 calibration preserved unchanged  
+**DO NOT PUBLISH.**
+
+## Pass7 fine-tuning / smoke hardening
+
+This pass closes the first broad fine-tuning sweep after the user's original v0.5.17 feature list. It deliberately makes narrow product-integrity fixes only; it does not recalibrate Match Ready Formation/Tactics/Mentor/Set Pieces or change the Best-in-Slot formation objective.
+
+### 1. Individual Training now has three explicit objectives
+
+`Max Growth | Balanced Development | Condition Efficient`
+
+- **Max Growth is unchanged.** It still maximises useful white-skill utility first.
+- **Balanced Development** is a separate transparent companion objective: distinct weak-white attributes covered → total white attributes covered → distinct drills → raw useful utility → lower condition → deterministic stable order.
+- **Condition Efficient is unchanged.** It still prioritises useful utility per condition.
+- Beam state now tracks unique drills so Balanced can reward variety without modifying the existing objectives.
+- Restoring a saved session now restores the visible selector to that session's real mode.
+- Changing mode while a result is displayed clears the stale result and requires a rebuild, preventing the UI from showing one objective while displaying another objective's session.
+
+**Stefano Luiu fixture:** Max Growth remains `Fast Counter-Attacks ×6`. Balanced Development instead produces six distinct drills and increases distinct weak-white attributes covered from 1 to 5 in the locked fixture. This is intentional objective separation, not a Max Growth nerf.
+
+Pass6→Pass7 regression comparisons prove Max Growth is byte-identical across eight deterministic role fixtures and Condition Efficient is identical across deterministic GK + MC fixtures.
+
+### 2. Best-in-Slot current-squad guide now distinguishes actionable gaps
+
+The long-term Best-in-Slot goal itself remains the stat-free v2 package model and still currently targets **4-2-3-1**. Only the current-squad annotation layer changed.
+
+Gap model: `best-in-slot-squad-gap-v2-actionable-identity`.
+
+States are now:
+
+- `master-ready` — natural role + target active Playstyle at Master + all target SAs;
+- `playstyle-upgrade` — correct target Playstyle/SAs but Playstyle level is below Master;
+- `sa-development` — target Playstyle is correct and missing target SAs fit available SA slots;
+- `playstyle-development` — target Playstyle still needs to be built/unlocked and there is no conflicting established identity;
+- `playstyle-identity-gap` — an existing different Playstyle identity conflicts with the target and is not mislabelled as routine development;
+- `sa-capacity-gap` — a target SA is missing but both SA slots are already occupied, so the app does not tell the user to train an impossible third SA;
+- `missing-natural-role` — genuine long-term recruitment gap.
+
+The summary therefore separates **goal-ready / trainable gaps / identity gaps / recruit gaps**. Natural-role-only, one-player-per-goal-slot and no-OVR/no-skill boundaries remain unchanged.
+
+### 3. Set Piece assigned-role visual consistency
+
+The automatic Set Piece pitch now uses each starter's **actual assigned XI role** for its role icon, matching the Current XI Coverage cards. It no longer falls back to a player's primary stored role when the Formation fields them in another legal role. Set Piece recommendation scoring is unchanged.
+
+### 4. Existing-player update UX cleanup
+
+The Add Player manual-entry hint is hidden while the scanner is in existing-player **age + skills update** mode. The update data boundary itself remains unchanged: age + skills only; full Edit Player remains the complete manual editor.
+
+### 5. Continuity / recovery hardening
+
+A stale `docs/continuity/NEW_CHAT_RECOVERY.md` still pointed at DEV PASS2. It is now refreshed to DEV PASS7. The root v0.5.17 recovery handoff and continuity mirror are resynchronised byte-for-byte before packaging so a future chat cannot recover two different current states.
+
+### Verification gates
+
+- Core: **355 PASS**.
+- Tactics calibration: **178 PASS**.
+- Live drain: **52 PASS**.
+- Formation invariants: **27 PASS** plus assignment/fallback/natural-fallback/Playstyle gates.
+- Squad Blueprint: **21 PASS**.
+- Team Training: **14 PASS**.
+- Set Pieces: **29 PASS**.
+- Mentor: **18 PASS**.
+- Stitched pipeline: **26 PASS**; monotonicity **8 PASS**; order invariance **4 PASS**.
+- Direct all-in-one: **5 PASS**.
+- SA role eligibility: **65 PASS**; SA picker **11 PASS**.
+- Best-in-Slot v2: **127 PASS**; actionable squad gap **28 PASS**; UI **29 PASS**.
+- Luiu fixture: **7 PASS**.
+- Balanced Training: **8 PASS**; representative-role matrix: **24 PASS across 8 roles**.
+- Player update scanner: **19 PASS**.
+- Set Piece coverage UI: **13 PASS**.
+- Tactic UI labels: **33 PASS**.
+- Navigation/queue, navigation/render, cloud hydration/local-first, scanner image/failover, strategy/data, static, runtime-hardening and package-integrity contracts: PASS.
+- Active runtime JS syntax passes.
+- Final pass7 archive verification: **819/819 files byte-identical after clean extraction**, with critical gates rerun from the extracted copy.
+
+A Chromium headless smoke attempt was also made but Chromium itself hung before returning any DOM and timed out with DBus/zygote environment errors. No application assertion failed. Per the project's established rule this is **ENVIRONMENT BLOCKED — NOT APPLICATION FAILURE**.
+
+### Locks / unresolved
+
+- No Match Ready scoring coefficient changed.
+- No Best-in-Slot formation-goal scoring changed.
+- No Max Growth or Condition Efficient ranking behaviour changed.
+- No scanner recognition logic changed.
+- Opponent information remains permanently out of scope.
+- Mixed live Medium/High tactic-drain arithmetic remains unresolved rather than guessed.
+
+### Next
+
+User-test DEV PASS7 in the real browser/PWA. Continue only narrow correction passes until the feature behaviour is accepted. Do not begin the visual redesign or publish v0.5.17 development work yet. Preserve the mandatory full-ZIP/extract/byte-verify workflow on every pass.
+
+---
+
+# v0.5.17 UNPUBLISHED DEV PASS6 CHECKPOINT
+
+**CURRENT WORKING STATE:** UNPUBLISHED v0.5.17 DEV PASS6  
+**Date:** 16 September 2026  
+**Base:** verified v0.5.17-dev-pass5 checkpoint  
+**Match Ready decision model:** v0.5.15 calibration preserved unchanged  
+**DO NOT PUBLISH.**
+
+## Pass6 change — Best-in-Slot current-squad gap/coverage
+
+The Best-in-Slot v2 goal is now turned into a practical recruitment/development guide without adding player-strength scoring. The goal itself remains static/model-driven. Current squad data is used only to annotate which ideal slots are already covered.
+
+### Locked Pass6 boundary
+
+`current squad -> natural-role global assignment -> Playstyle/SA identity comparison -> master-ready / development / recruit gaps`
+
+- One saved player can satisfy at most one Best-in-Slot slot.
+- A slot counts as covered only when the assigned current player has that role naturally. Related roles do not count for the long-term goal.
+- Among natural candidates, the global assignment prefers exact active target Playstyle, then current Playstyle level, then target-SA matches. These are assignment/tie-break priorities only, not claimed gameplay coefficients.
+- OVR, skills, roleMean, roleFloor, age, condition, morale and availability are not used. Dedicated regression fixtures use throwing OVR/skills getters to prove those fields are never read.
+- `master-ready` requires natural role + exact active target Playstyle at Master + all target SAs.
+- Natural-role players with identity gaps are shown as development gaps.
+- Missing natural-role slots are shown as recruit gaps.
+- If the Best-in-Slot slot has no proven preferred SA, the current player is not penalised for lacking an invented SA target.
+- Current Match Ready Team Plan is not consumed by this layer and no Match Ready scoring coefficient changed.
+- Official Top Eleven Squad Balance remains server-owned and is not reproduced.
+
+### Runtime/UI files
+
+- `js/best-in-slot-engine.js` — `squadGap()` global one-player-per-slot coverage engine; model `best-in-slot-squad-gap-v1-role-identity-only`.
+- `js/app.js` — Best-in-Slot cards now show current matched player / identity gap / recruit gap and a summary row.
+- `index.html` / `css/app.css` — coverage summary surface only; no broader visual redesign.
+- `docs/research/build_30527/V0517_BEST_IN_SLOT_SQUAD_GAP.md` — method/provenance.
+
+### Regression gates
+
+- Best-in-Slot squad-gap contract: **24 PASS**.
+- Best-in-Slot UI contract: **28 PASS**.
+- Existing **353 core / 178 Tactics / 52 live-drain / 27 Formation / 65 SA-role / 29 Set Piece / 18 Mentor / 26 stitched / 8 monotonicity / 5 direct all-in-one** and supporting Training/scanner/cloud/navigation/static contracts remain green.
+- Active runtime JS syntax passes.
+- Pre-final packaged copy extracted **815/815 files byte-identically** and passed the Best-in-Slot gap/UI, core, direct all-in-one and package-integrity gates from the extracted copy. Final package is independently reverified after this handoff entry is written.
+
+No Match Ready calibrated coefficient changed. Mixed live Medium/High drain arithmetic remains unresolved.
+
+### Next
+
+User-test the Best-in-Slot goal + current-squad gap presentation. Continue functional fine-tuning only; do not begin the visual redesign yet and do not publish v0.5.17 development work. Preserve the mandatory pass-by-pass full-ZIP recovery workflow.
+
+---
+
+# v0.5.17 UNPUBLISHED DEV PASS5 CHECKPOINT
+
+**CURRENT WORKING STATE:** UNPUBLISHED v0.5.17 DEV PASS5  
+**Date:** 16 September 2026  
+**Base:** verified v0.5.17-dev-pass4 checkpoint  
+**Match Ready decision model:** v0.5.15 calibration preserved unchanged  
+**DO NOT PUBLISH.**
+
+## Pass5 correction — Best-in-Slot v2 removes hypothetical player stats
+
+The user clarified the intended long-term model: choose the best complete formation package, then give every required natural-role slot the Playstyle and Special Ability package that best complements the formation's Tactics and Mentor. Individual player attributes/OVR are not part of this stage.
+
+DEV PASS5 therefore replaces the active Best-in-Slot v1 normalised-player layer with `best-in-slot-goal-v2-role-identity-only`.
+
+### Locked v2 objective
+
+`formation structure / natural role coverage -> role-valid Playstyle -> role-valid SA -> Tactics -> Set Pieces -> full-unlock Mentor`
+
+- Every ideal slot is a natural-role player by construction.
+- No OVR, white-skill mean, roleMean, roleFloor or hypothetical S/A/B/C attribute profile is used.
+- The Match Ready current-squad engine remains unchanged and still uses real player skills where appropriate.
+- Official Top Eleven Squad Balance is acknowledged as a real server-owned formation-position score, but its private server formula is not fabricated offline.
+- Best-in-Slot tactic scoring excludes the real-player `nativeLineupFitScore`; it uses formation/role structure, internal tactic coherence, active eligible Playstyle/SA compatibility and drain efficiency.
+- Skill-derived tactic capacities are neutral in this long-term layer. Identity-derived capabilities may be used only where the chosen Playstyle itself provides that semantic evidence.
+- SA eligibility uses the v0.5.17 19-ability role contract. If no comparative open-play rule exists, the UI says `No proven open-play SA preference` and shows role-valid options rather than inventing a winner.
+- Dedicated Corner / Free Kick / Penalty specialists may occupy second SA slots.
+- Mentors are compared under the explicit long-term Level-10/unlocked assumption.
+- Opponent information remains permanently out of scope.
+
+### Current generated v2 goal
+
+- **4-2-3-1 (`4231`)**
+- Roles: `GK / DL DC DC DR / DMC DMC / AML AMC AMR / ST`
+- Tactics: Short Passing / Shoot on Sight / Left Flank / High Crossing / Regroup / Focus on Buildup / Zonal / Low Pressing / Track Back / Balanced Tackling / Normal mentality
+- Drain class: Medium
+- Mentor: Lewis Green — The Wing Commander (full-unlock comparison)
+- Dedicated penalty/free-kick/corner coverage: complete
+
+The 4-1-1-3-1 package remains extremely close. 4-2-3-1 must be described only as the current winner of the transparent companion objective, never as a hidden Nordeus universal best formation.
+
+Full method: `docs/research/build_30527/V0517_BEST_IN_SLOT_GOAL_V2.md`.
+
+### Regression gates
+
+- Best-in-Slot v2 contract: 127 PASS.
+- Best-in-Slot UI contract: 24 PASS.
+- Existing 353 core / 178 Tactics / 52 live-drain / 5 direct all-in-one / 27 Formation / 65 SA-role / 18 Mentor / 29 Set Piece / 26 stitched and supporting scanner/cloud/navigation/training contracts remain green.
+
+No Match Ready calibrated coefficient changed. Mixed live Medium/High drain arithmetic remains unresolved.
+
+### Next
+
+User-test the simplified Best-in-Slot presentation and continue feature fine-tuning. Do not publish v0.5.17 development work yet. Preserve the pass-by-pass ZIP workflow.
+
+---
+
+# v0.5.17 UNPUBLISHED DEV PASS4 CHECKPOINT
+
+**CURRENT WORKING STATE:** UNPUBLISHED v0.5.17 DEV PASS4  
+**Date:** 16 September 2026  
+**Base:** verified v0.5.17-dev-pass3 checkpoint  
+**Decision model:** v0.5.15 Match Ready calibration preserved unchanged  
+**DO NOT PUBLISH.**
+
+## Pass4 change — Best-in-Slot long-term squad goal v1
+
+The user wanted a second Formation-page layer showing the **ideal team to build toward**, including ideal Formation, Role/attribute profile, Playstyle, Special Ability, Tactics and Mentor composition. This is now implemented separately from the current Match Ready plan.
+
+### Locked product separation
+
+- **Match Ready / Recommended XI** continues to answer: *what is the best complete plan from the players currently owned?*
+- **Best-in-Slot XI** answers: *what ideal squad should the manager recruit/train toward under the current Top Eleven Tool model?*
+- Best-in-Slot never feeds, changes, or replaces the user's current Formation/Tactics/Mentor plan.
+- Opponent information remains permanently out of scope.
+
+### Evidence-safe Best-in-Slot model
+
+Best-in-Slot is explicit **TOP ELEVEN TOOL COMPANION LOGIC**, not a recovered hidden Nordeus best-team formula.
+
+`tools/generate_best_in_slot_v1.js` uses only existing current contracts:
+
+- the 12 curated Formation families and v0.5.15 structural score;
+- current Role+Playstyle target-shape profiles;
+- exact current Playstyle-role eligibility;
+- v0.5.17 working current SA-role eligibility;
+- current Tactics compatibility/drain classes;
+- current Set Piece specialist readiness;
+- current Mentor synergy under an explicit long-term assumption that every Mentor is unlocked at Level 10.
+
+Every ideal slot is normalised to **100 assigned-role white-skill mean**. Only the relative Role+Playstyle attribute shape changes. This prevents a formation from winning because the tool invented stronger absolute players.
+
+Abilities with no current proven comparative tactic/set-piece benefit are **not ranked**. The UI shows **No proven SA preference** plus the role-eligible alternatives rather than inventing an effect.
+
+The build-time search is deliberately bounded and documented: it enumerates all 12 curated formation families/legal `A|B` slot variants, explores direct/transition and technical/buildup identity branches under a tractable balanced baseline, then full-`recommendAuto()` finalises the top five before Set Pieces and full-unlock Mentor comparison. It must not be described as a mathematical proof of every conceivable Top Eleven identity combination.
+
+### Current generated v1 goal
+
+- Formation: **4-1-1-3-1 (`41131`)**
+- Roles: `GK / DL DC DC DR / DMC / MC / AML AMC AMR / ST`
+- Current ideal tactic plan: Long passing / Shoot on Sight / Left Flank / High crossing / Regroup / Focus on Buildup / Zonal / Low pressing / Track Back / Balanced tackling / Normal mentality
+- Current drain class: **Low**
+- Current full-unlock Mentor comparison: **Lewis Green — The Wing Commander**
+- Dedicated Set Piece coverage: penalty + free kick + corner specialists.
+
+Current slot targets:
+
+- GK — Box Commander — no proven SA comparative preference
+- DL — Wing Back — Cross Expert
+- DC — No-Nonsense DC — no proven SA comparative preference
+- DC — No-Nonsense DC — no proven SA comparative preference
+- DR — Wing Back — Cross Expert
+- DMC — Anchor Man — Playmaker
+- MC — Regista — Playmaker + Corner Specialist
+- AML — Winger — Cross Expert
+- AMC — Enganche — Shadow Striker + Free Kick Specialist
+- AMR — Winger — Cross Expert
+- ST — Target Man — Penalty Kick Specialist for Set Piece coverage; no proven open-play SA preference
+
+Full methodology/provenance: `docs/research/build_30527/V0517_BEST_IN_SLOT_GOAL_V1.md`.
+
+### Runtime files
+
+- `data/build_30527/index/best_in_slot_v1.json` — generated machine-readable goal.
+- `js/best-in-slot-data.js` — browser data bundle.
+- `js/best-in-slot-engine.js` — source/model/legality validator + label boundary.
+- `js/app.js` — independent Best-in-Slot renderer.
+- `index.html` / `css/app.css` — functional goal section directly below current Formation, before Squad Blueprint.
+- `sw.js` — both new runtime JS files are precached.
+
+The runtime validator rejects stale model fingerprints, unknown formation, incorrect formation-slot role, ineligible Playstyle, ineligible SA, >2 SAs or invalid coordinates rather than showing a stale goal.
+
+### Regression gates added
+
+- `tests/best_in_slot_contract.js` — **152 assertions PASS**.
+- `tests/best_in_slot_ui_contract.py` — **22 assertions PASS**.
+
+Existing frozen Match Ready gates remain green, including 353 core, 178 Tactics, 65 SA-role, 11 picker, 5 direct all-in-one, 18 Mentor, 29 Set Piece, 26 stitched, Formation/Blueprint/Training/Team Training, cloud/navigation/scanner, strategy/static/package integrity and active-JS syntax.
+
+No v0.5.15 Formation/Tactics/Mentor/Set Piece/Training scoring coefficient changed. Mixed live Medium/High drain arithmetic remains unresolved.
+
+### Next after this checkpoint
+
+Test the Best-in-Slot presentation/logic against the user's expectations and continue fine-tuning v0.5.17 without publishing. Do not redesign visual styling yet. Any requested change to the Best-in-Slot objective should be made transparently in the generator/model rather than hard-coding a desired formation.
+
+---
+
 # v0.5.17 UNPUBLISHED DEV PASS3 CHECKPOINT
 
 **CURRENT WORKING STATE:** UNPUBLISHED v0.5.17 DEV PASS3  
