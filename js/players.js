@@ -198,11 +198,24 @@
     if(key)await S.del(`training:session:${outKey}`);
     await bumpRevision();await invalidateTeamPlan();return outKey;
   }
+  async function updateAgeSkillsOnly(key,{age,skills,scannerLastUpdate=null}={}){
+    await migrate();const existing=await get(key);if(!existing)throw new Error('The matched squad player is no longer available');
+    const nextAge=Number(age);if(!Number.isFinite(nextAge)||nextAge<15||nextAge>60)throw new Error('Automatic update age is invalid');
+    const required=D.applicableSkillsForRoles(normaliseRoles(existing)),nextSkills={};
+    for(const name of required){const value=Number(skills?.[name]);if(!Number.isFinite(value)||value<0||value>520)throw new Error(`Automatic update is missing a valid ${name} value`);nextSkills[name]=value;}
+    const priorScanner=existing.scanner&&typeof existing.scanner==='object'?existing.scanner:{};
+    const next={...existing,age:nextAge,skills:nextSkills,scanner:scannerLastUpdate?{...priorScanner,lastUpdate:scannerLastUpdate}:priorScanner};
+    await save(next,key);
+    const verified=await get(key);
+    const persisted=!!verified&&Number(verified.age)===nextAge&&required.every(name=>Number(verified.skills?.[name])===nextSkills[name]);
+    if(!persisted)throw new Error(`Automatic update write verification failed for ${existing.name||'player'}`);
+    return verified;
+  }
   async function remove(key){await S.del(key);await S.del(`training:session:${key}`);await bumpRevision();await invalidateTeamPlan();}
   function normalisePlayerName(value){return String(value||'').toLocaleLowerCase('en').normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^\p{L}\p{N}]+/gu,' ').trim().replace(/\s+/g,' ');}
   function nameDistance(a,b){a=normalisePlayerName(a).replace(/ /g,'');b=normalisePlayerName(b).replace(/ /g,'');const m=a.length,n=b.length;if(!m)return n;if(!n)return m;let prev=Array.from({length:n+1},(_,i)=>i),cur=new Array(n+1);for(let i=1;i<=m;i++){cur[0]=i;for(let j=1;j<=n;j++)cur[j]=Math.min(cur[j-1]+1,prev[j]+1,prev[j-1]+(a[i-1]===b[j-1]?0:1));[prev,cur]=[cur,prev]}return prev[n];}
   function matchPlayerByName(players,detectedName,{threshold=.90,margin=.08}={}){const wanted=normalisePlayerName(detectedName),rows=(players||[]).filter(p=>normalisePlayerName(p?.name));if(!wanted)return{player:null,kind:'missing',score:0,detectedName:String(detectedName||''),candidates:[]};const exact=rows.filter(p=>normalisePlayerName(p.name)===wanted);if(exact.length===1)return{player:exact[0],kind:'exact',score:1,detectedName:String(detectedName||''),candidates:exact};if(exact.length>1)return{player:null,kind:'ambiguous',score:1,detectedName:String(detectedName||''),candidates:exact};const compact=wanted.replace(/ /g,''),ranked=rows.map(player=>{const name=normalisePlayerName(player.name),other=name.replace(/ /g,''),maxLen=Math.max(compact.length,other.length,1),score=1-nameDistance(compact,other)/maxLen;return{player,score,name};}).sort((a,b)=>b.score-a.score||String(a.player.name).localeCompare(String(b.player.name)));const best=ranked[0],second=ranked[1];if(!best||best.score<threshold)return{player:null,kind:'not-found',score:best?.score||0,detectedName:String(detectedName||''),candidates:ranked.slice(0,3)};if(second&&best.score-second.score<margin)return{player:null,kind:'ambiguous',score:best.score,detectedName:String(detectedName||''),candidates:ranked.slice(0,3)};return{player:best.player,kind:'fuzzy',score:best.score,detectedName:String(detectedName||''),candidates:ranked.slice(0,3)};}
   function roleGroup(pos){if(pos==='GK')return'gk';if(pos==='ST')return'st';if(['AML','AMC','AMR'].includes(pos))return'am';if(pos==='DMC')return'dm';if(['DL','DC','DR'].includes(pos))return'd';return'm';}
 
-  TE.Players={SCHEMA_VERSION,MIGRATION_KEY,RECOVERY_KEY,all,get,save,remove,cleanPlayer,normaliseRoles,normaliseRelatedRoles,normalisePlaystyle,mergePlaystyleState,mergeVisibleNaturalRoles,playstyleName,normalisePlayerName,matchPlayerByName,roleGroup,migrate,revision,recoverLocalSquad};
+  TE.Players={SCHEMA_VERSION,MIGRATION_KEY,RECOVERY_KEY,all,get,save,updateAgeSkillsOnly,remove,cleanPlayer,normaliseRoles,normaliseRelatedRoles,normalisePlaystyle,mergePlaystyleState,mergeVisibleNaturalRoles,playstyleName,normalisePlayerName,matchPlayerByName,roleGroup,migrate,revision,recoverLocalSquad};
 })();

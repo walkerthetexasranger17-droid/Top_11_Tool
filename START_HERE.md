@@ -1,14 +1,14 @@
-# v0.5.17 UNPUBLISHED DEV PASS8 RECOVERY SNAPSHOT
+# v0.5.17 UNPUBLISHED DEV PASS9 RECOVERY SNAPSHOT
 
-**CURRENT WORKING BRANCH:** v0.5.17-dev-pass8 — **DO NOT PUBLISH YET**.  
+**CURRENT WORKING BRANCH:** v0.5.17-dev-pass9 — **DO NOT PUBLISH YET**.  
 **Stable release base:** v0.5.17.  
 **Match Ready decision model:** v0.5.15 calibration unchanged.
 
 Read `CALIBRATION_RECOVERY_HANDOFF_v0.5.17.md` first. Its top section is the authoritative current development checkpoint.
 
-Pass1–7 recovery history remains. DEV PASS8 replaces the manual existing-player update assignment flow with a fully automatic queue: each screenshot reads the visible player name for matching only, safely matches one saved squad player, scans age + skills, auto-saves only after clean verification, removes the successful queue row and continues. Saved identity fields remain untouched. Ambiguous/unmatched/uncertain scans stop rather than guessing.
+Pass9 fixes the Pass8 live defect where screenshots could scan/match without changing the stored player. Existing-player updates now use a dedicated `Players.updateAgeSkillsOnly()` mutation with immediate storage read-back verification. Clean deterministic scans save automatically; scans carrying uncertainty are independently read a second time and save only if the two reads agree exactly (or the second read is clean). A successful queue row is removed only after the saved age + every visible skill are reloaded and verified. Identity fields remain untouched.
 
-Primary changed files: `js/scanner-engine.js`, `js/players.js`, `js/app.js`, `tests/player_update_scan_contract.py`, `tests/player_update_auto_match.js`, and the pass8 recovery/research documents.
+Primary changed files: `js/players.js`, `js/app.js`, `tests/player_update_scan_contract.py`, new `tests/player_update_persistence.js`, automatic-update research/recovery documents and validation notes.
 
 Public/runtime version strings intentionally remain **0.5.17** because this is still unpublished development work.
 

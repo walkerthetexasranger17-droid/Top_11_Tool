@@ -1,3 +1,43 @@
+# v0.5.17 UNPUBLISHED DEV PASS9 CHECKPOINT
+
+**CURRENT WORKING STATE:** UNPUBLISHED v0.5.17 DEV PASS9  
+**Date:** 16 September 2026  
+**Base:** verified v0.5.17-dev-pass8 checkpoint  
+**Match Ready decision model:** v0.5.15 calibration preserved unchanged  
+**DO NOT PUBLISH.**
+
+## Pass9 correction — automatic update now proves the write actually happened
+
+Live testing of Pass8 showed a real defect: update screenshots scanned and matched, but the saved player did not change. Code audit found a concrete autosave blocker: `updateScanSafeForAutoSave()` rejected the write whenever Gemini returned any uncertainty/warning at all, so a visually successful scan could stop before the persistence call. Pass8's dedicated test was structural and did not execute the persisted age/skill mutation end to end.
+
+DEV PASS9 fixes the boundary rather than weakening it blindly:
+
+- `Players.updateAgeSkillsOnly()` is now the single dedicated persistence API for existing-player screenshot maintenance.
+- It validates age + every required visible skill, preserves name/OVR/natural+related roles/Playstyle/SAs, writes the existing player key, immediately reloads that key and verifies every new value before reporting success.
+- The normal automatic path no longer treats any warning string as an unconditional veto. A deterministic clean scan (complete data + all aggregate checks passing) can proceed.
+- If Gemini still marks fields uncertain, the queue performs a second independent read. It auto-saves only when the second read resolves cleanly or reproduces the same target, age, layout and every skill exactly. Otherwise that row stops for review; it never guesses.
+- Manual update fallback now uses the same write/read-back verified persistence API.
+- Queue success text says `updated + verified` only after persisted read-back succeeds.
+
+### New regression gates
+
+- Automatic update contract: 31 PASS.
+- Automatic name matcher: 11 PASS.
+- **New runtime persistence test:** 17 PASS. It creates a saved player, runs the real age+skills mutation, reloads storage and proves age + all 15 skills changed while name/OVR/roles/Playstyle/SAs stayed unchanged; invalid partial updates are rejected without modifying the player.
+- Existing 355 core / 178 Tactics / 52 live-drain / 27 Formation / 5 direct all-in-one / 65 SA-role / 18 Mentor / 29 Set Piece / 26 stitched / 127 Best-in-Slot and supporting Training/cloud/navigation/static/package gates remain green.
+
+No Match Ready, Tactics, Formation, Mentor, Set Piece, Training or Best-in-Slot scoring coefficient changed.
+
+### Recovery package
+
+Full checkpoint: `top-eleven-tool-v0.5.17-dev-pass9-2026-09-16.zip`. Final packaging workflow requires all **824 source files** to extract byte-identically and the critical update/calibration/package gates to pass again from the extracted copy. The delivered chat message carries the final SHA-256.
+
+### Next
+
+Deploy/test DEV PASS9 with the same real update screenshots that exposed Pass8. A successful row must only disappear after the saved player read-back verifies the new age/skills. Continue unpublished v0.5.17 fine-tuning and mandatory ZIP recovery workflow.
+
+---
+
 # v0.5.17 UNPUBLISHED DEV PASS8 CHECKPOINT
 
 **CURRENT WORKING STATE:** UNPUBLISHED v0.5.17 DEV PASS8  

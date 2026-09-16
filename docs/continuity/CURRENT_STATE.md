@@ -1,24 +1,22 @@
-# CURRENT DEVELOPMENT OVERLAY — v0.5.17-dev-pass8
+# CURRENT DEVELOPMENT OVERLAY — v0.5.17-dev-pass9
 
 **State:** UNPUBLISHED / TESTING — do not publish.  
 **Release base:** v0.5.17.  
 **Calibrated Match Ready decision model:** unchanged v0.5.15 engine.
 
-Pass1–7 remain preserved, including Balanced Development, automatic Set Piece coverage, role-filtered SAs and stat-free Best-in-Slot.
+Pass1–8 remain preserved. DEV PASS9 is a persistence correction to the fully automatic existing-player update workflow after live testing showed Pass8 could scan/match without changing the player.
 
-DEV PASS8 changes only the existing-player bulk update workflow:
-
-- Update screenshots no longer require a per-image squad-player dropdown.
-- Scanner update mode reads **visible player name + age + skills** from the screenshot; name exists only to resolve one saved player and is never written back.
-- Matching is deterministic: accent/case/punctuation-insensitive exact match first, then conservative unique fuzzy OCR tolerance. Duplicate names, near ties and unrelated names are never guessed.
-- Bulk queue auto-detects GK/outfield layout when no profile is pinned and checks the matched saved player's GK/outfield identity before saving.
-- Clean scans save automatically, mutate only age + skills, remove themselves from the queue and continue to the next screenshot.
-- A failed name/verification gets one automatic retry. If it is still unsafe, the row stops for attention instead of silently updating the wrong player.
-- Old pass7 `needs-target` queue rows migrate back into the automatic scanner after refresh.
+- Update mode still reads visible name + age + skills only; saved identity is never overwritten.
+- `Players.updateAgeSkillsOnly()` validates and writes the existing player record, then immediately re-reads it and proves age + every required skill persisted before success is reported.
+- A clean deterministic scan auto-saves directly.
+- Any uncertain but otherwise arithmetically clean scan receives a second independent scan. It auto-saves only if the second read is clean or matches the first target/age/layout/all skills exactly.
+- If the reads disagree, the row stops for review rather than guessing.
+- Manual update fallback uses the same verified persistence boundary.
+- New runtime test exercises the actual save/reload mutation; Pass8 only had structural contract checks.
 
 No Match Ready, Best-in-Slot, Set Piece, Mentor, Tactics or Training coefficient changed.
 
-Read `V0517_DEV_PASS8_VALIDATION.md`, `docs/research/build_30527/V0517_AUTOMATIC_PLAYER_UPDATE.md`, and the root recovery handoff before further changes.
+Read `V0517_DEV_PASS9_VALIDATION.md`, `docs/research/build_30527/V0517_AUTOMATIC_PLAYER_UPDATE.md`, and the root recovery handoff before further changes.
 
 ---
 

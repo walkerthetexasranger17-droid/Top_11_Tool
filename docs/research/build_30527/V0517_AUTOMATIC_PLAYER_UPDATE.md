@@ -30,18 +30,21 @@ The queue never picks an arbitrary first candidate.
 
 It does not request OVR, roles, Playstyle or Special Abilities. When no profile target is pinned, the client detects GK vs outfield from the screenshot before building the update board.
 
-## Automatic save gate
+## Automatic save gate — PASS9 corrected
 
-An update auto-saves only when all of the following hold:
+Pass8 incorrectly treated **any** scanner uncertainty string as a hard veto. Live testing showed the consequence: screenshots could visibly scan/match while never reaching the persistence call.
+
+Pass9 requires the deterministic boundary first:
 
 - exactly one safe name match exists;
 - saved-player GK/outfield identity agrees with screenshot layout;
 - age and all 15 skills are present and within 0–520;
 - scanner validation resolves;
-- aggregate checks do not fail;
-- scanner uncertainty list is empty.
+- all displayed-total aggregate checks exist and pass.
 
-A match/verification failure gets one automatic re-scan. If still unresolved, the row remains for attention and no player record is modified.
+If the scanner uncertainty list is empty, the update may save immediately. If uncertainty remains despite the deterministic checks passing, the queue runs a **second independent read**. It auto-saves only when the second read is clean or reproduces the same matched target, normalized detected name, age, layout and all 15 skills exactly. Any disagreement stops for review rather than guessing.
+
+Persistence is now a separate verified boundary: `Players.updateAgeSkillsOnly()` writes only age + skills to the existing player key, reloads the player and compares every saved value before the queue can report success/remove the row.
 
 ## Persistence migration
 

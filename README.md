@@ -1,5 +1,7 @@
 # Top Eleven Tool v0.5.17
 
+> **Current unpublished test branch: DEV PASS9.** Automatic existing-player updates now use write/read-back verified age+skills persistence. Pass8 is superseded for update testing. Public runtime version remains 0.5.17 until the development line is published.
+
 > **Project recovery:** a new chat/session must read [`START_HERE.md`](START_HERE.md) before modifying code. The app now embeds a permanent build-30527 Game Research Index under `docs/research/build_30527/` and machine-readable findings under `data/build_30527/index/`.
 
 Top Eleven Tool is a mobile-first PWA companion for managing a Top Eleven squad, scanning player cards, planning training, selecting a formation, assigning set pieces and presenting tactics in a simpler form.
