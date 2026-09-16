@@ -19,7 +19,9 @@ let n=0;function ok(c,m){if(!c)throw new Error(m);n++}function eq(a,b,m){ok(JSON
   eq(stored.skills,nextSkills,'all 15 outfield skills persisted exactly');
   eq(stored.attributes,nextSkills,'attributes mirror updated skills');
   ok(stored.name===original.name,'name preserved');
-  ok(stored.ovr===original.ovr,'OVR preserved');
+  const expectedOvr=Math.round(Object.values(nextSkills).reduce((a,b)=>a+b,0)/D.OUTFIELD_SKILLS.length);
+  ok(stored.ovr===expectedOvr,'OVR recalculated from the complete updated outfield skill set');
+  ok(D.overallFromSkills(nextSkills,['MC'])===expectedOvr,'shared OVR helper matches arithmetic rounded outfield mean');
   eq(stored.roles,original.roles,'natural roles preserved');
   eq(stored.relatedRoles,original.relatedRoles,'related roles preserved');
   ok(P.playstyleName(stored)==='Mezzala','playstyle identity preserved');
@@ -30,6 +32,8 @@ let n=0;function ok(c,m){if(!c)throw new Error(m);n++}function eq(a,b,m){ok(JSON
   ok(rev1===rev0+1,'squad revision increments exactly once');
   let rejected=false;try{const broken={...nextSkills};delete broken.Passing;await P.updateAgeSkillsOnly(key,{age:23,skills:broken});}catch(e){rejected=/Passing/.test(String(e.message));}
   ok(rejected,'missing skill cannot partially overwrite player');
-  const afterReject=await P.get(key);ok(afterReject.age===22,'failed update leaves existing age untouched');eq(afterReject.skills,nextSkills,'failed update leaves existing skills untouched');
+  const afterReject=await P.get(key);ok(afterReject.age===22,'failed update leaves existing age untouched');eq(afterReject.skills,nextSkills,'failed update leaves existing skills untouched');ok(afterReject.ovr===expectedOvr,'failed update leaves derived OVR untouched');
+  const gkSkills=Object.fromEntries([...D.GK_SKILLS,...D.GK_PHYSICAL].map((k,i)=>[k,80+i]));
+  ok(D.overallFromSkills(gkSkills,['GK'])===Math.round(Object.values(gkSkills).reduce((a,b)=>a+b,0)/15),'shared OVR helper uses all 15 goalkeeper-visible skills');
   console.log(`PASS player update persistence: ${n} assertions`);
 })().catch(e=>{console.error(e.stack||e);process.exit(1)});

@@ -1,13 +1,13 @@
-# CURRENT DEVELOPMENT OVERLAY — v0.5.17-dev-pass9
+# CURRENT DEVELOPMENT OVERLAY — v0.5.17-dev-pass10
 
 **State:** UNPUBLISHED / TESTING — do not publish.  
 **Release base:** v0.5.17.  
 **Calibrated Match Ready decision model:** unchanged v0.5.15 engine.
 
-Pass1–8 remain preserved. DEV PASS9 is a persistence correction to the fully automatic existing-player update workflow after live testing showed Pass8 could scan/match without changing the player.
+Pass1–9 remain preserved. DEV PASS10 corrects the existing-player statistical update boundary so OVR follows the newly scanned skills instead of remaining stale.
 
-- Update mode still reads visible name + age + skills only; saved identity is never overwritten.
-- `Players.updateAgeSkillsOnly()` validates and writes the existing player record, then immediately re-reads it and proves age + every required skill persisted before success is reported.
+- Update mode reads visible name + age + skills only. Name is routing-only; OVR is derived locally from the 15 scanned skills and is not independently scanned.
+- `Players.updateAgeSkillsOnly()` validates the complete visible skill set, derives rounded OVR from those 15 values, writes the existing player record, then immediately re-reads it and proves age + OVR + every required skill persisted before success is reported.
 - A clean deterministic scan auto-saves directly.
 - Any uncertain but otherwise arithmetically clean scan receives a second independent scan. It auto-saves only if the second read is clean or matches the first target/age/layout/all skills exactly.
 - If the reads disagree, the row stops for review rather than guessing.

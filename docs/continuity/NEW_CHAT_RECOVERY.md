@@ -1,12 +1,12 @@
 # New Chat Recovery Instructions
 
-## CURRENT instruction to the new chat — v0.5.17-dev-pass9
+## CURRENT instruction to the new chat — v0.5.17-dev-pass10
 
-> Read `/START_HERE.md`, then the **top/current section** of `CALIBRATION_RECOVERY_HANDOFF_v0.5.17.md`, then `docs/continuity/CURRENT_STATE.md`, then `V0517_DEV_PASS9_VALIDATION.md`.
+> Read `/START_HERE.md`, then the **top/current section** of `CALIBRATION_RECOVERY_HANDOFF_v0.5.17.md`, then `docs/continuity/CURRENT_STATE.md`, then `V0517_DEV_PASS10_VALIDATION.md`.
 >
-> The current working package is **UNPUBLISHED v0.5.17 DEV PASS9**, based on stable v0.5.17. Do not publish it or bump the visible runtime just to continue testing. The v0.5.15 calibrated Match Ready model remains unchanged.
+> The current working package is **UNPUBLISHED v0.5.17 DEV PASS10**, based on stable v0.5.17. Do not publish it or bump the visible runtime just to continue testing. The v0.5.15 calibrated Match Ready model remains unchanged.
 >
-> Pass9 fixes the live Pass8 failure where automatic update screenshots could scan/match without changing the player. Existing-player maintenance now goes through `Players.updateAgeSkillsOnly()` with immediate persisted read-back verification. Uncertain clean scans get a second independent read and save only on exact consensus/clean confirmation. A queue row disappears only after the new age + skills are actually reloaded from storage. Name/OVR/roles/Playstyle/SAs remain preserved.
+> Pass10 keeps Pass9 write/read-back verification and now recalculates OVR from the complete updated skill set. Update screenshots still scan only visible name + age + skills; name is used solely to route to the saved player, and OVR is `Math.round(mean(all 15 applicable visible skills))`. A queue row disappears only after age + OVR + all skills are reloaded successfully. Name/roles/Playstyle/SAs remain preserved.
 >
 > Full Edit Player remains the complete manual editor. Master Cards are above normal drills. Set Pieces are automatic-only with Current XI Coverage. Best-in-Slot remains the separate stat-free long-term squad goal with current-squad gap analysis. Training has Max Growth / Balanced Development / Condition Efficient.
 >

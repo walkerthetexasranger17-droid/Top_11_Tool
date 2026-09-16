@@ -56,7 +56,7 @@ See `data/build_30527/index/source_manifest.json`.
 
 ## Current unpublished development overlay
 
-The working branch is **v0.5.17-dev-pass7**. Pass7 preserves the stat-free Best-in-Slot v2 goal and hardens the current-squad gap overlay with trainable-vs-identity/SA-capacity states. It also adds the explicit Balanced Development Training mode without changing Max Growth. One current player can cover only one ideal slot; OVR/skills are not read. See `V0517_BEST_IN_SLOT_SQUAD_GAP.md`, `V0517_DEV_PASS7_VALIDATION.md` and the root recovery handoff. This is companion logic and is not official Squad Balance.
+The working branch is **v0.5.17-dev-pass10**. Pass10 preserves the Pass7 Best-in-Slot/Training work and the Pass8–9 fully automatic existing-player updater, but now derives each updated player OVR from the complete 15-skill screenshot set after age/skills persistence. Name/roles/Playstyle/SAs remain preserved. See `V0517_AUTOMATIC_PLAYER_UPDATE.md`, `V0517_DEV_PASS10_VALIDATION.md` and the root recovery handoff.
 
 ## Current highest-value checkpoint
 

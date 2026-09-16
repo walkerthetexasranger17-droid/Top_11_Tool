@@ -4,9 +4,9 @@
 
 Bulk **Update Players** requires no per-screenshot player selection. The normal successful path is:
 
-`screenshot → read visible name → match My Squad → read age + skills → verify → save age + skills only → remove row → continue`
+`screenshot → read visible name → match My Squad → read age + skills → derive OVR from all 15 skills → verify/write/read-back → remove row → continue`
 
-The screenshot name is a routing identifier only. It is never written to the saved player. OVR, natural/related roles, Playstyle, Playstyle level and Special Abilities remain preserved byte-for-byte through the update mutation boundary.
+The screenshot name is a routing identifier only. It is never written to the saved player. OVR is not scanned in update mode: it is deterministically recalculated as the rounded arithmetic mean of the complete 15-skill set. Natural/related roles, Playstyle, Playstyle level and Special Abilities remain preserved byte-for-byte.
 
 ## Matching boundary
 
@@ -44,7 +44,7 @@ Pass9 requires the deterministic boundary first:
 
 If the scanner uncertainty list is empty, the update may save immediately. If uncertainty remains despite the deterministic checks passing, the queue runs a **second independent read**. It auto-saves only when the second read is clean or reproduces the same matched target, normalized detected name, age, layout and all 15 skills exactly. Any disagreement stops for review rather than guessing.
 
-Persistence is now a separate verified boundary: `Players.updateAgeSkillsOnly()` writes only age + skills to the existing player key, reloads the player and compares every saved value before the queue can report success/remove the row.
+Persistence is a verified boundary: `Players.updateAgeSkillsOnly()` writes age + the complete visible skill set + derived OVR to the existing player key, reloads the player and compares age, OVR and every saved skill before the queue can report success/remove the row.
 
 ## Persistence migration
 

@@ -201,13 +201,14 @@
   async function updateAgeSkillsOnly(key,{age,skills,scannerLastUpdate=null}={}){
     await migrate();const existing=await get(key);if(!existing)throw new Error('The matched squad player is no longer available');
     const nextAge=Number(age);if(!Number.isFinite(nextAge)||nextAge<15||nextAge>60)throw new Error('Automatic update age is invalid');
-    const required=D.applicableSkillsForRoles(normaliseRoles(existing)),nextSkills={};
+    const roles=normaliseRoles(existing),required=D.applicableSkillsForRoles(roles),nextSkills={};
     for(const name of required){const value=Number(skills?.[name]);if(!Number.isFinite(value)||value<0||value>520)throw new Error(`Automatic update is missing a valid ${name} value`);nextSkills[name]=value;}
+    const nextOvr=D.overallFromSkills(nextSkills,roles);if(!Number.isFinite(nextOvr))throw new Error('Automatic update could not derive OVR from the complete skill set');
     const priorScanner=existing.scanner&&typeof existing.scanner==='object'?existing.scanner:{};
-    const next={...existing,age:nextAge,skills:nextSkills,scanner:scannerLastUpdate?{...priorScanner,lastUpdate:scannerLastUpdate}:priorScanner};
+    const next={...existing,age:nextAge,ovr:nextOvr,skills:nextSkills,scanner:scannerLastUpdate?{...priorScanner,lastUpdate:scannerLastUpdate}:priorScanner};
     await save(next,key);
     const verified=await get(key);
-    const persisted=!!verified&&Number(verified.age)===nextAge&&required.every(name=>Number(verified.skills?.[name])===nextSkills[name]);
+    const persisted=!!verified&&Number(verified.age)===nextAge&&Number(verified.ovr)===nextOvr&&required.every(name=>Number(verified.skills?.[name])===nextSkills[name]);
     if(!persisted)throw new Error(`Automatic update write verification failed for ${existing.name||'player'}`);
     return verified;
   }

@@ -1,3 +1,42 @@
+# v0.5.17 UNPUBLISHED DEV PASS10 CHECKPOINT
+
+**CURRENT WORKING STATE:** UNPUBLISHED v0.5.17 DEV PASS10  
+**Date:** 16 September 2026  
+**Base:** verified v0.5.17-dev-pass9 checkpoint  
+**Match Ready decision model:** v0.5.15 calibration preserved unchanged  
+**DO NOT PUBLISH.**
+
+## Pass10 correction — OVR now follows the updated skill set
+
+Live testing clarified the intended existing-player maintenance boundary. OVR is a derived overall of the visible player skills and must not remain stale when a fresh Skills screenshot updates those values.
+
+The automatic update pipeline is now:
+
+`screenshot → visible name match → age + 15 skills → derive OVR → verified write → verified read-back → remove row → next`
+
+### Locked behaviour
+
+- Update-mode Gemini still does **not** read OVR; it reads only the visible name, age, group totals and the complete skill set.
+- OVR is derived locally with the same arithmetic relationship already used by scanner reconciliation: `Math.round(mean(all 15 applicable visible skills))`.
+- Outfield uses the 15 Defence/Attack/Physical skills; GK uses the 10 Goalkeeping + 5 Physical skills.
+- `Players.updateAgeSkillsOnly()` now persists age + all 15 skills + derived OVR and reloads the record to verify all three before success. The function name is retained for compatibility even though OVR is now an intentional derived side-effect of the skill update.
+- Name, natural roles, related roles, Playstyle identity/state and Special Abilities remain unchanged.
+- Scanner provenance records `age-skills-derived-ovr-auto-name-match-write-verified`.
+- A failed/incomplete update remains atomic: existing age, OVR and skills remain unchanged.
+- Match Ready, Training, Best-in-Slot, Tactics, Mentor and Set Piece scoring are untouched.
+
+This section **supersedes historical Pass1–9 wording that said OVR was deliberately preserved during update scans**. That earlier interpretation is no longer current product behaviour.
+
+### Verification target
+
+Dedicated persistence test now proves: age persisted; all 15 skills persisted; OVR equals rounded 15-skill mean; identity fields preserved; write/read-back confirmed; incomplete update cannot partially change age/OVR/skills. The frozen Pass10 source contains **825 files**; the final recovery ZIP must extract all 825 byte-identically before delivery.
+
+### Next
+
+Deploy/test DEV PASS10 using the same real automatic-update screenshots. Confirm the player card changes age/skills/OVR immediately after the queue completes. Continue unpublished v0.5.17 fine-tuning and mandatory full-ZIP recovery workflow.
+
+---
+
 # v0.5.17 UNPUBLISHED DEV PASS9 CHECKPOINT
 
 **CURRENT WORKING STATE:** UNPUBLISHED v0.5.17 DEV PASS9  
@@ -493,7 +532,7 @@ The previous **Update by Scan** path reused the full new-player scanner and coul
 - full manual **Edit Player** remains unchanged and can still edit the complete record;
 - if a full Add Player scan matches an existing player, the safe action is now **Update age + skills only**, not replacement of identity fields.
 
-**Important user decision:** OVR is deliberately preserved on update scans because the user requested that only age and skills change. Do not silently recalculate/overwrite OVR in a future chat without discussing that product decision.
+**Historical Pass1 decision — SUPERSEDED BY DEV PASS10:** OVR was initially preserved when update scans were interpreted as age + skills only. DEV PASS10 explicitly changes this: OVR is now derived from the updated complete skill set.
 
 ### 2. Bulk existing-player update queue
 
