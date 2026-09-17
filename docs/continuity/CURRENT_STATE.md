@@ -1,3 +1,3 @@
-# CURRENT DESIGN OVERLAY — v0.6.9-dev-pass9
+# CURRENT DESIGN OVERLAY — v0.6.10-dev-pass10
 
-v0.6.9 supports the same approved v0.6 visual system across desktop, landscape phone/tablet and compact portrait fallback. Desktop keeps the left sidebar; phone/tablet keeps bottom navigation. Portrait is no longer blocked. Update Players now has a dedicated identity-safe queue overview while reusing the real Scanner workflow and assets. Decision/scanner logic remains frozen.
+v0.6.10 completes the planned cross-device consistency pass across the full v0.6 redesign. Desktop/laptop pointer devices keep the left sidebar; phones and coarse-pointer tablets keep bottom navigation even at 1024–1180px widths. Landscape remains preferred and compact, while portrait remains supported with the same visual system, compact shell/zoom treatment, and restored phone-friendly page reflows instead of wide inherited workspaces. All redesigned page units remain complete. Decision/scanner logic remains frozen at the v0.5.17 contract / v0.5.15 model fingerprint.

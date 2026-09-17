@@ -315,3 +315,45 @@ main{max-width:var(--v6-content)}
 @media (orientation:landscape) and (max-height:700px) and (pointer:coarse){
   .update-queue-overview{grid-template-columns:minmax(260px,.8fr) minmax(0,1.4fr)!important;gap:7px!important;margin-bottom:7px!important;padding:7px!important}.update-overview-copy{padding:2px 5px!important}.update-overview-copy h2{font-size:16px!important}.update-overview-copy p{font-size:5.5px!important}.update-overview-stats{gap:5px!important}.update-overview-stats>div{min-height:44px!important;padding:5px 7px!important}.update-overview-stats b{font-size:17px!important}.update-overview-stats small,.update-overview-stats span{font-size:5px!important}
 }
+
+/* =========================================================
+   v0.6.10 — Cross-device consistency / responsive QA
+   Keep the approved visual system; resolve shell/reflow conflicts only.
+   ========================================================= */
+
+/* Coarse-pointer tablets stay on bottom navigation even when their CSS width
+   crosses the desktop 1024px breakpoint. Desktop/laptop pointer devices keep
+   the persistent sidebar. */
+@media (pointer:coarse) and (min-width:1024px) and (max-width:1180px){
+  :root{--nav-h:64px}
+  .app{padding-left:0!important;padding-bottom:calc(64px + env(safe-area-inset-bottom))!important}
+  .topbar{left:0!important}.topbar::after{display:none!important}
+  main{width:100%!important;max-width:none!important;margin:0!important}
+  .bottom-nav,.bottom-nav-six{top:auto!important;left:0!important;right:0!important;bottom:0!important;width:auto!important;height:calc(64px + env(safe-area-inset-bottom))!important;padding:0 max(8px,env(safe-area-inset-right)) env(safe-area-inset-bottom) max(8px,env(safe-area-inset-left))!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;grid-template-rows:1fr!important;border-right:0!important;border-top:1px solid rgba(64,150,212,.24)!important;background:linear-gradient(180deg,rgba(3,13,23,.98),rgba(1,6,11,.995))!important}
+  .bottom-nav::after{display:none!important}
+  .nav-btn,.bottom-nav-six .nav-btn{grid-template-columns:1fr!important;grid-auto-flow:row!important;place-content:center!important;text-align:center!important;gap:2px!important;padding:5px 2px!important;border-radius:0!important;letter-spacing:0!important}
+  .nav-btn img,.bottom-nav-six .nav-btn img{width:22px!important;height:22px!important;margin:0 auto!important}
+  .nav-btn span,.bottom-nav-six .nav-btn span{font-size:8px!important;line-height:1!important}
+  .nav-btn.active::before{top:0!important;bottom:auto!important;left:28%!important;right:28%!important;width:auto!important;height:2px!important}
+  .more-sheet{bottom:calc(64px + env(safe-area-inset-bottom) + 6px)!important}
+  .toast{bottom:calc(64px + env(safe-area-inset-bottom) + 8px)!important}
+  .page-body{padding-bottom:calc(76px + env(safe-area-inset-bottom))!important}
+}
+
+/* Phone portrait keeps the compact zoomed canvas, but restores the proven
+   single-column/mobile reflows instead of inheriting wide tablet workspaces. */
+@media (orientation:portrait) and (max-width:699px) and (pointer:coarse){
+  .dashboard-workspace{grid-template-columns:1fr!important}.dashboard-recent,.dashboard-training,.dashboard-plan,.dashboard-insight,.dashboard-actions{grid-column:1!important;grid-row:auto!important}
+  .dashboard-plan-snapshot{grid-template-columns:minmax(180px,.9fr) minmax(150px,.7fr)!important}
+
+  .squad-workspace{grid-template-columns:1fr!important;overflow-x:visible!important}.squad-filter-panel{position:static!important}.squad-table-head{display:none!important}.squad-player-list,.squad-player-list.cards{grid-template-columns:1fr!important}.squad-player-row,.squad-player-list.cards .squad-player-row{grid-template-columns:25px minmax(0,1fr) 52px 16px!important}
+
+  .update-overview-stats{grid-template-columns:repeat(2,minmax(0,1fr))!important}.scanner-workspace{grid-template-columns:1fr!important;overflow-x:visible!important}.scanner-guide-panel{position:static!important}.scanner-review-grid{grid-template-columns:1fr!important;overflow-x:visible!important}.scanner-verification-panel,.scanner-player-review,.scanner-attributes-panel{grid-column:1!important}.scanner-attributes-panel .skill-groups{grid-template-columns:1fr!important}.scanner-review-actions .btn-row{grid-template-columns:1fr!important}
+
+  .v064-training-setup{grid-template-columns:1fr!important}
+  .v066-drills-workspace{grid-template-columns:1fr!important;overflow-x:visible!important}.v066-drills-page .drill-master-panel{position:static!important}.v066-drills-page .master-grid{grid-template-columns:1fr!important}
+
+  .v065-team-plan-body{min-width:0!important}.v065-team-plan-page #teamPlanFormationPanel,#teamPlanSetPiecesPanel,#teamPlanTacticsPanel{grid-template-columns:1fr!important}.v065-team-plan-page .mentor-section{grid-column:1!important;grid-row:auto!important}.v065-team-plan-page .best-in-slot-grid{grid-template-columns:1fr!important}
+
+  .settings-grid{grid-template-columns:1fr!important}.settings-account-card,.settings-cloud-card,.settings-scanner-card,.settings-version-card{grid-column:1!important;grid-row:auto!important}.v067-account-body{display:block!important}.v067-account-body>.card,.v067-account-body>.section{margin-bottom:8px!important}
+}

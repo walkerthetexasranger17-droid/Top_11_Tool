@@ -43,7 +43,7 @@ for phase in ['possession','transition','out']:
     if not soup.select_one(f'[data-tactic-phase="{phase}"]'): errs.append(f'Tactics missing {phase} phase')
 if not soup.select_one('[data-training-tab="individual"]') or not soup.select_one('[data-training-tab="team"]'):
     errs.append('Training does not expose Individual | Team tabs on one page')
-if 'v0.6.9' not in html: errs.append('visible UI/runtime version is not v0.6.9')
+if 'v0.6.10' not in html: errs.append('visible UI/runtime version is not v0.6.10')
 if re.search(r'BUILD\s*30527|Build\s*30527',html): errs.append('internal build 30527 is still visible in product HTML')
 if 'verified scanner' in html.lower(): errs.append('technical scanner provenance is exposed in normal UI')
 
@@ -81,11 +81,11 @@ for rid in ['drillLibrarySearch','drillLibraryCategory','drillSummaryTotal','dri
 if not soup.select_one('#page-my-drills.v066-drills-page .v066-drills-hero'): errs.append('v0.6.6 Drills cinematic hero missing')
 if not soup.select_one('#page-my-drills .v066-drills-workspace'): errs.append('v0.6.6 Drills workspace missing')
 
-# v0.6.9 Scanner + Update Players + compact portrait contract.
+# v0.6.10 Scanner + Update Players + compact portrait contract.
 for rid in ['scanWindow','scanQueue','scanReview','manualAddPlayerBtn','saveScannedPlayer','updateQueueOverview','updateStatSquad','updateStatQueue','updateStatDone','updateStatAttention']:
-    if rid not in ids: errs.append(f'missing v0.6.9 scanner/update control: {rid}')
-if not soup.select_one('#page-add-player.v068-scanner-page .v068-scanner-hero'): errs.append('v0.6.9 Scanner hero missing')
-if not soup.select_one('#page-add-player .scanner-workspace'): errs.append('v0.6.9 Scanner workspace missing')
+    if rid not in ids: errs.append(f'missing v0.6.10 scanner/update control: {rid}')
+if not soup.select_one('#page-add-player.v068-scanner-page .v068-scanner-hero'): errs.append('v0.6.10 Scanner hero missing')
+if not soup.select_one('#page-add-player .scanner-workspace'): errs.append('v0.6.10 Scanner workspace missing')
 if '"orientation":"any"' not in (ROOT/'manifest.json').read_text(encoding='utf-8').replace(' ', '').replace('\n',''): errs.append('manifest must allow portrait compact fallback')
 
 # v0.6.7 Settings + Account production design contract.
@@ -132,7 +132,7 @@ if not account_btn or account_btn.get('title')!='Profile & Security': errs.appen
 css_text=(ROOT/'css/app.css').read_text(encoding='utf-8')
 if '.account-button' not in css_text or 'cursor:pointer' not in css_text: errs.append('profile button does not advertise clickability with a pointer cursor')
 sw_text=(ROOT/'sw.js').read_text(encoding='utf-8')
-if "const CACHE='te-v0-6-9-update-p9" not in sw_text or "e.request.mode==='navigate'" not in sw_text or "cache:'no-store'" not in sw_text: errs.append('v0.4.12 service-worker update/navigation freshness guard missing')
+if "const CACHE='te-v0-6-10-responsive-p10" not in sw_text or "e.request.mode==='navigate'" not in sw_text or "cache:'no-store'" not in sw_text: errs.append('v0.4.12 service-worker update/navigation freshness guard missing')
 if "toast('App initialisation failed','err')" in js: errs.append('generic app-initialisation error toast survived GitHub testing hotfix')
 if 'loadMentorLevels' in js: errs.append('stale loadMentorLevels startup call survived; Mentor state must hydrate through loadMentorState')
 if "startupStep('mentor state',()=>loadMentorState())" not in js: errs.append('Mentor state is not hydrated during startup')
