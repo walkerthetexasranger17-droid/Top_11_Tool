@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-runtime="0.6.19">
+<html lang="en" data-runtime="0.6.20">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -10,11 +10,11 @@
   <meta name="application-name" content="Top Eleven Tool">
   <meta name="apple-mobile-web-app-title" content="Top Eleven Tool">
   <title>Top Eleven Tool</title>
-  <link rel="manifest" href="./manifest.json?r=0619">
+  <link rel="manifest" href="./manifest.json?r=0620">
   <link rel="icon" href="./icon-192.png"><link rel="apple-touch-icon" href="./icon-192.png">
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./css/app.css?r=0619"><link rel="stylesheet" href="./css/v060.css?r=0619">
+  <link rel="stylesheet" href="./css/app.css?r=0620"><link rel="stylesheet" href="./css/v060.css?r=0620">
 </head>
 <body class="booting">
 <div class="auth-gate" id="authGate" hidden>
@@ -63,7 +63,7 @@
 <div class="app">
   <header class="topbar">
     <button class="brand-home" type="button" data-go="dashboard" aria-label="Go to Home" title="Home"><img class="brand-mark" src="./icon-192.png" alt="Top Eleven Tool"></button>
-    <div class="brand-copy"><div class="brand-title">TOP ELEVEN <span>TOOL</span></div><div class="brand-sub">v0.6.19</div></div>
+    <div class="brand-copy"><div class="brand-title">TOP ELEVEN <span>TOOL</span></div><div class="brand-sub">v0.6.20</div></div>
     <button class="home-search-shortcut" id="homeSearchShortcut" type="button" aria-label="Search squad"><img src="./assets/v0616/home/27-header-search.svg" alt=""><em>Search players, skills, or run a scan...</em><kbd>⌘ K</kbd></button>
     <div class="topbar-actions">
       <div class="top-status" aria-live="polite"><img class="cloud-icon" src="./assets/v0616/home/26-header-cloud.svg" alt=""><span class="top-status-copy"><b>Cloud synced</b><small>Last sync: just now</small></span></div>
@@ -115,22 +115,12 @@
           <button class="squad-stat" data-go="squad"><span class="squad-stat-icon cyan">▥</span><span><small>Average OVR</small><b id="squadStatAvg">—</b><em>squad average</em></span></button>
           <button class="squad-stat" id="squadHighestCard" data-go="squad"><span class="squad-stat-icon cyan">☆</span><span><small>Highest OVR</small><b id="squadStatHigh">—</b><em id="squadStatHighName">top player</em></span></button>
           <button class="squad-stat" data-go="team-plan"><span class="squad-stat-icon cyan">◔</span><span><small>Position balance</small><b id="squadStatBalance">—</b><em id="squadStatBalanceCopy">coverage</em></span></button>
-          <button class="squad-stat attention" id="squadNeedsUpdateCard" type="button"><span class="squad-stat-icon warning">!</span><span><small>Needs attention</small><b id="squadStatNeeds">0</b><em>players need data</em></span></button>
+          <div class="squad-stat attention"><span class="squad-stat-icon warning">!</span><span><small>Needs attention</small><b id="squadStatNeeds">0</b><em>players need data</em></span></div>
         </div>
 
-        <div class="squad-workspace">
-          <aside class="squad-filter-panel">
-            <div class="squad-filter-head"><h2>Filters</h2><button class="section-link" id="squadResetFilters" type="button">Clear all</button></div>
-            <label class="squad-search"><span>⌕</span><input id="squadSearch" type="search" placeholder="Search players…" autocomplete="off"></label>
-            <div class="squad-filter-group"><span>Position</span><div class="filter-chips squad-simple-filters" id="squadFilters"></div></div>
-            <label class="squad-filter-field"><span>Playstyle</span><select class="select" id="squadPlaystyleFilter"><option value="">All playstyles</option></select></label>
-            <label class="squad-filter-field"><span>Special ability</span><select class="select" id="squadAbilityFilter"><option value="">All abilities</option></select></label>
-            <div class="squad-filter-group"><span>OVR range</span><div class="squad-range-inputs"><input class="input" id="squadOvrMin" type="number" min="1" max="520" placeholder="Min"><span>to</span><input class="input" id="squadOvrMax" type="number" min="1" max="520" placeholder="Max"></div></div>
-            <label class="squad-toggle"><span><b>Only players needing attention</b><small>Incomplete Skills data</small></span><input id="squadIssuesOnly" type="checkbox"><i></i></label>
-          </aside>
-
+        <div class="squad-workspace squad-workspace-no-filters">
           <section class="squad-roster-panel">
-            <div class="squad-roster-head"><div><span class="section-kicker">Squad</span><h2>Players <small id="squadVisibleCount">(0)</small></h2></div><div class="squad-roster-controls"><label>Sort by <select class="select" id="squadSort"><option value="ovr-desc">OVR (High → Low)</option><option value="ovr-asc">OVR (Low → High)</option><option value="name-asc">Name (A → Z)</option><option value="age-asc">Age (Young → Old)</option></select></label><div class="squad-view-switch" aria-label="Squad view"><button class="active" type="button" data-squad-view="list">☷ <span>List</span></button><button type="button" data-squad-view="cards">▦ <span>Cards</span></button></div></div></div>
+            <div class="squad-roster-head"><div><span class="section-kicker">Squad</span><h2>Players <small id="squadVisibleCount">(0)</small></h2></div><div class="squad-roster-controls"><label>Sort by <select class="select" id="squadSort"><option value="ovr-desc">OVR (High → Low)</option><option value="role-order">Role Order (GK → ST)</option><option value="ovr-asc">OVR (Low → High)</option><option value="name-asc">Name (A → Z)</option><option value="age-asc">Age (Young → Old)</option></select></label><div class="squad-view-switch" aria-label="Squad view"><button class="active" type="button" data-squad-view="list">☷ <span>List</span></button><button type="button" data-squad-view="cards">▦ <span>Cards</span></button></div></div></div>
             <div class="squad-table-head"><span>#</span><span>Player</span><span>Pos</span><span>Age</span><span>OVR</span><span>Playstyle</span><span>Special abilities</span><span>Status</span><span></span></div>
             <div class="player-list squad-player-list" id="squadList"></div><button class="sr-only" id="refreshSquadBtn">Refresh</button>
           </section>
@@ -439,6 +429,6 @@
   <div class="dialog-backdrop" id="confirmDialogBackdrop"><div class="confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="confirmDialogTitle"><div class="section-kicker">Squad</div><div class="section-title" id="confirmDialogTitle">Delete player?</div><p id="confirmDialogCopy">Are you sure you want to permanently remove this player from your squad?</p><div class="btn-row spaced"><button class="btn ghost" id="confirmCancelBtn" type="button">Cancel</button><button class="btn danger" id="confirmDeleteBtn" type="button">Delete</button></div></div></div>
   <div class="toast" id="toast"></div>
 </div>
-<script src="./js/optimizer-data.js?r=0619"></script><script src="./js/bible-data.js?r=0619"></script><script src="./js/data.js?r=0619"></script><script src="./js/strategy-data.js?r=0619"></script><script src="./js/best-in-slot-data.js?r=0619"></script><script src="./js/strategy-logic.js?r=0619"></script><script src="./js/squad-coverage-engine.js?r=0619"></script><script src="./js/cloud.js?r=0619"></script><script src="./js/storage.js?r=0619"></script><script src="./js/drill-profile.js?r=0619"></script><script src="./js/players.js?r=0619"></script><script src="./js/training-engine.js?r=0619"></script><script src="./js/team-training-engine.js?r=0619"></script><script src="./js/scanner-engine.js?r=0619"></script><script src="./js/recommendations.js?r=0619"></script><script src="./js/formation.js?r=0619"></script><script src="./js/tactics-engine.js?r=0619"></script><script src="./js/mentor-engine.js?r=0619"></script><script src="./js/team-plan-engine.js?r=0619"></script><script src="./js/best-in-slot-engine.js?r=0619"></script><script src="./js/app.js?r=0619"></script>
+<script src="./js/optimizer-data.js?r=0620"></script><script src="./js/bible-data.js?r=0620"></script><script src="./js/data.js?r=0620"></script><script src="./js/strategy-data.js?r=0620"></script><script src="./js/best-in-slot-data.js?r=0620"></script><script src="./js/strategy-logic.js?r=0620"></script><script src="./js/squad-coverage-engine.js?r=0620"></script><script src="./js/cloud.js?r=0620"></script><script src="./js/storage.js?r=0620"></script><script src="./js/drill-profile.js?r=0620"></script><script src="./js/players.js?r=0620"></script><script src="./js/training-engine.js?r=0620"></script><script src="./js/team-training-engine.js?r=0620"></script><script src="./js/scanner-engine.js?r=0620"></script><script src="./js/recommendations.js?r=0620"></script><script src="./js/formation.js?r=0620"></script><script src="./js/tactics-engine.js?r=0620"></script><script src="./js/mentor-engine.js?r=0620"></script><script src="./js/team-plan-engine.js?r=0620"></script><script src="./js/best-in-slot-engine.js?r=0620"></script><script src="./js/app.js?r=0620"></script>
 <script>(()=>{const expected=document.documentElement.dataset.runtime;if(window.__TE_RUNTIME__!==expected){console.error('Runtime build mismatch',{expected,loaded:window.__TE_RUNTIME__||'missing'});const k='te:runtime-reload:'+expected;if(!sessionStorage.getItem(k)){sessionStorage.setItem(k,'1');location.reload();}}else{sessionStorage.removeItem('te:runtime-reload:'+expected);}})();</script>
 </body></html>

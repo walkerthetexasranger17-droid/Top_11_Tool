@@ -936,3 +936,17 @@ main{max-width:var(--v6-content)}
   .squad-player-identity b{font-size:10px!important}.squad-player-identity small{font-size:5.8px!important}
   .squad-position-badge{width:32px!important;height:21px!important}.squad-playstyle-icon{width:21px!important;height:21px!important}.squad-ability img{width:17px!important;height:17px!important}
 }
+
+/* =========================================================
+   v0.6.20 — Squad finishing pass
+   - remove filter panel
+   - full-width roster
+   - keep the app header visible on phone/tablet
+   ========================================================= */
+.squad-workspace.squad-workspace-no-filters{grid-template-columns:minmax(0,1fr)!important}
+.squad-workspace-no-filters .squad-roster-panel{width:100%;min-width:0}
+@media (max-width:1260px){
+  #page-squad.active~*{} /* specificity anchor for legacy cascade */
+  .topbar{display:flex!important;position:sticky!important;top:0!important;z-index:80!important}
+  .squad-workspace.squad-workspace-no-filters{display:block!important;overflow-x:visible!important}
+}

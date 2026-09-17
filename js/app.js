@@ -1,5 +1,5 @@
 (() => {
-  window.__TE_RUNTIME__='0.6.19';
+  window.__TE_RUNTIME__='0.6.20';
   const TE=window.TE5;const D=TE.Data,P=TE.Players,S=TE.Storage,DP=TE.DrillProfile,T=TE.Training,TT=TE.TeamTraining,SC=TE.Scanner,R=TE.Recommendations,F=TE.Formation,TP=TE.TeamPlan,TAC=TE.Tactics,M=TE.Mentor,B=TE.BibleData,C=TE.Cloud,BIS=TE.BestInSlot;
   const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
   const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -130,7 +130,7 @@
     let players=await P.all();
     const validFilters=new Set(['ALL','GK','DEF','MID','ATT']);
     if(!validFilters.has(state.squadFilter))state.squadFilter='ALL';
-    if(!['ovr-desc','ovr-asc','name-asc','age-asc'].includes(state.squadSort))state.squadSort='ovr-desc';
+    if(!['ovr-desc','role-order','ovr-asc','name-asc','age-asc'].includes(state.squadSort))state.squadSort='ovr-desc';
     if(!['list','cards'].includes(state.squadView))state.squadView='list';
     const counts={ALL:players.length,GK:0,DEF:0,MID:0,ATT:0};players.forEach(p=>counts[category(p.position)]++);
     const avg=players.length?players.reduce((a,p)=>a+(Number(p.ovr)||0),0)/players.length:0;
@@ -145,30 +145,20 @@
     if($('#squadStatNeeds'))$('#squadStatNeeds').textContent=needs;
     const highCard=$('#squadHighestCard');if(highCard){if(highest){highCard.dataset.playerOpen=highest.key;delete highCard.dataset.go;}else{delete highCard.dataset.playerOpen;highCard.dataset.go='squad';}}
 
-    $('#squadFilters').innerHTML=['ALL','GK','DEF','MID','ATT'].map(x=>`<button class="chip ${state.squadFilter===x?'active':''}" data-squad-filter="${x}">${x}<small>${counts[x]}</small></button>`).join('');
-    const playstyles=[...new Set(players.map(psLabel).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
-    const abilities=[...new Set(players.flatMap(p=>p.specialAbilities||[]).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
-    const psSel=$('#squadPlaystyleFilter');if(psSel){psSel.innerHTML='<option value="">All playstyles</option>'+playstyles.map(x=>`<option value="${esc(x)}" ${state.squadPlaystyle===x?'selected':''}>${esc(x)}</option>`).join('');psSel.value=state.squadPlaystyle||'';}
-    const abSel=$('#squadAbilityFilter');if(abSel){abSel.innerHTML='<option value="">All abilities</option>'+abilities.map(x=>`<option value="${esc(x)}" ${state.squadAbility===x?'selected':''}>${esc(x)}</option>`).join('');abSel.value=state.squadAbility||'';}
-    if($('#squadSearch'))$('#squadSearch').value=state.search||'';
-    if($('#squadOvrMin'))$('#squadOvrMin').value=state.squadOvrMin||'';
-    if($('#squadOvrMax'))$('#squadOvrMax').value=state.squadOvrMax||'';
-    if($('#squadIssuesOnly'))$('#squadIssuesOnly').checked=state.squadAvailability==='issues';
+    // v0.6.20: the Squad filter panel was intentionally removed. Clear any
+    // persisted legacy filter state so an invisible old filter can never hide players.
+    if(state.squadFilter!=='ALL'||state.search||state.squadOvrMin!==''||state.squadOvrMax!==''||state.squadPlaystyle||state.squadAbility||state.squadAvailability){
+      state.squadFilter='ALL';state.search='';state.squadOvrMin='';state.squadOvrMax='';state.squadPlaystyle='';state.squadAbility='';state.squadAvailability='';persistUiState();
+    }
     if($('#squadSort'))$('#squadSort').value=state.squadSort;
     $$('#page-squad [data-squad-view]').forEach(b=>b.classList.toggle('active',b.dataset.squadView===state.squadView));
 
-    const q=String(state.search||'').trim().toLowerCase(),min=Number(state.squadOvrMin),max=Number(state.squadOvrMax);
-    let filtered=players.filter(p=>{
-      if(state.squadFilter!=='ALL'&&category(p.position)!==state.squadFilter)return false;
-      if(state.squadPlaystyle&&psLabel(p)!==state.squadPlaystyle)return false;
-      if(state.squadAbility&&!(p.specialAbilities||[]).includes(state.squadAbility))return false;
-      if(state.squadAvailability==='issues'&&!squadNeedsAttention(p))return false;
-      const o=Number(p.ovr)||0;if(state.squadOvrMin!==''&&Number.isFinite(min)&&o<min)return false;if(state.squadOvrMax!==''&&Number.isFinite(max)&&o>max)return false;
-      if(q){const hay=[p.name,p.position,p.nationalityCode,...P.normaliseRoles(p),psLabel(p),...(p.specialAbilities||[])].filter(Boolean).join(' ').toLowerCase();if(!hay.includes(q))return false;}
-      return true;
-    });
+    let filtered=players.slice();
+    const roleOrder=['GK','DL','DC','DR','DMC','ML','MC','MR','AML','AMC','AMR','ST'];
+    const roleRank=p=>{const roles=P.normaliseRoles(p);const primary=String(roles[0]||p.position||'').toUpperCase();const idx=roleOrder.indexOf(primary);return idx<0?roleOrder.length:idx;};
     const sorts={
       'ovr-desc':(a,b)=>(Number(b.ovr)||0)-(Number(a.ovr)||0)||String(a.name||'').localeCompare(String(b.name||'')),
+      'role-order':(a,b)=>roleRank(a)-roleRank(b)||(Number(b.ovr)||0)-(Number(a.ovr)||0)||String(a.name||'').localeCompare(String(b.name||'')),
       'ovr-asc':(a,b)=>(Number(a.ovr)||0)-(Number(b.ovr)||0)||String(a.name||'').localeCompare(String(b.name||'')),
       'name-asc':(a,b)=>String(a.name||'').localeCompare(String(b.name||'')),
       'age-asc':(a,b)=>(Number(a.age)||99)-(Number(b.age)||99)||String(a.name||'').localeCompare(String(b.name||''))
@@ -190,17 +180,9 @@
   $('#squadList')?.addEventListener('pointermove',e=>{if(!squadSwipe.active||e.pointerId!==squadSwipe.pointerId||!squadSwipe.el)return;const dx=e.clientX-squadSwipe.startX,dy=e.clientY-squadSwipe.startY;squadSwipe.lastX=e.clientX;squadSwipe.lastY=e.clientY;if(!squadSwipe.mode){if(Math.abs(dy)>10&&Math.abs(dy)>Math.abs(dx)*1.2){squadSwipe.mode='vertical';return;}if(Math.abs(dx)>12&&Math.abs(dx)>Math.abs(dy)*1.25)squadSwipe.mode='horizontal';}if(squadSwipe.mode==='horizontal'){e.preventDefault();const base=openSquadSwipeKey===squadSwipe.key?-82:0,offset=Math.max(-82,Math.min(0,base+dx));squadSwipe.el.querySelector('.player-swipe-content').style.transform=`translateX(${offset}px)`;}});
   function finishSquadSwipe(e){if(!squadSwipe.active||(e?.pointerId!=null&&e.pointerId!==squadSwipe.pointerId))return;const dx=squadSwipe.lastX-squadSwipe.startX,dy=squadSwipe.lastY-squadSwipe.startY,el=squadSwipe.el,key=squadSwipe.key,wasHorizontal=squadSwipe.mode==='horizontal',wasOpen=openSquadSwipeKey===key,realSwipe=Math.abs(dx)>=32&&Math.abs(dx)>Math.abs(dy)*1.35;squadSwipe.active=false;if(wasHorizontal&&realSwipe){suppressSquadClickUntil=Date.now()+280;if(wasOpen){if(dx>35)closeOpenSquadSwipe();else openSquadSwipe(key,el);}else if(dx<-42)openSquadSwipe(key,el);else closeOpenSquadSwipe();}else if(!wasHorizontal&&Math.abs(dx)>Math.abs(dy)*1.5&&dx<-55){suppressSquadClickUntil=Date.now()+280;openSquadSwipe(key,el);}else if(wasHorizontal&&el){el.querySelector('.player-swipe-content')?.style.removeProperty('transform');}if(el&&!el.classList.contains('open'))el.querySelector('.player-swipe-content')?.style.removeProperty('transform');}
   $('#squadList')?.addEventListener('pointerup',finishSquadSwipe);$('#squadList')?.addEventListener('pointercancel',finishSquadSwipe);
-  document.addEventListener('click',e=>{const f=e.target.closest('[data-squad-filter]');if(f){state.squadFilter=f.dataset.squadFilter;persistUiState();renderSquad();return;}const del=e.target.closest('[data-squad-delete]');if(del){openDeleteDialog(del.dataset.squadDelete,del.dataset.playerName);return;}const row=e.target.closest('[data-player-open]');if(row){if(Date.now()<suppressSquadClickUntil)return;if(openSquadSwipeKey){closeOpenSquadSwipe();return;}state.playerKey=row.dataset.playerOpen;persistUiState();go('player');return;}if(openSquadSwipeKey&&!e.target.closest('.player-swipe'))closeOpenSquadSwipe();});
+  document.addEventListener('click',e=>{const del=e.target.closest('[data-squad-delete]');if(del){openDeleteDialog(del.dataset.squadDelete,del.dataset.playerName);return;}const row=e.target.closest('[data-player-open]');if(row){if(Date.now()<suppressSquadClickUntil)return;if(openSquadSwipeKey){closeOpenSquadSwipe();return;}state.playerKey=row.dataset.playerOpen;persistUiState();go('player');return;}if(openSquadSwipeKey&&!e.target.closest('.player-swipe'))closeOpenSquadSwipe();});
 
-  $('#squadSearch')?.addEventListener('input',e=>{state.search=e.target.value;persistUiState();void renderSquad();});
-  $('#squadPlaystyleFilter')?.addEventListener('change',e=>{state.squadPlaystyle=e.target.value;persistUiState();void renderSquad();});
-  $('#squadAbilityFilter')?.addEventListener('change',e=>{state.squadAbility=e.target.value;persistUiState();void renderSquad();});
-  $('#squadOvrMin')?.addEventListener('input',e=>{state.squadOvrMin=e.target.value;persistUiState();void renderSquad();});
-  $('#squadOvrMax')?.addEventListener('input',e=>{state.squadOvrMax=e.target.value;persistUiState();void renderSquad();});
-  $('#squadIssuesOnly')?.addEventListener('change',e=>{state.squadAvailability=e.target.checked?'issues':'';persistUiState();void renderSquad();});
   $('#squadSort')?.addEventListener('change',e=>{state.squadSort=e.target.value;persistUiState();void renderSquad();});
-  $('#squadResetFilters')?.addEventListener('click',()=>{state.squadFilter='ALL';state.search='';state.squadOvrMin='';state.squadOvrMax='';state.squadPlaystyle='';state.squadAbility='';state.squadAvailability='';persistUiState();void renderSquad();});
-  $('#squadNeedsUpdateCard')?.addEventListener('click',()=>{state.squadAvailability=state.squadAvailability==='issues'?'':'issues';persistUiState();void renderSquad();});
   document.addEventListener('click',e=>{const view=e.target.closest('[data-squad-view]');if(!view)return;state.squadView=view.dataset.squadView;persistUiState();void renderSquad();});
 
   // ---------- Player profile ----------
@@ -281,7 +263,7 @@
   $('#profileDeleteBtn')?.addEventListener('click',async()=>{const b=$('#profileDeleteBtn');if(!b.dataset.armed){b.dataset.armed='1';b.textContent='Tap again to delete';$('#profileEditNote').textContent='This permanently removes the player and their saved training session.';setTimeout(()=>{delete b.dataset.armed;b.textContent='Delete Player';},3500);return;}const p=await P.get(state.playerKey);await P.remove(state.playerKey);state.playerKey='';state.trainingKey='';delete b.dataset.armed;b.textContent='Delete Player';toast(`${p?.name||'Player'} deleted`);await renderDashboard();go('squad',{historyMode:'replace'});});
   $('#squadBulkUpdateBtn')?.addEventListener('click',async()=>{state.scanMode='update';state.scanUpdateKey='';state.scanAutoSavedCount=0;await go('add-player');if($('#scanProgressText'))$('#scanProgressText').textContent='Choose Skills screenshots · names will be matched and saved automatically';toast('Automatic squad update ready');});
   $('#dashboardUpdatePlayers')?.addEventListener('click',()=>$('#squadBulkUpdateBtn')?.click());
-  $('#homeSearchShortcut')?.addEventListener('click',async()=>{await go('squad');$('#squadSearch')?.focus();});
+  $('#homeSearchShortcut')?.addEventListener('click',async()=>{await go('squad');});
 
   // ---------- Refresh-safe scanner queue persistence ----------
   function openQueueDb(){return new Promise((resolve,reject)=>{if(!('indexedDB'in window)){resolve(null);return;}const req=indexedDB.open(QUEUE_DB_NAME,1);req.onupgradeneeded=()=>{if(!req.result.objectStoreNames.contains(QUEUE_STORE))req.result.createObjectStore(QUEUE_STORE);};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);});}
