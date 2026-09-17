@@ -3,6 +3,7 @@
   "short_name":"Top Eleven Tool",
   "start_url":"./index.html",
   "display":"standalone",
+  "orientation":"landscape",
   "background_color":"#030913",
   "theme_color":"#030913",
   "icons":[
