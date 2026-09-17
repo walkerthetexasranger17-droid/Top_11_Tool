@@ -5,7 +5,7 @@ html=(ROOT/'index.html').read_text(encoding='utf-8')
 css=(ROOT/'css/v060.css').read_text(encoding='utf-8')
 js=(ROOT/'js/app.js').read_text(encoding='utf-8')
 errs=[]
-for needle in ['css/v060.css?r=0613','dashboardRecentPlayers','dashboardTrainingStats','dashboardPlanSnapshot','dashboardInsight','dashboardUpdatePlayers','v060-home-hero','v062-squad-hero','squadSearch','squadPlaystyleFilter','squadAbilityFilter','squadSort','v063-profile-hero','profileDevelopmentInsight','profileRoleScores','profileSkills','v064-training-hero','trainingPlayer','trainingMode','buildSessionBtn','trainingResults','sessionList','sessionSummary','completeSessionBtn','v065-team-plan-head','teamPlanFormationPanel','teamPlanSetPiecesPanel','teamPlanTacticsPanel','mentorStrip','mentorLevels','v066-drills-hero','drillLibrarySearch','drillLibraryCategory','drillSummaryUnlocked','drillSummaryMaster','v067-settings-hero','geminiScannerApiKey','localSquadStatus','v067-account-hero','accountMfaStatus','v068-scanner-hero','scanWindow','scanQueue','scanReview','updateQueueOverview','updateStatQueue','updateStatDone','updateStatAttention','scanner-hero-desktop.webp','scanner-hero-landscape.webp']:
+for needle in ['css/v060.css?r=0615','dashboardRecentPlayers','dashboardTrainingStats','dashboardPlanSnapshot','dashboardInsight','dashboardUpdatePlayers','v060-home-hero','v062-squad-hero','squadSearch','squadPlaystyleFilter','squadAbilityFilter','squadSort','v063-profile-hero','profileDevelopmentInsight','profileRoleScores','profileSkills','v064-training-hero','trainingPlayer','trainingMode','buildSessionBtn','trainingResults','sessionList','sessionSummary','completeSessionBtn','v065-team-plan-head','teamPlanFormationPanel','teamPlanSetPiecesPanel','teamPlanTacticsPanel','mentorStrip','mentorLevels','v066-drills-hero','drillLibrarySearch','drillLibraryCategory','drillSummaryUnlocked','drillSummaryMaster','v067-settings-hero','geminiScannerApiKey','localSquadStatus','v067-account-hero','accountMfaStatus','v068-scanner-hero','scanWindow','scanQueue','scanReview','updateQueueOverview','updateStatQueue','updateStatDone','updateStatAttention','scanner-hero-desktop.webp','scanner-hero-landscape.webp']:
     if needle not in html: errs.append(f'missing v0.6 Home hook: {needle}')
 for needle in ['@media (min-width:1024px)','@media (min-width:700px) and (max-width:1023px)','@media (max-width:699px)','--v6-sidebar:214px','.dashboard-workspace','.auth-gate::before','.squad-workspace','.squad-player-row','.v063-profile-hero','.profile-panel','.skill-track','.v064-training-hero','.v064-training-setup','.training-setup-card','.v064-training-results','.v065-team-plan-head','.v065-team-plan-body','.v066-drills-hero','.v066-drills-workspace','.v067-settings-hero','.settings-grid','.v067-account-hero','.v067-account-body']:
     if needle not in css: errs.append(f'missing responsive/design marker: {needle}')
@@ -35,11 +35,11 @@ for needle in [
     '.more-drawer-backdrop'
 ]:
     if needle not in css: errs.append(f'missing v0.6.13 Home fidelity marker: {needle}')
-for needle in ['home-hero-desktop.webp','home-hero-mobile.webp']:
-    if needle not in html: errs.append(f'missing v0.6.13 Home hero reference: {needle}')
-for name in ['home-hero-desktop.webp','home-hero-mobile.webp']:
+for needle in ['home-hero-desktop-v0615.webp','home-hero-mobile-v0615.webp']:
+    if needle not in html: errs.append(f'missing v0.6.15 Home hero reference: {needle}')
+for name in ['home-hero-desktop-v0615.webp','home-hero-mobile-v0615.webp']:
     p=ROOT/'assets/v060/scenes'/name
-    if not p.is_file() or p.stat().st_size<20000: errs.append(f'missing v0.6.13 Home production asset: {name}')
+    if not p.is_file() or p.stat().st_size<20000: errs.append(f'missing v0.6.15 Home production asset: {name}')
 for needle in ['homeSearchShortcut','moreNavButton','dashboardWatchTour','Performance Insights','Run Scan']:
     if needle not in html: errs.append(f'missing v0.6.13 Home UI hook: {needle}')
 harness=ROOT/'tests/offline_browser_viewport_audit.py'
@@ -49,7 +49,7 @@ else:
     for needle in ["page.set_content(html", "has_touch=profile['touch']", "expected_nav", "about:blank", "URLBlocklist=['*']"]:
         if needle not in h: errs.append(f'offline Chromium harness missing marker: {needle}')
 if errs:
-    print('FAIL v0.6.13 design contract')
+    print('FAIL v0.6.15 design contract')
     for e in errs: print('-',e)
     sys.exit(1)
-print('PASS v0.6.13 design contract: v0.6 baseline + real-Chromium offline QA harness + true portrait viewport fit')
+print('PASS v0.6.15 design contract: corrected approved Home visual-system baseline + Squad overlay and real-Chromium responsive QA preserved')

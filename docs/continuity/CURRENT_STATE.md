@@ -1,11 +1,19 @@
-# CURRENT DESIGN OVERLAY — v0.6.13-dev-pass13
+# CURRENT DESIGN OVERLAY — v0.6.15 Corrective Home Fidelity
 
-v0.6.13 is the first explicit **design-fidelity correction pass** after the v0.6.12 browser QA work. A real-device Home screenshot showed that responsive fit alone was not sufficient proof that the implementation matched the approved v0.6 references.
+The v0.6 redesign is in a strict **approved-reference fidelity sequence**. Responsive correctness alone is not design completion.
 
-Pass 13 is Home-only. The production Home now uses the approved dark navy / neon lime / cyan cinematic composition: dedicated football hero crops derived from the existing production football scene, desktop search/header treatment, Cloud/manager chrome, four stat cards, Recent Players, Training Builder, Team Plan Snapshot, Performance Insights, Quick Actions, and the approved five-item touch navigation (`Home / Squad / Training / Team Plan / More`). Desktop retains direct Drills + Settings in the sidebar.
+## Current authority order
+1. Approved page reference images in `docs/design/reference/v060/`.
+2. The corrected v0.6.15 Home implementation as the live visual-system baseline.
+3. Real application data/logic and authoritative game-extracted assets.
+4. Earlier v0.6 implementations only where they do not conflict with the above.
 
-The Home desktop/mobile approved images in `docs/design/reference/v060/` are the visual contract for this pass. The v0.6.12 real-Chromium harness remains the responsive QA mechanism and must not be removed.
+## Completed / current
+- v0.6.15 Home: corrected against `approved-home-desktop.webp` and `approved-home-mobile.webp`.
+- Real-Chromium QA: 45/45 page/view combinations, zero horizontal overflow, zero console errors.
+- Frozen v0.5.17 decision/calibration base remains intact.
 
-Frozen decision/calibration base remains v0.5.17. No scanner, Training, Formation, Tactics, Mentor, Team Plan, Best-in-Slot or canonical strategy logic is intentionally changed by this pass.
+## Next
+**v0.6.16 Squad Fidelity Re-audit.** Earlier Squad work is not automatically accepted; compare it literally against the approved Squad reference and the v0.6.15 Home visual language.
 
-**Next fixed design unit after Pass 13:** v0.6.14 Squad design-fidelity pass against `approved-squad-desktop-v2.webp` / stored Squad references, unless real-device Home review exposes a blocking Home defect first.
+The user will test only after the full page-fidelity sequence is complete.

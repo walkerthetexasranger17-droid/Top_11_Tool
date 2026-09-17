@@ -11,7 +11,7 @@ hero=soup.select_one('#page-dashboard .v060-home-hero')
 if not hero: errs.append('Home cinematic hero missing')
 else:
     style=hero.get('style','')
-    for name in ['home-hero-desktop.webp','home-hero-mobile.webp']:
+    for name in ['home-hero-desktop-v0615.webp','home-hero-mobile-v0615.webp']:
         if name not in style: errs.append(f'Home hero does not reference {name}')
 for text in ['Get started','Watch tour','Recent Players','Training Builder','Team Plan Snapshot','Performance Insights','Quick Actions']:
     if text.lower() not in soup.get_text(' ',strip=True).lower(): errs.append(f'Home approved section/action missing: {text}')
