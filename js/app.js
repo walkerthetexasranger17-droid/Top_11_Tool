@@ -1,5 +1,5 @@
 (() => {
-  window.__TE_RUNTIME__='0.6.20';
+  window.__TE_RUNTIME__='0.6.21';
   const TE=window.TE5;const D=TE.Data,P=TE.Players,S=TE.Storage,DP=TE.DrillProfile,T=TE.Training,TT=TE.TeamTraining,SC=TE.Scanner,R=TE.Recommendations,F=TE.Formation,TP=TE.TeamPlan,TAC=TE.Tactics,M=TE.Mentor,B=TE.BibleData,C=TE.Cloud,BIS=TE.BestInSlot;
   const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
   const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -145,7 +145,7 @@
     if($('#squadStatNeeds'))$('#squadStatNeeds').textContent=needs;
     const highCard=$('#squadHighestCard');if(highCard){if(highest){highCard.dataset.playerOpen=highest.key;delete highCard.dataset.go;}else{delete highCard.dataset.playerOpen;highCard.dataset.go='squad';}}
 
-    // v0.6.20: the Squad filter panel was intentionally removed. Clear any
+    // v0.6.21: the Squad filter panel was intentionally removed. Clear any
     // persisted legacy filter state so an invisible old filter can never hide players.
     if(state.squadFilter!=='ALL'||state.search||state.squadOvrMin!==''||state.squadOvrMax!==''||state.squadPlaystyle||state.squadAbility||state.squadAvailability){
       state.squadFilter='ALL';state.search='';state.squadOvrMin='';state.squadOvrMax='';state.squadPlaystyle='';state.squadAbility='';state.squadAvailability='';persistUiState();

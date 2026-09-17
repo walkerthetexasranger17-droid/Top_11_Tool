@@ -143,6 +143,14 @@ class OfflineBundle:
             if p:
                 img['src'] = self.data_uri(p)
 
+        # Responsive <picture> sources must be embedded too; otherwise a matching
+        # <source srcset> can override an embedded <img> fallback and appear blank.
+        for source in soup.find_all('source'):
+            raw = source.get('srcset', '')
+            p = self.resolve_local(raw, self.app)
+            if p:
+                source['srcset'] = self.data_uri(p)
+
         for element in soup.find_all(style=True):
             element['style'] = self.rewrite_urls(element['style'], self.app)
 
@@ -167,6 +175,7 @@ class OfflineBundle:
         refs = page.evaluate("""() => {
           const out=[];
           document.querySelectorAll('img[src]').forEach(e=>out.push(['src',e.getAttribute('src')]));
+          document.querySelectorAll('source[srcset]').forEach(e=>out.push(['src',e.getAttribute('srcset')]));
           document.querySelectorAll('[style]').forEach(e=>out.push(['style',e.getAttribute('style')]));
           return out;
         }""")
@@ -187,6 +196,7 @@ class OfflineBundle:
         if mapping:
             page.evaluate("""m => {
               document.querySelectorAll('img[src]').forEach(e=>{const s=e.getAttribute('src');if(m[s])e.setAttribute('src',m[s]);});
+              document.querySelectorAll('source[srcset]').forEach(e=>{const s=e.getAttribute('srcset');if(m[s])e.setAttribute('srcset',m[s]);});
               document.querySelectorAll('[style]').forEach(e=>{let s=e.getAttribute('style')||''; for(const [k,v] of Object.entries(m)){s=s.split(k).join(v)} e.setAttribute('style',s);});
             }""", mapping)
 

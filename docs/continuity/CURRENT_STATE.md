@@ -1,19 +1,11 @@
-# CURRENT DESIGN OVERLAY — v0.6.20 Squad Finishing Pass
+# CURRENT DESIGN OVERLAY — v0.6.21 Squad Hero Reliability Hotfix
 
-The calibrated v0.5.17 football/decision contract remains frozen under the v0.6 redesign.
-
-## Squad mobile contract
-Compact one-line rows show rank, new role/player artwork, player name, optional nationality flag + roles/age, glossy position badge, real Playstyle image, up to two real Special Ability images, OVR and chevron. No stars and no Playstyle/SA text labels on mobile.
-
-## v0.6.20 finishing changes
-- Removed Squad filter panel.
-- Added Role Order sort: GK, DL, DC, DR, DMC, ML, MC, MR, AML, AMC, AMR, ST.
+- Mobile/tablet remains the product priority; desktop only needs to stay functional.
+- Home mobile design is accepted enough to proceed page-by-page.
+- Squad compact mobile roster design is accepted.
+- Squad filter panel is removed.
+- Role Order exists with `GK → DL → DC → DR → DMC → ML → MC → MR → AML → AMC → AMR → ST`.
 - DML and DMR are not current game positions.
-- Kept the mobile/tablet app header visible/sticky on Squad.
-- Full-width roster workspace.
-
-## Scanner
-Scanner remains v12. Nationality is optional visible-flag metadata only. Frozen OVR/skills/playstyle/SA calibration is unchanged.
-
-## Next
-Deploy and review Squad on the real device. If accepted, move to the next page; otherwise make Squad-only fidelity corrections.
+- Nationality flag support is wired through player storage and scanner as an optional visible-flag field.
+- v0.6.21 replaces the Squad hero CSS custom-property image with a direct responsive picture element and bumps cache markers so the cinematic header artwork reliably appears on deployed/installed mobile builds.
+- Frozen v0.5.17 decision logic and scanner VERSION=12 remain unchanged.

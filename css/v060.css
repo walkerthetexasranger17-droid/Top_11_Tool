@@ -950,3 +950,22 @@ main{max-width:var(--v6-content)}
   .topbar{display:flex!important;position:sticky!important;top:0!important;z-index:80!important}
   .squad-workspace.squad-workspace-no-filters{display:block!important;overflow-x:visible!important}
 }
+
+
+/* =========================================================
+   v0.6.21 — Squad hero asset reliability hotfix
+   Use a real responsive <picture> element instead of a CSS custom-property
+   background so deployed PWAs cannot lose the cinematic header artwork.
+   ========================================================= */
+.v062-squad-hero>.squad-hero-media{position:absolute;inset:0;display:block;width:100%;height:100%;z-index:0;overflow:hidden;pointer-events:none}
+.v062-squad-hero>.squad-hero-media img{display:block;width:100%;height:100%;object-fit:cover;object-position:center 46%}
+.v062-squad-hero::before{z-index:1;background-image:linear-gradient(90deg,rgba(2,9,18,.94) 0%,rgba(2,9,18,.75) 31%,rgba(2,9,18,.16) 63%,rgba(2,9,18,.37) 100%),linear-gradient(0deg,rgba(2,9,18,.63),transparent 52%)!important;background-position:center!important;background-size:cover!important}
+.v062-squad-hero .hero-copy,.v062-squad-hero .squad-mantra{z-index:2}
+@media (orientation:portrait) and (max-width:699px) and (pointer:coarse){
+  .v062-squad-hero>.squad-hero-media img{object-position:center 38%}
+  .v062-squad-hero::before{background-image:linear-gradient(90deg,rgba(2,9,18,.95),rgba(2,9,18,.57) 46%,rgba(2,9,18,.08) 82%)!important}
+}
+@media (orientation:landscape) and (pointer:coarse) and (max-height:600px){
+  .v062-squad-hero>.squad-hero-media img{object-position:center 46%}
+  .v062-squad-hero::before{background-image:linear-gradient(90deg,rgba(2,9,18,.94),rgba(2,9,18,.63) 38%,rgba(2,9,18,.08) 70%)!important}
+}

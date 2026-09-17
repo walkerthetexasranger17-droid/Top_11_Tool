@@ -13,8 +13,10 @@ scanner=(ROOT/'js/scanner-engine.js').read_text(encoding='utf-8')
 # Inline scene URLs must remain inside an app hosted at /top-eleven-tool/.
 base='https://example.invalid/top-eleven-tool/index.html'
 scene_refs=re.findall(r"--hero:url\('([^']+)'\)",html)
-if len(scene_refs)!=7: errs.append(f'expected 7 current inline hero scene refs, found {len(scene_refs)}')
-for ref in scene_refs:
+picture_refs=re.findall(r'(?:src|srcset)="(\./assets/v060/scenes/squad-hero-(?:mobile|desktop)\.webp)"',html)
+if len(scene_refs)!=6: errs.append(f'expected 6 current inline hero scene refs after Squad picture migration, found {len(scene_refs)}')
+if sorted(set(picture_refs))!=['./assets/v060/scenes/squad-hero-desktop.webp','./assets/v060/scenes/squad-hero-mobile.webp']: errs.append(f'Squad picture refs missing/incorrect: {picture_refs}')
+for ref in scene_refs+picture_refs:
     resolved=urlparse(urljoin(base,ref)).path
     if not resolved.startswith('/top-eleven-tool/assets/'):
         errs.append(f'hero path escapes app subdirectory: {ref} -> {resolved}')
@@ -49,4 +51,4 @@ if errs:
     print('FAIL runtime hardening contract')
     for e in errs: print('-',e)
     sys.exit(1)
-print(f'PASS runtime hardening contract: {len(scene_refs)} subpath-safe heroes; offline query fallback; account escaping; scanner 0..520 boundary; scratch probe archived')
+print(f'PASS runtime hardening contract: {len(scene_refs)+len(picture_refs)} subpath-safe heroes; offline query fallback; account escaping; scanner 0..520 boundary; scratch probe archived')
