@@ -1,5 +1,5 @@
 (() => {
-  window.__TE_RUNTIME__='0.6.8';
+  window.__TE_RUNTIME__='0.6.9';
   const TE=window.TE5;const D=TE.Data,P=TE.Players,S=TE.Storage,DP=TE.DrillProfile,T=TE.Training,TT=TE.TeamTraining,SC=TE.Scanner,R=TE.Recommendations,F=TE.Formation,TP=TE.TeamPlan,TAC=TE.Tactics,M=TE.Mentor,B=TE.BibleData,C=TE.Cloud,BIS=TE.BestInSlot;
   const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
   const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -317,9 +317,11 @@
   async function renderScannerMode(){
     state.scanUpdateTargets=await P.all();
     const updateMode=state.scanMode==='update';
+    const page=$('#page-add-player'),overview=$('#updateQueueOverview');
+    page?.classList.toggle('update-mode',updateMode);if(overview)overview.hidden=!updateMode;
     const eyebrow=$('#scanHeroEyebrow'),title=$('#scanHeroTitle'),copy=$('#scanHeroCopy'),modeNote=$('#scanModeNote'),manual=$('#manualAddPlayerBtn'),manualNote=$('#manualEntryNote');
-    if(updateMode){if(eyebrow)eyebrow.textContent='Automatic squad update';if(title)title.innerHTML='Drop them. <em>Done.</em>';if(copy)copy.textContent='Queue fresh Skills screenshots. The scanner reads each visible name, matches My Squad, saves age + skills and recalculates OVR automatically.';if(modeNote){modeNote.style.display='block';modeNote.innerHTML='<b>Fully automatic update:</b> player name is read only for matching. The saved name, roles, Playstyle and Special Abilities are never changed. OVR is recalculated from the updated skill values. A row stops only if the match or scan cannot be verified safely.';}if(manual)manual.style.display='none';if(manualNote)manualNote.style.display='none';}
-    else{if(eyebrow)eyebrow.textContent='Add or update player';if(title)title.innerHTML='Scan. <em>Review. Save.</em>';if(copy)copy.textContent='Use a Top Eleven Skills screenshot, check the result and save it to your squad.';if(modeNote)modeNote.style.display='none';if(manual)manual.style.display='inline-flex';if(manualNote)manualNote.style.display='block';}
+    if(updateMode){if(eyebrow)eyebrow.textContent='Squad refresh';if(title)title.innerHTML='Update. <em>Match. Done.</em>';if(copy)copy.textContent='Drop fresh Skills screenshots. The scanner matches each visible name to My Squad, updates age + skills and recalculates OVR automatically.';if(modeNote){modeNote.style.display='block';modeNote.innerHTML='<b>Identity-safe update:</b> the screenshot name is used only for matching. Saved name, roles, Playstyle and Special Abilities are preserved. A screenshot only pauses when the match or scan cannot be verified safely.';}if(manual)manual.style.display='none';if(manualNote)manualNote.style.display='none';}
+    else{if(eyebrow)eyebrow.textContent='Add player';if(title)title.innerHTML='Scan. <em>Review. Save.</em>';if(copy)copy.textContent='Use a Top Eleven Skills screenshot, check the result and save it to your squad.';if(modeNote)modeNote.style.display='none';if(manual)manual.style.display='inline-flex';if(manualNote)manualNote.style.display='block';}
     renderScanQueue();
   }
   function resetScanner(){state.scan=null;state.scanAbilities=[];state.scanRelatedRoles=[];state.scanDuplicateKey='';state.scanPreservedRoles=[];state.scanManualVerified=false;state.scanQueueReviewIndex=-1;if($('#scanReview'))$('#scanReview').style.display='none';if($('#scanPreview'))$('#scanPreview').removeAttribute('src');$('#scanWindow')?.classList.remove('has-image','scanning');if($('#scanProgressBar'))$('#scanProgressBar').style.width='0%';if($('#scanProgressText'))$('#scanProgressText').textContent=state.scanMode==='update'?'Choose Skills screenshots · updates are automatic':'Choose one or more player screenshots';if($('#scanPercent'))$('#scanPercent').textContent='0%';}
@@ -336,8 +338,16 @@
   function sameUpdateCandidate(a,scan,targetKey){if(!a)return false;const b=updateCandidate(scan,targetKey);if(a.targetKey!==b.targetKey||a.detectedName!==b.detectedName||a.age!==b.age||a.layout!==b.layout)return false;const keys=Object.keys(b.skills);return keys.length===Object.keys(a.skills||{}).length&&keys.every(k=>Number(a.skills?.[k])===Number(b.skills[k]));}
   function hydrateUpdateScan(scan,target,key){const roles=P.normaliseRoles(target),derivedOvr=D.overallFromSkills(scan.skills,roles);return{...scan,name:target.name,detectedName:scan.name,ovr:Number.isFinite(derivedOvr)?derivedOvr:target.ovr,roles:[...roles],position:target.position,relatedRoles:[...P.normaliseRelatedRoles(target)],playstyle:{...P.normalisePlaystyle(target.playstyle),name:P.playstyleName(target)},specialAbilities:[...(target.specialAbilities||[])],specialAbilityTraining:target.specialAbilityTraining||null,updateOnly:true,updateKey:key};}
   async function saveAutomaticUpdate(target,scan,match,{consensusVerified=false}={}){const req=scan?.layout==='gk'?[...D.GK_SKILLS,...D.GK_PHYSICAL]:[...D.OUTFIELD_SKILLS],derivedOvr=D.overallFromSkills(scan.skills,P.normaliseRoles(target)),changedFields=[...(Number(target.age)!==Number(scan.age)?['age']:[]),...(Number.isFinite(derivedOvr)&&Number(target.ovr)!==Number(derivedOvr)?['ovr']:[]),...req.filter(k=>Number(target.skills?.[k])!==Number(scan.skills?.[k]))],lastUpdate={version:SC.VERSION,scope:'age-skills-derived-ovr-auto-name-match-write-verified',detectedName:scan.name,nameMatch:{kind:match.kind,score:Number(match.score||0)},provider:scan.provider||'google-gemini-live',model:scan.raw?.model||scan.model||null,confidence:scan.confidence,checks:scan.checks,validation:{...scan.validation,automatic:true,consensusVerified:!!consensusVerified,writeReadbackVerified:true},changedFields,updatedAt:new Date().toISOString()};const player=await P.updateAgeSkillsOnly(target.key,{age:Number(scan.age),skills:{...scan.skills},scannerLastUpdate:lastUpdate});return{player,changedFields};}
+  function renderUpdateQueueOverview(){
+    const overview=$('#updateQueueOverview');if(!overview||state.scanMode!=='update')return;
+    const attention=state.scanQueue.filter(x=>['error','failed','waiting','fallback','needs-match','ready'].includes(x.status)).length;
+    if($('#updateStatSquad'))$('#updateStatSquad').textContent=state.scanUpdateTargets.length||0;
+    if($('#updateStatQueue'))$('#updateStatQueue').textContent=state.scanQueue.length||0;
+    if($('#updateStatDone'))$('#updateStatDone').textContent=state.scanAutoSavedCount||0;
+    if($('#updateStatAttention'))$('#updateStatAttention').textContent=attention;
+  }
   function renderScanQueue(){
-    const el=$('#scanQueue');if(!el)return;
+    const el=$('#scanQueue');if(!el)return;renderUpdateQueueOverview();
     if(!state.scanQueue.length){el.innerHTML=state.scanMode==='update'&&state.scanAutoSavedCount?`<div class="scan-queue-summary"><span>${state.scanAutoSavedCount} player${state.scanAutoSavedCount===1?'':'s'} updated automatically</span><span>Queue complete</span></div>`:'';return;}
     const counts={queued:0,scanning:0,ready:0,saved:0,error:0,failed:0,'needs-match':0,waiting:0,fallback:0};state.scanQueue.forEach(x=>counts[x.status]=(counts[x.status]||0)+1);
     const retryCount=(counts.error||0)+(counts.failed||0)+(counts.waiting||0)+(counts.fallback||0)+(counts['needs-match']||0),processing=(counts.queued||0)+(counts.scanning||0);

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-runtime="0.6.8">
+<html lang="en" data-runtime="0.6.9">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -10,24 +10,16 @@
   <meta name="application-name" content="Top Eleven Tool">
   <meta name="apple-mobile-web-app-title" content="Top Eleven Tool">
   <title>Top Eleven Tool</title>
-  <link rel="manifest" href="./manifest.json?r=0608">
+  <link rel="manifest" href="./manifest.json?r=0609">
   <link rel="icon" href="./icon-192.png"><link rel="apple-touch-icon" href="./icon-192.png">
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./css/app.css?r=0608"><link rel="stylesheet" href="./css/v060.css?r=0608">
+  <link rel="stylesheet" href="./css/app.css?r=0609"><link rel="stylesheet" href="./css/v060.css?r=0609">
 </head>
 <body class="booting">
-<div class="orientation-gate" id="orientationGate" aria-live="polite">
-  <div class="orientation-gate-card">
-    <img src="./icon-192.png" alt="Top Eleven Tool">
-    <div class="orientation-rotate" aria-hidden="true">↻</div>
-    <h1>Rotate to landscape</h1>
-    <p>Top Eleven Tool is designed for landscape on phones and tablets.</p>
-  </div>
-</div>
 <div class="auth-gate" id="authGate" hidden>
   <div class="auth-shell">
-    <div class="auth-brand"><img src="./icon-192.png" alt=""><div><b>TOP ELEVEN <span>TOOL</span></b><small>Cloud account · v0.6.8</small></div></div>
+    <div class="auth-brand"><img src="./icon-192.png" alt=""><div><b>TOP ELEVEN <span>TOOL</span></b><small>Cloud account · v0.6.9</small></div></div>
     <div class="auth-message" id="authMessage"></div>
     <div data-auth-panel="setup">
       <div class="section-kicker">One-time setup</div><h1>Connect Firebase</h1><p class="body-copy">Paste the <b>firebaseConfig</b> object from Firebase Console. This project configuration is not a private password; it identifies the Firebase project used by the app.</p>
@@ -71,7 +63,7 @@
 <div class="app">
   <header class="topbar">
     <button class="brand-home" type="button" data-go="dashboard" aria-label="Go to Home" title="Home"><img class="brand-mark" src="./icon-192.png" alt="Top Eleven Tool"></button>
-    <div class="brand-copy"><div class="brand-title">TOP ELEVEN <span>TOOL</span></div><div class="brand-sub">v0.6.8</div></div>
+    <div class="brand-copy"><div class="brand-title">TOP ELEVEN <span>TOOL</span></div><div class="brand-sub">v0.6.9</div></div>
     <div class="topbar-actions"><div class="top-status"><i></i> Cloud</div><button class="account-button" id="accountButton" type="button" aria-label="Open Profile &amp; Security" title="Profile &amp; Security" hidden>?</button></div>
   </header>
 
@@ -177,6 +169,15 @@
         <div class="hero-mantra scanner-mantra" aria-hidden="true"><span>Capture.</span><span>Verify.</span><span>Improve.</span></div>
       </div>
       <div class="page-body v068-scanner-body">
+        <section class="update-queue-overview" id="updateQueueOverview" hidden>
+          <div class="update-overview-copy"><span class="section-kicker">Squad refresh</span><h2>Update Players</h2><p>Drop fresh Skills screenshots. Names are used only to match existing players; saved roles, Playstyle and Special Abilities stay untouched.</p></div>
+          <div class="update-overview-stats">
+            <div><small>Squad</small><b id="updateStatSquad">0</b><span>players available</span></div>
+            <div><small>Queue</small><b id="updateStatQueue">0</b><span>screenshots remaining</span></div>
+            <div><small>Updated</small><b id="updateStatDone">0</b><span>saved automatically</span></div>
+            <div class="attention"><small>Attention</small><b id="updateStatAttention">0</b><span>need review / retry</span></div>
+          </div>
+        </section>
         <div class="scanner-workspace">
           <section class="scanner-primary-panel">
             <div class="scanner-panel-head">
@@ -417,7 +418,7 @@
 
           <section class="settings-card settings-version-card">
             <div class="settings-card-head"><img src="./icon-192.png" alt=""><div><span>About</span><b>Top Eleven Tool</b><small>Responsive web/PWA build.</small></div></div>
-            <div class="settings-version"><strong>v0.6.8</strong><span>Design branch</span></div>
+            <div class="settings-version"><strong>v0.6.9</strong><span>Design branch</span></div>
             <p class="mini-note">Internal game-data build references stay in the background and are not shown throughout the normal product UI.</p>
           </section>
         </div>
@@ -429,6 +430,6 @@
   <div class="dialog-backdrop" id="confirmDialogBackdrop"><div class="confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="confirmDialogTitle"><div class="section-kicker">Squad</div><div class="section-title" id="confirmDialogTitle">Delete player?</div><p id="confirmDialogCopy">Are you sure you want to permanently remove this player from your squad?</p><div class="btn-row spaced"><button class="btn ghost" id="confirmCancelBtn" type="button">Cancel</button><button class="btn danger" id="confirmDeleteBtn" type="button">Delete</button></div></div></div>
   <div class="toast" id="toast"></div>
 </div>
-<script src="./js/optimizer-data.js?r=0608"></script><script src="./js/bible-data.js?r=0608"></script><script src="./js/data.js?r=0608"></script><script src="./js/strategy-data.js?r=0608"></script><script src="./js/best-in-slot-data.js?r=0608"></script><script src="./js/strategy-logic.js?r=0608"></script><script src="./js/squad-coverage-engine.js?r=0608"></script><script src="./js/cloud.js?r=0608"></script><script src="./js/storage.js?r=0608"></script><script src="./js/drill-profile.js?r=0608"></script><script src="./js/players.js?r=0608"></script><script src="./js/training-engine.js?r=0608"></script><script src="./js/team-training-engine.js?r=0608"></script><script src="./js/scanner-engine.js?r=0608"></script><script src="./js/recommendations.js?r=0608"></script><script src="./js/formation.js?r=0608"></script><script src="./js/tactics-engine.js?r=0608"></script><script src="./js/mentor-engine.js?r=0608"></script><script src="./js/team-plan-engine.js?r=0608"></script><script src="./js/best-in-slot-engine.js?r=0608"></script><script src="./js/app.js?r=0608"></script>
+<script src="./js/optimizer-data.js?r=0609"></script><script src="./js/bible-data.js?r=0609"></script><script src="./js/data.js?r=0609"></script><script src="./js/strategy-data.js?r=0609"></script><script src="./js/best-in-slot-data.js?r=0609"></script><script src="./js/strategy-logic.js?r=0609"></script><script src="./js/squad-coverage-engine.js?r=0609"></script><script src="./js/cloud.js?r=0609"></script><script src="./js/storage.js?r=0609"></script><script src="./js/drill-profile.js?r=0609"></script><script src="./js/players.js?r=0609"></script><script src="./js/training-engine.js?r=0609"></script><script src="./js/team-training-engine.js?r=0609"></script><script src="./js/scanner-engine.js?r=0609"></script><script src="./js/recommendations.js?r=0609"></script><script src="./js/formation.js?r=0609"></script><script src="./js/tactics-engine.js?r=0609"></script><script src="./js/mentor-engine.js?r=0609"></script><script src="./js/team-plan-engine.js?r=0609"></script><script src="./js/best-in-slot-engine.js?r=0609"></script><script src="./js/app.js?r=0609"></script>
 <script>(()=>{const expected=document.documentElement.dataset.runtime;if(window.__TE_RUNTIME__!==expected){console.error('Runtime build mismatch',{expected,loaded:window.__TE_RUNTIME__||'missing'});const k='te:runtime-reload:'+expected;if(!sessionStorage.getItem(k)){sessionStorage.setItem(k,'1');location.reload();}}else{sessionStorage.removeItem('te:runtime-reload:'+expected);}})();</script>
 </body></html>

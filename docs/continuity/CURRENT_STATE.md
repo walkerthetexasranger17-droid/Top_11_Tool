@@ -1,3 +1,3 @@
-# CURRENT DESIGN OVERLAY — v0.6.8-dev-pass8
+# CURRENT DESIGN OVERLAY — v0.6.9-dev-pass9
 
-v0.6.8 implements Add Player / Scanner in the production v0.6 design system and fixes the real-device landscape shell so the header/footer no longer consume most of the viewport. Mobile/tablet portrait is gated; installed PWA declares landscape orientation. Decision/scanner logic remains frozen.
+v0.6.9 supports the same approved v0.6 visual system across desktop, landscape phone/tablet and compact portrait fallback. Desktop keeps the left sidebar; phone/tablet keeps bottom navigation. Portrait is no longer blocked. Update Players now has a dedicated identity-safe queue overview while reusing the real Scanner workflow and assets. Decision/scanner logic remains frozen.
