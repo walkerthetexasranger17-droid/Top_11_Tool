@@ -33,4 +33,9 @@ if errs:
     print('FAIL v0.6.15 corrected Home fidelity contract')
     for e in errs: print('-',e)
     sys.exit(1)
+
+# Deployment-safe hero must be a real DOM image, not only a CSS-variable pseudo background.
+assert '<picture class="home-hero-media"' in html, 'Home hero must use deployment-safe picture/img markup'
+assert './assets/v0615/home/home-hero-desktop.webp' in html, 'Desktop Home hero asset missing from DOM'
+assert './assets/v0615/home/home-hero-mobile.webp' in html, 'Mobile Home hero asset missing from DOM'
 print('PASS v0.6.15 corrected Home fidelity contract: approved header/hero/stat overlap/dense dashboard/mobile two-column composition present')

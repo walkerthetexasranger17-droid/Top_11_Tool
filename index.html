@@ -73,7 +73,11 @@
 
   <main>
     <section class="page active" id="page-dashboard" data-page="dashboard" data-nav-label="Home" data-nav-icon="assets/v0615/home/19-nav-home.svg">
-      <div class="hero hero-dashboard v060-home-hero" style="--hero:url('./assets/v0615/home/home-hero-desktop.webp');--hero-mobile:url('./assets/v0615/home/home-hero-mobile.webp')">
+      <div class="hero hero-dashboard v060-home-hero">
+        <picture class="home-hero-media" aria-hidden="true">
+          <source media="(max-width: 820px) and (orientation: portrait)" srcset="./assets/v0615/home/home-hero-mobile.webp">
+          <img src="./assets/v0615/home/home-hero-desktop.webp" alt="" decoding="async" fetchpriority="high">
+        </picture>
         <div class="hero-copy">
           <div class="eyebrow"><i></i> Top Eleven Tool</div>
           <h1>Your squad.<br><em>Your plan.</em><br>Your next win.</h1>
