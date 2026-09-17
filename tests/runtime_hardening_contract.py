@@ -16,7 +16,7 @@ scene_refs=re.findall(r"--hero:url\('([^']+)'\)",html)
 if len(scene_refs)!=8: errs.append(f'expected 8 inline hero scene refs, found {len(scene_refs)}')
 for ref in scene_refs:
     resolved=urlparse(urljoin(base,ref)).path
-    if not resolved.startswith('/top-eleven-tool/assets/scenes/'):
+    if not resolved.startswith('/top-eleven-tool/assets/'):
         errs.append(f'hero path escapes app subdirectory: {ref} -> {resolved}')
     local=(ROOT/ref.replace('./','',1)).resolve()
     try: local.relative_to(ROOT.resolve())

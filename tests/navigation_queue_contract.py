@@ -21,7 +21,7 @@ if soup.select_one('#page-add-player[data-nav-label]'): errs.append('contextual 
 nav=[x.get_text(' ',strip=True) for x in soup.select('.bottom-nav .nav-btn')]
 if nav!=['Home','Squad','Training','Team Plan','Drills','Settings']: errs.append(f'wrong six-item bottom nav: {nav}')
 if soup.select_one('.bottom-nav [data-go="add-player"]'): errs.append('Scanner leaked into bottom nav')
-if not soup.select_one('#page-squad .squad-add-primary[data-go="add-player"]'): errs.append('Squad Add Player entry point missing')
+if not soup.select_one('#page-squad .v062-squad-hero [data-go="add-player"]'): errs.append('Squad Add Player entry point missing')
 for tab in ['formation','set-pieces','tactics']:
     if not soup.select_one(f'[data-team-plan-tab="{tab}"]'): errs.append(f'missing Team Plan tab: {tab}')
 for phase in ['possession','transition','out']:

@@ -31,9 +31,9 @@ for rid in [
     'profileRelatedPicker','scanRelatedPicker','profileRescanBtn','scanReviewPlayerCard','scanSkills','squadList'
 ]:
     if rid not in ids: errs.append(f'missing v0.4.12 UI control: {rid}')
-for forbidden_id in ['squadSearch','squadRoleFilter','squadPlaystyleFilter','squadAvailabilityFilter','squadAgeMin','squadAgeMax','squadOvrMin','squadOvrMax','planTemplate','formationXIList','formationBench','mentorAlternatives']:
+for forbidden_id in ['squadRoleFilter','squadAvailabilityFilter','squadAgeMin','squadAgeMax','planTemplate','formationXIList','formationBench','mentorAlternatives']:
     if forbidden_id in ids: errs.append(f'removed/clutter UI control survived: {forbidden_id}')
-if not soup.select_one('#page-squad .squad-add-primary[data-go="add-player"]'): errs.append('Squad page missing primary Add Player action')
+if not soup.select_one('#page-squad .v062-squad-hero [data-go="add-player"]'): errs.append('Squad page missing primary Add Player action')
 if soup.select_one('#page-add-player[data-nav-label]'): errs.append('Scanner must stay contextual and out of main navigation')
 if soup.select_one('#page-player[data-nav-label]'): errs.append('Player Profile must stay contextual and out of main navigation')
 if soup.select_one('[data-page="playmakers"]'): errs.append('legacy Specialists/Playmakers page survives')
@@ -43,11 +43,50 @@ for phase in ['possession','transition','out']:
     if not soup.select_one(f'[data-tactic-phase="{phase}"]'): errs.append(f'Tactics missing {phase} phase')
 if not soup.select_one('[data-training-tab="individual"]') or not soup.select_one('[data-training-tab="team"]'):
     errs.append('Training does not expose Individual | Team tabs on one page')
-if 'v0.6.1' not in html: errs.append('visible UI/runtime version is not v0.6.1')
+if 'v0.6.7' not in html: errs.append('visible UI/runtime version is not v0.6.7')
 if re.search(r'BUILD\s*30527|Build\s*30527',html): errs.append('internal build 30527 is still visible in product HTML')
 if 'verified scanner' in html.lower(): errs.append('technical scanner provenance is exposed in normal UI')
 
 
+
+
+# v0.6.4 inherited Squad redesign contract.
+for rid in ['squadSearch','squadPlaystyleFilter','squadAbilityFilter','squadOvrMin','squadOvrMax','squadIssuesOnly','squadSort','squadStatTotal','squadStatAvg','squadStatHigh','squadStatBalance','squadStatNeeds']:
+    if rid not in ids: errs.append(f'missing v0.6.4 Squad control: {rid}')
+if not soup.select_one('#page-squad .v062-squad-hero'): errs.append('v0.6.4 Squad cinematic hero missing')
+if not soup.select_one('#page-squad .squad-workspace'): errs.append('v0.6.4 Squad workspace missing')
+
+
+# v0.6.4 inherited Player Profile production design contract.
+for rid in ['profileName','profileOvr','profileBadges','profileDevelopmentInsight','profileRoleScores','profileSkills','profileTrainBtn','profileRescanBtn','profileEditBtn']:
+    if rid not in ids: errs.append(f'missing v0.6.4 Player Profile control: {rid}')
+if not soup.select_one('#page-player.v063-profile-page .v063-profile-hero'): errs.append('v0.6.4 Player Profile cinematic hero missing')
+if len(soup.select('#page-player .profile-panel')) < 3: errs.append('v0.6.4 Player Profile intelligence panel layout missing')
+
+# v0.6.4 Training production design contract.
+for rid in ['trainingPlayer','trainingMode','intelNormalCount','intelMasterCount','buildSessionBtn','trainingResults','sessionList','sessionSummary','completeSessionBtn','teamTrainingCards']:
+    if rid not in ids: errs.append(f'missing v0.6.4 Training control: {rid}')
+if not soup.select_one('#page-training.v064-training-page .v064-training-hero'): errs.append('v0.6.4 Training cinematic hero missing')
+if len(soup.select('#page-training .training-setup-card')) != 4: errs.append('v0.6.4 Training four-step setup workspace missing')
+if not soup.select_one('#page-training .v064-training-results .training-results-side'): errs.append('v0.6.4 Training intelligence side panel missing')
+
+# v0.6.5 Team Plan production design contract.
+if not soup.select_one('#page-team-plan.v065-team-plan-page .v065-team-plan-head'): errs.append('v0.6.5 Team Plan header missing')
+if not soup.select_one('#page-team-plan #teamPlanFormationPanel'): errs.append('v0.6.5 Team Plan lineup workspace missing')
+if not soup.select_one('#page-team-plan #teamPlanTacticsPanel .mentor-section'): errs.append('v0.6.5 Team Plan mentor workspace missing')
+
+# v0.6.6 Drills production design contract.
+for rid in ['drillLibrarySearch','drillLibraryCategory','drillSummaryTotal','drillSummaryUnlocked','drillSummaryMaster','normalDrillConfig','masterStockConfig']:
+    if rid not in ids: errs.append(f'missing v0.6.6 Drills control: {rid}')
+if not soup.select_one('#page-my-drills.v066-drills-page .v066-drills-hero'): errs.append('v0.6.6 Drills cinematic hero missing')
+if not soup.select_one('#page-my-drills .v066-drills-workspace'): errs.append('v0.6.6 Drills workspace missing')
+
+# v0.6.7 Settings + Account production design contract.
+for rid in ['geminiScannerApiKey','saveGeminiScannerKey','testGeminiScannerKey','clearGeminiScannerKey','geminiScannerStatus','localSquadStatus','clearDataBtn','accountAvatar','accountDisplayName','accountEmail','accountMfaStatus']:
+    if rid not in ids: errs.append(f'missing v0.6.7 Settings/Account control: {rid}')
+if not soup.select_one('#page-settings.v067-settings-page .v067-settings-hero'): errs.append('v0.6.7 Settings hero missing')
+if not soup.select_one('#page-settings .settings-grid'): errs.append('v0.6.7 Settings grid missing')
+if not soup.select_one('#page-account.v067-account-page .v067-account-hero'): errs.append('v0.6.7 Account hero missing')
 
 # v0.4.12 focused patch contracts.
 if soup.select_one('#planMode') or soup.select_one('#planMinCondition'): errs.append('legacy Formation plan inputs survived v0.4.12')
@@ -86,7 +125,7 @@ if not account_btn or account_btn.get('title')!='Profile & Security': errs.appen
 css_text=(ROOT/'css/app.css').read_text(encoding='utf-8')
 if '.account-button' not in css_text or 'cursor:pointer' not in css_text: errs.append('profile button does not advertise clickability with a pointer cursor')
 sw_text=(ROOT/'sw.js').read_text(encoding='utf-8')
-if "const CACHE='te-v0-6-1" not in sw_text or "e.request.mode==='navigate'" not in sw_text or "cache:'no-store'" not in sw_text: errs.append('v0.4.12 service-worker update/navigation freshness guard missing')
+if "const CACHE='te-v0-6-7" not in sw_text or "e.request.mode==='navigate'" not in sw_text or "cache:'no-store'" not in sw_text: errs.append('v0.4.12 service-worker update/navigation freshness guard missing')
 if "toast('App initialisation failed','err')" in js: errs.append('generic app-initialisation error toast survived GitHub testing hotfix')
 if 'loadMentorLevels' in js: errs.append('stale loadMentorLevels startup call survived; Mentor state must hydrate through loadMentorState')
 if "startupStep('mentor state',()=>loadMentorState())" not in js: errs.append('Mentor state is not hydrated during startup')
