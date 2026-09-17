@@ -83,7 +83,7 @@
     const savedLevels=drillSetup?Object.values(drillSetup.normal?.drills||{}).filter(x=>x?.unlocked).length:0;
     const masterStock=drillSetup?Object.values(drillSetup.master?.stock||{}).reduce((a,v)=>a+Math.max(0,Number(v)||0),0):0;
     const highPlayer=players.slice().sort((a,b)=>Number(b.ovr||0)-Number(a.ovr||0))[0];
-    const H='./assets/v0615/home/';
+    const H='./assets/v0616/home/';
     const stats=$('#dashboardStats');
     if(stats)stats.innerHTML=`
       <button class="dashboard-stat" data-go="squad"><span class="dashboard-stat-icon"><img src="${H}08-stat-players.svg" alt=""></span><span><small>Players</small><b>${players.length}</b><em>in saved squad</em></span></button>

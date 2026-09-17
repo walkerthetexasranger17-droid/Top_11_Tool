@@ -687,13 +687,13 @@ main{max-width:var(--v6-content)}
 /* Stat cards use the approved technical texture while keeping all data live. */
 .dashboard-stat{position:relative;overflow:hidden;background:
   linear-gradient(135deg,rgba(5,29,45,.96),rgba(3,15,25,.98))!important}
-.dashboard-stat::before{content:"";position:absolute;inset:0;background:url('../assets/v0616/home/06-card-tech-pattern.svg') center/cover no-repeat;opacity:.18;pointer-events:none}
+.dashboard-stat::before{content:"";position:absolute;inset:0;background:url('../assets/v0615/home/06-card-tech-pattern.svg') center/cover no-repeat;opacity:.18;pointer-events:none}
 .dashboard-stat>*{position:relative;z-index:1}.dashboard-stat-icon{border-radius:10px!important;background:rgba(3,37,55,.78)!important;border:1px solid rgba(67,222,255,.14)!important}.dashboard-stat-icon img{width:100%!important;height:100%!important;object-fit:contain;padding:6px}
 .dashboard-stat-icon.lime{background:rgba(47,80,16,.45)!important;border-color:rgba(156,255,26,.20)!important}
 
 /* Large dashboard cards use the individual cinematic art assets. */
-.dashboard-training{background-image:linear-gradient(90deg,rgba(3,17,28,.98) 0%,rgba(3,17,28,.90) 46%,rgba(3,17,28,.42) 100%),url('../assets/v0616/home/training-builder-bg.webp')!important;background-size:cover!important;background-position:center!important}
-.dashboard-insight{background-image:linear-gradient(90deg,rgba(3,17,28,.97) 0%,rgba(3,17,28,.88) 50%,rgba(3,17,28,.35) 100%),url('../assets/v0616/home/performance-insights-bg.webp')!important;background-size:cover!important;background-position:center!important}
+.dashboard-training{background-image:linear-gradient(90deg,rgba(3,17,28,.98) 0%,rgba(3,17,28,.90) 46%,rgba(3,17,28,.42) 100%),url('../assets/v0615/home/training-builder-bg.webp')!important;background-size:cover!important;background-position:center!important}
+.dashboard-insight{background-image:linear-gradient(90deg,rgba(3,17,28,.97) 0%,rgba(3,17,28,.88) 50%,rgba(3,17,28,.35) 100%),url('../assets/v0615/home/performance-insights-bg.webp')!important;background-size:cover!important;background-position:center!important}
 .dashboard-plan{background:linear-gradient(145deg,rgba(7,27,43,.98),rgba(3,15,25,.99))!important}
 .dashboard-actions,.dashboard-recent{background:linear-gradient(145deg,rgba(7,27,43,.98),rgba(3,15,25,.99))!important}
 
@@ -753,38 +753,4 @@ main{max-width:var(--v6-content)}
 
 @media (orientation:landscape) and (pointer:coarse) and (max-height:700px){
   .v060-home-hero{height:260px!important;min-height:260px!important}.v060-home-hero::before{background-image:var(--hero)!important;background-size:cover!important;background-position:center 50%!important}.v060-home-hero .hero-copy{left:18px!important;top:18px!important;max-width:47%!important}.v060-home-hero .hero-copy h1{font-size:35px!important}.v060-home-hero .hero-copy p{font-size:6px!important}.v060-home-hero .hero-actions{display:flex!important;width:auto!important;gap:6px!important;margin-top:8px!important}.v060-home-hero .hero-actions .btn{width:auto!important;min-width:108px!important;height:30px!important;min-height:30px!important;font-size:6px!important}.v060-dashboard-body{margin-top:-34px!important}
-}
-
-/* v0.6.15 deployment-safe Home hero media: use a real DOM image rather than CSS custom-property URL. */
-.v060-home-hero>.home-hero-media{position:absolute;z-index:0;inset:0;display:block;overflow:hidden;pointer-events:none}
-.v060-home-hero>.home-hero-media img{width:100%;height:100%;display:block;object-fit:cover;object-position:center 52%}
-.v060-home-hero::before{background-image:none!important;background:none!important;transform:none!important;opacity:1!important}
-.v060-home-hero::after{z-index:1}
-.v060-home-hero>.hero-copy,.v060-home-hero>.hero-mantra,.v060-home-hero>.hero-intelligence{z-index:3}
-@media (max-width:820px) and (orientation:portrait){.v060-home-hero>.home-hero-media img{object-position:center 47%}}
-@media (max-width:900px) and (orientation:landscape){.v060-home-hero>.home-hero-media img{object-position:center 50%}}
-
-/* v0.6.16 mobile-first Home corrections: no hero CTAs, direct six-destination nav, richer Team Plan pitch. */
-#page-dashboard .hero-actions{display:none!important}
-.dashboard-mini-pitch{
-  background-image:url('../assets/v0616/home/team-plan-pitch.png')!important;
-  background-size:cover!important;
-  background-position:center!important;
-  background-repeat:no-repeat!important;
-  border-color:rgba(67,223,255,.42)!important;
-}
-.dashboard-mini-pitch::before,.dashboard-mini-pitch::after{display:none!important}
-.dashboard-mini-pitch .p{display:none!important}
-@media (pointer:coarse){
-  .bottom-nav.bottom-nav-six{grid-template-columns:repeat(6,minmax(0,1fr))!important}
-  .bottom-nav.bottom-nav-six .nav-btn{display:grid!important}
-}
-@media (orientation:portrait) and (max-width:699px) and (pointer:coarse){
-  .v060-home-hero .hero-copy{top:26px!important}
-  .v060-home-hero{height:390px!important;min-height:390px!important}
-  .v060-dashboard-body{margin-top:-28px!important}
-  .bottom-nav.bottom-nav-six{height:calc(66px + env(safe-area-inset-bottom))!important;padding-left:2px!important;padding-right:2px!important}
-  .bottom-nav.bottom-nav-six .nav-btn{padding:4px 0!important;gap:2px!important}
-  .bottom-nav.bottom-nav-six .nav-btn img{width:21px!important;height:21px!important}
-  .bottom-nav.bottom-nav-six .nav-btn span{font-size:7px!important;white-space:nowrap!important}
 }

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="600" viewBox="0 0 1600 600">
+<defs>
+  <linearGradient id="fadeL" x1="0" x2="1"><stop stop-color="#43DFFF" stop-opacity=".24"/><stop offset="1" stop-color="#43DFFF" stop-opacity="0"/></linearGradient>
+  <linearGradient id="fadeR" x1="1" x2="0"><stop stop-color="#9CFF1A" stop-opacity=".22"/><stop offset="1" stop-color="#9CFF1A" stop-opacity="0"/></linearGradient>
+  <pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="4" cy="4" r="2.2" fill="#43DFFF" opacity=".16"/></pattern>
+</defs>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M0 520 L190 330 L355 330 L510 175" stroke="url(#fadeL)" stroke-width="3"/>
+  <path d="M0 560 L215 345 L365 345" stroke="#0B8DDA" stroke-opacity=".20" stroke-width="12"/>
+  <path d="M1600 95 L1390 305 L1240 305 L1085 460" stroke="url(#fadeR)" stroke-width="3"/>
+  <path d="M1600 55 L1365 290 L1220 290" stroke="#9CFF1A" stroke-opacity=".16" stroke-width="12"/>
+</g>
+<path d="M0 230 L0 600 L390 600 L500 490 L330 490 L230 590 L0 590 Z" fill="url(#dots)" opacity=".9"/>
+<path d="M1600 0 L1260 0 L1160 100 L1330 100 L1430 0 Z" fill="url(#dots)" opacity=".65"/>
+</svg>
