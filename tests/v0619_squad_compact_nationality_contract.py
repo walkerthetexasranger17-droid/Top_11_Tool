@@ -20,7 +20,7 @@ for pos in positions:
 for role in ['gk','d','dm','m','am','st']:
     if not (ROOT/'assets/roles'/f'{role}.webp').exists(): errs.append(f'missing role artwork: {role}')
 for needle,label in [
-    ("window.__TE_RUNTIME__='0.6.21'",'current runtime marker'),
+    ("window.__TE_RUNTIME__='0.6.22'",'current runtime marker'),
     ('function nationalityFlag(code)','nationality flag renderer'),
     ('squad-nationality-flag','Squad nationality flag markup'),
     ('positionBadgeAsset(role)','glossy position badge use'),

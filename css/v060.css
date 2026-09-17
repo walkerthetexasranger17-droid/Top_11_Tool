@@ -969,3 +969,99 @@ main{max-width:var(--v6-content)}
   .v062-squad-hero>.squad-hero-media img{object-position:center 46%}
   .v062-squad-hero::before{background-image:linear-gradient(90deg,rgba(2,9,18,.94),rgba(2,9,18,.63) 38%,rgba(2,9,18,.08) 70%)!important}
 }
+
+/* =========================================================
+   v0.6.22 — Anchored cinematic hero scroll treatment
+   Mobile/tablet only: Home and Squad hero artwork stays fixed beneath the
+   sticky app header while page copy/cards scroll over it. This deliberately
+   avoids background-attachment:fixed, which is unreliable in mobile PWAs.
+   ========================================================= */
+@media (pointer:coarse) and (max-width:1180px){
+  #page-dashboard.active,
+  #page-squad.active{
+    position:relative;
+    isolation:isolate;
+    background:#020914!important;
+  }
+
+  /* Keep each page's existing hero dimensions/crop as the fixed viewport art.
+     The hero element remains in normal flow as the spacer for its copy. */
+  #page-dashboard.active .v060-home-hero,
+  #page-squad.active .v062-squad-hero{
+    overflow:visible!important;
+    background:transparent!important;
+    isolation:isolate;
+  }
+  #page-dashboard.active .home-hero-media,
+  #page-squad.active .squad-hero-media{
+    position:fixed!important;
+    left:0!important;
+    right:0!important;
+    top:var(--v622-hero-top,54px)!important;
+    width:100vw!important;
+    pointer-events:none!important;
+    z-index:0!important;
+    overflow:hidden!important;
+    transform:translateZ(0);
+    will-change:transform;
+  }
+  #page-dashboard.active .home-hero-media{height:390px!important}
+  #page-squad.active .squad-hero-media{height:430px!important}
+
+  /* Readability veil stays with the scrolling hero copy while the art remains
+     anchored behind it. */
+  #page-dashboard.active .v060-home-hero::after,
+  #page-squad.active .v062-squad-hero::before{
+    z-index:1!important;
+  }
+  #page-dashboard.active .v060-home-hero>.hero-copy,
+  #page-dashboard.active .v060-home-hero>.hero-mantra,
+  #page-dashboard.active .v060-home-hero>.hero-intelligence,
+  #page-squad.active .v062-squad-hero>.hero-copy,
+  #page-squad.active .v062-squad-hero>.squad-mantra{
+    position:absolute!important;
+    z-index:3!important;
+  }
+
+  /* Cards/panels are the scrolling foreground. Home already overlaps its hero;
+     Squad now uses the same visual hand-off. */
+  #page-dashboard.active .v060-dashboard-body,
+  #page-squad.active .v062-squad-body{
+    position:relative!important;
+    z-index:5!important;
+  }
+  #page-squad.active .v062-squad-body{margin-top:-28px!important}
+
+  /* Dark translucent foreground surfaces retain legibility while letting a
+     subtle amount of the anchored stadium artwork read through the gaps. */
+  #page-dashboard.active .dashboard-stat,
+  #page-dashboard.active .dashboard-panel,
+  #page-squad.active .squad-stat,
+  #page-squad.active .squad-roster-panel{
+    backdrop-filter:blur(1.5px);
+    -webkit-backdrop-filter:blur(1.5px);
+  }
+}
+
+@media (orientation:portrait) and (max-width:699px) and (pointer:coarse){
+  #page-dashboard.active .home-hero-media{height:390px!important}
+  #page-squad.active .squad-hero-media{height:430px!important}
+  #page-dashboard.active .home-hero-media img{object-position:center 47%!important}
+  #page-squad.active .squad-hero-media img{object-position:center 38%!important}
+}
+
+@media (orientation:landscape) and (pointer:coarse) and (max-height:700px){
+  #page-dashboard.active .home-hero-media,
+  #page-squad.active .squad-hero-media{top:46px!important}
+  #page-dashboard.active .home-hero-media{height:260px!important}
+  #page-squad.active .squad-hero-media{height:235px!important}
+  #page-squad.active .v062-squad-body{margin-top:-22px!important}
+}
+
+@media (orientation:portrait) and (min-width:700px) and (max-width:1180px) and (pointer:coarse){
+  #page-dashboard.active .home-hero-media,
+  #page-squad.active .squad-hero-media{top:54px!important}
+  #page-dashboard.active .home-hero-media{height:315px!important}
+  #page-squad.active .squad-hero-media{height:235px!important}
+  #page-squad.active .v062-squad-body{margin-top:-24px!important}
+}

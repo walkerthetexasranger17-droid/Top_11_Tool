@@ -13,7 +13,7 @@ if 'squad-hero-desktop.webp' not in html: errs.append('desktop Squad hero source
 if "--hero:url('./assets/v060/scenes/squad-hero-desktop.webp')" in html: errs.append('fragile Squad CSS custom-property hero survived')
 if '.v062-squad-hero>.squad-hero-media' not in css: errs.append('Squad hero picture layout CSS missing')
 if 'background-image:linear-gradient(90deg,rgba(2,9,18,.95),rgba(2,9,18,.57) 46%,rgba(2,9,18,.08) 82%)!important' not in css: errs.append('mobile Squad hero readability overlay missing')
-if "const CACHE='te-v0-6-21-squad-hero-hotfix'" not in sw: errs.append('v0.6.21 service-worker cache marker missing')
+if "const CACHE='te-v0-6-22-fixed-hero-scroll'" not in sw: errs.append('current service-worker cache marker missing')
 if errs:
     print('FAIL v0.6.21 Squad hero hotfix contract')
     for e in errs: print('-',e)
