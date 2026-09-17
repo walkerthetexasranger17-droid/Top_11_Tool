@@ -1,6 +1,6 @@
-# Top Eleven Tool v0.5.17
+# Top Eleven Tool v0.6.13 design branch
 
-> **Current unpublished test branch: DEV PASS11.** This is the cleanup/stability baseline: package bloat removed, PWA precache reduced, navigation/heavy-action races hardened, and Training/Team Plan performance improved without changing calibrated football logic. Public runtime version remains 0.5.17 until the development line is published.
+> **Current unpublished design branch: v0.6.13 / Design Pass 13 — Home Fidelity.** The calibrated v0.5.17 football/scanner decision contract remains frozen underneath the v0.6 visual redesign.
 
 > **Project recovery:** a new chat/session must read [`START_HERE.md`](START_HERE.md) before modifying code. The app now embeds a permanent build-30527 Game Research Index under `docs/research/build_30527/` and machine-readable findings under `data/build_30527/index/`.
 
@@ -89,6 +89,7 @@ python tests/strategy_logic_data_contract.py
 python tests/release_identity_contract.py
 python tests/static_checks.py
 python tests/package_integrity.py
+python tests/offline_browser_viewport_audit.py --screenshots
 python tests/navigation_render_contract.py
 python tests/navigation_queue_contract.py
 python tests/cloud_hydration_contract.py
@@ -103,6 +104,8 @@ python tests/v0416_pixel_level_guard_contract.py
 python tests/v0417_native_source_playstyle_contract.py
 python tests/v0418_all_native_resolution_contract.py
 ```
+
+The responsive browser audit deliberately performs no URL navigation: it injects the local app into `about:blank`, so it remains usable in managed Chromium environments that block localhost/file/data URLs. It requires Python Playwright and BeautifulSoup plus an installed Chromium.
 
 The Firebase end-to-end sign-in/sync path still needs a real browser and the actual Firebase project, so that remains part of the manual GitHub test pass.
 

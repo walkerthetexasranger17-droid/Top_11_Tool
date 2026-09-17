@@ -1,11 +1,10 @@
-# v0.6.10 UNPUBLISHED DESIGN PASS 10 — START HERE
+# v0.6.13 UNPUBLISHED DESIGN PASS 13 — START HERE
 
-**CURRENT UI BRANCH:** v0.6.10.  
-**DECISION CONTRACT:** v0.5.17 frozen.  
-Read `DESIGN_RECOVERY_HANDOFF_v0.6.10.md` first.
+**CURRENT UI BRANCH:** v0.6.13.  
+**FROZEN DECISION/CALIBRATION BASE:** v0.5.17.  
 
-Pass 10 is the cross-device consistency/responsive QA pass. It keeps desktop on the sidebar, keeps phones/tablets on bottom navigation (including coarse-pointer tablets above the old 1024px breakpoint), and restores compact phone-portrait reflows where v0.6.9 late rules had reintroduced wide workspaces.
+Read `DESIGN_RECOVERY_HANDOFF_v0.6.13.md` first, then `V0613_DESIGN_PASS13_VALIDATION.md`.
 
-No frozen football/scanner/calibration logic was changed.
+Pass 13 corrects a design-fidelity drift discovered on the real Android Home screen. The approved v0.6 Home references in `docs/design/reference/v060/` are now treated as a visual contract, not merely inspiration. The Home page has been rebuilt toward those references while frozen football/scanner/training logic remains untouched.
 
-Next step: real-device review of v0.6.10 and only narrow responsive/polish fixes resulting from that review.
+The reusable real-Chromium offline viewport harness introduced in v0.6.12 remains mandatory for future passes.

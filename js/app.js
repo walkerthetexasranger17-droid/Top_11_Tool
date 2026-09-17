@@ -1,5 +1,5 @@
 (() => {
-  window.__TE_RUNTIME__='0.6.10';
+  window.__TE_RUNTIME__='0.6.13';
   const TE=window.TE5;const D=TE.Data,P=TE.Players,S=TE.Storage,DP=TE.DrillProfile,T=TE.Training,TT=TE.TeamTraining,SC=TE.Scanner,R=TE.Recommendations,F=TE.Formation,TP=TE.TeamPlan,TAC=TE.Tactics,M=TE.Mentor,B=TE.BibleData,C=TE.Cloud,BIS=TE.BestInSlot;
   const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
   const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -38,7 +38,7 @@
     // Switch the shell immediately so the first tap always gets visible feedback. The
     // expensive renderer then runs through one serial queue, preventing overlapping page
     // renders/cloud refreshes from racing each other and leaving stale DOM behind.
-    state.page=page;$$('.page').forEach(p=>p.classList.toggle('active',p.dataset.page===page));$$('.nav-btn[data-go]').forEach(b=>b.classList.toggle('active',b.dataset.go===page));if(scroll)window.scrollTo({top:0,behavior:'auto'});persistUiState();
+    state.page=page;$$('.page').forEach(p=>p.classList.toggle('active',p.dataset.page===page));$$('.nav-btn[data-go]').forEach(b=>b.classList.toggle('active',b.dataset.go===page));$('#moreNavButton')?.classList.toggle('active',['my-drills','settings','account'].includes(page));if(scroll)window.scrollTo({top:0,behavior:'auto'});persistUiState();
     const run=async()=>{
       if(request!==pageRenderSeq)return false;
       pageRenderActive++;setPageBusy(true);
@@ -84,17 +84,17 @@
     const highPlayer=players.slice().sort((a,b)=>Number(b.ovr||0)-Number(a.ovr||0))[0];
     const stats=$('#dashboardStats');
     if(stats)stats.innerHTML=`
-      <button class="dashboard-stat" data-go="squad"><span class="dashboard-stat-icon"><img src="assets/icons/squad.svg" alt=""></span><span><small>Players</small><b>${players.length}</b><em>in your squad</em></span><i>›</i></button>
-      <button class="dashboard-stat" data-go="squad"><span class="dashboard-stat-icon blue">▥</span><span><small>Avg OVR</small><b>${players.length?Math.round(avg):'—'}</b><em>squad average</em></span><i>›</i></button>
-      <button class="dashboard-stat" ${highPlayer?`data-player-open="${esc(highPlayer.key)}"`:'data-go="squad"'}><span class="dashboard-stat-icon lime">☆</span><span><small>Highest OVR</small><b>${players.length?high:'—'}</b><em>${highPlayer?esc(highPlayer.name||'Top player'):'add players'}</em></span><i>›</i></button>
-      <button class="dashboard-stat" data-go="training"><span class="dashboard-stat-icon lime">ϟ</span><span><small>Training Ready</small><b>${unlockedNormal}</b><em>saved drill levels</em></span><i>›</i></button>`;
+      <button class="dashboard-stat" data-go="squad"><span class="dashboard-stat-icon"><img src="assets/icons/squad.svg" alt=""></span><span><small>Players</small><b>${players.length}</b><em>in saved squad</em></span></button>
+      <button class="dashboard-stat" data-go="squad"><span class="dashboard-stat-icon blue"><span class="bar-glyph">▥</span></span><span><small>Avg OVR</small><b>${players.length?Math.round(avg):'—'}</b><em>across your squad</em></span></button>
+      <button class="dashboard-stat dashboard-stat-player" ${highPlayer?`data-player-open="${esc(highPlayer.key)}"`:'data-go="squad"'}><span class="dashboard-stat-icon cyan-star">☆</span><span><small>Highest OVR</small><b>${players.length?high:'—'}</b><em>${highPlayer?esc(highPlayer.name||'Top player'):'add players'}</em></span>${highPlayer?`<img class="dashboard-stat-player-art" src="${roleAsset(highPlayer.position)}" alt="">`:''}</button>
+      <button class="dashboard-stat" data-go="training"><span class="dashboard-stat-icon lime">ϟ</span><span><small>Training Opportunities</small><b>${unlockedNormal}</b><em>saved drill levels</em></span></button>`;
     const recent=$('#dashboardRecentPlayers');
-    if(recent)recent.innerHTML=players.length?players.slice().sort((a,b)=>Number(b.ovr||0)-Number(a.ovr||0)).slice(0,5).map((p,i)=>`<button class="dashboard-player-row" data-player-open="${esc(p.key)}"><span class="dashboard-player-rank">${i+1}</span><img src="${roleAsset(p.position)}" alt=""><span class="dashboard-player-copy"><b>${esc(p.name||'Unnamed Player')}</b><small><i>${esc(p.position||'?')}</i>${p.age?` Age ${esc(p.age)}`:''}${psLabel(p)?` · ${esc(psLabel(p))}`:''}</small></span><span class="dashboard-player-ovr"><small>OVR</small><b>${esc(p.ovr||'—')}</b></span><span class="dashboard-row-arrow">›</span></button>`).join(''):`<div class="dashboard-empty"><b>No players yet</b><span>Add your first player to bring the dashboard to life.</span><button class="btn primary" data-go="add-player">Add Player</button></div>`;
+    if(recent)recent.innerHTML=players.length?players.slice().sort((a,b)=>Number(b.ovr||0)-Number(a.ovr||0)).slice(0,4).map((p,i)=>`<button class="dashboard-player-row" data-player-open="${esc(p.key)}"><span class="dashboard-player-rank">${i+1}</span><img src="${roleAsset(p.position)}" alt=""><span class="dashboard-player-copy"><b>${esc(p.name||'Unnamed Player')}</b><small><i>${esc(p.position||'?')}</i>${p.age?` Age ${esc(p.age)}`:''}${psLabel(p)?` · ${esc(psLabel(p))}`:''}</small></span><span class="dashboard-player-ovr"><small>OVR</small><b>${esc(p.ovr||'—')}</b></span><span class="dashboard-row-arrow">›</span></button>`).join(''):`<div class="dashboard-empty"><b>No players yet</b><span>Add your first player to bring the dashboard to life.</span><button class="btn primary" data-go="add-player">Add Player</button></div>`;
     const training=$('#dashboardTrainingStats');
     if(training)training.innerHTML=`<div><b>${unlockedNormal}</b><span>Normal drills</span></div><div><b>${masterStock}</b><span>Master cards</span></div><div><b>6</b><span>Session slots</span></div>`;
     const snap=$('#dashboardPlanSnapshot');
     if(snap){
-      if(plan&&!plan.error){const form=esc(plan.formationName||'Saved plan'),approach=esc(plan.approach||'Balanced'),starters=Array.isArray(plan.starters)?plan.starters.length:0;snap.innerHTML=`<div class="dashboard-mini-pitch"><span class="p p1"></span><span class="p p2"></span><span class="p p3"></span><span class="p p4"></span><span class="p p5"></span><span class="p p6"></span><span class="p p7"></span><span class="p p8"></span><span class="p p9"></span><span class="p p10"></span><span class="p p11"></span></div><div class="dashboard-plan-copy"><small>Formation</small><b>${form}</b><span>${starters}/11 starters</span><small>Approach</small><b>${approach}</b><button class="btn ghost compact" data-go="team-plan">View team plan →</button></div>`;}else snap.innerHTML=`<div class="dashboard-empty"><b>No saved Team Plan</b><span>Build your XI, tactics, set pieces and Mentor plan from your current squad.</span><button class="btn primary" data-go="team-plan">Build Team Plan</button></div>`;
+      if(plan&&!plan.error){const form=esc(plan.formationName||'Saved plan'),approach=esc(plan.approach||'Balanced'),starters=Array.isArray(plan.starters)?plan.starters.length:0;snap.innerHTML=`<div class="dashboard-mini-pitch"><span class="p p1"></span><span class="p p2"></span><span class="p p3"></span><span class="p p4"></span><span class="p p5"></span><span class="p p6"></span><span class="p p7"></span><span class="p p8"></span><span class="p p9"></span><span class="p p10"></span><span class="p p11"></span></div><div class="dashboard-plan-copy"><small>Formation</small><b>${form}</b><span>${starters}/11 starters</span><small>Approach</small><b>${approach}</b><span class="plan-ready">Team plan ready</span></div>`;}else snap.innerHTML=`<div class="dashboard-empty"><b>No saved Team Plan</b><span>Build your XI, tactics, set pieces and Mentor plan from your current squad.</span><button class="btn primary" data-go="team-plan">Build Team Plan</button></div>`;
     }
     const insight=$('#dashboardInsight');
     if(insight){
@@ -271,6 +271,15 @@
   $('#profileDeleteBtn')?.addEventListener('click',async()=>{const b=$('#profileDeleteBtn');if(!b.dataset.armed){b.dataset.armed='1';b.textContent='Tap again to delete';$('#profileEditNote').textContent='This permanently removes the player and their saved training session.';setTimeout(()=>{delete b.dataset.armed;b.textContent='Delete Player';},3500);return;}const p=await P.get(state.playerKey);await P.remove(state.playerKey);state.playerKey='';state.trainingKey='';delete b.dataset.armed;b.textContent='Delete Player';toast(`${p?.name||'Player'} deleted`);await renderDashboard();go('squad',{historyMode:'replace'});});
   $('#squadBulkUpdateBtn')?.addEventListener('click',async()=>{state.scanMode='update';state.scanUpdateKey='';state.scanAutoSavedCount=0;await go('add-player');if($('#scanProgressText'))$('#scanProgressText').textContent='Choose Skills screenshots · names will be matched and saved automatically';toast('Automatic squad update ready');});
   $('#dashboardUpdatePlayers')?.addEventListener('click',()=>$('#squadBulkUpdateBtn')?.click());
+  $('#dashboardWatchTour')?.addEventListener('click',()=>{$('#dashboardStats')?.scrollIntoView({behavior:'smooth',block:'start'});});
+  $('#homeSearchShortcut')?.addEventListener('click',async()=>{await go('squad');$('#squadSearch')?.focus();});
+  const moreBackdrop=$('#moreDrawerBackdrop');
+  function closeMoreDrawer(){if(moreBackdrop){moreBackdrop.hidden=true;document.body.classList.remove('more-drawer-open');}}
+  function openMoreDrawer(){if(moreBackdrop){moreBackdrop.hidden=false;document.body.classList.add('more-drawer-open');}}
+  $('#moreNavButton')?.addEventListener('click',openMoreDrawer);
+  $('#moreDrawerClose')?.addEventListener('click',closeMoreDrawer);
+  moreBackdrop?.addEventListener('click',e=>{if(e.target===moreBackdrop)closeMoreDrawer();});
+  moreBackdrop?.addEventListener('click',e=>{if(e.target.closest('[data-go]'))closeMoreDrawer();});
 
   // ---------- Refresh-safe scanner queue persistence ----------
   function openQueueDb(){return new Promise((resolve,reject)=>{if(!('indexedDB'in window)){resolve(null);return;}const req=indexedDB.open(QUEUE_DB_NAME,1);req.onupgradeneeded=()=>{if(!req.result.objectStoreNames.contains(QUEUE_STORE))req.result.createObjectStore(QUEUE_STORE);};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);});}

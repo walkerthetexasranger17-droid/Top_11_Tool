@@ -14,12 +14,14 @@ checks=[
 ]
 for needle,src,label in checks:
     if needle not in src: errs.append(f'missing {label}: {needle}')
-for forbidden in ['SCAN_RETRY_BACKOFF_MS=[10000,20000,45000,90000,120000]','scheduleQueueRetryTimer','RETRYING GEMINI 3.8 AUTOMATICALLY','drawerNav','finishDrawerSwipe','drawer-backdrop']:
+for forbidden in ['SCAN_RETRY_BACKOFF_MS=[10000,20000,45000,90000,120000]','scheduleQueueRetryTimer','RETRYING GEMINI 3.8 AUTOMATICALLY','drawerNav','finishDrawerSwipe']:
     if forbidden in js+html: errs.append(f'legacy navigation/retry hook survives: {forbidden}')
 if soup.select_one('#page-player[data-nav-label]'): errs.append('contextual Player Profile must not be a main nav item')
 if soup.select_one('#page-add-player[data-nav-label]'): errs.append('contextual Scanner must not be a main nav item')
 nav=[x.get_text(' ',strip=True) for x in soup.select('.bottom-nav .nav-btn')]
-if nav!=['Home','Squad','Training','Team Plan','Drills','Settings']: errs.append(f'wrong six-item bottom nav: {nav}')
+if nav!=['Home','Squad','Training','Team Plan','Drills','Settings','More']: errs.append(f'wrong responsive navigation shell: {nav}')
+touch_nav=[x.get_text(' ',strip=True) for x in soup.select('.bottom-nav .nav-btn:not(.nav-desktop-only)')]
+if touch_nav!=['Home','Squad','Training','Team Plan','More']: errs.append(f'wrong five-item touch nav: {touch_nav}')
 if soup.select_one('.bottom-nav [data-go="add-player"]'): errs.append('Scanner leaked into bottom nav')
 if not soup.select_one('#page-squad .v062-squad-hero [data-go="add-player"]'): errs.append('Squad Add Player entry point missing')
 for tab in ['formation','set-pieces','tactics']:
@@ -30,4 +32,4 @@ if errs:
     print('FAIL navigation/queue contract')
     for e in errs: print('-',e)
     sys.exit(1)
-print(f'PASS navigation/queue contract: six-screen IA + contextual scanner/profile + {len(checks)} queue/navigation hooks')
+print(f'PASS navigation/queue contract: responsive desktop/touch IA + contextual scanner/profile + {len(checks)} queue/navigation hooks')

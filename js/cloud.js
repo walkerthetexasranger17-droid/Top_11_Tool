@@ -84,9 +84,9 @@
   function hideGate(){show(qs('#authGate'),false);document.body.classList.remove('auth-locked')}
   function updateCloudChrome(){
     const status=qs('.top-status');
-    if(status){status.innerHTML=`<i></i> ${state.user?'Cloud':'Offline'}`;status.classList.toggle('cloud',!!state.user)}
+    if(status){status.classList.toggle('cloud',!!state.user);const label=status.querySelector('b'),sub=status.querySelector('small');if(label)text(label,state.user?'Cloud synced':'Offline');if(sub)text(sub,state.user?'Sync active':'Local device');}
     const account=qs('#accountButton');
-    if(account){account.hidden=!state.user;const initial=(state.user?.displayName||state.user?.email||'?').trim().slice(0,1).toUpperCase();text(account,initial)}
+    if(account){account.hidden=!state.user;const display=(state.user?.displayName||state.user?.email||'Manager').trim();const initial=display.slice(0,1).toUpperCase();const avatar=account.querySelector('.account-avatar'),meta=account.querySelector('.account-meta small');if(avatar)text(avatar,initial);if(meta)text(meta,display);}
   }
 
   function outboxStorageKey(uid=state.user?.uid){return uid?`${OUTBOX_PREFIX}${uid}:v1`:''}
@@ -163,7 +163,7 @@
       state.status='ready';hideGate();updateCloudChrome();
       scheduleFlush(0);
       if(localReady)syncDown().then(()=>scheduleFlush(0)).catch(err=>console.warn('Background cloud hydration',err));
-      console.info('[Top Eleven Tool] Cloud sync ready',{runtime:'0.6.10',source:state.lastSyncSource,records:state.syncCount,pending:state.pendingWrites,localFirst:localReady});
+      console.info('[Top Eleven Tool] Cloud sync ready',{runtime:'0.6.13',source:state.lastSyncSource,records:state.syncCount,pending:state.pendingWrites,localFirst:localReady});
       return true;
     }catch(err){state.error=err;state.status='error';showGate('setup');setAuthMessage(`Firebase setup error: ${friendlyAuthError(err)}`,'err');return false;}
   }

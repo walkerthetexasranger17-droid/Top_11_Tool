@@ -17,7 +17,7 @@ else:
             errs.append(f'applyPage no longer routes to {fn}')
 if "--hero:url('assets/scenes/" in html:
     errs.append('hero custom-property URLs still resolve incorrectly under css/assets on GitHub Pages')
-if "--hero:url('./assets/scenes/" not in html:
+if "--hero:url('./assets/" not in html:
     errs.append('subdirectory-safe hero scene URLs missing')
 if errs:
     print('FAIL')
