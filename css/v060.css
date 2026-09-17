@@ -788,3 +788,36 @@ main{max-width:var(--v6-content)}
   .bottom-nav.bottom-nav-six .nav-btn img{width:21px!important;height:21px!important}
   .bottom-nav.bottom-nav-six .nav-btn span{font-size:7px!important;white-space:nowrap!important}
 }
+
+/* v0.6.17 mobile Home: Highest OVR portrait alignment fix.
+   Keep the role art as a small framed thumbnail rather than stretching it down the card edge. */
+@media (orientation:portrait) and (max-width:699px) and (pointer:coarse){
+  #page-dashboard .dashboard-stat-player{padding-right:5px!important}
+  #page-dashboard .dashboard-stat-player>span:nth-child(2){padding-right:30px!important;min-width:0!important}
+  #page-dashboard .dashboard-stat-player-art{
+    position:absolute!important;
+    right:5px!important;
+    top:6px!important;
+    bottom:auto!important;
+    width:29px!important;
+    height:29px!important;
+    margin:0!important;
+    object-fit:cover!important;
+    object-position:50% 24%!important;
+    border-radius:5px!important;
+    border:1px solid rgba(67,223,255,.34)!important;
+    box-shadow:0 0 0 1px rgba(3,17,28,.55),0 3px 8px rgba(0,0,0,.38)!important;
+    opacity:1!important;
+  }
+}
+@media (orientation:portrait) and (min-width:700px) and (max-width:1023px) and (pointer:coarse){
+  #page-dashboard .dashboard-stat-player-art{
+    width:42px!important;
+    height:42px!important;
+    margin:0!important;
+    object-fit:cover!important;
+    object-position:50% 24%!important;
+    border-radius:7px!important;
+    border:1px solid rgba(67,223,255,.30)!important;
+  }
+}

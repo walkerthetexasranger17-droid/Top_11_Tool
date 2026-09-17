@@ -23,9 +23,9 @@ if missing: errs.append('missing DOM ids: '+', '.join(missing))
 
 # v0.4.12 product information architecture + cloud account/security foundation.
 nav=[x.get_text(' ',strip=True) for x in soup.select('.bottom-nav .nav-btn')]
-expected_nav=['Home','Squad','Training','Team Plan','Drills','Settings','More']
-if nav!=expected_nav: errs.append(f'navigation shell does not match v0.6.15 desktop/touch structure: {nav}')
-if len(soup.select('.bottom-nav .nav-btn'))!=7: errs.append('navigation shell must expose four shared routes, two desktop routes and mobile More')
+expected_nav=['Home','Squad','Training','Team Plan','Drills','Settings']
+if nav!=expected_nav: errs.append(f'navigation shell does not match v0.6.17 direct-touch structure: {nav}')
+if len(soup.select('.bottom-nav .nav-btn'))!=6: errs.append('navigation shell must expose six direct touch routes with no More item')
 for rid in [
     'formationPitch','setPiecePitch','setPieceCoverage','setPieceCoverageGrid','tacticPlan','mentorLevels','profilePlaystyleState',
     'profileRelatedPicker','scanRelatedPicker','profileRescanBtn','scanReviewPlayerCard','scanSkills','squadList'
@@ -43,7 +43,7 @@ for phase in ['possession','transition','out']:
     if not soup.select_one(f'[data-tactic-phase="{phase}"]'): errs.append(f'Tactics missing {phase} phase')
 if not soup.select_one('[data-training-tab="individual"]') or not soup.select_one('[data-training-tab="team"]'):
     errs.append('Training does not expose Individual | Team tabs on one page')
-if 'v0.6.15' not in html: errs.append('visible UI/runtime version is not v0.6.15')
+if 'v0.6.17' not in html: errs.append('visible UI/runtime version is not v0.6.17')
 if re.search(r'BUILD\s*30527|Build\s*30527',html): errs.append('internal build 30527 is still visible in product HTML')
 if 'verified scanner' in html.lower(): errs.append('technical scanner provenance is exposed in normal UI')
 
@@ -132,7 +132,7 @@ if not account_btn or account_btn.get('title')!='Profile & Security': errs.appen
 css_text=(ROOT/'css/app.css').read_text(encoding='utf-8')
 if '.account-button' not in css_text or 'cursor:pointer' not in css_text: errs.append('profile button does not advertise clickability with a pointer cursor')
 sw_text=(ROOT/'sw.js').read_text(encoding='utf-8')
-if "const CACHE='te-v0-6-15-home-fidelity-p15" not in sw_text or "e.request.mode==='navigate'" not in sw_text or "cache:'no-store'" not in sw_text: errs.append('v0.4.12 service-worker update/navigation freshness guard missing')
+if "const CACHE='te-v0-6-17-home-card-fix" not in sw_text or "e.request.mode==='navigate'" not in sw_text or "cache:'no-store'" not in sw_text: errs.append('v0.4.12 service-worker update/navigation freshness guard missing')
 if "toast('App initialisation failed','err')" in js: errs.append('generic app-initialisation error toast survived GitHub testing hotfix')
 if 'loadMentorLevels' in js: errs.append('stale loadMentorLevels startup call survived; Mentor state must hydrate through loadMentorState')
 if "startupStep('mentor state',()=>loadMentorState())" not in js: errs.append('Mentor state is not hydrated during startup')

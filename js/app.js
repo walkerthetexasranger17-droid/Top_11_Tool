@@ -1,5 +1,5 @@
 (() => {
-  window.__TE_RUNTIME__='0.6.15';
+  window.__TE_RUNTIME__='0.6.17';
   const TE=window.TE5;const D=TE.Data,P=TE.Players,S=TE.Storage,DP=TE.DrillProfile,T=TE.Training,TT=TE.TeamTraining,SC=TE.Scanner,R=TE.Recommendations,F=TE.Formation,TP=TE.TeamPlan,TAC=TE.Tactics,M=TE.Mentor,B=TE.BibleData,C=TE.Cloud,BIS=TE.BestInSlot;
   const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
   const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -38,7 +38,7 @@
     // Switch the shell immediately so the first tap always gets visible feedback. The
     // expensive renderer then runs through one serial queue, preventing overlapping page
     // renders/cloud refreshes from racing each other and leaving stale DOM behind.
-    state.page=page;$$('.page').forEach(p=>p.classList.toggle('active',p.dataset.page===page));$$('.nav-btn[data-go]').forEach(b=>b.classList.toggle('active',b.dataset.go===page));$('#moreNavButton')?.classList.toggle('active',['my-drills','settings','account'].includes(page));if(scroll)window.scrollTo({top:0,behavior:'auto'});persistUiState();
+    state.page=page;$$('.page').forEach(p=>p.classList.toggle('active',p.dataset.page===page));$$('.nav-btn[data-go]').forEach(b=>b.classList.toggle('active',b.dataset.go===page));if(scroll)window.scrollTo({top:0,behavior:'auto'});persistUiState();
     const run=async()=>{
       if(request!==pageRenderSeq)return false;
       pageRenderActive++;setPageBusy(true);
@@ -277,15 +277,7 @@
   $('#profileDeleteBtn')?.addEventListener('click',async()=>{const b=$('#profileDeleteBtn');if(!b.dataset.armed){b.dataset.armed='1';b.textContent='Tap again to delete';$('#profileEditNote').textContent='This permanently removes the player and their saved training session.';setTimeout(()=>{delete b.dataset.armed;b.textContent='Delete Player';},3500);return;}const p=await P.get(state.playerKey);await P.remove(state.playerKey);state.playerKey='';state.trainingKey='';delete b.dataset.armed;b.textContent='Delete Player';toast(`${p?.name||'Player'} deleted`);await renderDashboard();go('squad',{historyMode:'replace'});});
   $('#squadBulkUpdateBtn')?.addEventListener('click',async()=>{state.scanMode='update';state.scanUpdateKey='';state.scanAutoSavedCount=0;await go('add-player');if($('#scanProgressText'))$('#scanProgressText').textContent='Choose Skills screenshots · names will be matched and saved automatically';toast('Automatic squad update ready');});
   $('#dashboardUpdatePlayers')?.addEventListener('click',()=>$('#squadBulkUpdateBtn')?.click());
-  $('#dashboardWatchTour')?.addEventListener('click',()=>{$('#dashboardStats')?.scrollIntoView({behavior:'smooth',block:'start'});});
   $('#homeSearchShortcut')?.addEventListener('click',async()=>{await go('squad');$('#squadSearch')?.focus();});
-  const moreBackdrop=$('#moreDrawerBackdrop');
-  function closeMoreDrawer(){if(moreBackdrop){moreBackdrop.hidden=true;document.body.classList.remove('more-drawer-open');}}
-  function openMoreDrawer(){if(moreBackdrop){moreBackdrop.hidden=false;document.body.classList.add('more-drawer-open');}}
-  $('#moreNavButton')?.addEventListener('click',openMoreDrawer);
-  $('#moreDrawerClose')?.addEventListener('click',closeMoreDrawer);
-  moreBackdrop?.addEventListener('click',e=>{if(e.target===moreBackdrop)closeMoreDrawer();});
-  moreBackdrop?.addEventListener('click',e=>{if(e.target.closest('[data-go]'))closeMoreDrawer();});
 
   // ---------- Refresh-safe scanner queue persistence ----------
   function openQueueDb(){return new Promise((resolve,reject)=>{if(!('indexedDB'in window)){resolve(null);return;}const req=indexedDB.open(QUEUE_DB_NAME,1);req.onupgradeneeded=()=>{if(!req.result.objectStoreNames.contains(QUEUE_STORE))req.result.createObjectStore(QUEUE_STORE);};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);});}
