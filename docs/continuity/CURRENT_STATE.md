@@ -1,21 +1,18 @@
-# CURRENT DESIGN OVERLAY — v0.6.17 Mobile Home Polish
+# CURRENT DESIGN OVERLAY — v0.6.18 Mobile Squad Detail
 
-The v0.6 redesign is currently paused on **Home mobile fidelity/polish**. Responsive correctness alone is not design completion.
+## Active direction
+- Mobile/tablet is the product priority. Desktop only needs to remain functional.
+- Approved dark navy / neon lime / cyan visual system remains locked.
+- Home mobile direction is accepted enough to move to Squad.
+- Squad mobile must retain useful player detail instead of stripping it down.
 
-## Current authority order
-1. Approved Home mobile reference in `docs/design/reference/v060/approved-home-mobile.webp`.
-2. Real deployed phone screenshots and explicit user corrections.
-3. Real application data/logic and authoritative game-extracted assets.
-4. Desktop presentation only needs to remain functional.
-
-## Current Home decisions
-- Phone/tablet is the product/design target.
-- Home hero Get Started / Watch Tour buttons remain removed.
-- Touch bottom navigation exposes Home, Squad, Training, Team Plan, Drills and Settings directly; no More button.
-- Home Team Plan Snapshot uses the richer pitch artwork.
-- v0.6.17 corrects the Highest OVR player portrait to a small square upper-right thumbnail instead of a stretched lower-right image.
+## v0.6.18 scope
+- Rebuild mobile Squad player rows as richer cards.
+- Use the existing authoritative game-extracted Playstyle artwork and Special Ability artwork already in the package.
+- Use the newly approved glossy individual position badges with fixed role colours: GK/DL/DC/DR green; DML/DMC/DMR/ML/MC/MR/AML/AMC/AMR yellow; ST red.
+- Replace the old generic role art with the already-approved role artwork: striker red, midfield/DM/AM yellow, defender green, goalkeeper green.
+- No star ratings. No invented player fields.
+- Preserve swipe-left delete and frozen football/scanner/training/decision logic.
 
 ## Next
-Deploy v0.6.17 and continue Home-only refinement from real-device feedback until the user accepts Home. Only then use Home as the design baseline for later page fidelity passes.
-
-Frozen v0.5.17 football/scanner/training/decision logic remains unchanged.
+Deploy v0.6.18 with the real cloud squad and review Squad mobile density, icon sizing and text truncation from a real phone screenshot.

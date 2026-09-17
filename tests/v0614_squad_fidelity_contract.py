@@ -22,8 +22,8 @@ for needle in [
     '@media (orientation:landscape) and (pointer:coarse) and (max-height:600px)'
 ]:
     if needle not in css: errs.append(f'missing Pass 14 Squad fidelity marker: {needle}')
-if 'class="pos-tag pos-${esc(String(role).toLowerCase())}"' not in js:
-    errs.append('Squad roster does not emit role-coded position chips')
+if 'positionBadgeAsset(role)' not in js:
+    errs.append('Squad roster does not emit role-coded position visuals')
 ref=ROOT/'docs/design/reference/v060/approved-squad-desktop-v2.webp'
 if not ref.is_file() or ref.stat().st_size < 10000:
     errs.append('approved Squad v2 visual reference missing')

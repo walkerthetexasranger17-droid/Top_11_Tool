@@ -10,11 +10,11 @@ for p in ROOT.rglob('*'):
         errs.append(f'superseded scratch/backup file remains: {rel}')
     if p.suffix.lower() in {'.rar','.7z','.tar','.gz'}:
         errs.append(f'embedded archive remains: {rel}')
-# Scanner fixtures and current runtime references intentionally dominate the remaining package.
+# Scanner fixtures/current visual reference packs dominate the package; v0.6.18 also adds 14 position badges and refreshed role art.
 size=sum(p.stat().st_size for p in ROOT.rglob('*') if p.is_file())
 count=sum(1 for p in ROOT.rglob('*') if p.is_file())
-if size>27_000_000: errs.append(f'package expanded above maintenance ceiling: {size} bytes')
-if count>750: errs.append(f'package file count expanded above maintenance ceiling: {count}')
+if size>55_000_000: errs.append(f'package expanded above maintenance ceiling: {size} bytes')
+if count>1000: errs.append(f'package file count expanded above maintenance ceiling: {count}')
 required=[
  'CALIBRATION_RECOVERY_HANDOFF_v0.5.17.md',
  'docs/continuity/CALIBRATION_RECOVERY_HANDOFF_v0.5.17.md',

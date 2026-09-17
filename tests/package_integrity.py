@@ -13,7 +13,7 @@ for rel in assets:
     p=ROOT/rel.lstrip('./')
     if not p.is_file() or p.stat().st_size==0:
         errs.append(f'service-worker asset missing/empty: {rel}')
-# Pass11 intentionally keeps the install-time precache small. Large scanner references,
+# v0.6.18 keeps the install-time precache bounded while adding the 14 lightweight Squad position badges. Large scanner references,
 # mentor art and other feature assets are still packaged and are runtime-cached on demand.
 required={
     './index.html','./manifest.json','./icon-192.png','./icon-512.png','./css/app.css','./css/v060.css',
@@ -25,8 +25,8 @@ if missing: errs.append('core runtime files not precached: '+', '.join(missing))
 scanner_eager=sorted(a for a in assets if a.startswith('./assets/scanner/'))
 if scanner_eager: errs.append(f'bulk scanner references must be runtime-cached, not install-precached ({len(scanner_eager)} found)')
 precache_bytes=sum((ROOT/a.lstrip('./')).stat().st_size for a in assets if (ROOT/a.lstrip('./')).is_file())
-if len(assets)>100: errs.append(f'install precache unexpectedly large: {len(assets)} files')
-if precache_bytes>5_000_000: errs.append(f'install precache unexpectedly large: {precache_bytes} bytes')
+if len(assets)>120: errs.append(f'install precache unexpectedly large: {len(assets)} files')
+if precache_bytes>6_200_000: errs.append(f'install precache unexpectedly large: {precache_bytes} bytes')
 # Scanner reference packs remain part of the package even though they are no longer eagerly cached.
 for rel in ('assets/scanner/reference-manifest.json','assets/scanner/compact-reference-manifest.json'):
     p=ROOT/rel
