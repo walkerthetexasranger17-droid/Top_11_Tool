@@ -1,12 +1,7 @@
-# Top Eleven Tool v0.6.15 design branch
+# Top Eleven Tool v0.6.19 design branch
 
-> **Current unpublished design branch: v0.6.15 / Corrective Home Fidelity.** The calibrated v0.5.17 decision/scanner/training contract remains frozen underneath the v0.6 visual redesign.
+> **Current unpublished design branch: v0.6.19 / Compact Mobile Squad + Nationality.** The calibrated v0.5.17 decision contract remains frozen underneath the v0.6 visual redesign. Scanner calibration stays v12; nationality is an isolated optional metadata extension.
 
-The earlier Home fidelity result was rejected after real-device comparison. v0.6.15 rebuilds Home directly against the packaged approved desktop/mobile references and establishes the implementation-level visual system for every later page.
+Current focus is the mobile Squad page. Rows are compact horizontal strips using the approved high-quality role art, glossy position badges, authoritative game-extracted Playstyle/Special Ability images, OVR and optional nationality flag. No star-rating UI and no Playstyle/SA label text is shown on the compact row.
 
-Current fidelity state:
-- **Home:** corrected in v0.6.15 and now the visual-system baseline.
-- **Squad:** earlier pass exists, but must be re-audited in v0.6.16 against the corrected Home standard.
-- **Player Profile and later pages:** do not continue until Squad re-audit is complete.
-
-The user wants one consolidated end-to-end test only after the complete fidelity sequence. Intermediate passes still require regression testing, updated embedded recovery documentation and a freshly extracted/verified full backup ZIP.
+Read `START_HERE.md` and `DESIGN_RECOVERY_HANDOFF_v0.6.19.md` before changing anything.

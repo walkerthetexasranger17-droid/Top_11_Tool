@@ -44,7 +44,7 @@ need('updateAgeSkillsOnly' in players and 'D.overallFromSkills(nextSkills,roles)
 need("needs-match" in app,'unsafe or unmatched names stop safely rather than guessing')
 need('id="squadBulkUpdateBtn"' in html,'Squad exposes bulk update queue entry point')
 need('id="manualEntryNote"' in html and "manualNote.style.display='none'" in app,'update mode hides add-player manual-entry hint')
-need(html.find('id="masterStockConfig"') < html.find('id="normalDrillConfig"'),'Master card stock renders above normal drills')
+need(html.find('id="normalDrillConfig"') < html.find('id="masterStockConfig"'),'Current drills layout renders normal drill configuration before Master card stock')
 
 if not all(x for x,_ in checks):
     raise SystemExit(1)

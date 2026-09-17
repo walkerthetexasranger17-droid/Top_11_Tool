@@ -1,18 +1,32 @@
-# CURRENT DESIGN OVERLAY — v0.6.18 Mobile Squad Detail
+# CURRENT DESIGN OVERLAY — v0.6.19 Compact Mobile Squad + Nationality
 
 ## Active direction
-- Mobile/tablet is the product priority. Desktop only needs to remain functional.
-- Approved dark navy / neon lime / cyan visual system remains locked.
-- Home mobile direction is accepted enough to move to Squad.
-- Squad mobile must retain useful player detail instead of stripping it down.
+- Mobile/tablet is the product priority; desktop is functional only.
+- Dark navy / neon lime / cyan visual system remains locked.
+- Current active page: Squad.
+- User-approved Squad target is a thin, information-dense horizontal row rather than a tall card.
 
-## v0.6.18 scope
-- Rebuild mobile Squad player rows as richer cards.
-- Use the existing authoritative game-extracted Playstyle artwork and Special Ability artwork already in the package.
-- Use the newly approved glossy individual position badges with fixed role colours: GK/DL/DC/DR green; DML/DMC/DMR/ML/MC/MR/AML/AMC/AMR yellow; ST red.
-- Replace the old generic role art with the already-approved role artwork: striker red, midfield/DM/AM yellow, defender green, goalkeeper green.
-- No star ratings. No invented player fields.
-- Preserve swipe-left delete and frozen football/scanner/training/decision logic.
+## v0.6.19 row contract
+- Rank.
+- High-quality role/player artwork from `assets/roles/`.
+- Name plus optional nationality flag and roles/age.
+- Glossy position badge from `assets/positions/`.
+- Existing game-extracted Playstyle image only.
+- Existing game-extracted Special Ability image(s) only, maximum two in compact phone row.
+- OVR and chevron.
+- No stars and no Playstyle / Special Ability label words on phone rows.
+
+## Nationality support
+- `nationalityCode` is optional persisted player metadata.
+- Scanner v12 gains nationality metadata extension v1 only; scanner calibration version remains 12.
+- Read only the visible nationality flag; never infer nationality from player name.
+- ENG/SCO/WAL/NIR represent UK home nations; ordinary countries use ISO alpha-2.
+- Uncertain or absent flags produce blank nationality and do not block a save/update.
+- Existing nationality is preserved during update scans; a missing saved nationality may be filled from a confident new scan.
+
+## Frozen boundary
+- v0.5.17 decision contract remains frozen.
+- Numeric scanner calibration, Playstyle recognition, Special Ability recognition, training, formation, tactics, Mentors and Team Plan logic are not part of this pass.
 
 ## Next
-Deploy v0.6.18 with the real cloud squad and review Squad mobile density, icon sizing and text truncation from a real phone screenshot.
+Deploy v0.6.19 with the real squad and review the mobile Squad screen only. Make spacing/icon-size hotfixes if required; do not move to the next page until Squad is accepted.

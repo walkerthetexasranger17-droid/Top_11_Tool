@@ -876,3 +876,63 @@ main{max-width:var(--v6-content)}
 @media (orientation:landscape) and (pointer:coarse) and (max-height:600px){
   .squad-position-badge{width:39px;height:25px}.squad-playstyle-icon{width:25px;height:25px}.squad-cell-playstyle{gap:4px}.squad-cell-playstyle>b,.squad-playstyle-copy>b{font-size:7px}.squad-cell-abilities{display:flex!important;flex-direction:row!important;gap:4px!important}.squad-ability{grid-template-columns:21px minmax(0,1fr)}.squad-ability img{width:20px;height:20px}.squad-ability b{font-size:5.5px}
 }
+
+/* =========================================================
+   v0.6.19 — Compact mobile Squad + nationality
+   Approved mobile contract: thin one-line rows, new role art,
+   glossy position badge, flag, Playstyle image, SA images, OVR.
+   No stars and no Playstyle / Special Ability labels on mobile.
+   ========================================================= */
+.squad-nationality-flag{display:inline-flex;align-items:center;justify-content:center;margin-right:3px;line-height:1;font-family:"Segoe UI Emoji","Noto Color Emoji",sans-serif}
+
+@media (orientation:portrait) and (max-width:699px) and (pointer:coarse){
+  .squad-player-list,.squad-player-list.cards{gap:4px!important}
+  .squad-player-row,.squad-player-list.cards .squad-player-row{
+    min-height:66px!important;height:66px!important;
+    grid-template-columns:18px minmax(0,1fr) 35px 25px 42px 30px 8px!important;
+    grid-template-rows:1fr!important;
+    gap:4px!important;
+    padding:3px 6px 3px 0!important;
+    align-items:center!important;
+    border-radius:8px!important;
+    overflow:hidden!important;
+  }
+  .squad-rank{grid-column:1!important;grid-row:1!important;align-self:stretch!important;display:grid!important;place-items:center!important;font-size:15px!important;line-height:1!important}
+  .squad-player-identity,.squad-player-list.cards .squad-player-identity{
+    grid-column:2!important;grid-row:1!important;
+    grid-template-columns:46px minmax(0,1fr)!important;gap:5px!important;align-items:center!important;min-width:0!important;
+  }
+  .squad-player-identity .player-art,.squad-player-list.cards .squad-player-identity .player-art{
+    width:46px!important;height:58px!important;
+    border-radius:5px!important;object-fit:cover!important;object-position:50% 24%!important;
+    border:1px solid rgba(71,211,255,.24)!important;box-shadow:none!important;
+  }
+  .squad-player-identity>span{display:block!important;min-width:0!important}
+  .squad-player-identity b{font-size:11px!important;line-height:.95!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+  .squad-player-identity small{display:flex!important;align-items:center!important;min-width:0!important;margin-top:3px!important;font-size:6.2px!important;line-height:1!important;color:#8eaabd!important;white-space:nowrap!important;overflow:hidden!important}
+  .squad-nationality-flag{font-size:10px!important;flex:0 0 auto!important;margin-right:3px!important}
+  .squad-role-age{display:block!important;min-width:0!important;overflow:hidden!important;text-overflow:ellipsis!important}
+  .squad-cell-pos,.squad-player-list.cards .squad-cell-pos{display:flex!important;grid-column:3!important;grid-row:1!important;align-items:center!important;justify-content:center!important}
+  .squad-position-badge{width:35px!important;height:24px!important;object-fit:contain!important}
+  .squad-cell-age{display:none!important}
+  .squad-cell-playstyle,.squad-player-list.cards .squad-cell-playstyle{display:flex!important;grid-column:4!important;grid-row:1!important;align-items:center!important;justify-content:center!important;min-width:0!important}
+  .squad-playstyle-icon{width:24px!important;height:24px!important;flex:0 0 24px!important;object-fit:contain!important}
+  .squad-playstyle-copy,.squad-cell-playstyle>.squad-muted{display:none!important}
+  .squad-cell-abilities,.squad-player-list.cards .squad-cell-abilities{display:flex!important;grid-column:5!important;grid-row:1!important;align-items:center!important;justify-content:center!important;flex-direction:row!important;flex-wrap:nowrap!important;gap:2px!important;min-width:0!important;overflow:hidden!important}
+  .squad-ability{display:block!important;flex:0 0 auto!important;min-width:0!important;max-width:none!important;margin:0!important}
+  .squad-ability img{display:block!important;width:19px!important;height:19px!important;object-fit:contain!important}
+  .squad-ability b,.squad-cell-abilities>.squad-muted{display:none!important}
+  .squad-ability:nth-child(n+3){display:none!important}
+  .squad-cell-ovr,.squad-player-list.cards .squad-cell-ovr{display:grid!important;grid-column:6!important;grid-row:1!important;justify-items:end!important;align-self:center!important;padding:0!important;text-align:right!important}
+  .squad-cell-ovr>small{display:none!important}.squad-cell-ovr b{font-size:20px!important;line-height:1!important;color:var(--v6-lime)!important}
+  .squad-status,.squad-player-list.cards .squad-status{display:none!important}
+  .squad-player-row .row-arrow,.squad-player-list.cards .row-arrow{grid-column:7!important;grid-row:1!important;align-self:center!important;font-size:17px!important;line-height:1!important}
+}
+
+@media (orientation:landscape) and (pointer:coarse) and (max-height:600px){
+  .squad-player-row,.squad-player-list.cards .squad-player-row{min-height:48px!important;height:48px!important}
+  .squad-player-identity,.squad-player-list.cards .squad-player-identity{grid-template-columns:39px minmax(0,1fr)!important}
+  .squad-player-identity .player-art,.squad-player-list.cards .squad-player-identity .player-art{width:39px!important;height:42px!important}
+  .squad-player-identity b{font-size:10px!important}.squad-player-identity small{font-size:5.8px!important}
+  .squad-position-badge{width:32px!important;height:21px!important}.squad-playstyle-icon{width:21px!important;height:21px!important}.squad-ability img{width:17px!important;height:17px!important}
+}

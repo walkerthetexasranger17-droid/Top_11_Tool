@@ -1,12 +1,15 @@
-# v0.6.18 — START HERE
+# v0.6.19 — START HERE
 
-**CURRENT UI BRANCH:** v0.6.18 — Mobile Squad detail pass.  
-**FROZEN DECISION BASE:** v0.5.17.
+**CURRENT UI BRANCH:** v0.6.19 — Compact Mobile Squad + Nationality.  
+**FROZEN DECISION BASE:** v0.5.17.  
+**SCANNER BASE:** v12, with isolated nationality metadata extension v1.
 
-Read `DESIGN_RECOVERY_HANDOFF_v0.6.18.md` first, then `V0618_SQUAD_MOBILE_VALIDATION.md`.
+Read `DESIGN_RECOVERY_HANDOFF_v0.6.19.md` first, then `V0619_SQUAD_COMPACT_NATIONALITY_VALIDATION.md`.
 
-Phone/tablet is the product/design target. Desktop is functional-support only. The current active page is **Squad**.
+Phone/tablet is the product/design target. Desktop is functional-support only. The active page is **Squad**.
 
-**NEXT FIXED UNIT:** deploy v0.6.18 with the real cloud squad, inspect Squad on a real phone, and make only Squad-mobile fidelity fixes until the user accepts the page.
+The approved mobile row is compact: rank → high-quality role art → name + flag + roles/age → glossy position badge → Playstyle image only → Special Ability image(s) only → OVR → chevron. No stars and no Playstyle/SA label text on the mobile row.
 
-Do not regenerate Playstyle or Special Ability assets: the game-extracted assets already in the package are authoritative. Do not add stars or player fields that the app does not store. Do not change frozen football/scanner/training/calibration logic during UI work. Every deliverable ends with regression tests, handoff update, full ZIP, fresh extraction and verification.
+Nationality is optional scanner metadata. Read only the visible flag; never infer it from a name. Missing/uncertain nationality must not block save/update. Existing game-extracted Playstyle and Special Ability assets are authoritative and must not be regenerated.
+
+**NEXT FIXED UNIT:** deploy v0.6.19 with the user's real cloud squad and do only Squad-mobile fidelity fixes until accepted. Every deliverable still ends with regression tests, handoff update, full ZIP, fresh extraction and verification.

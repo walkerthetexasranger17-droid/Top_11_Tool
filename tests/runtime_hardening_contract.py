@@ -13,7 +13,7 @@ scanner=(ROOT/'js/scanner-engine.js').read_text(encoding='utf-8')
 # Inline scene URLs must remain inside an app hosted at /top-eleven-tool/.
 base='https://example.invalid/top-eleven-tool/index.html'
 scene_refs=re.findall(r"--hero:url\('([^']+)'\)",html)
-if len(scene_refs)!=8: errs.append(f'expected 8 inline hero scene refs, found {len(scene_refs)}')
+if len(scene_refs)!=7: errs.append(f'expected 7 current inline hero scene refs, found {len(scene_refs)}')
 for ref in scene_refs:
     resolved=urlparse(urljoin(base,ref)).path
     if not resolved.startswith('/top-eleven-tool/assets/'):

@@ -59,6 +59,7 @@
   const LEGACY_CURRENT_ROLES=['DML','DMR'];
 
   function normPos(p){return String(p||'').toUpperCase().trim();}
+  function normaliseNationalityCode(value){const code=String(value||'').toUpperCase().trim().replace(/[^A-Z-]/g,'');if(['ENG','SCO','WAL','NIR'].includes(code))return code;return /^[A-Z]{2}$/.test(code)?code:'';}
   function uniqueCurrent(list){
     const out=[];
     for(const raw of list||[]){const r=D.normaliseRole(raw);if(r&&!out.includes(r))out.push(r);}
@@ -141,6 +142,7 @@
       schemaVersion:SCHEMA_VERSION,
       gameDataVersion:D.GAME_DATA_VERSION,
       position,roles,
+      nationalityCode:normaliseNationalityCode(data?.nationalityCode||data?.nationality||''),
       relatedRoles:normaliseRelatedRoles(data),
       legacyRoles:legacy,
       playstyle:normalisePlaystyle(data?.playstyle),
@@ -198,14 +200,15 @@
     if(key)await S.del(`training:session:${outKey}`);
     await bumpRevision();await invalidateTeamPlan();return outKey;
   }
-  async function updateAgeSkillsOnly(key,{age,skills,scannerLastUpdate=null}={}){
+  async function updateAgeSkillsOnly(key,{age,skills,nationalityCode='',scannerLastUpdate=null}={}){
     await migrate();const existing=await get(key);if(!existing)throw new Error('The matched squad player is no longer available');
     const nextAge=Number(age);if(!Number.isFinite(nextAge)||nextAge<15||nextAge>60)throw new Error('Automatic update age is invalid');
     const roles=normaliseRoles(existing),required=D.applicableSkillsForRoles(roles),nextSkills={};
     for(const name of required){const value=Number(skills?.[name]);if(!Number.isFinite(value)||value<0||value>520)throw new Error(`Automatic update is missing a valid ${name} value`);nextSkills[name]=value;}
     const nextOvr=D.overallFromSkills(nextSkills,roles);if(!Number.isFinite(nextOvr))throw new Error('Automatic update could not derive OVR from the complete skill set');
     const priorScanner=existing.scanner&&typeof existing.scanner==='object'?existing.scanner:{};
-    const next={...existing,age:nextAge,ovr:nextOvr,skills:nextSkills,scanner:scannerLastUpdate?{...priorScanner,lastUpdate:scannerLastUpdate}:priorScanner};
+    const scannedNationality=normaliseNationalityCode(nationalityCode),nextNationality=existing.nationalityCode||scannedNationality||'';
+    const next={...existing,age:nextAge,ovr:nextOvr,skills:nextSkills,nationalityCode:nextNationality,scanner:scannerLastUpdate?{...priorScanner,lastUpdate:scannerLastUpdate}:priorScanner};
     await save(next,key);
     const verified=await get(key);
     const persisted=!!verified&&Number(verified.age)===nextAge&&Number(verified.ovr)===nextOvr&&required.every(name=>Number(verified.skills?.[name])===nextSkills[name]);
@@ -218,5 +221,5 @@
   function matchPlayerByName(players,detectedName,{threshold=.90,margin=.08}={}){const wanted=normalisePlayerName(detectedName),rows=(players||[]).filter(p=>normalisePlayerName(p?.name));if(!wanted)return{player:null,kind:'missing',score:0,detectedName:String(detectedName||''),candidates:[]};const exact=rows.filter(p=>normalisePlayerName(p.name)===wanted);if(exact.length===1)return{player:exact[0],kind:'exact',score:1,detectedName:String(detectedName||''),candidates:exact};if(exact.length>1)return{player:null,kind:'ambiguous',score:1,detectedName:String(detectedName||''),candidates:exact};const compact=wanted.replace(/ /g,''),ranked=rows.map(player=>{const name=normalisePlayerName(player.name),other=name.replace(/ /g,''),maxLen=Math.max(compact.length,other.length,1),score=1-nameDistance(compact,other)/maxLen;return{player,score,name};}).sort((a,b)=>b.score-a.score||String(a.player.name).localeCompare(String(b.player.name)));const best=ranked[0],second=ranked[1];if(!best||best.score<threshold)return{player:null,kind:'not-found',score:best?.score||0,detectedName:String(detectedName||''),candidates:ranked.slice(0,3)};if(second&&best.score-second.score<margin)return{player:null,kind:'ambiguous',score:best.score,detectedName:String(detectedName||''),candidates:ranked.slice(0,3)};return{player:best.player,kind:'fuzzy',score:best.score,detectedName:String(detectedName||''),candidates:ranked.slice(0,3)};}
   function roleGroup(pos){if(pos==='GK')return'gk';if(pos==='ST')return'st';if(['AML','AMC','AMR'].includes(pos))return'am';if(pos==='DMC')return'dm';if(['DL','DC','DR'].includes(pos))return'd';return'm';}
 
-  TE.Players={SCHEMA_VERSION,MIGRATION_KEY,RECOVERY_KEY,all,get,save,updateAgeSkillsOnly,remove,cleanPlayer,normaliseRoles,normaliseRelatedRoles,normalisePlaystyle,mergePlaystyleState,mergeVisibleNaturalRoles,playstyleName,normalisePlayerName,matchPlayerByName,roleGroup,migrate,revision,recoverLocalSquad};
+  TE.Players={SCHEMA_VERSION,MIGRATION_KEY,RECOVERY_KEY,all,get,save,updateAgeSkillsOnly,remove,cleanPlayer,normaliseRoles,normaliseRelatedRoles,normalisePlaystyle,mergePlaystyleState,mergeVisibleNaturalRoles,playstyleName,normalisePlayerName,normaliseNationalityCode,matchPlayerByName,roleGroup,migrate,revision,recoverLocalSquad};
 })();
