@@ -1,5 +1,5 @@
 (() => {
-  window.__TE_RUNTIME__='0.6.26';
+  window.__TE_RUNTIME__='0.6.27';
   const TE=window.TE5;const D=TE.Data,P=TE.Players,S=TE.Storage,DP=TE.DrillProfile,T=TE.Training,TT=TE.TeamTraining,SC=TE.Scanner,R=TE.Recommendations,F=TE.Formation,TP=TE.TeamPlan,TAC=TE.Tactics,M=TE.Mentor,B=TE.BibleData,C=TE.Cloud,BIS=TE.BestInSlot;
   const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
   const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -115,16 +115,7 @@
       if(players.length){const complete=players.filter(p=>p.skills&&Object.keys(p.skills).length>=15).length;const missing=Math.max(0,players.length-complete);insight.innerHTML=`<div><b>${complete} player${complete===1?'':'s'} ready for full analysis</b><p>${missing?`${missing} player${missing===1?' needs':'s need'} a complete Skills update before every optimiser can use them.`:'Your saved squad has complete attribute data for every player.'}</p><button class="section-link" data-go="squad">Review squad <img src="${H}30-chevron-right.svg" alt=""></button></div>`;}else insight.innerHTML='<div class="dashboard-empty compact"><b>Start with your squad</b><span>Your training and team-plan intelligence will appear here.</span></div>';
     }
   }
-  function category(pos){if(pos==='GK')return'GK';if(['DL','DC','DR','DMC'].includes(pos))return'DEF';if(['ML','MC','MR'].includes(pos))return'MID';return'ATT';}
   function squadNeedsAttention(p){return !(p?.skills&&Object.keys(p.skills).length>=15);}
-  function squadBalanceSummary(players){
-    const groups={GK:0,DEF:0,MID:0,ATT:0};for(const p of players)groups[category(p.position)]++;
-    const covered=Object.values(groups).filter(Boolean).length;
-    if(!players.length)return{label:'—',copy:'add players'};
-    if(covered===4&&groups.GK>=1&&groups.DEF>=3&&groups.MID>=2&&groups.ATT>=1)return{label:'Good',copy:'all areas covered'};
-    if(covered===4)return{label:'Fair',copy:'thin in one area'};
-    return{label:'Needs work',copy:`${4-covered} group${4-covered===1?'':'s'} missing`};
-  }
   function squadAbilityHtml(p){
     const rows=(p.specialAbilities||[]).slice(0,2);
     if(!rows.length)return'<span class="squad-muted">None</span>';
@@ -136,19 +127,6 @@
     if(!validFilters.has(state.squadFilter))state.squadFilter='ALL';
     if(!['ovr-desc','role-order','ovr-asc','name-asc','age-asc'].includes(state.squadSort))state.squadSort='ovr-desc';
     if(!['list','cards'].includes(state.squadView))state.squadView='list';
-    const counts={ALL:players.length,GK:0,DEF:0,MID:0,ATT:0};players.forEach(p=>counts[category(p.position)]++);
-    const avg=players.length?players.reduce((a,p)=>a+(Number(p.ovr)||0),0)/players.length:0;
-    const highest=players.slice().sort((a,b)=>(Number(b.ovr)||0)-(Number(a.ovr)||0))[0]||null;
-    const needs=players.filter(squadNeedsAttention).length,balance=squadBalanceSummary(players);
-    if($('#squadStatTotal'))$('#squadStatTotal').textContent=players.length;
-    if($('#squadStatAvg'))$('#squadStatAvg').textContent=players.length?Math.round(avg):'—';
-    if($('#squadStatHigh'))$('#squadStatHigh').textContent=highest?highest.ovr||'—':'—';
-    if($('#squadStatHighName'))$('#squadStatHighName').textContent=highest?.name||'top player';
-    if($('#squadStatBalance'))$('#squadStatBalance').textContent=balance.label;
-    if($('#squadStatBalanceCopy'))$('#squadStatBalanceCopy').textContent=balance.copy;
-    if($('#squadStatNeeds'))$('#squadStatNeeds').textContent=needs;
-    const highCard=$('#squadHighestCard');if(highCard){if(highest){highCard.dataset.playerOpen=highest.key;delete highCard.dataset.go;}else{delete highCard.dataset.playerOpen;highCard.dataset.go='squad';}}
-
     // v0.6.21: the Squad filter panel was intentionally removed. Clear any
     // persisted legacy filter state so an invisible old filter can never hide players.
     if(state.squadFilter!=='ALL'||state.search||state.squadOvrMin!==''||state.squadOvrMax!==''||state.squadPlaystyle||state.squadAbility||state.squadAvailability){

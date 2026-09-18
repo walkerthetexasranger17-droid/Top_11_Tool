@@ -126,7 +126,7 @@ main{max-width:var(--v6-content)}
 .v063-profile-hero{position:relative;height:430px;min-height:430px;overflow:hidden;border-bottom:1px solid rgba(62,191,238,.22);background:#030b14}
 .v063-profile-hero .profile-hero-bg{position:absolute;inset:0;background-image:linear-gradient(90deg,rgba(2,10,18,.97) 0%,rgba(2,10,18,.78) 34%,rgba(2,10,18,.18) 67%,rgba(2,10,18,.72) 100%),linear-gradient(180deg,rgba(2,8,15,.04),rgba(2,8,15,.2) 63%,#020a12 100%),var(--profile-bg);background-size:cover;background-position:center}
 .v063-profile-hero::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 68% 42%,rgba(70,211,255,.14),transparent 28%),radial-gradient(circle at 79% 62%,rgba(159,255,27,.13),transparent 25%)}
-.v063-profile-hero .profile-back{z-index:7;left:28px;top:20px;width:auto;height:35px;padding:0 10px;border:0;background:rgba(3,16,28,.54);border-radius:8px;color:#c9dbe5;font:700 10px 'DM Sans';display:flex;align-items:center;gap:7px}
+.v063-profile-hero .profile-back{z-index:7;left:28px;top:20px;width:auto;height:35px;padding:0 10px;border:0;background:rgba(3,16,28,.54);border-radius:8px;color:#c9dbe5;font:700 10px 'Barlow Condensed';display:flex;align-items:center;gap:7px}
 .v063-profile-hero .profile-back:hover{color:#fff;background:rgba(6,28,45,.78)}
 .v063-profile-hero .profile-role-art{z-index:3;right:11%;bottom:-33px;width:510px;height:510px;object-fit:cover;object-position:50% 18%;border-radius:0;filter:saturate(1.1) contrast(1.05) drop-shadow(0 0 34px rgba(42,171,255,.2));mask-image:linear-gradient(90deg,transparent 0,#000 14%,#000 100%),linear-gradient(180deg,#000 0,#000 84%,transparent 100%);mask-composite:intersect}
 .v063-profile-hero .profile-hero-copy{z-index:6;left:31px;bottom:36px;max-width:620px}
@@ -418,7 +418,7 @@ main{max-width:var(--v6-content)}
 .topbar-actions{display:flex;align-items:center;gap:14px}
 .top-status{display:flex;align-items:center;gap:9px;border:0;border-radius:0;background:transparent;padding:0 14px 0 0;color:#d9e9f2;min-width:128px}
 .top-status .cloud-icon{font-size:22px;color:#fff;line-height:1}.top-status-copy{display:grid;gap:2px;text-align:left}.top-status-copy b{font-size:9px;line-height:1;text-transform:uppercase;letter-spacing:.09em;color:var(--v6-lime)}.top-status-copy small{font-size:7px;line-height:1;color:#8da9ba}.top-status.cloud .cloud-icon{filter:drop-shadow(0 0 8px rgba(168,255,25,.3))}
-.account-button{width:auto;height:48px;display:grid;grid-template-columns:38px auto 14px;gap:9px;align-items:center;padding:4px 5px 4px 4px;border:0;border-left:1px solid rgba(92,185,233,.28);border-radius:0;background:transparent;text-align:left;color:#fff}.account-button:hover{background:rgba(14,43,61,.38)}.account-avatar{width:36px;height:36px;display:grid;place-items:center;border-radius:50%;border:1px solid rgba(92,220,255,.7);background:radial-gradient(circle at 35% 30%,#14374a,#071724 70%);box-shadow:0 0 0 2px rgba(255,255,255,.04);font:800 13px 'DM Sans',sans-serif}.account-meta{display:grid;min-width:78px}.account-meta b{font:800 11px 'DM Sans',sans-serif}.account-meta small{max-width:92px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#a6bbc8;font-size:8px}.account-chevron{font-size:11px;color:#b9d0dc}
+.account-button{width:auto;height:48px;display:grid;grid-template-columns:38px auto 14px;gap:9px;align-items:center;padding:4px 5px 4px 4px;border:0;border-left:1px solid rgba(92,185,233,.28);border-radius:0;background:transparent;text-align:left;color:#fff}.account-button:hover{background:rgba(14,43,61,.38)}.account-avatar{width:36px;height:36px;display:grid;place-items:center;border-radius:50%;border:1px solid rgba(92,220,255,.7);background:radial-gradient(circle at 35% 30%,#14374a,#071724 70%);box-shadow:0 0 0 2px rgba(255,255,255,.04);font:800 13px 'Barlow Condensed',sans-serif}.account-meta{display:grid;min-width:78px}.account-meta b{font:800 11px 'Barlow Condensed',sans-serif}.account-meta small{max-width:92px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#a6bbc8;font-size:8px}.account-chevron{font-size:11px;color:#b9d0dc}
 
 /* Hero fidelity: reuse the existing football production scene, mirrored and
    reframed so the ball-carrying player occupies the approved right side. */
@@ -435,7 +435,7 @@ main{max-width:var(--v6-content)}
 .dashboard-training{position:relative;background-image:linear-gradient(90deg,rgba(4,19,30,.98) 0%,rgba(4,19,30,.90) 58%,rgba(4,19,30,.30) 100%),url('../assets/scenes/team-training.webp');background-size:cover;background-position:center}.dashboard-training-art{display:none}.dashboard-mini-stats{gap:5px}.dashboard-mini-stats div{padding:8px 5px;background:rgba(4,18,29,.88);border-radius:7px}.dashboard-mini-stats b{font-size:19px}.dashboard-mini-stats span{font-size:6px}.dashboard-build-btn{height:36px;min-height:36px;margin-top:8px;border-radius:6px;font-size:10px;text-transform:uppercase}
 .dashboard-plan-snapshot{min-height:145px;grid-template-columns:1.15fr .85fr;gap:8px}.dashboard-mini-pitch{min-height:138px;border-radius:7px}.dashboard-mini-pitch::before{inset:7px}.dashboard-mini-pitch .p{width:9px;height:9px}.dashboard-plan-copy small{font-size:6px}.dashboard-plan-copy b{font-size:15px}.dashboard-plan-copy span{font-size:6.5px;margin-bottom:7px}.dashboard-plan-copy .plan-ready{margin-top:auto;color:var(--v6-lime);text-transform:uppercase;letter-spacing:.06em;font-weight:800}
 .dashboard-insight{position:relative;background-image:linear-gradient(90deg,rgba(4,19,30,.98) 0%,rgba(4,19,30,.88) 60%,rgba(4,19,30,.22) 100%),url('../assets/scenes/training.webp');background-size:cover;background-position:center}.dashboard-insight-copy{min-height:92px;grid-template-columns:76px 1fr;gap:10px}.dashboard-insight-score{width:67px;height:67px;border-width:6px}.dashboard-insight-score b{font-size:19px}.dashboard-insight-score span{font-size:5px}.dashboard-insight-copy>div:last-child>b{font-size:12px}.dashboard-insight-copy p{font-size:6.5px;line-height:1.35;margin:4px 0}.dashboard-insight-copy .section-link{font-size:7px}
-.dashboard-action-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.dashboard-action-grid button{min-height:68px;display:grid;place-items:center;align-content:center;gap:3px;padding:7px;border:1px solid rgba(71,169,225,.22);border-radius:8px;background:#061522;color:#fff}.dashboard-action-grid button:hover{border-color:rgba(168,255,25,.5)}.dashboard-action-grid span{font-size:24px;color:var(--v6-cyan);line-height:1}.dashboard-action-grid b{font:800 9px 'DM Sans',sans-serif}
+.dashboard-action-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.dashboard-action-grid button{min-height:68px;display:grid;place-items:center;align-content:center;gap:3px;padding:7px;border:1px solid rgba(71,169,225,.22);border-radius:8px;background:#061522;color:#fff}.dashboard-action-grid button:hover{border-color:rgba(168,255,25,.5)}.dashboard-action-grid span{font-size:24px;color:var(--v6-cyan);line-height:1}.dashboard-action-grid b{font:800 9px 'Barlow Condensed',sans-serif}
 
 /* Drawer backing the approved mobile “More” navigation item. */
 .nav-more{display:none}.more-drawer-backdrop[hidden]{display:none!important}.more-drawer-backdrop{position:fixed;z-index:120;inset:0;background:rgba(0,5,10,.66);backdrop-filter:blur(3px)}.more-drawer{position:absolute;left:0;top:0;bottom:0;width:min(300px,82vw);padding:20px 14px;background:linear-gradient(180deg,#061421,#020a12);border-right:1px solid rgba(72,190,244,.32);box-shadow:24px 0 60px rgba(0,0,0,.45);display:grid;grid-auto-rows:min-content;gap:7px}.more-drawer-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;padding:5px 5px 12px;border-bottom:1px solid rgba(72,190,244,.18)}.more-drawer-head h2{margin:4px 0 0;font:900 30px 'Barlow Condensed',sans-serif;text-transform:uppercase}.more-drawer-head button{border:0;background:transparent;color:#c8d8e2;font-size:27px}.more-drawer>button{height:52px;display:grid;grid-template-columns:35px 1fr;align-items:center;gap:9px;padding:0 13px;border:1px solid rgba(72,190,244,.16);border-radius:9px;background:#061522;color:#dce8ee;text-align:left;font-weight:700}.more-drawer>button img{width:23px;height:23px}.drawer-account-dot{width:26px;height:26px;display:grid;place-items:center;border:1px solid var(--v6-cyan);border-radius:50%;color:#fff}.more-drawer-open{overflow:hidden}
@@ -495,7 +495,7 @@ main{max-width:var(--v6-content)}
 /* Approved desktop header search shortcut. */
 .home-search-shortcut{display:none}
 @media (min-width:1024px) and (pointer:fine){
-  .home-search-shortcut{width:min(390px,32vw);height:40px;margin-left:16px;display:grid;grid-template-columns:24px 1fr auto;align-items:center;gap:8px;padding:0 12px;border:1px solid rgba(74,184,235,.20);border-radius:7px;background:#071522;color:#c7d7e0;text-align:left}.home-search-shortcut>span{font-size:20px;color:#dcebf2}.home-search-shortcut em{font-style:normal;font-size:10px;color:#829cab;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.home-search-shortcut kbd{padding:3px 6px;border-radius:5px;background:#0b2233;color:#8aa5b4;font:700 8px 'DM Sans',sans-serif}.home-search-shortcut:hover{border-color:rgba(168,255,25,.38)}
+  .home-search-shortcut{width:min(390px,32vw);height:40px;margin-left:16px;display:grid;grid-template-columns:24px 1fr auto;align-items:center;gap:8px;padding:0 12px;border:1px solid rgba(74,184,235,.20);border-radius:7px;background:#071522;color:#c7d7e0;text-align:left}.home-search-shortcut>span{font-size:20px;color:#dcebf2}.home-search-shortcut em{font-style:normal;font-size:10px;color:#829cab;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.home-search-shortcut kbd{padding:3px 6px;border-radius:5px;background:#0b2233;color:#8aa5b4;font:700 8px 'Barlow Condensed',sans-serif}.home-search-shortcut:hover{border-color:rgba(168,255,25,.38)}
 }
 @media (orientation:portrait) and (max-width:699px) and (pointer:coarse){
   .v060-home-hero .hero-secondary{display:flex!important;align-items:center;justify-content:center}.v060-home-hero .hero-actions{height:auto!important}
@@ -704,7 +704,7 @@ main{max-width:var(--v6-content)}
  border:1px solid rgba(115,255,179,.38)!important;overflow:hidden}
 .dashboard-mini-pitch::before{inset:7px!important;border-color:rgba(148,236,226,.64)!important}
 .dashboard-mini-pitch::after{left:7px!important;right:7px!important;background:rgba(148,236,226,.46)!important}
-.dashboard-focus-list{display:grid;gap:5px;align-content:center;min-width:0}.dashboard-focus-list>small{font-size:6px;text-transform:uppercase;letter-spacing:.12em;color:#9fc5d6;font-weight:800}.dashboard-focus-list>span{display:grid;grid-template-columns:15px minmax(0,1fr);gap:5px;align-items:center;padding:5px 6px;border:1px solid rgba(72,160,208,.16);border-radius:5px;background:rgba(8,31,45,.78);min-width:0}.dashboard-focus-list img{width:13px;height:13px}.dashboard-focus-list b{font:700 6.5px 'DM Sans',sans-serif;color:#ddecf3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dashboard-focus-list{display:grid;gap:5px;align-content:center;min-width:0}.dashboard-focus-list>small{font-size:6px;text-transform:uppercase;letter-spacing:.12em;color:#9fc5d6;font-weight:800}.dashboard-focus-list>span{display:grid;grid-template-columns:15px minmax(0,1fr);gap:5px;align-items:center;padding:5px 6px;border:1px solid rgba(72,160,208,.16);border-radius:5px;background:rgba(8,31,45,.78);min-width:0}.dashboard-focus-list img{width:13px;height:13px}.dashboard-focus-list b{font:700 6.5px 'Barlow Condensed',sans-serif;color:#ddecf3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 /* Performance is intentionally copy-led like the approved reference; no invented chart. */
 .dashboard-insight-copy{display:flex!important;align-items:flex-end!important;min-height:80px!important;padding:10px 44% 6px 2px!important}.dashboard-insight-copy>div{min-width:0}.dashboard-insight-copy>div>b{display:block;font:900 12px/1.08 'Barlow Condensed',sans-serif;text-transform:uppercase;color:#fff}.dashboard-insight-copy p{margin:5px 0 5px;font-size:6px!important;line-height:1.4;color:#b6c9d4!important}.dashboard-insight-copy .section-link{padding:0!important;color:var(--v6-lime)!important;font-size:6px!important}
@@ -1294,7 +1294,7 @@ main{max-width:var(--v6-content)}
 .brand-wordmark-main{display:flex;align-items:baseline;gap:4px;font:900 28px/.78 "Barlow Condensed",sans-serif;font-style:italic;letter-spacing:-.035em;text-transform:uppercase;white-space:nowrap;filter:drop-shadow(0 2px 2px rgba(0,0,0,.65))}
 .brand-wordmark-top{color:#f5f7f8;text-shadow:0 1px 0 #6e7880,0 2px 0 #323a40}
 .brand-wordmark-eleven{background:linear-gradient(180deg,#eaff3a 0%,#9cff00 42%,#4dbf00 100%);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:0 0 12px rgba(157,255,18,.15)}
-.brand-wordmark-tool{width:100%;display:flex;align-items:center;justify-content:center;gap:7px;margin-top:3px;font:800 12px/.8 "DM Sans",sans-serif;letter-spacing:.42em;color:#eef4f6;text-transform:uppercase}
+.brand-wordmark-tool{width:100%;display:flex;align-items:center;justify-content:center;gap:7px;margin-top:3px;font:800 12px/.8 "Barlow Condensed",sans-serif;letter-spacing:.42em;color:#eef4f6;text-transform:uppercase}
 .brand-wordmark-tool i{display:block;width:24px;height:2px;border-radius:2px;background:linear-gradient(90deg,transparent,var(--v6-cyan));box-shadow:0 0 7px rgba(66,217,255,.55)}
 .brand-wordmark-tool i:last-child{background:linear-gradient(90deg,var(--v6-lime),transparent);box-shadow:0 0 7px rgba(168,255,25,.45)}
 .brand-wordmark .brand-sub{font-size:7px!important;line-height:1!important;letter-spacing:.16em!important;margin:4px 0 0!important;color:var(--v6-cyan)!important}
@@ -1304,10 +1304,10 @@ main{max-width:var(--v6-content)}
 .home-wordmark-main{display:flex;align-items:baseline;gap:7px;font:900 46px/.78 "Barlow Condensed",sans-serif;font-style:italic;letter-spacing:-.04em;text-transform:uppercase;white-space:nowrap}
 .home-wordmark-main>span{color:#f5f7f8;text-shadow:0 2px 0 #65717a,0 4px 0 #263039}
 .home-wordmark-main>strong{font:inherit;background:linear-gradient(180deg,#edff42 0%,#a9ff10 42%,#45bd00 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 9px rgba(163,255,20,.22))}
-.home-wordmark-tool{width:92%;display:flex;align-items:center;justify-content:center;gap:12px;margin-top:7px;font:800 17px/.9 "DM Sans",sans-serif;letter-spacing:.48em;color:#f2f5f6;text-transform:uppercase}
+.home-wordmark-tool{width:92%;display:flex;align-items:center;justify-content:center;gap:12px;margin-top:7px;font:800 17px/.9 "Barlow Condensed",sans-serif;letter-spacing:.48em;color:#f2f5f6;text-transform:uppercase}
 .home-wordmark-tool i{display:block;width:62px;height:2px;border-radius:2px;background:linear-gradient(90deg,transparent,var(--v6-cyan));box-shadow:0 0 9px rgba(66,217,255,.65)}
 .home-wordmark-tool i:last-child{background:linear-gradient(90deg,var(--v6-lime),transparent);box-shadow:0 0 9px rgba(168,255,25,.55)}
-.home-wordmark-pill{margin-top:10px;min-width:90px;padding:4px 18px;border:1px solid var(--v6-lime);border-radius:999px;background:rgba(3,19,29,.72);font:800 8px/1 "DM Sans",sans-serif;letter-spacing:.3em;color:#fff;text-transform:uppercase;box-shadow:0 0 14px rgba(168,255,25,.12)}
+.home-wordmark-pill{margin-top:10px;min-width:90px;padding:4px 18px;border:1px solid var(--v6-lime);border-radius:999px;background:rgba(3,19,29,.72);font:800 8px/1 "Barlow Condensed",sans-serif;letter-spacing:.3em;color:#fff;text-transform:uppercase;box-shadow:0 0 14px rgba(168,255,25,.12)}
 
 /* A small consistent tone layer for photographic page backgrounds. */
 :root{--v626-photo-tint:rgba(1,10,19,.15);--v626-photo-filter:brightness(.86) saturate(.91) contrast(1.02)}
@@ -1322,14 +1322,14 @@ main{max-width:var(--v6-content)}
 .dashboard-stat-grid.dashboard-glance{display:block!important;position:relative!important;z-index:6!important;margin:0!important;padding:0!important;border:1px solid rgba(70,215,255,.50)!important;border-radius:14px!important;background:linear-gradient(135deg,rgba(5,28,43,.94),rgba(3,17,28,.94))!important;box-shadow:0 10px 28px rgba(0,0,0,.28),inset 0 0 0 1px rgba(255,255,255,.015)!important;overflow:hidden!important}
 .dashboard-glance::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(66,217,255,.045),transparent 46%,rgba(168,255,25,.035));pointer-events:none}
 .dashboard-glance-head{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 14px 6px}
-.dashboard-glance-head>div{display:flex;align-items:center;gap:9px}.dashboard-glance-head h2{margin:0;font:900 18px/1 "Barlow Condensed",sans-serif;text-transform:uppercase;letter-spacing:.015em;color:#fff}.dashboard-glance-head time{font:700 7px/1 "DM Sans",sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#83b8d0}
+.dashboard-glance-head>div{display:flex;align-items:center;gap:9px}.dashboard-glance-head h2{margin:0;font:900 18px/1 "Barlow Condensed",sans-serif;text-transform:uppercase;letter-spacing:.015em;color:#fff}.dashboard-glance-head time{font:700 7px/1 "Barlow Condensed",sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#83b8d0}
 .dashboard-glance-calendar{width:18px;height:18px;border:2px solid var(--v6-cyan);border-radius:4px;position:relative;box-shadow:0 0 9px rgba(66,217,255,.12)}
 .dashboard-glance-calendar::before{content:"";position:absolute;left:3px;right:3px;top:5px;height:2px;background:var(--v6-cyan);box-shadow:0 -5px 0 -1px var(--v6-cyan)}
 .dashboard-glance-metrics{position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));padding:4px 8px 10px}
 .dashboard-glance-metric{min-width:0;display:grid;grid-template-columns:36px minmax(0,1fr);align-items:center;gap:8px;padding:7px 11px;border:0;border-right:1px solid rgba(72,190,239,.34);background:transparent;color:#fff;text-align:left}
 .dashboard-glance-metric:last-child{border-right:0}.dashboard-glance-metric:hover{background:rgba(66,217,255,.035)}
 .dashboard-glance-metric img{width:31px;height:31px;object-fit:contain}.dashboard-glance-metric:nth-child(3) img{filter:drop-shadow(0 0 5px rgba(168,255,25,.18))}
-.dashboard-glance-metric>span{display:grid;min-width:0}.dashboard-glance-metric b{font:900 27px/.9 "Barlow Condensed",sans-serif;color:#fff}.dashboard-glance-metric small{margin-top:3px;font:700 7px/1 "DM Sans",sans-serif;text-transform:uppercase;letter-spacing:.06em;color:#9fc0d0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dashboard-glance-metric>span{display:grid;min-width:0}.dashboard-glance-metric b{font:900 27px/.9 "Barlow Condensed",sans-serif;color:#fff}.dashboard-glance-metric small{margin-top:3px;font:700 7px/1 "Barlow Condensed",sans-serif;text-transform:uppercase;letter-spacing:.06em;color:#9fc0d0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .dashboard-workspace{margin-top:10px!important}
 
 /* Squad management actions now belong with the roster, not on top of the team photo. */
@@ -1378,4 +1378,66 @@ main{max-width:var(--v6-content)}
   #page-squad .v0625-page-title h1{white-space:normal!important;max-width:220px!important;line-height:.86!important}
   #page-squad .v0625-page-title h1 em{display:block!important}
   .top-status-copy small{display:none!important}
+}
+
+
+/* =========================================================
+   v0.6.27 — Unified typography + branded page-title system +
+   Home upper-left branding + Squad summary removal.
+   ========================================================= */
+:root{--v627-type:"Barlow Condensed","Arial Narrow",sans-serif}
+html,body,button,input,select,textarea,option{font-family:var(--v627-type)!important;font-variant-numeric:tabular-nums}
+body{letter-spacing:.01em}
+.squad-nationality-flag{font-family:"Segoe UI Emoji","Noto Color Emoji",sans-serif!important}
+
+/* Keep the header wordmark crisp and give the italic final N breathing room. */
+.brand-copy.brand-wordmark{overflow:visible!important;justify-items:center!important;text-align:center!important}
+.brand-wordmark-main{overflow:visible!important;padding-right:.22em!important;justify-self:center!important}
+.brand-wordmark-eleven{-webkit-box-decoration-break:clone;box-decoration-break:clone;padding-right:.05em}
+.brand-wordmark-tool{justify-self:center!important;width:94%!important}
+.brand-wordmark .brand-sub{justify-self:center!important;text-align:center!important;width:100%!important;padding-right:.22em!important}
+
+/* Home branding is a page mark, not a centred poster. */
+.home-hero-branding{left:20px!important;right:auto!important;top:18px!important;transform:none!important;justify-items:start!important;text-align:left!important;width:max-content!important;max-width:calc(100% - 40px)!important}
+.home-wordmark-main{padding-right:.22em!important;overflow:visible!important}
+.home-wordmark-tool{width:100%!important;justify-content:center!important}
+.home-wordmark-pill{justify-self:center!important}
+
+/* Reusable page titles use the approved TOP ELEVEN TOOL visual language. */
+.branded-page-title{max-width:none!important;pointer-events:none}
+.page-brand-heading{display:grid!important;width:max-content!important;max-width:100%!important;margin:0!important;padding:.06em .20em .16em 0!important;font:900 54px/.76 var(--v627-type)!important;font-style:italic!important;letter-spacing:-.025em!important;text-transform:uppercase!important;text-shadow:none!important;filter:drop-shadow(0 4px 10px rgba(0,0,0,.72))}
+.page-brand-heading span{display:block;white-space:nowrap}
+.page-brand-primary{color:#f5f7f8!important;text-shadow:0 2px 0 #66727b,0 4px 0 #273139,0 0 14px rgba(255,255,255,.06)!important}
+.page-brand-accent{background:linear-gradient(180deg,#efff49 0%,#aaff12 43%,#45bf00 100%)!important;-webkit-background-clip:text!important;background-clip:text!important;color:transparent!important;filter:drop-shadow(0 0 8px rgba(166,255,25,.20));padding-right:.08em}
+.page-brand-heading::after{content:"";display:block;width:92%;height:2px;margin-top:10px;background:linear-gradient(90deg,var(--v6-cyan) 0 31%,transparent 31% 64%,var(--v6-lime) 64% 100%);box-shadow:-12px 0 10px rgba(66,217,255,.28),12px 0 10px rgba(168,255,25,.20)}
+.page-brand-single .page-brand-primary{background:linear-gradient(180deg,#f9fbfc,#b8c4cb 82%);-webkit-background-clip:text;background-clip:text;color:transparent!important;text-shadow:none!important}
+
+/* Functional titles only on the redesigned hero set. */
+.v068-scanner-hero .branded-page-title,.v064-training-hero .branded-page-title,.v066-drills-hero .branded-page-title,.v067-account-hero .branded-page-title,.v067-settings-hero .branded-page-title{left:24px!important;right:auto!important;top:22px!important;bottom:auto!important}
+.v065-team-plan-head>.branded-page-title{position:absolute!important;left:24px!important;top:22px!important;z-index:3!important}
+
+/* The five redundant Squad summary cards are retired. Actions now lead directly into the roster. */
+#page-squad .squad-stat-grid{display:none!important}
+#page-squad .squad-management-actions{margin-top:0!important}
+#page-squad .squad-workspace{margin-top:0!important}
+
+@media (orientation:portrait) and (max-width:699px) and (pointer:coarse){
+  .brand-copy.brand-wordmark{flex-basis:146px!important;max-width:146px!important}
+  .brand-wordmark-main{font-size:18px!important;padding-right:.34em!important}
+  .home-hero-branding{left:16px!important;top:14px!important;max-width:calc(100% - 32px)!important}
+  .home-wordmark-main{font-size:30px!important;gap:5px!important;padding-right:.34em!important}
+  .home-wordmark-tool{font-size:9px!important;margin-top:4px!important}
+  .home-wordmark-pill{margin-top:5px!important;font-size:5.5px!important}
+  #page-squad .v0625-page-title{left:18px!important;right:auto!important;top:18px!important;max-width:330px!important}
+  .page-brand-heading{font-size:31px!important;line-height:.78!important;padding-right:.34em!important}
+  .page-brand-heading::after{height:1px!important;margin-top:7px!important}
+  .v068-scanner-hero .branded-page-title,.v064-training-hero .branded-page-title,.v066-drills-hero .branded-page-title,.v067-account-hero .branded-page-title,.v067-settings-hero .branded-page-title{left:18px!important;top:18px!important}
+  .v065-team-plan-head>.branded-page-title{left:18px!important;top:18px!important}
+  #page-squad.active .v062-squad-body{margin-top:-14px!important;padding-top:8px!important}
+  #page-squad .squad-management-actions{margin:0 0 8px!important}
+}
+
+@media (orientation:landscape) and (pointer:coarse) and (max-height:700px){
+  .home-hero-branding{left:16px!important;top:10px!important}
+  .page-brand-heading{font-size:31px!important}.page-brand-heading::after{margin-top:5px!important;height:1px!important}
 }

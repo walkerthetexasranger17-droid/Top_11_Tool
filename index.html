@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-runtime="0.6.26">
+<html lang="en" data-runtime="0.6.27">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -10,16 +10,16 @@
   <meta name="application-name" content="Top Eleven Tool">
   <meta name="apple-mobile-web-app-title" content="Top Eleven Tool">
   <title>Top Eleven Tool</title>
-  <link rel="manifest" href="./manifest.json?r=0626">
+  <link rel="manifest" href="./manifest.json?r=0627">
   <link rel="icon" href="./icon-192.png"><link rel="apple-touch-icon" href="./icon-192.png">
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./css/app.css?r=0626"><link rel="stylesheet" href="./css/v060.css?r=0626">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/app.css?r=0627"><link rel="stylesheet" href="./css/v060.css?r=0627">
 </head>
 <body class="booting">
 <div class="auth-gate" id="authGate" hidden>
   <div class="auth-shell">
-    <div class="auth-brand"><img src="./icon-192.png" alt=""><div><b>TOP ELEVEN <span>TOOL</span></b><small>Cloud account · v0.6.26</small></div></div>
+    <div class="auth-brand"><img src="./icon-192.png" alt=""><div><b>TOP ELEVEN <span>TOOL</span></b><small>Cloud account · v0.6.27</small></div></div>
     <div class="auth-message" id="authMessage"></div>
     <div data-auth-panel="setup">
       <div class="section-kicker">One-time setup</div><h1>Connect Firebase</h1><p class="body-copy">Paste the <b>firebaseConfig</b> object from Firebase Console. This project configuration is not a private password; it identifies the Firebase project used by the app.</p>
@@ -63,10 +63,10 @@
 <div class="app">
   <header class="topbar">
     <button class="brand-home" type="button" data-go="dashboard" aria-label="Go to Home" title="Home"><img class="brand-mark" src="./icon-192.png" alt="Top Eleven Tool"></button>
-    <div class="brand-copy brand-wordmark" aria-label="Top Eleven Tool v0.6.26">
+    <div class="brand-copy brand-wordmark" aria-label="Top Eleven Tool v0.6.27">
       <div class="brand-wordmark-main"><span class="brand-wordmark-top">TOP</span><span class="brand-wordmark-eleven">ELEVEN</span></div>
       <div class="brand-wordmark-tool"><i></i><span>TOOL</span><i></i></div>
-      <div class="brand-sub">v0.6.26</div>
+      <div class="brand-sub">v0.6.27</div>
     </div>
     <button class="home-search-shortcut" id="homeSearchShortcut" type="button" aria-label="Search squad"><img src="./assets/v0616/home/27-header-search.svg" alt=""><em>Search players, skills, or run a scan...</em><kbd>⌘ K</kbd></button>
     <div class="topbar-actions">
@@ -106,18 +106,11 @@
           <source media="(pointer: coarse) and (max-width: 1180px)" srcset="./assets/v0623/backgrounds/squad-mobile.png">
           <img src="./assets/v060/scenes/squad-hero-desktop.webp" alt="" decoding="async" fetchpriority="high">
         </picture>
-        <div class="hero-copy v0625-page-title">
-          <h1>Squad <em>Management</em></h1>
+        <div class="hero-copy v0625-page-title branded-page-title">
+          <h1 class="page-brand-heading"><span class="page-brand-primary">SQUAD</span><span class="page-brand-accent">MANAGEMENT</span></h1>
         </div>
       </div>
       <div class="page-body v062-squad-body">
-        <div class="squad-stat-grid">
-          <button class="squad-stat" data-go="squad"><span class="squad-stat-icon"><img src="assets/v0616/home/20-nav-squad.svg" alt=""></span><span><small>Total players</small><b id="squadStatTotal">0</b><em>in your squad</em></span></button>
-          <button class="squad-stat" data-go="squad"><span class="squad-stat-icon cyan">▥</span><span><small>Average OVR</small><b id="squadStatAvg">—</b><em>squad average</em></span></button>
-          <button class="squad-stat" id="squadHighestCard" data-go="squad"><span class="squad-stat-icon cyan">☆</span><span><small>Highest OVR</small><b id="squadStatHigh">—</b><em id="squadStatHighName">top player</em></span></button>
-          <button class="squad-stat" data-go="team-plan"><span class="squad-stat-icon cyan">◔</span><span><small>Position balance</small><b id="squadStatBalance">—</b><em id="squadStatBalanceCopy">coverage</em></span></button>
-          <div class="squad-stat attention"><span class="squad-stat-icon warning">!</span><span><small>Needs attention</small><b id="squadStatNeeds">0</b><em>players need data</em></span></div>
-        </div>
 
         <div class="squad-management-actions" aria-label="Squad management actions">
           <button class="btn primary squad-action-add" data-go="add-player"><span>＋</span> Add Player</button>
@@ -166,13 +159,8 @@
 
     <section class="page v068-scanner-page" id="page-add-player" data-page="add-player">
       <div class="hero v068-scanner-hero" style="--hero:url('./assets/v060/scenes/scanner-hero-desktop.webp');--hero-landscape:url('./assets/v060/scenes/scanner-hero-landscape.webp')">
-        <div class="hero-copy">
-          <div class="eyebrow" id="scanHeroEyebrow">Player scanner</div>
-          <h1 id="scanHeroTitle">Scan. <em>Review. Save.</em></h1>
-          <p id="scanHeroCopy">Upload a Top Eleven Skills screenshot, verify the detected player data and save it directly to your squad.</p>
-        </div>
-        <div class="hero-mantra scanner-mantra" aria-hidden="true"><span>Capture.</span><span>Verify.</span><span>Improve.</span></div>
-      </div>
+        <div class="hero-copy branded-page-title" id="scanHeroTitleWrap"><h1 class="page-brand-heading"><span class="page-brand-primary">PLAYER</span><span class="page-brand-accent">SCANNER</span></h1></div>
+      <span id="scanHeroEyebrow" hidden>Player scanner</span><span id="scanHeroTitle" hidden>Player Scanner</span><span id="scanHeroCopy" hidden>Player scanner</span></div>
       <div class="page-body v068-scanner-body">
         <section class="update-queue-overview" id="updateQueueOverview" hidden>
           <div class="update-overview-copy"><span class="section-kicker">Squad refresh</span><h2>Update Players</h2><p>Drop fresh Skills screenshots. Names are used only to match existing players; saved roles, Playstyle and Special Abilities stay untouched.</p></div>
@@ -248,12 +236,7 @@
 
     <section class="page v064-training-page" id="page-training" data-page="training" data-nav-label="Training" data-nav-icon="assets/v0616/home/21-nav-training.svg">
       <div class="hero v064-training-hero" style="--hero:url('./assets/v060/scenes/training-hero-desktop.webp');--hero-mobile:url('./assets/v060/scenes/training-hero-mobile.webp')">
-        <div class="hero-copy">
-          <div class="eyebrow">Training optimiser</div>
-          <h1>Training <em>Builder</em></h1>
-          <p>Build a tailored 6-drill session from your saved drill levels and real player data. Smarter training, stronger players.</p>
-        </div>
-        <div class="hero-mantra training-mantra" aria-hidden="true"><span>Train.</span><span>Analyse.</span><span>Improve.</span><span>Win.</span></div>
+        <div class="hero-copy branded-page-title"><h1 class="page-brand-heading"><span class="page-brand-primary">TRAINING</span><span class="page-brand-accent">BUILDER</span></h1></div>
       </div>
       <div class="page-body v064-training-body">
         <div class="mode-grid training-tabs v064-training-tabs">
@@ -314,8 +297,7 @@
 
     <section class="page v066-drills-page" id="page-my-drills" data-page="my-drills" data-nav-label="Drill Selection" data-nav-icon="assets/v0616/home/21-nav-training.svg">
       <div class="hero v066-drills-hero" style="--hero:url('./assets/v060/scenes/drills-hero-desktop.webp');--hero-mobile:url('./assets/v060/scenes/drills-hero-mobile.webp')">
-        <div class="hero-copy"><div class="eyebrow">Drill library</div><h1>Drills <em>Train Smarter.</em></h1><p>Manage the drills you actually own, keep their levels current and give the optimiser the best possible training data.</p></div>
-        <div class="hero-mantra drills-mantra" aria-hidden="true"><span>Discover.</span><span>Analyse.</span><span>Build.</span><span>Improve.</span></div>
+        <div class="hero-copy branded-page-title"><h1 class="page-brand-heading"><span class="page-brand-primary">DRILL</span><span class="page-brand-accent">LIBRARY</span></h1></div>
       </div>
       <div class="page-body v066-drills-body">
         <div class="drills-summary-grid">
@@ -349,7 +331,7 @@
     </section>
 
     <section class="page v065-team-plan-page" id="page-team-plan" data-page="team-plan" data-nav-label="Team Plan" data-nav-icon="assets/v0616/home/22-nav-team-plan.svg">
-      <div class="v065-team-plan-head" style="--hero:url('./assets/v060/scenes/team-plan-header-desktop.webp');--hero-mobile:url('./assets/v060/scenes/team-plan-header-mobile.webp')"><div><div class="eyebrow">Tactics · Players · A stronger tomorrow</div><h1>Team <em>Plan</em></h1><p>Your formation, set pieces, tactics and Mentor plan in one match workspace.</p></div><div class="team-plan-mantra" aria-hidden="true"><span>Plan smarter.</span><span>Play stronger.</span><span>Win together.</span></div></div>
+      <div class="v065-team-plan-head" style="--hero:url('./assets/v060/scenes/team-plan-header-desktop.webp');--hero-mobile:url('./assets/v060/scenes/team-plan-header-mobile.webp')"><div class="branded-page-title"><h1 class="page-brand-heading"><span class="page-brand-primary">TEAM</span><span class="page-brand-accent">PLAN</span></h1></div></div>
       <div class="page-body v065-team-plan-body">
         <div class="mode-grid team-plan-tabs">
           <button class="mode active" data-team-plan-tab="formation"><img src="assets/icons/team.svg"><span>Lineup</span></button>
@@ -384,7 +366,7 @@
     </section>
 
     <section class="page v067-account-page" id="page-account" data-page="account">
-      <div class="hero v067-account-hero" style="--hero:url('./assets/v060/scenes/settings-hero-desktop.webp');--hero-mobile:url('./assets/v060/scenes/settings-hero-mobile.webp')"><div class="hero-copy"><div class="eyebrow">Your account</div><h1>Profile & <em>Security</em></h1><p>Manage your cloud identity, linked sign-in methods and two-step verification.</p></div></div>
+      <div class="hero v067-account-hero" style="--hero:url('./assets/v060/scenes/settings-hero-desktop.webp');--hero-mobile:url('./assets/v060/scenes/settings-hero-mobile.webp')"><div class="hero-copy branded-page-title"><h1 class="page-brand-heading"><span class="page-brand-primary">MANAGER</span><span class="page-brand-accent">PROFILE</span></h1></div></div>
       <div class="page-body v067-account-body">
         <div class="card"><div class="card-inner"><div class="account-head"><div class="account-avatar" id="accountAvatar">A</div><div><div class="section-title" id="accountDisplayName">Top Eleven Manager</div><div class="body-copy" id="accountEmail">—</div><span class="verify-pill" id="accountVerified">—</span></div></div><div class="filter-chips spaced" id="accountProviders"></div><div class="sync-pill" id="accountSyncStatus"><i></i><span>Checking cloud sync…</span></div><div class="btn-row spaced"><button class="btn ghost" id="resendVerificationBtn">Resend verification email</button><button class="btn danger" id="accountSignOut">Sign out</button></div><div class="auth-message" id="accountMessage"></div></div></div>
         <div class="section"><div class="card"><div class="card-inner"><div class="section-title">Profile</div><label class="field wide spaced"><span>Display name</span><input class="input" id="accountNameInput"></label><button class="btn primary" id="accountSaveName">Save profile</button><div class="divider"></div><div class="section-kicker">Linked sign-in methods</div><div class="btn-row spaced"><button class="btn ghost" id="linkGoogleBtn">Link Google</button></div></div></div></div>
@@ -397,8 +379,7 @@
 
     <section class="page v067-settings-page" id="page-settings" data-page="settings" data-nav-label="Settings" data-nav-icon="assets/v0616/home/25-sidebar-settings.svg">
       <div class="hero v067-settings-hero" style="--hero:url('./assets/v060/scenes/settings-hero-desktop.webp');--hero-mobile:url('./assets/v060/scenes/settings-hero-mobile.webp')">
-        <div class="hero-copy"><div class="eyebrow">Settings</div><h1>Your Tool. <em>Your Rules.</em></h1><p>Manage your account, scanner connection, cloud data and application information.</p></div>
-        <div class="hero-mantra settings-mantra" aria-hidden="true"><span>Analyse.</span><span>Plan.</span><span>Improve.</span><span>Win.</span></div>
+        <div class="hero-copy branded-page-title"><h1 class="page-brand-heading"><span class="page-brand-primary">APP</span><span class="page-brand-accent">SETTINGS</span></h1></div>
       </div>
       <div class="page-body v067-settings-body">
         <div class="settings-grid">
@@ -423,7 +404,7 @@
 
           <section class="settings-card settings-version-card">
             <div class="settings-card-head"><img src="./icon-192.png" alt=""><div><span>About</span><b>Top Eleven Tool</b><small>Responsive web/PWA build.</small></div></div>
-            <div class="settings-version"><strong>v0.6.26</strong><span>Design branch</span></div>
+            <div class="settings-version"><strong>v0.6.27</strong><span>Design branch</span></div>
             <p class="mini-note">Internal game-data build references stay in the background and are not shown throughout the normal product UI.</p>
           </section>
         </div>
@@ -435,6 +416,6 @@
   <div class="dialog-backdrop" id="confirmDialogBackdrop"><div class="confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="confirmDialogTitle"><div class="section-kicker">Squad</div><div class="section-title" id="confirmDialogTitle">Delete player?</div><p id="confirmDialogCopy">Are you sure you want to permanently remove this player from your squad?</p><div class="btn-row spaced"><button class="btn ghost" id="confirmCancelBtn" type="button">Cancel</button><button class="btn danger" id="confirmDeleteBtn" type="button">Delete</button></div></div></div>
   <div class="toast" id="toast"></div>
 </div>
-<script src="./js/optimizer-data.js?r=0626"></script><script src="./js/bible-data.js?r=0626"></script><script src="./js/data.js?r=0626"></script><script src="./js/strategy-data.js?r=0626"></script><script src="./js/best-in-slot-data.js?r=0626"></script><script src="./js/strategy-logic.js?r=0626"></script><script src="./js/squad-coverage-engine.js?r=0626"></script><script src="./js/cloud.js?r=0626"></script><script src="./js/storage.js?r=0626"></script><script src="./js/drill-profile.js?r=0626"></script><script src="./js/players.js?r=0626"></script><script src="./js/training-engine.js?r=0626"></script><script src="./js/team-training-engine.js?r=0626"></script><script src="./js/scanner-engine.js?r=0626"></script><script src="./js/recommendations.js?r=0626"></script><script src="./js/formation.js?r=0626"></script><script src="./js/tactics-engine.js?r=0626"></script><script src="./js/mentor-engine.js?r=0626"></script><script src="./js/team-plan-engine.js?r=0626"></script><script src="./js/best-in-slot-engine.js?r=0626"></script><script src="./js/app.js?r=0626"></script>
+<script src="./js/optimizer-data.js?r=0627"></script><script src="./js/bible-data.js?r=0627"></script><script src="./js/data.js?r=0627"></script><script src="./js/strategy-data.js?r=0627"></script><script src="./js/best-in-slot-data.js?r=0627"></script><script src="./js/strategy-logic.js?r=0627"></script><script src="./js/squad-coverage-engine.js?r=0627"></script><script src="./js/cloud.js?r=0627"></script><script src="./js/storage.js?r=0627"></script><script src="./js/drill-profile.js?r=0627"></script><script src="./js/players.js?r=0627"></script><script src="./js/training-engine.js?r=0627"></script><script src="./js/team-training-engine.js?r=0627"></script><script src="./js/scanner-engine.js?r=0627"></script><script src="./js/recommendations.js?r=0627"></script><script src="./js/formation.js?r=0627"></script><script src="./js/tactics-engine.js?r=0627"></script><script src="./js/mentor-engine.js?r=0627"></script><script src="./js/team-plan-engine.js?r=0627"></script><script src="./js/best-in-slot-engine.js?r=0627"></script><script src="./js/app.js?r=0627"></script>
 <script>(()=>{const expected=document.documentElement.dataset.runtime;if(window.__TE_RUNTIME__!==expected){console.error('Runtime build mismatch',{expected,loaded:window.__TE_RUNTIME__||'missing'});const k='te:runtime-reload:'+expected;if(!sessionStorage.getItem(k)){sessionStorage.setItem(k,'1');location.reload();}}else{sessionStorage.removeItem('te:runtime-reload:'+expected);}})();</script>
 </body></html>

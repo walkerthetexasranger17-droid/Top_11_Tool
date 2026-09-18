@@ -16,9 +16,9 @@ for rel,h in expected.items():
  if not p.exists(): errs.append(f'missing {rel}'); continue
  got=hashlib.sha256(p.read_bytes()).hexdigest()
  if got!=h: errs.append(f'{rel} hash changed: {got}')
-# v0.6.26 keeps the approved Home/Squad background baseline but adds branded Home presence,
+# v0.6.27 keeps the approved Home/Squad background baseline but adds branded Home presence,
 # a subtle tone layer, a single Today-at-a-glance bar, and relocated Squad actions.
-if '<h1>Squad <em>Management</em></h1>' not in html: errs.append('Squad functional title missing')
+if 'page-brand-primary">SQUAD</span><span class="page-brand-accent">MANAGEMENT' not in html: errs.append('Squad functional title missing')
 if 'v0625-page-title' not in html: errs.append('Squad title hook missing')
 for needle,label in [
  ('home-hero-branding','Home branded hero overlay'),
@@ -29,7 +29,7 @@ for needle,label in [
  if needle not in html: errs.append(f'missing {label}')
 if 'squad-hero-actions' in html: errs.append('Squad actions still live in the hero')
 required=[
- 'v0.6.26 — Branding wordmark, calmer backgrounds, Home glance bar',
+ 'v0.6.27 — Unified typography + branded page-title system +',
  'filter:var(--v626-photo-filter)!important',
  'background:var(--v626-photo-tint)!important',
  'height:250px!important;min-height:250px!important',
@@ -37,9 +37,9 @@ required=[
 ]
 for x in required:
  if x not in css: errs.append(f'missing CSS contract: {x}')
-if 'data-runtime="0.6.26"' not in html: errs.append('runtime marker not 0.6.26')
+if 'data-runtime="0.6.27"' not in html: errs.append('runtime marker not 0.6.27')
 if errs:
- print('FAIL v0.6.26 mobile hero/branding contract')
+ print('FAIL v0.6.27 mobile hero/branding contract')
  for e in errs: print('-',e)
  sys.exit(1)
-print('PASS v0.6.26 mobile hero/branding contract')
+print('PASS v0.6.27 mobile hero/branding contract')
