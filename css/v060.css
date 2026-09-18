@@ -1065,3 +1065,110 @@ main{max-width:var(--v6-content)}
   #page-squad.active .squad-hero-media{height:235px!important}
   #page-squad.active .v062-squad-body{margin-top:-24px!important}
 }
+
+/* =========================================================
+   v0.6.23 — Approved full-screen Home + Squad backgrounds
+   Mobile/tablet first. The hand-picked portrait images remain fixed behind
+   the scrolling page, fill the whole usable viewport, and share one hero
+   stage height so the first stat row starts at the same vertical position.
+   ========================================================= */
+.squad-inline-position-badge{display:none}
+
+@media (pointer:coarse) and (max-width:1180px){
+  #page-dashboard.active .home-hero-media,
+  #page-squad.active .squad-hero-media{
+    height:calc(100dvh - var(--v623-hero-top,66px))!important;
+    min-height:calc(100svh - var(--v623-hero-top,66px))!important;
+    bottom:auto!important;
+    overflow:hidden!important;
+  }
+  #page-dashboard.active .home-hero-media img,
+  #page-squad.active .squad-hero-media img{
+    width:100%!important;
+    height:100%!important;
+    object-fit:cover!important;
+    object-position:center top!important;
+    transform:none!important;
+  }
+  #page-dashboard.active .home-hero-media img{filter:brightness(.76) saturate(.94) contrast(1.04)}
+  #page-squad.active .squad-hero-media img{filter:brightness(.72) saturate(.95) contrast(1.04)}
+  #page-dashboard.active .home-hero-media::after,
+  #page-squad.active .squad-hero-media::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    background:linear-gradient(180deg,rgba(2,9,18,.04) 0%,rgba(2,9,18,.10) 40%,rgba(2,9,18,.34) 74%,rgba(2,9,18,.62) 100%);
+  }
+  #page-dashboard.active .dashboard-stat,
+  #page-dashboard.active .dashboard-panel,
+  #page-squad.active .squad-stat,
+  #page-squad.active .squad-roster-panel{
+    background-color:rgba(3,18,29,.91)!important;
+  }
+}
+
+@media (orientation:portrait) and (max-width:699px) and (pointer:coarse){
+  :root{--v623-hero-top:66px}
+  #page-dashboard.active .home-hero-media,
+  #page-squad.active .squad-hero-media{top:66px!important}
+
+  /* Shared page rhythm: Home and Squad hand off to their stat cards at the
+     same Y position. */
+  #page-dashboard .v060-home-hero,
+  #page-squad .v062-squad-hero{
+    height:390px!important;
+    min-height:390px!important;
+  }
+  #page-dashboard.active .v060-dashboard-body,
+  #page-squad.active .v062-squad-body{
+    margin-top:-28px!important;
+  }
+  #page-squad.active .v062-squad-body{padding-top:0!important}
+
+  /* Keep the approved portrait artwork uncropped vertically as far as cover
+     allows; the focal subjects were designed into the top section. */
+  #page-dashboard.active .home-hero-media img,
+  #page-squad.active .squad-hero-media img{object-position:center top!important}
+
+  /* The large glossy role badge was taking too much row width. On mobile it
+     now sits as a compact badge directly after role/age, as requested. */
+  .squad-player-row,.squad-player-list.cards .squad-player-row{
+    grid-template-columns:18px minmax(0,1fr) 25px 42px 30px 8px!important;
+  }
+  .squad-cell-pos,.squad-player-list.cards .squad-cell-pos{display:none!important}
+  .squad-player-identity small{gap:0!important}
+  .squad-role-age{flex:0 1 auto!important;min-width:0!important;overflow:hidden!important;text-overflow:ellipsis!important}
+  .squad-inline-position-badge{
+    display:block!important;
+    width:22px!important;
+    height:14px!important;
+    object-fit:contain!important;
+    flex:0 0 22px!important;
+    margin-left:4px!important;
+  }
+  .squad-cell-playstyle,.squad-player-list.cards .squad-cell-playstyle{grid-column:3!important}
+  .squad-cell-abilities,.squad-player-list.cards .squad-cell-abilities{grid-column:4!important}
+  .squad-cell-ovr,.squad-player-list.cards .squad-cell-ovr{grid-column:5!important}
+  .squad-player-row .row-arrow,.squad-player-list.cards .row-arrow{grid-column:6!important}
+}
+
+@media (orientation:landscape) and (pointer:coarse) and (max-height:700px){
+  :root{--v623-hero-top:46px}
+  #page-dashboard.active .home-hero-media,
+  #page-squad.active .squad-hero-media{top:46px!important}
+  #page-dashboard .v060-home-hero,
+  #page-squad .v062-squad-hero{height:245px!important;min-height:245px!important}
+  #page-dashboard.active .v060-dashboard-body,
+  #page-squad.active .v062-squad-body{margin-top:-22px!important}
+}
+
+@media (orientation:portrait) and (min-width:700px) and (max-width:1180px) and (pointer:coarse){
+  :root{--v623-hero-top:54px}
+  #page-dashboard.active .home-hero-media,
+  #page-squad.active .squad-hero-media{top:54px!important}
+  #page-dashboard .v060-home-hero,
+  #page-squad .v062-squad-hero{height:315px!important;min-height:315px!important}
+  #page-dashboard.active .v060-dashboard-body,
+  #page-squad.active .v062-squad-body{margin-top:-24px!important}
+}

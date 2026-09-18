@@ -1,12 +1,10 @@
-# CURRENT DESIGN OVERLAY — v0.6.22 Home + Squad Anchored Hero Scroll
+# CURRENT DESIGN OVERLAY — v0.6.23 Approved Home + Squad Full-Screen Backgrounds
 
-- Mobile/tablet remains the product priority; desktop only needs to stay functional.
-- Home and Squad use the existing approved cinematic artwork.
-- v0.6.22 anchors the Home and Squad hero media beneath the sticky app header on coarse-pointer phone/tablet layouts while foreground page content scrolls over it.
-- Home retains its overlapping top-stat treatment.
-- Squad now mirrors that depth treatment with the page body overlapping the lower hero.
-- The implementation deliberately avoids `background-attachment: fixed` for mobile-PWA reliability.
-- Squad filter panel is removed.
-- Role Order is `GK → DL → DC → DR → DMC → ML → MC → MR → AML → AMC → AMR → ST`; DML/DMR remain excluded.
-- Nationality flag support remains wired through player storage/scanner as optional visible-flag metadata.
-- Frozen v0.5.17 decision logic and scanner VERSION=12 remain unchanged.
+- Current UI branch: v0.6.23.
+- Frozen decision contract remains v0.5.17.
+- Scanner remains VERSION=12; nationality is still an isolated optional metadata extension.
+- Home and Squad now use the exact user-approved portrait artwork in `assets/v0623/backgrounds/` on coarse-pointer phone/tablet layouts.
+- Their media layers fill the usable viewport beneath the sticky header and remain anchored while content scrolls.
+- Home and Squad share the same mobile hero-stage rhythm; first stat rows align.
+- Mobile Squad position badge is reduced and moved after the role/age text.
+- Remaining approved page backgrounds are not installed yet; Player Profile is reserved for a separate whole-page redesign.

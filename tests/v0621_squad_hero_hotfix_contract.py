@@ -8,12 +8,12 @@ errs=[]
 for path in ['assets/v060/scenes/squad-hero-mobile.webp','assets/v060/scenes/squad-hero-desktop.webp']:
     if not (ROOT/path).exists(): errs.append(f'missing Squad hero asset: {path}')
 if 'class="squad-hero-media"' not in html: errs.append('Squad hero does not use direct picture media')
-if 'squad-hero-mobile.webp' not in html: errs.append('mobile Squad hero source missing')
+if 'squad-hero-mobile.webp' not in html and 'assets/v0623/backgrounds/squad-mobile.png' not in html: errs.append('mobile Squad hero source missing')
 if 'squad-hero-desktop.webp' not in html: errs.append('desktop Squad hero source missing')
 if "--hero:url('./assets/v060/scenes/squad-hero-desktop.webp')" in html: errs.append('fragile Squad CSS custom-property hero survived')
 if '.v062-squad-hero>.squad-hero-media' not in css: errs.append('Squad hero picture layout CSS missing')
 if 'background-image:linear-gradient(90deg,rgba(2,9,18,.95),rgba(2,9,18,.57) 46%,rgba(2,9,18,.08) 82%)!important' not in css: errs.append('mobile Squad hero readability overlay missing')
-if "const CACHE='te-v0-6-22-fixed-hero-scroll'" not in sw: errs.append('current service-worker cache marker missing')
+if "const CACHE='te-v0-6-23-approved-home-squad-backgrounds'" not in sw: errs.append('current service-worker cache marker missing')
 if errs:
     print('FAIL v0.6.21 Squad hero hotfix contract')
     for e in errs: print('-',e)

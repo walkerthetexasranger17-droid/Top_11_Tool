@@ -19,8 +19,8 @@ if re.search(r'background-attachment\s*:\s*fixed\s*;', css, re.I): errs.append('
 for needle,label in [
     ('class="home-hero-media"','Home real picture element'),
     ('class="squad-hero-media"','Squad real picture element'),
-    ('./assets/v0616/home/home-hero-mobile.webp','Home mobile hero asset'),
-    ('./assets/v060/scenes/squad-hero-mobile.webp','Squad mobile hero asset'),
+    ('./assets/v0623/backgrounds/home-mobile.png','Home current mobile hero asset'),
+    ('./assets/v0623/backgrounds/squad-mobile.png','Squad current mobile hero asset'),
 ]:
     if needle not in html: errs.append(f'missing {label}')
 if errs:
