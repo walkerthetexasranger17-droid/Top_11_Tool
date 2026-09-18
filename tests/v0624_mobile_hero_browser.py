@@ -38,7 +38,7 @@ with sync_playwright() as pw:
     if styles['borderBottom']!='0px': errs.append(f'Squad hero border survives: {styles}')
     context.close(); browser.close()
 if errs:
-    print('FAIL v0.6.25 mobile hero browser contract')
+    print('FAIL v0.6.26 mobile hero browser contract')
     for e in errs: print('-',e)
     raise SystemExit(1)
-print('PASS v0.6.25 browser: compact aligned hero rhythm, full fixed backgrounds, no Home copy, functional Squad title, no hero seam')
+print('PASS v0.6.26 browser: compact aligned hero rhythm, full fixed backgrounds, branded Home overlay, functional Squad title, no hero seam')

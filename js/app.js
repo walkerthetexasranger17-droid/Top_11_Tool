@@ -1,5 +1,5 @@
 (() => {
-  window.__TE_RUNTIME__='0.6.25';
+  window.__TE_RUNTIME__='0.6.26';
   const TE=window.TE5;const D=TE.Data,P=TE.Players,S=TE.Storage,DP=TE.DrillProfile,T=TE.Training,TT=TE.TeamTraining,SC=TE.Scanner,R=TE.Recommendations,F=TE.Formation,TP=TE.TeamPlan,TAC=TE.Tactics,M=TE.Mentor,B=TE.BibleData,C=TE.Cloud,BIS=TE.BestInSlot;
   const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
   const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -86,14 +86,18 @@
     const normalDrills=drillSetup?Object.keys(drillSetup.normal?.drills||{}).length:0;
     const savedLevels=drillSetup?Object.values(drillSetup.normal?.drills||{}).filter(x=>x?.unlocked).length:0;
     const masterStock=drillSetup?Object.values(drillSetup.master?.stock||{}).reduce((a,v)=>a+Math.max(0,Number(v)||0),0):0;
-    const highPlayer=players.slice().sort((a,b)=>Number(b.ovr||0)-Number(a.ovr||0))[0];
     const H='./assets/v0616/home/';
     const stats=$('#dashboardStats');
-    if(stats)stats.innerHTML=`
-      <button class="dashboard-stat" data-go="squad"><span class="dashboard-stat-icon"><img src="${H}08-stat-players.svg" alt=""></span><span><small>Players</small><b>${players.length}</b><em>in saved squad</em></span></button>
-      <button class="dashboard-stat" data-go="squad"><span class="dashboard-stat-icon"><img src="${H}09-stat-avg-ovr.svg" alt=""></span><span><small>Avg OVR</small><b>${players.length?Math.round(avg):'—'}</b><em>across your squad</em></span></button>
-      <button class="dashboard-stat dashboard-stat-player" ${highPlayer?`data-player-open="${esc(highPlayer.key)}"`:'data-go="squad"'}><span class="dashboard-stat-icon"><img src="${H}10-stat-highest-ovr.svg" alt=""></span><span><small>Highest OVR</small><b>${players.length?high:'—'}</b><em>${highPlayer?esc(highPlayer.name||'Top player'):'add players'}</em></span>${highPlayer?`<img class="dashboard-stat-player-art" src="${roleAsset(highPlayer.position)}" alt="">`:''}</button>
-      <button class="dashboard-stat" data-go="training"><span class="dashboard-stat-icon lime"><img src="${H}11-stat-training.svg" alt=""></span><span><small>Training Opportunities</small><b>${savedLevels}</b><em>saved drill levels</em></span></button>`;
+    if(stats){
+      const today=new Intl.DateTimeFormat(undefined,{weekday:'short',day:'2-digit',month:'short'}).format(new Date());
+      stats.innerHTML=`
+        <div class="dashboard-glance-head"><div><span class="dashboard-glance-calendar" aria-hidden="true"></span><h2>Today at a glance</h2></div><time>${esc(today)}</time></div>
+        <div class="dashboard-glance-metrics">
+          <button class="dashboard-glance-metric" data-go="squad"><img src="${H}08-stat-players.svg" alt=""><span><b>${players.length}</b><small>Players</small></span></button>
+          <button class="dashboard-glance-metric" data-go="squad"><img src="${H}09-stat-avg-ovr.svg" alt=""><span><b>${players.length?Math.round(avg):'—'}</b><small>Avg OVR</small></span></button>
+          <button class="dashboard-glance-metric" data-go="training"><img src="${H}11-stat-training.svg" alt=""><span><b>${savedLevels}</b><small>Training opportunities</small></span></button>
+        </div>`;
+    }
     const recent=$('#dashboardRecentPlayers');
     if(recent)recent.innerHTML=players.length?players.slice().sort((a,b)=>Number(b.ovr||0)-Number(a.ovr||0)).slice(0,4).map((p,i)=>`<button class="dashboard-player-row" data-player-open="${esc(p.key)}"><span class="dashboard-player-rank">${i+1}</span><img src="${roleAsset(p.position)}" alt=""><span class="dashboard-player-copy"><b>${esc(p.name||'Unnamed Player')}</b><small><i>${esc(p.position||'?')}</i>${p.age?` Age ${esc(p.age)}`:''}${psLabel(p)?` · ${esc(psLabel(p))}`:''}</small></span><span class="dashboard-player-ovr"><small>OVR</small><b>${esc(p.ovr||'—')}</b></span><img class="dashboard-row-arrow-img" src="${H}30-chevron-right.svg" alt=""></button>`).join(''):`<div class="dashboard-empty"><b>No players yet</b><span>Add your first player to bring the dashboard to life.</span><button class="btn primary" data-go="add-player">Add Player</button></div>`;
     const training=$('#dashboardTrainingStats');
