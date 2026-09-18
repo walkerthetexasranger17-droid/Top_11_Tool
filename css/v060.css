@@ -1174,7 +1174,7 @@ main{max-width:var(--v6-content)}
 }
 
 /* =========================================================
-   v0.6.24 — Mobile hero cleanup + approved tactics-board branding
+   v0.6.25 — Mobile hero cleanup + approved tactics-board branding
    App-first visual pass. Home carries no hero copy. Squad carries only its
    functional page title plus the existing actions. Background art is left
    clear and continuous: no haze, scrim seam, hero divider or coloured edge.
@@ -1214,14 +1214,14 @@ main{max-width:var(--v6-content)}
   }
 
   /* Squad title is functional only: no eyebrow, paragraph or slogan. */
-  #page-squad .v0624-page-title{
+  #page-squad .v0625-page-title{
     left:18px!important;
     right:auto!important;
     top:18px!important;
     bottom:auto!important;
     max-width:305px!important;
   }
-  #page-squad .v0624-page-title h1{
+  #page-squad .v0625-page-title h1{
     margin:0!important;
     font-size:36px!important;
     line-height:.82!important;
@@ -1229,7 +1229,7 @@ main{max-width:var(--v6-content)}
     text-transform:uppercase!important;
     text-shadow:0 2px 12px rgba(0,0,0,.72)!important;
   }
-  #page-squad .v0624-page-title h1 em{font-style:normal!important;color:var(--v6-lime)!important}
+  #page-squad .v0625-page-title h1 em{font-style:normal!important;color:var(--v6-lime)!important}
   #page-squad .squad-hero-actions{margin-top:12px!important;gap:8px!important}
   #page-squad .squad-hero-actions .btn{
     min-width:0!important;
@@ -1266,8 +1266,8 @@ main{max-width:var(--v6-content)}
   #page-squad .v062-squad-hero{height:210px!important;min-height:210px!important}
   #page-dashboard.active .v060-dashboard-body,
   #page-squad.active .v062-squad-body{margin-top:-16px!important}
-  #page-squad .v0624-page-title{top:12px!important;left:16px!important}
-  #page-squad .v0624-page-title h1{font-size:31px!important}
+  #page-squad .v0625-page-title{top:12px!important;left:16px!important}
+  #page-squad .v0625-page-title h1{font-size:31px!important}
   #page-squad .squad-hero-actions{margin-top:8px!important}
   #page-squad .squad-hero-actions .btn{height:30px!important;min-height:30px!important;font-size:8px!important}
 }
@@ -1278,8 +1278,8 @@ main{max-width:var(--v6-content)}
   #page-squad .v062-squad-hero{height:250px!important;min-height:250px!important}
   #page-dashboard.active .v060-dashboard-body,
   #page-squad.active .v062-squad-body{margin-top:-14px!important}
-  #page-squad .v0624-page-title{top:16px!important;max-width:360px!important}
-  #page-squad .v0624-page-title h1{font-size:30px!important;line-height:.9!important;white-space:nowrap!important}
+  #page-squad .v0625-page-title{top:16px!important;max-width:360px!important}
+  #page-squad .v0625-page-title h1{font-size:30px!important;line-height:.9!important;white-space:nowrap!important}
   #page-squad .squad-hero-actions{margin-top:10px!important}
   #page-squad .squad-hero-actions .btn{height:36px!important;min-height:36px!important}
 }
