@@ -1,5 +1,5 @@
-# Top Eleven Tool v0.6.23 design branch
+# Top Eleven Tool v0.6.24
 
-> **Current design branch: v0.6.23 / Approved Home + Squad Full-Screen Backgrounds.** The calibrated v0.5.17 decision contract remains frozen underneath the v0.6 visual redesign. Scanner calibration stays VERSION=12; nationality remains an isolated optional metadata extension.
+Mobile-first Top Eleven companion tool. Current design pass installs the approved tactics-board logo and cleans the Home/Squad hero treatment: compact spacing, no motivational copy, no dark haze, and no hero/content seam. Football/scanner/calibration logic remains frozen at its existing validated contracts.
 
-Read `START_HERE.md` and `DESIGN_RECOVERY_HANDOFF_v0.6.23.md` before changing anything.
+Start with `START_HERE.md`.

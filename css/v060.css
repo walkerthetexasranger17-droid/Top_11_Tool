@@ -1172,3 +1172,114 @@ main{max-width:var(--v6-content)}
   #page-dashboard.active .v060-dashboard-body,
   #page-squad.active .v062-squad-body{margin-top:-24px!important}
 }
+
+/* =========================================================
+   v0.6.24 — Mobile hero cleanup + approved tactics-board branding
+   App-first visual pass. Home carries no hero copy. Squad carries only its
+   functional page title plus the existing actions. Background art is left
+   clear and continuous: no haze, scrim seam, hero divider or coloured edge.
+   ========================================================= */
+@media (pointer:coarse) and (max-width:1180px){
+  /* New approved tactics-board mark in the app chrome. */
+  .brand-home{width:46px!important;flex:0 0 46px!important}
+  .brand-mark{width:44px!important;height:44px!important;object-fit:contain!important;border-radius:10px!important}
+
+  /* The approved backgrounds are the page surface. Do not dim them globally. */
+  #page-dashboard.active .home-hero-media img,
+  #page-squad.active .squad-hero-media img{
+    filter:none!important;
+  }
+  #page-dashboard.active .home-hero-media::after,
+  #page-squad.active .squad-hero-media::after,
+  #page-dashboard.active .v060-home-hero::after,
+  #page-squad.active .v062-squad-hero::before{
+    content:none!important;
+    display:none!important;
+    background:none!important;
+    box-shadow:none!important;
+  }
+  #page-dashboard .v060-home-hero,
+  #page-squad .v062-squad-hero{
+    border:0!important;
+    border-radius:0!important;
+    box-shadow:none!important;
+    background:transparent!important;
+  }
+
+  /* Home is deliberately image-only. */
+  #page-dashboard .v060-home-hero>.hero-copy,
+  #page-dashboard .v060-home-hero>.hero-mantra,
+  #page-dashboard .v060-home-hero>.hero-intelligence{
+    display:none!important;
+  }
+
+  /* Squad title is functional only: no eyebrow, paragraph or slogan. */
+  #page-squad .v0624-page-title{
+    left:18px!important;
+    right:auto!important;
+    top:18px!important;
+    bottom:auto!important;
+    max-width:305px!important;
+  }
+  #page-squad .v0624-page-title h1{
+    margin:0!important;
+    font-size:36px!important;
+    line-height:.82!important;
+    letter-spacing:-.02em!important;
+    text-transform:uppercase!important;
+    text-shadow:0 2px 12px rgba(0,0,0,.72)!important;
+  }
+  #page-squad .v0624-page-title h1 em{font-style:normal!important;color:var(--v6-lime)!important}
+  #page-squad .squad-hero-actions{margin-top:12px!important;gap:8px!important}
+  #page-squad .squad-hero-actions .btn{
+    min-width:0!important;
+    height:38px!important;
+    min-height:38px!important;
+    padding:0 14px!important;
+    font-size:10px!important;
+    backdrop-filter:blur(4px);
+    -webkit-backdrop-filter:blur(4px);
+  }
+
+  /* Remove the legacy hero-to-content divider/seam completely. */
+  #page-dashboard .hero,
+  #page-squad .hero{border-bottom:0!important}
+}
+
+@media (orientation:portrait) and (max-width:699px) and (pointer:coarse){
+  /* Less dead space: both pages hand off to their first cards at one shared Y. */
+  #page-dashboard .v060-home-hero,
+  #page-squad .v062-squad-hero{
+    height:270px!important;
+    min-height:270px!important;
+  }
+  #page-dashboard.active .v060-dashboard-body,
+  #page-squad.active .v062-squad-body{
+    margin-top:-18px!important;
+  }
+  #page-dashboard.active .v060-dashboard-body,
+  #page-squad.active .v062-squad-body{padding-top:0!important}
+}
+
+@media (orientation:landscape) and (pointer:coarse) and (max-height:700px){
+  #page-dashboard .v060-home-hero,
+  #page-squad .v062-squad-hero{height:210px!important;min-height:210px!important}
+  #page-dashboard.active .v060-dashboard-body,
+  #page-squad.active .v062-squad-body{margin-top:-16px!important}
+  #page-squad .v0624-page-title{top:12px!important;left:16px!important}
+  #page-squad .v0624-page-title h1{font-size:31px!important}
+  #page-squad .squad-hero-actions{margin-top:8px!important}
+  #page-squad .squad-hero-actions .btn{height:30px!important;min-height:30px!important;font-size:8px!important}
+}
+
+/* v0.6.24 final mobile tightening after visual check. */
+@media (orientation:portrait) and (max-width:699px) and (pointer:coarse){
+  #page-dashboard .v060-home-hero,
+  #page-squad .v062-squad-hero{height:250px!important;min-height:250px!important}
+  #page-dashboard.active .v060-dashboard-body,
+  #page-squad.active .v062-squad-body{margin-top:-14px!important}
+  #page-squad .v0624-page-title{top:16px!important;max-width:360px!important}
+  #page-squad .v0624-page-title h1{font-size:30px!important;line-height:.9!important;white-space:nowrap!important}
+  #page-squad .squad-hero-actions{margin-top:10px!important}
+  #page-squad .squad-hero-actions .btn{height:36px!important;min-height:36px!important}
+}
