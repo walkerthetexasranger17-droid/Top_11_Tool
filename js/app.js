@@ -1,9 +1,9 @@
 (() => {
-  window.__TE_RUNTIME__='0.6.31';
+  window.__TE_RUNTIME__='0.6.32';
   const TE=window.TE5;const D=TE.Data,P=TE.Players,S=TE.Storage,DP=TE.DrillProfile,T=TE.Training,TT=TE.TeamTraining,SC=TE.Scanner,R=TE.Recommendations,F=TE.Formation,TP=TE.TeamPlan,TAC=TE.Tactics,M=TE.Mentor,B=TE.BibleData,C=TE.Cloud,BIS=TE.BestInSlot;
   const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
   const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const state={page:'dashboard',squadFilter:'ALL',search:'',squadRole:'',squadAgeMin:'',squadAgeMax:'',squadOvrMin:'',squadOvrMax:'',squadPlaystyle:'',squadAvailability:'',squadAbility:'',squadSort:'ovr-desc',squadView:'list',scan:null,scanAbilities:[],scanRelatedRoles:[],scanDuplicateKey:'',scanPreservedRoles:[],scanUpdateKey:'',scanMode:'add',scanUpdateTargets:[],scanQueue:[],scanQueueReviewIndex:-1,scanQueueScanning:false,scanQueueSeq:0,scanAutoSavedCount:0,scanManualVerified:false,playerKey:'',profileAbilities:[],profileRelatedRoles:[],profilePreservedRoles:[],trainingKey:'',trainingTab:'individual',session:null,approach:'auto',drainLimit:'Medium',teamPlanTab:'formation',tacticPhase:'possession',setPieceMode:'penalty1'};
+  const state={page:'dashboard',squadFilter:'ALL',search:'',squadRole:'',squadAgeMin:'',squadAgeMax:'',squadOvrMin:'',squadOvrMax:'',squadPlaystyle:'',squadAvailability:'',squadAbility:'',squadSort:'role-order',squadView:'list',scan:null,scanAbilities:[],scanRelatedRoles:[],scanDuplicateKey:'',scanPreservedRoles:[],scanUpdateKey:'',scanMode:'add',scanUpdateTargets:[],scanQueue:[],scanQueueReviewIndex:-1,scanQueueScanning:false,scanQueueSeq:0,scanAutoSavedCount:0,scanManualVerified:false,playerKey:'',profileAbilities:[],profileRelatedRoles:[],profilePreservedRoles:[],trainingKey:'',trainingTab:'individual',session:null,approach:'auto',drainLimit:'Medium',teamPlanTab:'formation',tacticPhase:'possession',setPieceMode:'penalty1'};
   const UI_STATE_KEY='te:ui:state:v046',SCAN_QUEUE_META_KEY='scanner:queue:v1',QUEUE_DB_NAME='te-scanner-queue-v1',QUEUE_STORE='images';
   const scanControllers=new Map();
   let deleteTarget=null,openSquadSwipeKey='',suppressSquadClickUntil=0;
@@ -33,6 +33,55 @@
   function fmt(n,d=1){return Number.isFinite(Number(n))?Number(n).toFixed(d):'—';}
   function rolesLabel(p){return P.normaliseRoles(p).join(' / ');}
 
+
+  // ---------- App-wide themed dropdowns ----------
+  // Native Android <select> pickers ignore the app theme. Keep the real select as the
+  // source of truth for all existing logic, but present a consistent app-owned chooser.
+  const SELECT_TITLES={squadSort:'Sort players',trainingPlayer:'Select a player',trainingMode:'Optimisation mode',drillLibraryCategory:'Drill category',planApproach:'Approach',planDrain:'Drain limit',profileEditRole1:'Primary role',profileEditRole2:'Second role',profileEditRole3:'Third role',profileEditPlaystyle:'Playstyle',profileEditPlaystyleLevel:'Playstyle tier',scanRole:'Primary role',scanRole2:'Second role',scanRole3:'Third role',scanPlaystyle:'Playstyle',scanPlaystyleLevel:'Playstyle tier'};
+  let themedSelectOverlay=null;
+  function selectLabel(select){
+    const explicit=SELECT_TITLES[select.id];if(explicit)return explicit;
+    const field=select.closest('.field');const span=field?.querySelector(':scope > span');if(span?.textContent?.trim())return span.textContent.trim();
+    if(select.classList.contains('level-select'))return 'Drill level';
+    if(select.classList.contains('queue-update-target'))return 'Select player';
+    return 'Choose option';
+  }
+  function selectedOption(select){return select.options?.[select.selectedIndex]||select.options?.[0]||null;}
+  function syncThemedSelect(select){
+    const shell=select?.closest?.('.te-select-shell'),trigger=shell?.querySelector('.te-select-trigger');if(!trigger)return;
+    const option=selectedOption(select),label=option?.textContent?.trim()||selectLabel(select);
+    const value=option?.value??'';
+    trigger.querySelector('.te-select-value').textContent=label;
+    trigger.classList.toggle('placeholder',value==='');
+    trigger.disabled=!!select.disabled;
+    trigger.setAttribute('aria-disabled',select.disabled?'true':'false');
+  }
+  function closeThemedSelect(){if(!themedSelectOverlay)return;themedSelectOverlay.remove();themedSelectOverlay=null;document.body.classList.remove('te-select-open');}
+  function openThemedSelect(select,trigger){
+    closeThemedSelect();if(select.disabled)return;
+    const wrap=document.createElement('div');wrap.className='te-select-overlay';wrap.innerHTML=`<button class="te-select-backdrop" type="button" aria-label="Close dropdown"></button><section class="te-select-menu" role="listbox" aria-label="${esc(selectLabel(select))}"><div class="te-select-menu-head"><div><small>TOP ELEVEN TOOL</small><b>${esc(selectLabel(select))}</b></div><button type="button" class="te-select-close" aria-label="Close">×</button></div><div class="te-select-options"></div></section>`;
+    const list=wrap.querySelector('.te-select-options');
+    [...select.options].forEach((opt,index)=>{const b=document.createElement('button');b.type='button';b.className='te-select-option'+(index===select.selectedIndex?' selected':'');b.setAttribute('role','option');b.setAttribute('aria-selected',index===select.selectedIndex?'true':'false');b.disabled=!!opt.disabled;b.innerHTML=`<span>${esc(opt.textContent.trim())}</span><i aria-hidden="true"></i>`;b.addEventListener('click',()=>{if(opt.disabled)return;select.selectedIndex=index;select.dispatchEvent(new Event('change',{bubbles:true}));syncThemedSelect(select);closeThemedSelect();trigger.focus({preventScroll:true});});list.appendChild(b);});
+    wrap.querySelector('.te-select-backdrop').addEventListener('click',closeThemedSelect);wrap.querySelector('.te-select-close').addEventListener('click',closeThemedSelect);
+    document.body.appendChild(wrap);themedSelectOverlay=wrap;document.body.classList.add('te-select-open');
+    requestAnimationFrame(()=>wrap.classList.add('open'));
+  }
+  function enhanceThemedSelect(select){
+    if(!select||select.dataset.teThemed==='1')return syncThemedSelect(select);
+    select.dataset.teThemed='1';
+    const shell=document.createElement('span');shell.className='te-select-shell';
+    select.parentNode.insertBefore(shell,select);shell.appendChild(select);
+    const trigger=document.createElement('button');trigger.type='button';trigger.className='te-select-trigger';trigger.innerHTML='<span class="te-select-value"></span><span class="te-select-chevron" aria-hidden="true"></span>';shell.appendChild(trigger);
+    select.classList.add('te-native-select');select.tabIndex=-1;select.setAttribute('aria-hidden','true');
+    trigger.addEventListener('click',()=>openThemedSelect(select,trigger));
+    select.addEventListener('change',()=>syncThemedSelect(select));
+    const mo=new MutationObserver(()=>syncThemedSelect(select));mo.observe(select,{childList:true,subtree:true,attributes:true,attributeFilter:['disabled']});
+    syncThemedSelect(select);
+  }
+  function refreshThemedSelects(){document.querySelectorAll('select').forEach(enhanceThemedSelect);document.querySelectorAll('select[data-te-themed="1"]').forEach(syncThemedSelect);}
+  const themedSelectDomObserver=new MutationObserver(records=>{for(const record of records){for(const node of record.addedNodes){if(node.nodeType!==1)continue;if(node.matches?.('select'))enhanceThemedSelect(node);node.querySelectorAll?.('select').forEach(enhanceThemedSelect);}}});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeThemedSelect();});
+
   function uiSnapshot(){return{page:state.page,squadFilter:state.squadFilter,search:state.search,squadRole:state.squadRole,squadAgeMin:state.squadAgeMin,squadAgeMax:state.squadAgeMax,squadOvrMin:state.squadOvrMin,squadOvrMax:state.squadOvrMax,squadPlaystyle:state.squadPlaystyle,squadAvailability:state.squadAvailability,squadAbility:state.squadAbility,squadSort:state.squadSort,squadView:state.squadView,playerKey:state.playerKey,trainingKey:state.trainingKey,trainingTab:state.trainingTab,approach:state.approach,drainLimit:state.drainLimit,teamPlanTab:state.teamPlanTab,tacticPhase:state.tacticPhase,setPieceMode:state.setPieceMode,scanMode:state.scanMode};}
   function persistUiState(){try{sessionStorage.setItem(UI_STATE_KEY,JSON.stringify(uiSnapshot()));}catch(_){/* refresh-state persistence is best effort */}}
   function restoreUiState(){try{const saved=JSON.parse(sessionStorage.getItem(UI_STATE_KEY)||'null');if(saved&&typeof saved==='object')for(const k of Object.keys(uiSnapshot()))if(saved[k]!=null)state[k]=saved[k];}catch(_){/* ignore corrupt UI state */}}
@@ -52,6 +101,7 @@
         await nextUiFrame();
         if(request!==pageRenderSeq)return false;
         if(page==='dashboard')await renderDashboard();else if(page==='squad')await renderSquad();else if(page==='player')await renderPlayerProfile();else if(page==='add-player')await renderScannerMode();else if(page==='training')await renderTrainingPicker();else if(page==='my-drills')await renderMyDrills();else if(page==='team-plan')await renderTeamPlan();else if(page==='account')C?.renderAccountPage?.();
+        refreshThemedSelects();
         return true;
       }finally{
         pageRenderActive=Math.max(0,pageRenderActive-1);
@@ -127,7 +177,7 @@
     let players=await P.all();
     const validFilters=new Set(['ALL','GK','DEF','MID','ATT']);
     if(!validFilters.has(state.squadFilter))state.squadFilter='ALL';
-    if(!['ovr-desc','role-order','ovr-asc','name-asc','age-asc'].includes(state.squadSort))state.squadSort='ovr-desc';
+    if(!['role-order','ovr-desc','ovr-asc','age-asc','name-asc'].includes(state.squadSort))state.squadSort='role-order';
     if(!['list','cards'].includes(state.squadView))state.squadView='list';
     // v0.6.21: the Squad filter panel was intentionally removed. Clear any
     // persisted legacy filter state so an invisible old filter can never hide players.
@@ -490,10 +540,10 @@
   function trainingSourceSnapshot(player,normal,master,plan=null){const starter=plan?.starters?.find(x=>x.playerKey===player?.key);return {playerUpdatedAt:String(player?.updatedAt||''),normalUpdatedAt:String(normal?.updatedAt||''),masterUpdatedAt:String(master?.updatedAt||''),teamPlanVersion:Number(plan?.version||0),formationTemplateId:String(plan?.formationTemplateId||''),assignedRole:String(starter?.assignedRole||''),tactics:JSON.stringify(plan?.tactics?.values||{})};}
   function sameTrainingSource(a,b){return !!a&&a.playerUpdatedAt===b.playerUpdatedAt&&a.normalUpdatedAt===b.normalUpdatedAt&&a.masterUpdatedAt===b.masterUpdatedAt&&Number(a.teamPlanVersion||0)===Number(b.teamPlanVersion||0)&&String(a.formationTemplateId||'')===String(b.formationTemplateId||'')&&String(a.assignedRole||'')===String(b.assignedRole||'')&&String(a.tactics||'{}')===String(b.tactics||'{}');}
   async function updateTrainingIntel(){const {normal,master}=await DP.ensure();const drills=normal&&typeof normal.drills==='object'&&normal.drills?normal.drills:{},stock=master&&typeof master.stock==='object'&&master.stock?master.stock:{};const unlocked=Object.values(drills).filter(x=>x&&x.unlocked).length,totalMaster=Object.values(stock).reduce((a,b)=>a+Math.max(0,Number(b)||0),0);if($('#drillSummaryUnlocked'))$('#drillSummaryUnlocked').textContent=unlocked;if($('#drillSummaryMaster'))$('#drillSummaryMaster').textContent=totalMaster;if($('#drillSummaryTotal'))$('#drillSummaryTotal').textContent=D.NORMAL_DRILLS.length;}
-  async function renderTrainingPicker(){await updateTrainingIntel();const players=await P.all();$('#trainingPlayer').innerHTML='<option value="">Select a player</option>'+players.map(p=>`<option value="${esc(p.key)}" ${p.key===state.trainingKey?'selected':''}>${esc(p.name)} · ${esc(rolesLabel(p))} · ${esc(p.ovr||'—')} OVR</option>`).join('');clearTrainingSessionView();$('#trainingStatus').textContent='';if(state.trainingKey&&!players.some(p=>p.key===state.trainingKey)){state.trainingKey='';return;}if(state.trainingKey)await restoreTrainingSession();}
+  async function renderTrainingPicker(){await updateTrainingIntel();const players=await P.all();$('#trainingPlayer').innerHTML='<option value="">Select a player</option>'+players.map(p=>`<option value="${esc(p.key)}" ${p.key===state.trainingKey?'selected':''}>${esc(p.name)} · ${esc(rolesLabel(p))} · ${esc(p.ovr||'—')} OVR</option>`).join('');clearTrainingSessionView();$('#trainingStatus').textContent=state.trainingKey?'Ready to generate a fresh 6-drill session.':'Select a player, choose a mode, then generate the session.';if(state.trainingKey&&!players.some(p=>p.key===state.trainingKey)){state.trainingKey='';$('#trainingStatus').textContent='Select a player, choose a mode, then generate the session.';return;}refreshThemedSelects();}
   async function persistTraining(){if(!state.trainingKey||!state.session)return;await S.set(`training:session:${state.trainingKey}`,JSON.stringify({gameDataVersion:D.GAME_DATA_VERSION,session:state.session,savedAt:new Date().toISOString()}));}
   async function restoreTrainingSession(){clearTrainingSessionView();const key=`training:session:${state.trainingKey}`,raw=await S.get(key);if(!raw)return false;try{const x=JSON.parse(raw);if(x.gameDataVersion!==D.GAME_DATA_VERSION||x.session?.meta?.model!==T.MODEL_VERSION){await S.del(key);$('#trainingStatus').textContent='A previous recommendation used older training data. Build a fresh session.';return false;}const player=await P.get(state.trainingKey);if(!player){await S.del(key);return false;}const {normal,master}=await DP.ensure(),plan=await TP.load(),current=trainingSourceSnapshot(player,normal,master,plan);if(!sameTrainingSource(x.session?.sourceSnapshot,current)){await S.del(key);$('#trainingStatus').textContent='Saved recommendation expired because the player or My Drills changed. Build a fresh session.';return false;}state.session=x.session;const mode=$('#trainingMode');if(mode&&[...mode.options].some(o=>o.value===state.session?.meta?.mode))mode.value=state.session.meta.mode;renderSession();$('#trainingStatus').textContent=state.session.completed?'Completed session restored.':'Saved recommendation restored.';return true;}catch(_){await S.del(key);$('#trainingStatus').textContent='Saved recommendation could not be restored. Build a fresh session.';return false;}}
-  $('#trainingPlayer')?.addEventListener('change',async e=>{state.trainingKey=e.target.value;persistUiState();clearTrainingSessionView();$('#trainingStatus').textContent='';if(state.trainingKey)await restoreTrainingSession();});
+  $('#trainingPlayer')?.addEventListener('change',e=>{state.trainingKey=e.target.value;persistUiState();clearTrainingSessionView(state.trainingKey?'Ready to generate a fresh 6-drill session.':'Select a player, choose a mode, then generate the session.');});
   async function buildTrainingCore(){if(!state.trainingKey){toast('Select a player first','err');return;}const player=await P.get(state.trainingKey);if(!player){toast('Player could not be loaded','err');return;}const {normal,master}=await DP.ensure(),plan=await TP.load(),starter=plan?.starters?.find(x=>x.playerKey===player.key)||null,naturalRoles=P.normaliseRoles(player),developmentRole=starter?.assignedRole||null,tactics=starter&&plan?.tactics?.values?plan.tactics:null;const result=T.buildIndividualSession({player,roles:naturalRoles,developmentRole,tactics,normalProfile:normal,masterStock:master,slots:6,mode:$('#trainingMode')?.value||'maxGrowth'});if(result.error==='missing-white-attributes'){$('#trainingStatus').textContent=`Cannot optimise reliably: ${result.missingAttributes.join(', ')} are missing from this player profile. Rescan or update the player first.`;$('#trainingResults').style.display='none';toast('Player profile is incomplete','err');return;}state.session={...result,playerKey:state.trainingKey,playerName:player.name,teamPlanContext:starter?{formation:plan.formationName,assignedRole:starter.assignedRole,developmentRole:result.meta.hierarchy.developmentRole,developmentRoleFallbackReason:result.meta.hierarchy.developmentRoleFallbackReason||null,tactics:plan.tactics?.values||null}:null,completed:false,stockDeducted:false,createdAt:new Date().toISOString(),sourceSnapshot:trainingSourceSnapshot(player,normal,master,plan)};renderSession();await persistTraining();const identity=`${result.meta.hierarchy.developmentRole}${result.meta.hierarchy.playstyle?` + ${result.meta.hierarchy.playstyle}`:''}`,relatedFallback=starter&&result.meta.hierarchy.developmentRoleFallbackReason?` The Team Plan fields him at ${starter.assignedRole}, but that is not one of his natural trained roles, so development safely uses natural ${result.meta.hierarchy.developmentRole}.`:'',planText=starter?` using the current ${plan.formationName} Team Plan tactics`:' using the player profile because this player is not in the current XI',modeLabel=result.meta.mode==='balancedDevelopment'?'Balanced Development':result.meta.mode==='conditionEfficient'?'Condition Efficient':'Max Growth',modeReason=result.meta.mode==='balancedDevelopment'?' This mode deliberately prioritises broader weak-white coverage and distinct drills before raw utility.':result.meta.mode==='conditionEfficient'?' This mode prioritises useful training utility per condition.':' This mode prioritises maximum total useful white-skill utility.';$('#trainingStatus').textContent=result.drills.length===6?`Built 6 slots for ${identity}${planText}. ${modeLabel}.${modeReason}${relatedFallback} The verified drill gain ladder still determines drill strength; grey attributes remain zero-value.`:`Only ${result.drills.length}/6 legal slots could be built from your saved drill library.`;}
   async function buildTraining(){return runUiAction('training-build',['#buildSessionBtn','#rebuildBtn'],buildTrainingCore);}
   $('#buildSessionBtn')?.addEventListener('click',()=>void buildTraining());$('#rebuildBtn')?.addEventListener('click',()=>void buildTraining());$('#trainingMode')?.addEventListener('change',()=>{if(state.session){clearTrainingSessionView('Training mode changed. Build a fresh 6-drill session.');}});
@@ -603,7 +653,7 @@
   // ---------- Settings / startup ----------
   async function recoverSquadNow({silent=false}={}){
     const result=await P.recoverLocalSquad({force:false});
-    state.squadFilter='ALL';state.search='';state.squadRole='';state.squadAgeMin='';state.squadAgeMax='';state.squadOvrMin='';state.squadOvrMax='';state.squadPlaystyle='';state.squadAvailability='';state.squadAbility='';state.squadSort='ovr-desc';state.squadView='list';persistUiState();
+    state.squadFilter='ALL';state.search='';state.squadRole='';state.squadAgeMin='';state.squadAgeMax='';state.squadOvrMin='';state.squadOvrMax='';state.squadPlaystyle='';state.squadAvailability='';state.squadAbility='';state.squadSort='role-order';state.squadView='list';persistUiState();
     await renderDashboard();if(state.page==='squad')await renderSquad();
     const count=(await P.all()).length;
     const note=$('#localSquadStatus');if(note)note.textContent=`${count} player${count===1?'':'s'} found on this device${result.recovered||result.repaired?` · restored ${result.recovered+result.repaired}`:''}.`;
@@ -621,7 +671,8 @@
     // Restore the requested route immediately, but keep the app visually hidden until
     // authentication + cloud hydration + the first real page render are complete. This
     // prevents the static Home page from flashing during every refresh.
-    restoreUiState();
+    refreshThemedSelects();themedSelectDomObserver.observe(document.body,{childList:true,subtree:true});
+  restoreUiState();
     primePageArtwork();
     const cloudReady=await C?.ensureReady?.();if(!cloudReady)return;
 
@@ -630,7 +681,7 @@
     if(forceHome){state.page='dashboard';state.playerKey='';state.trainingKey='';state.trainingTab='individual';}
 
     await P.migrate();
-    state.squadFilter='ALL';state.search='';state.squadRole='';state.squadAgeMin='';state.squadAgeMax='';state.squadOvrMin='';state.squadOvrMax='';state.squadPlaystyle='';state.squadAvailability='';state.squadAbility='';state.squadSort='ovr-desc';state.squadView='list';persistUiState();
+    state.squadFilter='ALL';state.search='';state.squadRole='';state.squadAgeMin='';state.squadAgeMax='';state.squadOvrMin='';state.squadOvrMax='';state.squadPlaystyle='';state.squadAvailability='';state.squadAbility='';state.squadSort='role-order';state.squadView='list';persistUiState();
 
     // Auxiliary startup work must never stop Squad/Profile from loading.
     await startupStep('drill profile',()=>DP.ensure());
