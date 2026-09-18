@@ -10,7 +10,7 @@ for p in ROOT.rglob('*'):
         errs.append(f'superseded scratch/backup file remains: {rel}')
     if p.suffix.lower() in {'.rar','.7z','.tar','.gz'}:
         errs.append(f'embedded archive remains: {rel}')
-# Scanner fixtures plus the embedded approved v0.6.24 background reference pack dominate the package; v0.6.28 adds a compact WebP header-art set.
+# Scanner fixtures plus the embedded approved v0.6.24 background reference pack dominate the package; v0.6.29 adds a compact WebP header-art set.
 size=sum(p.stat().st_size for p in ROOT.rglob('*') if p.is_file())
 count=sum(1 for p in ROOT.rglob('*') if p.is_file())
 if size>80_000_000: errs.append(f'package expanded above maintenance ceiling: {size} bytes')

@@ -1443,7 +1443,7 @@ body{letter-spacing:.01em}
 }
 
 /* ================================================================
-   v0.6.28 — Approved raster header artwork
+   v0.6.29 — Header transparency + stacked Home hotfix
    Page-title typography is now supplied by one consistent image set.
    ================================================================ */
 .brand-copy.brand-wordmark-art{
@@ -1497,7 +1497,7 @@ body{letter-spacing:.01em}
   right:auto!important;
   top:10px!important;
   transform:none!important;
-  width:268px!important;
+  width:360px!important;
   max-width:calc(100% - 32px)!important;
   justify-items:unset!important;
   text-align:left!important;
@@ -1535,7 +1535,7 @@ body{letter-spacing:.01em}
   .brand-copy.brand-wordmark-art{flex-basis:145px!important;max-width:145px!important}
   .brand-wordmark-image{height:37px!important}
   .brand-wordmark-art .brand-sub{font-size:5px!important}
-  .home-hero-branding.page-header-art-wrap{width:238px!important;left:14px!important;top:8px!important}
+  .home-hero-branding.page-header-art-wrap{width:350px!important;left:14px!important;top:8px!important;max-width:calc(100% - 28px)!important}
   #page-squad .v0625-page-title.page-header-art-wrap,
   .v068-scanner-hero .branded-page-title.page-header-art-wrap,
   .v064-training-hero .branded-page-title.page-header-art-wrap,
