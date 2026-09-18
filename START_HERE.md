@@ -1,19 +1,19 @@
-# v0.6.33 — START HERE
+# v0.6.34 — START HERE
 
-**CURRENT UI BRANCH:** v0.6.33 — Training Results Persistence Hotfix.  
-**APPROVED VISUAL STATE:** Home and Squad are approved and frozen; Training visual design remains v0.6.31/v0.6.32 approved.  
+**CURRENT UI BRANCH:** v0.6.34 — Global Header Scale + Add Player Redesign.  
+**APPROVED VISUAL STATE:** Home, Squad and Training are retained; branded page-title artwork now follows one smaller upper-left rule.  
 **FROZEN DECISION CONTRACT:** v0.5.17.  
 **SCANNER CALIBRATION:** VERSION=12.
 
-Read `DESIGN_RECOVERY_HANDOFF_v0.6.33.md` first, then `V0633_TRAINING_RESULTS_HOTFIX_VALIDATION.md`.
+Read `DESIGN_RECOVERY_HANDOFF_v0.6.34.md` first, then `V0634_ADD_PLAYER_HEADER_VALIDATION.md`.
 
-## v0.6.33 scope
-- Fix only the bug where Individual Training drills appeared after Build Session and then vanished moments later.
-- Root cause is redundant cloud acknowledgement repainting the Training page after persistence.
-- Identical Firestore values are now treated as no-op acknowledgements.
-- No-op cloud sync events no longer repaint the active page.
-- Keep the v0.6.32 rule that no drills are shown before Build Session in the current visit.
-- No Home/Squad visual changes and no football/scanner/training-calculation changes.
+## v0.6.34 scope
+- Standardise page-header artwork size and move it slightly higher/left across the app.
+- Restore the approved Add Player portrait background.
+- Keep scanner as the primary Add Player workflow.
+- Move Add Player Manually directly below the Skills Screenshot scanner in its own secondary card.
+- Do not redesign Update Player until its dedicated background is created.
+- No scanner recognition/calibration or football/training logic changes.
 
 ## Packaging
 Continue the split-release workflow:

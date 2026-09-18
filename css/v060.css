@@ -1806,3 +1806,118 @@ body.te-select-open{overflow:hidden}
 .te-select-option{appearance:none;width:100%;min-height:48px;display:grid;grid-template-columns:minmax(0,1fr) 24px;align-items:center;gap:9px;padding:9px 11px;border:0;border-bottom:1px solid rgba(89,166,207,.12);background:transparent;color:#dceaf2;text-align:left;font:800 14px/1.18 var(--v627-type);letter-spacing:.01em}.te-select-option:last-child{border-bottom:0}.te-select-option i{width:18px;height:18px;border:2px solid #7594a8;border-radius:50%;position:relative}.te-select-option.selected{color:#efffd2;background:linear-gradient(90deg,rgba(168,255,25,.10),rgba(37,160,218,.06));}.te-select-option.selected i{border-color:var(--v6-lime);box-shadow:0 0 12px rgba(168,255,25,.18)}.te-select-option.selected i::after{content:"";position:absolute;inset:4px;border-radius:50%;background:var(--v6-lime)}.te-select-option:disabled{opacity:.35}
 @media (orientation:landscape) and (pointer:coarse) and (max-height:700px){.te-select-menu{width:min(72vw,620px);max-height:82dvh;bottom:8px}.te-select-option{min-height:40px;font-size:12px}.te-select-menu-head{padding:9px 12px 8px}.te-select-menu-head b{font-size:17px}}
 @media (orientation:portrait) and (max-width:699px) and (pointer:coarse){.squad-roster-controls .te-select-shell{min-width:145px}.squad-roster-controls .te-select-trigger{height:34px;min-height:34px;padding:6px 6px 6px 9px;font-size:8px}.training-setup-card .te-select-trigger{min-height:46px;font-size:12px}.te-select-menu{width:calc(100vw - 20px);max-height:72dvh}.te-select-option{font-size:13px}}
+
+/* =========================================================
+   v0.6.34 — Global page-title sizing + Add Player redesign
+   Header art is deliberately secondary to the approved portrait artwork.
+   Scanner logic remains unchanged.
+   ========================================================= */
+
+/* One visual footprint for all branded page headers. */
+.home-hero-branding.page-header-art-wrap,
+#page-squad .v0625-page-title.page-header-art-wrap,
+.v068-scanner-hero .branded-page-title.page-header-art-wrap,
+.v064-training-hero .branded-page-title.page-header-art-wrap,
+.v066-drills-hero .branded-page-title.page-header-art-wrap,
+.v067-account-hero .branded-page-title.page-header-art-wrap,
+.v067-settings-hero .branded-page-title.page-header-art-wrap,
+.v065-team-plan-head>.branded-page-title.page-header-art-wrap{
+  width:250px!important;
+  max-width:calc(100% - 24px)!important;
+  left:12px!important;
+  right:auto!important;
+  top:7px!important;
+  bottom:auto!important;
+}
+
+/* Add Player gets its approved portrait background as the page surface. */
+.scanner-page-media{display:none}
+@media (pointer:coarse) and (max-width:1180px){
+  #page-add-player.v068-scanner-page:not(.update-mode){position:relative;isolation:isolate;background:#020914!important}
+  #page-add-player:not(.update-mode) .scanner-page-media{
+    display:block;
+    position:fixed;
+    left:0;right:0;top:var(--v631-bg-top,66px);
+    width:100vw;
+    height:calc(100dvh - var(--v631-bg-top,66px));
+    min-height:calc(100svh - var(--v631-bg-top,66px));
+    overflow:hidden;
+    pointer-events:none;
+    z-index:0;
+    transform:translateZ(0);
+  }
+  #page-add-player:not(.update-mode) .scanner-page-media img{
+    display:block;width:100%;height:100%;object-fit:cover;object-position:center top;
+    filter:var(--v626-photo-filter);
+  }
+  #page-add-player:not(.update-mode) .scanner-page-media::after{
+    content:"";position:absolute;inset:0;background:rgba(1,10,19,.25);pointer-events:none;
+  }
+  #page-add-player:not(.update-mode) .v068-scanner-hero{
+    position:relative!important;z-index:2!important;overflow:visible!important;
+    background:transparent!important;background-image:none!important;border:0!important;
+    border-radius:0!important;box-shadow:none!important;
+  }
+  #page-add-player:not(.update-mode) .v068-scanner-hero::before,
+  #page-add-player:not(.update-mode) .v068-scanner-hero::after{content:none!important;display:none!important}
+  #page-add-player .v068-scanner-body{position:relative!important;z-index:5!important}
+  #page-add-player:not(.update-mode) .scanner-primary-panel,
+  #page-add-player:not(.update-mode) .scanner-guide-panel,
+  #page-add-player:not(.update-mode) .scanner-review-panel,
+  #page-add-player:not(.update-mode) .scanner-review-actions{
+    backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);
+  }
+}
+
+/* Manual entry is a deliberate secondary route immediately below the scanner. */
+.scanner-manual-card{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:8px 12px;
+  align-items:center;
+  margin-top:10px;
+  padding:11px 12px;
+  border:1px solid rgba(168,255,25,.22);
+  border-radius:10px;
+  background:linear-gradient(120deg,rgba(38,73,17,.16),rgba(4,19,30,.88));
+}
+.scanner-manual-copy{min-width:0;display:grid}
+.scanner-manual-copy>b{margin-top:2px;font:900 16px/1 var(--v627-type);text-transform:uppercase;color:#f2f7f8}
+.scanner-manual-copy>small{margin-top:3px;font-size:7px;line-height:1.35;color:#93aab7}
+.scanner-manual-card>.btn{min-width:150px;height:38px}
+.scanner-manual-card>.manual-entry-note{grid-column:1/-1;margin:0!important;font-size:6.5px!important;color:#7f98a7!important}
+#page-add-player.update-mode .scanner-manual-card{display:none!important}
+
+@media (orientation:portrait) and (max-width:699px) and (pointer:coarse){
+  .home-hero-branding.page-header-art-wrap,
+  #page-squad .v0625-page-title.page-header-art-wrap,
+  .v068-scanner-hero .branded-page-title.page-header-art-wrap,
+  .v064-training-hero .branded-page-title.page-header-art-wrap,
+  .v066-drills-hero .branded-page-title.page-header-art-wrap,
+  .v067-account-hero .branded-page-title.page-header-art-wrap,
+  .v067-settings-hero .branded-page-title.page-header-art-wrap,
+  .v065-team-plan-head>.branded-page-title.page-header-art-wrap{
+    width:205px!important;
+    left:8px!important;
+    top:4px!important;
+    max-width:calc(100% - 16px)!important;
+  }
+  #page-add-player:not(.update-mode) .v068-scanner-hero{height:260px!important;min-height:260px!important}
+  #page-add-player:not(.update-mode) .v068-scanner-body{margin-top:-14px!important;padding:0 10px 92px!important}
+  .scanner-manual-card{grid-template-columns:1fr;margin-top:8px;padding:9px 10px;gap:7px}
+  .scanner-manual-card>.btn{width:100%;min-width:0;height:40px}
+  .scanner-manual-copy>b{font-size:15px}.scanner-manual-copy>small{font-size:7px}
+}
+
+@media (orientation:landscape) and (pointer:coarse) and (max-height:700px){
+  .home-hero-branding.page-header-art-wrap,
+  #page-squad .v0625-page-title.page-header-art-wrap,
+  .v068-scanner-hero .branded-page-title.page-header-art-wrap,
+  .v064-training-hero .branded-page-title.page-header-art-wrap,
+  .v066-drills-hero .branded-page-title.page-header-art-wrap,
+  .v067-account-hero .branded-page-title.page-header-art-wrap,
+  .v067-settings-hero .branded-page-title.page-header-art-wrap,
+  .v065-team-plan-head>.branded-page-title.page-header-art-wrap{
+    width:190px!important;left:8px!important;top:3px!important;
+  }
+}
