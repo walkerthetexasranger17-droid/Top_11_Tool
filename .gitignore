@@ -1,0 +1,21 @@
+# OS / editor noise
+.DS_Store
+Thumbs.db
+Desktop.ini
+.vscode/
+.idea/
+
+# Logs / local scratch
+*.log
+*.tmp
+*.bak
+
+# Python / Node transient files
+__pycache__/
+*.py[cod]
+node_modules/
+
+# Local secrets / environment files
+.env
+.env.*
+!.env.example

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-runtime="0.6.30">
+<html lang="en" data-runtime="0.6.31">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -10,16 +10,16 @@
   <meta name="application-name" content="Top Eleven Tool">
   <meta name="apple-mobile-web-app-title" content="Top Eleven Tool">
   <title>Top Eleven Tool</title>
-  <link rel="manifest" href="./manifest.json?r=0630">
+  <link rel="manifest" href="./manifest.json?r=0631">
   <link rel="icon" href="./icon-192.png"><link rel="apple-touch-icon" href="./icon-192.png">
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./css/app.css?r=0630"><link rel="stylesheet" href="./css/v060.css?r=0630">
+  <link rel="stylesheet" href="./css/app.css?r=0631"><link rel="stylesheet" href="./css/v060.css?r=0631">
 </head>
 <body class="booting">
 <div class="auth-gate" id="authGate" hidden>
   <div class="auth-shell">
-    <div class="auth-brand"><img src="./icon-192.png" alt=""><div><b>TOP ELEVEN <span>TOOL</span></b><small>Cloud account · v0.6.30</small></div></div>
+    <div class="auth-brand"><img src="./icon-192.png" alt=""><div><b>TOP ELEVEN <span>TOOL</span></b><small>Cloud account · v0.6.31</small></div></div>
     <div class="auth-message" id="authMessage"></div>
     <div data-auth-panel="setup">
       <div class="section-kicker">One-time setup</div><h1>Connect Firebase</h1><p class="body-copy">Paste the <b>firebaseConfig</b> object from Firebase Console. This project configuration is not a private password; it identifies the Firebase project used by the app.</p>
@@ -63,9 +63,9 @@
 <div class="app">
   <header class="topbar">
     <button class="brand-home" type="button" data-go="dashboard" aria-label="Go to Home" title="Home"><img class="brand-mark" src="./icon-192.png" alt="Top Eleven Tool"></button>
-    <div class="brand-copy brand-wordmark brand-wordmark-art" aria-label="Top Eleven Tool v0.6.30">
+    <div class="brand-copy brand-wordmark brand-wordmark-art" aria-label="Top Eleven Tool v0.6.31">
       <img class="brand-wordmark-image" src="./assets/v0629/headers/topbar.webp" alt="Top Eleven Tool">
-      <div class="brand-sub">v0.6.30</div>
+      <div class="brand-sub">v0.6.31</div>
     </div>
     <button class="home-search-shortcut" id="homeSearchShortcut" type="button" aria-label="Search squad"><img src="./assets/v0616/home/27-header-search.svg" alt=""><em>Search players, skills, or run a scan...</em><kbd>⌘ K</kbd></button>
     <div class="topbar-actions">
@@ -230,13 +230,16 @@
     </section>
 
     <section class="page v064-training-page" id="page-training" data-page="training" data-nav-label="Training" data-nav-icon="assets/v0616/home/21-nav-training.svg">
+      <picture class="training-page-media" aria-hidden="true">
+        <img src="./assets/v0631/backgrounds/training.webp" alt="" decoding="async" loading="eager">
+      </picture>
       <div class="hero v064-training-hero" style="--hero:url('./assets/v060/scenes/training-hero-desktop.webp');--hero-mobile:url('./assets/v060/scenes/training-hero-mobile.webp')">
         <div class="hero-copy branded-page-title page-header-art-wrap"><img class="page-header-art" src="./assets/v0629/headers/training.webp" alt="Training"></div>
       </div>
       <div class="page-body v064-training-body">
-        <div class="mode-grid training-tabs v064-training-tabs">
-          <button class="mode active" data-training-tab="individual"><img src="assets/v0616/home/21-nav-training.svg"><span>Individual Training</span></button>
-          <button class="mode" data-training-tab="team"><img src="assets/icons/team.svg"><span>Team Training</span></button>
+        <div class="mode-grid training-tabs v064-training-tabs" role="tablist" aria-label="Training mode">
+          <button class="mode active" type="button" role="tab" aria-selected="true" data-training-tab="individual"><img src="assets/v0616/home/21-nav-training.svg"><span>Individual Training</span></button>
+          <button class="mode" type="button" role="tab" aria-selected="false" data-training-tab="team"><img src="assets/icons/team.svg"><span>Team Training</span></button>
         </div>
 
         <div id="individualTrainingPanel">
@@ -252,27 +255,19 @@
               <div class="mini-note training-mode-note" id="trainingModeNote">Max Growth prioritises total useful white-skill utility. Balanced Development deliberately spreads useful work across more weak white skills and distinct drills. Condition Efficient prioritises useful utility per condition.</div>
             </section>
 
-            <section class="training-setup-card training-drill-stock-card">
-              <div class="training-step-head"><span>3</span><div><b>Manage My Drills</b><small>Your saved normal levels and Master card stock.</small></div></div>
-              <button class="btn ghost full" data-go="my-drills">Manage My Drills</button>
-              <div class="training-stock-mini"><div><b id="intelNormalCount">0</b><span>Saved levels</span></div><div><b id="intelMasterCount">0</b><span>Master cards</span></div></div>
-            </section>
-
             <section class="training-setup-card training-build-card">
-              <div class="training-step-head"><span>4</span><div><b>Build 6-Drill Session</b><small>Generate the best legal session for this player.</small></div></div>
+              <div class="training-step-head"><span>3</span><div><b>Build 6-Drill Session</b><small>Generate the best legal session for this player.</small></div></div>
               <button class="btn primary build-btn" id="buildSessionBtn">BUILD SESSION →</button>
               <div id="trainingStatus" class="mini-note"></div>
             </section>
           </div>
-
-          <div class="training-intel v064-training-intel" aria-label="Training optimiser summary"><div><b>06</b><span>DRILLS</span><small>per session</small></div><div><b>3</b><span>MODES</span><small>growth strategies</small></div><div><b>0</b><span>GREY SCORE</span><small>white skills only</small></div></div>
 
           <div class="section v064-training-results" id="trainingResults" style="display:none">
             <div class="training-results-main">
               <div class="section-head"><div><div class="section-kicker">Top Eleven Tool calculation</div><div class="section-title">Your 6-Drill Training Session</div></div><button class="section-link" id="rebuildBtn">Rebuild</button></div>
               <div class="priority-strip" id="priorityAttributes"></div>
               <div class="session-list" id="sessionList"></div>
-              <div class="training-session-actions"><button class="btn ghost" data-go="my-drills">Manage Drills</button><button class="btn primary" id="completeSessionBtn">Mark Session Completed</button></div>
+              <div class="training-session-actions"><button class="btn primary" id="completeSessionBtn">Mark Session Completed</button></div>
               <div class="mini-note" id="sessionCompleteNote"></div>
             </div>
             <aside class="training-results-side">
@@ -283,9 +278,9 @@
         </div>
 
         <div id="teamTrainingPanel" style="display:none">
-          <div class="v064-team-training-head"><div><div class="section-kicker">Actual squad players</div><div class="section-title">Team Training</div><p class="body-copy">Build normal-drill sessions for each squad group using your saved drill levels and the players you actually own.</p></div><button class="btn ghost" data-go="my-drills">Manage My Drills</button></div>
+          <div class="v064-team-training-head"><div><div class="section-kicker">Actual squad players</div><div class="section-title">Team Training</div><p class="body-copy">Build normal-drill sessions for each squad group using your saved drill levels and the players you actually own.</p></div></div>
           <div class="team-grid" id="teamTrainingCards"></div>
-          <p class="mini-note">This is the normal-drill team optimiser. Top Eleven TeamPlayTrainingDrill is a separate protocol system and is not fabricated here.</p>
+          <p class="mini-note team-training-note">This is the normal-drill team optimiser. Top Eleven TeamPlayTrainingDrill is a separate protocol system and is not fabricated here.</p>
         </div>
       </div>
     </section>
@@ -399,7 +394,7 @@
 
           <section class="settings-card settings-version-card">
             <div class="settings-card-head"><img src="./icon-192.png" alt=""><div><span>About</span><b>Top Eleven Tool</b><small>Responsive web/PWA build.</small></div></div>
-            <div class="settings-version"><strong>v0.6.30</strong><span>Design branch</span></div>
+            <div class="settings-version"><strong>v0.6.31</strong><span>Design branch</span></div>
             <p class="mini-note">Internal game-data build references stay in the background and are not shown throughout the normal product UI.</p>
           </section>
         </div>
@@ -411,6 +406,6 @@
   <div class="dialog-backdrop" id="confirmDialogBackdrop"><div class="confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="confirmDialogTitle"><div class="section-kicker">Squad</div><div class="section-title" id="confirmDialogTitle">Delete player?</div><p id="confirmDialogCopy">Are you sure you want to permanently remove this player from your squad?</p><div class="btn-row spaced"><button class="btn ghost" id="confirmCancelBtn" type="button">Cancel</button><button class="btn danger" id="confirmDeleteBtn" type="button">Delete</button></div></div></div>
   <div class="toast" id="toast"></div>
 </div>
-<script src="./js/optimizer-data.js?r=0630"></script><script src="./js/bible-data.js?r=0630"></script><script src="./js/data.js?r=0630"></script><script src="./js/strategy-data.js?r=0630"></script><script src="./js/best-in-slot-data.js?r=0630"></script><script src="./js/strategy-logic.js?r=0630"></script><script src="./js/squad-coverage-engine.js?r=0630"></script><script src="./js/cloud.js?r=0630"></script><script src="./js/storage.js?r=0630"></script><script src="./js/drill-profile.js?r=0630"></script><script src="./js/players.js?r=0630"></script><script src="./js/training-engine.js?r=0630"></script><script src="./js/team-training-engine.js?r=0630"></script><script src="./js/scanner-engine.js?r=0630"></script><script src="./js/recommendations.js?r=0630"></script><script src="./js/formation.js?r=0630"></script><script src="./js/tactics-engine.js?r=0630"></script><script src="./js/mentor-engine.js?r=0630"></script><script src="./js/team-plan-engine.js?r=0630"></script><script src="./js/best-in-slot-engine.js?r=0630"></script><script src="./js/app.js?r=0630"></script>
+<script src="./js/optimizer-data.js?r=0631"></script><script src="./js/bible-data.js?r=0631"></script><script src="./js/data.js?r=0631"></script><script src="./js/strategy-data.js?r=0631"></script><script src="./js/best-in-slot-data.js?r=0631"></script><script src="./js/strategy-logic.js?r=0631"></script><script src="./js/squad-coverage-engine.js?r=0631"></script><script src="./js/cloud.js?r=0631"></script><script src="./js/storage.js?r=0631"></script><script src="./js/drill-profile.js?r=0631"></script><script src="./js/players.js?r=0631"></script><script src="./js/training-engine.js?r=0631"></script><script src="./js/team-training-engine.js?r=0631"></script><script src="./js/scanner-engine.js?r=0631"></script><script src="./js/recommendations.js?r=0631"></script><script src="./js/formation.js?r=0631"></script><script src="./js/tactics-engine.js?r=0631"></script><script src="./js/mentor-engine.js?r=0631"></script><script src="./js/team-plan-engine.js?r=0631"></script><script src="./js/best-in-slot-engine.js?r=0631"></script><script src="./js/app.js?r=0631"></script>
 <script>(()=>{const expected=document.documentElement.dataset.runtime;if(window.__TE_RUNTIME__!==expected){console.error('Runtime build mismatch',{expected,loaded:window.__TE_RUNTIME__||'missing'});const k='te:runtime-reload:'+expected;if(!sessionStorage.getItem(k)){sessionStorage.setItem(k,'1');location.reload();}}else{sessionStorage.removeItem('te:runtime-reload:'+expected);}})();</script>
 </body></html>

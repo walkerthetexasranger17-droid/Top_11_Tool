@@ -1549,3 +1549,226 @@ body{letter-spacing:.01em}
     max-width:calc(100% - 28px)!important;
   }
 }
+
+/* =========================================================
+   v0.6.31 — Training mobile redesign + smooth page artwork
+   Home/Squad visual design remains locked. This pass removes
+   the active-state geometry jump, restores the approved Training
+   portrait background, simplifies Training controls, and gives
+   drill categories their official colour language.
+   ========================================================= */
+
+@keyframes v631PageFade{from{opacity:.82}to{opacity:1}}
+#page-dashboard.active,#page-squad.active,#page-training.active{
+  animation:v631PageFade .14s ease-out both!important;
+}
+
+/* Pre-position Home/Squad artwork before a page becomes active. The previous
+   active-only fixed positioning caused a first-frame absolute -> fixed snap. */
+@media (pointer:coarse) and (max-width:1180px){
+  :root{--v631-bg-top:66px}
+  #page-dashboard.page .home-hero-media,
+  #page-squad.page .squad-hero-media{
+    position:fixed!important;
+    left:0!important;
+    right:0!important;
+    top:var(--v631-bg-top)!important;
+    width:100vw!important;
+    height:calc(100dvh - var(--v631-bg-top))!important;
+    min-height:calc(100svh - var(--v631-bg-top))!important;
+    bottom:auto!important;
+    overflow:hidden!important;
+    pointer-events:none!important;
+    z-index:0!important;
+    transform:translateZ(0)!important;
+    will-change:auto!important;
+  }
+  #page-dashboard.page .home-hero-media img,
+  #page-squad.page .squad-hero-media img{
+    width:100%!important;
+    height:100%!important;
+    object-fit:cover!important;
+    object-position:center top!important;
+    transform:none!important;
+    filter:var(--v626-photo-filter)!important;
+  }
+  #page-dashboard.page .home-hero-media::after,
+  #page-squad.page .squad-hero-media::after{
+    content:""!important;
+    display:block!important;
+    position:absolute!important;
+    inset:0!important;
+    background:var(--v626-photo-tint)!important;
+    pointer-events:none!important;
+    z-index:1!important;
+    box-shadow:none!important;
+  }
+
+  /* Training uses the already-approved portrait background as the page surface. */
+  #page-training.page{position:relative;isolation:isolate;background:#020914!important}
+  .training-page-media{
+    display:block;
+    position:fixed;
+    left:0;right:0;top:var(--v631-bg-top);
+    width:100vw;
+    height:calc(100dvh - var(--v631-bg-top));
+    min-height:calc(100svh - var(--v631-bg-top));
+    overflow:hidden;
+    pointer-events:none;
+    z-index:0;
+    transform:translateZ(0);
+  }
+  .training-page-media img{display:block;width:100%;height:100%;object-fit:cover;object-position:center top;filter:var(--v626-photo-filter)}
+  .training-page-media::after{content:"";position:absolute;inset:0;background:rgba(1,10,19,.23);pointer-events:none}
+  #page-training .v064-training-hero{
+    position:relative!important;
+    z-index:2!important;
+    overflow:visible!important;
+    background:transparent!important;
+    background-image:none!important;
+    border:0!important;
+    border-radius:0!important;
+    box-shadow:none!important;
+  }
+  #page-training .v064-training-hero::before,
+  #page-training .v064-training-hero::after{content:none!important;display:none!important}
+  #page-training .v064-training-body{position:relative!important;z-index:5!important}
+  #page-training .training-setup-card,
+  #page-training .training-results-main,
+  #page-training .training-side-card,
+  #page-training .training-team-card,
+  #page-training .v064-team-training-head{
+    backdrop-filter:blur(2px);
+    -webkit-backdrop-filter:blur(2px);
+  }
+}
+@media (orientation:landscape) and (pointer:coarse) and (max-height:700px){:root{--v631-bg-top:46px}}
+@media (orientation:portrait) and (min-width:700px) and (max-width:1180px) and (pointer:coarse){:root{--v631-bg-top:54px}}
+
+/* Training mode tabs now behave as one compact segmented control. */
+.v064-training-tabs{
+  grid-template-columns:1fr 1fr!important;
+  gap:5px!important;
+  margin:10px 0 12px!important;
+  padding:5px!important;
+  border:1px solid rgba(73,197,240,.34)!important;
+  border-radius:14px!important;
+  background:linear-gradient(145deg,rgba(4,22,35,.94),rgba(2,13,23,.94))!important;
+  box-shadow:0 9px 24px rgba(0,0,0,.20),inset 0 1px 0 rgba(255,255,255,.025)!important;
+  overflow:visible!important;
+}
+.v064-training-tabs .mode{
+  min-height:50px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:9px!important;
+  padding:8px 12px!important;
+  border:1px solid transparent!important;
+  border-radius:10px!important;
+  background:rgba(6,25,40,.56)!important;
+  color:#93aebb!important;
+  box-shadow:none!important;
+  transition:background .14s ease,border-color .14s ease,color .14s ease,transform .14s ease!important;
+}
+.v064-training-tabs .mode img{width:24px!important;height:24px!important;margin:0!important;opacity:.68!important;filter:saturate(.72)!important}
+.v064-training-tabs .mode span{font-size:13px!important;letter-spacing:.025em!important}
+.v064-training-tabs .mode.active{
+  color:#f4ffdc!important;
+  border-color:rgba(168,255,25,.48)!important;
+  background:linear-gradient(120deg,rgba(19,83,72,.82),rgba(17,48,61,.9))!important;
+  box-shadow:inset 0 -2px 0 var(--v6-lime),0 0 18px rgba(168,255,25,.08)!important;
+}
+.v064-training-tabs .mode.active img{opacity:1!important;filter:drop-shadow(0 0 5px rgba(168,255,25,.28))!important}
+
+/* Manage My Drills now lives only on the dedicated Drills page. */
+.v064-training-setup{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+.training-session-actions{grid-template-columns:1fr!important}
+.training-session-actions #completeSessionBtn{width:100%!important}
+
+/* Official drill category colour language. */
+.cat-attack{--drill-accent:#ff4d5f;--drill-soft:rgba(255,77,95,.11)}
+.cat-defence{--drill-accent:#62dd72;--drill-soft:rgba(98,221,114,.10)}
+.cat-possession{--drill-accent:#ffd84e;--drill-soft:rgba(255,216,78,.10)}
+.cat-physical{--drill-accent:#45a9ff;--drill-soft:rgba(69,169,255,.11)}
+.cat-neutral{--drill-accent:#62dff6;--drill-soft:rgba(98,223,246,.09)}
+.drill-category-badge{
+  display:inline-flex;align-items:center;min-height:16px;padding:2px 5px;border-radius:5px;
+  border:1px solid color-mix(in srgb,var(--drill-accent) 50%,transparent);
+  background:var(--drill-soft);color:var(--drill-accent);
+  font:800 6px/1 var(--v627-type);letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;
+}
+.v064-training-results .drill-row{
+  border-color:color-mix(in srgb,var(--drill-accent) 50%,#102b3c)!important;
+  background:linear-gradient(180deg,var(--drill-soft),rgba(3,15,25,.97) 34%)!important;
+  box-shadow:inset 0 3px 0 var(--drill-accent)!important;
+}
+.v064-training-results .drill-row.master{
+  border:2px solid #f0c84a!important;
+  box-shadow:inset 0 3px 0 var(--drill-accent),0 0 14px rgba(240,200,74,.10)!important;
+}
+
+/* Team Training: richer, readable group cards with category-coded drill rows. */
+.v064-team-training-head{
+  padding:12px 14px!important;margin:0 0 10px!important;
+  border-color:rgba(73,197,240,.30)!important;
+  background:linear-gradient(135deg,rgba(5,28,43,.93),rgba(3,17,28,.94))!important;
+}
+.v064-team-training-head .section-title{font-size:25px!important}
+.v064-team-training-head .body-copy{font-size:8px!important;color:#9fb6c3!important}
+.v064-training-page .team-grid{gap:10px!important}
+.v064-training-page .training-team-card{
+  padding:11px!important;
+  border:1px solid rgba(73,197,240,.30)!important;
+  border-radius:13px!important;
+  background:linear-gradient(145deg,rgba(5,27,42,.95),rgba(2,14,24,.96))!important;
+  box-shadow:0 8px 22px rgba(0,0,0,.20)!important;
+  overflow:hidden!important;
+}
+.training-team-card .team-card-top{display:grid!important;grid-template-columns:38px minmax(0,1fr) auto!important;gap:9px!important;align-items:center!important;padding-bottom:8px!important;border-bottom:1px solid rgba(73,197,240,.15)!important}
+.team-card-icon{width:36px;height:36px;display:grid;place-items:center;border-radius:9px;background:rgba(69,169,255,.10);border:1px solid rgba(69,169,255,.25)}
+.training-team-card .team-card-top .team-card-icon img{width:22px!important;height:22px!important;margin:0!important;opacity:.9}
+.training-team-card .team-card-top span:not(.team-card-icon){display:block;font-size:6px!important;letter-spacing:.13em!important;color:#61dff7!important}
+.training-team-card .team-card-top b{font-size:19px!important;line-height:1!important}
+.training-team-card .team-card-top>em{font-style:normal;font:800 7px/1 var(--v627-type);letter-spacing:.08em;color:var(--v6-lime);border:1px solid rgba(168,255,25,.25);border-radius:999px;padding:5px 7px;background:rgba(168,255,25,.06);white-space:nowrap}
+.v064-training-page .team-mini-list{display:grid!important;grid-template-columns:1fr!important;gap:6px!important;margin-top:9px!important}
+.v064-training-page .team-mini-list .team-drill-item{
+  position:relative;display:grid!important;grid-template-columns:23px 46px minmax(0,1fr) auto!important;gap:8px!important;align-items:center!important;
+  min-height:57px;padding:5px 8px 5px 5px!important;border:1px solid color-mix(in srgb,var(--drill-accent) 46%,#163246)!important;border-left:3px solid var(--drill-accent)!important;border-radius:9px!important;
+  background:linear-gradient(90deg,var(--drill-soft),rgba(4,20,32,.82) 44%,rgba(3,15,25,.92))!important;
+}
+.v064-training-page .team-mini-list .team-drill-item.master{border:2px solid #f0c84a!important;border-left:3px solid #f0c84a!important;box-shadow:inset 0 2px 0 var(--drill-accent)}
+.team-drill-no{font:900 14px/1 var(--v627-type);color:var(--drill-accent);text-align:center}
+.team-drill-item>img{display:block;width:46px!important;height:46px!important;object-fit:cover!important;border-radius:7px!important;border:1px solid color-mix(in srgb,var(--drill-accent) 42%,transparent)!important}
+.team-drill-copy{min-width:0}
+.team-drill-copy .drill-category-badge{margin-bottom:3px}
+.team-drill-copy b{display:block!important;font-size:11px!important;line-height:1.05!important;color:#f4f8fa!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+.team-drill-copy small{display:block;font-size:6.5px!important;margin-top:2px!important;color:#8fa9b8!important}
+.team-drill-item>strong{font:900 15px/1 var(--v627-type);color:var(--drill-accent);white-space:nowrap}
+.team-card-summary{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
+.team-card-summary>span{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:7px 8px;border-radius:8px;background:rgba(5,22,34,.72);border:1px solid rgba(73,197,240,.13)}
+.team-card-summary small{font-size:6px;color:#7896a7;letter-spacing:.08em}
+.team-card-summary b{font-size:12px;color:#edf6fa}
+.team-card-loading{min-height:112px;opacity:.74}
+.team-loading-bar{height:3px;margin-top:14px;border-radius:99px;background:rgba(75,173,220,.10);overflow:hidden}
+.team-loading-bar i{display:block;width:38%;height:100%;background:linear-gradient(90deg,var(--v6-lime),var(--v6-cyan));animation:v631TeamLoad .8s ease-in-out infinite alternate}
+@keyframes v631TeamLoad{from{transform:translateX(-15%)}to{transform:translateX(175%)}}
+.team-training-note{margin:9px 2px 0!important;padding:8px 10px!important;border-radius:8px!important;background:rgba(3,16,27,.72)!important;border:1px solid rgba(73,197,240,.12)!important}
+
+@media (orientation:portrait) and (max-width:699px) and (pointer:coarse){
+  #page-training .v064-training-hero{height:280px!important;min-height:280px!important}
+  #page-training .v064-training-body{margin-top:-14px!important;padding:0 10px 92px!important}
+  .v064-training-tabs{margin:0 0 9px!important;padding:4px!important}
+  .v064-training-tabs .mode{min-height:43px!important;padding:6px 7px!important;gap:6px!important}
+  .v064-training-tabs .mode img{width:19px!important;height:19px!important}
+  .v064-training-tabs .mode span{font-size:10px!important}
+  .v064-training-setup{grid-template-columns:1fr!important;gap:8px!important}
+  .training-setup-card{background:linear-gradient(145deg,rgba(5,27,42,.94),rgba(3,15,25,.96))!important}
+  .v064-training-results .session-list{grid-template-columns:1fr 1fr!important}
+  .training-team-card .team-card-top{grid-template-columns:34px minmax(0,1fr) auto!important}
+  .team-card-icon{width:32px;height:32px}.training-team-card .team-card-top .team-card-icon img{width:19px!important;height:19px!important}
+  .training-team-card .team-card-top b{font-size:16px!important}
+  .v064-training-page .team-mini-list .team-drill-item{grid-template-columns:20px 42px minmax(0,1fr) auto!important;min-height:53px!important;gap:6px!important}
+  .team-drill-item>img{width:42px!important;height:42px!important}
+  .team-drill-copy b{font-size:10px!important}.team-drill-item>strong{font-size:13px!important}
+}
