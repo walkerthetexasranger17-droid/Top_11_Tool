@@ -1,5 +1,5 @@
 (() => {
-  window.__TE_RUNTIME__='0.6.32';
+  window.__TE_RUNTIME__='0.6.33';
   const TE=window.TE5;const D=TE.Data,P=TE.Players,S=TE.Storage,DP=TE.DrillProfile,T=TE.Training,TT=TE.TeamTraining,SC=TE.Scanner,R=TE.Recommendations,F=TE.Formation,TP=TE.TeamPlan,TAC=TE.Tactics,M=TE.Mentor,B=TE.BibleData,C=TE.Cloud,BIS=TE.BestInSlot;
   const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
   const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -703,7 +703,11 @@
     const nav=performance.getEntriesByType?.('navigation')?.[0];if(nav?.type==='reload')setTimeout(()=>toast('✓ Successfully refreshed'),180);
   }
   let cloudRefreshTimer=0,cloudUiRefreshSeq=0;
-  function scheduleCloudUiRefresh(){
+  function scheduleCloudUiRefresh(event){
+    // Server acknowledgement of data that is already identical to the local working copy
+    // must not repaint the current page. In particular, repainting Training immediately
+    // after persisting a freshly-built session clears the just-rendered result view.
+    if(event?.type==='te-cloud-synced'&&event.detail?.changed===false)return;
     clearTimeout(cloudRefreshTimer);const seq=++cloudUiRefreshSeq;
     cloudRefreshTimer=setTimeout(async()=>{if(seq!==cloudUiRefreshSeq)return;
       // Never repaint a page on top of an in-flight navigation. Defer the cloud repaint

@@ -163,7 +163,7 @@
       state.status='ready';hideGate();updateCloudChrome();
       scheduleFlush(0);
       if(localReady)syncDown().then(()=>scheduleFlush(0)).catch(err=>console.warn('Background cloud hydration',err));
-      console.info('[Top Eleven Tool] Cloud sync ready',{runtime:'0.6.32',source:state.lastSyncSource,records:state.syncCount,pending:state.pendingWrites,localFirst:localReady});
+      console.info('[Top Eleven Tool] Cloud sync ready',{runtime:'0.6.33',source:state.lastSyncSource,records:state.syncCount,pending:state.pendingWrites,localFirst:localReady});
       return true;
     }catch(err){state.error=err;state.status='error';showGate('setup');setAuthMessage(`Firebase setup error: ${friendlyAuthError(err)}`,'err');return false;}
   }
@@ -211,8 +211,10 @@
     // A local pending write/delete always wins until Firestore confirms it. This makes
     // refresh/navigation safe even if the network drops between the local edit and upload.
     if(pendingOp(key))return false;
-    if(entry.deleted)localDelRaw(key);else localSetRaw(key,entry.value);
-    return true;
+    let current=null;try{current=localStorage.getItem(LOCAL_PREFIX+key)}catch(_){}
+    if(entry.deleted){if(current==null)return false;localDelRaw(key);return true;}
+    const next=String(entry.value??'');if(current===next)return false;
+    localSetRaw(key,next);return true;
   }
   async function applyServerSnapshot(snap,{source='server',recoverMissing=true}={}){
     if(!state.user)return;
