@@ -1921,3 +1921,48 @@ body.te-select-open{overflow:hidden}
     width:190px!important;left:8px!important;top:3px!important;
   }
 }
+
+
+/* ================================================================
+   v0.6.35 — Scanner review field polish + selected-XI Team OVR
+   ================================================================ */
+/* Scanner role/playstyle selectors should read as integrated review controls,
+   not generic fields with a separate boxed arrow attached. */
+.scanner-player-review #scanRole + .te-select-trigger,
+.scanner-player-review #scanRole2 + .te-select-trigger,
+.scanner-player-review #scanRole3 + .te-select-trigger,
+.scanner-player-review #scanPlaystyle + .te-select-trigger,
+.scanner-player-review #scanPlaystyleLevel + .te-select-trigger{
+  min-height:44px;grid-template-columns:minmax(0,1fr) 18px;gap:6px;
+  padding:9px 12px 9px 13px;border-radius:13px;
+  border-color:rgba(71,198,242,.32);
+  background:linear-gradient(145deg,rgba(4,25,40,.97),rgba(2,14,24,.99));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.025),0 8px 18px rgba(0,0,0,.12);
+}
+.scanner-player-review #scanRole + .te-select-trigger .te-select-chevron,
+.scanner-player-review #scanRole2 + .te-select-trigger .te-select-chevron,
+.scanner-player-review #scanRole3 + .te-select-trigger .te-select-chevron,
+.scanner-player-review #scanPlaystyle + .te-select-trigger .te-select-chevron,
+.scanner-player-review #scanPlaystyleLevel + .te-select-trigger .te-select-chevron{
+  width:16px;height:20px;border:0;border-radius:0;background:transparent;box-shadow:none;
+}
+.scanner-player-review #scanRole + .te-select-trigger .te-select-chevron::before,
+.scanner-player-review #scanRole2 + .te-select-trigger .te-select-chevron::before,
+.scanner-player-review #scanRole3 + .te-select-trigger .te-select-chevron::before,
+.scanner-player-review #scanPlaystyle + .te-select-trigger .te-select-chevron::before,
+.scanner-player-review #scanPlaystyleLevel + .te-select-trigger .te-select-chevron::before{
+  content:"▾";width:auto;height:auto;border:0;color:#65dfff;
+  font:900 13px/1 sans-serif;transform:none;filter:drop-shadow(0 0 5px rgba(58,207,255,.22));
+}
+.scanner-player-review #scanRole + .te-select-trigger:not(.placeholder) .te-select-value{color:var(--v6-lime)}
+.scanner-player-review #scanRole2 + .te-select-trigger:not(.placeholder) .te-select-value,
+.scanner-player-review #scanRole3 + .te-select-trigger:not(.placeholder) .te-select-value{color:#ccecf8}
+.scanner-player-review #scanPlaystyle + .te-select-trigger:not(.placeholder) .te-select-value{color:#f1f7f9}
+.scanner-player-review #scanPlaystyleLevel + .te-select-trigger:not(.placeholder) .te-select-value{color:#8de7ff}
+.scanner-player-review .field:has(#scanRole),
+.scanner-player-review .field:has(#scanPlaystyle){position:relative}
+.scanner-player-review .field:has(#scanRole)::after,
+.scanner-player-review .field:has(#scanPlaystyle)::after{
+  content:"";position:absolute;left:1px;right:1px;bottom:0;height:1px;border-radius:2px;
+  background:linear-gradient(90deg,var(--v6-lime),rgba(66,211,255,.8),transparent 82%);opacity:.55;pointer-events:none;
+}

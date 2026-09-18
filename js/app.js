@@ -1,5 +1,5 @@
 (() => {
-  window.__TE_RUNTIME__='0.6.34';
+  window.__TE_RUNTIME__='0.6.35';
   const TE=window.TE5;const D=TE.Data,P=TE.Players,S=TE.Storage,DP=TE.DrillProfile,T=TE.Training,TT=TE.TeamTraining,SC=TE.Scanner,R=TE.Recommendations,F=TE.Formation,TP=TE.TeamPlan,TAC=TE.Tactics,M=TE.Mentor,B=TE.BibleData,C=TE.Cloud,BIS=TE.BestInSlot;
   const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
   const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -131,10 +131,14 @@
 
   // ---------- Dashboard / Squad ----------
   async function renderDashboard(){
-    const players=await P.all(),avg=players.length?players.reduce((a,p)=>a+Number(p.ovr||0),0)/players.length:0,high=players.length?Math.max(...players.map(p=>Number(p.ovr||0))):0;
+    const players=await P.all(),high=players.length?Math.max(...players.map(p=>Number(p.ovr||0))):0;
     let drillSetup=null,plan=null;
     try{drillSetup=await DP.ensure();}catch(_){/* dashboard intelligence is best effort */}
     try{plan=await TP.load();}catch(_){/* no saved plan yet */}
+    const playerByKey=new Map(players.map(p=>[String(p.key||''),p]));
+    const starterKeys=Array.isArray(plan?.starters)?[...new Set(plan.starters.map(x=>String(x?.playerKey||'')).filter(Boolean))]:[];
+    const selectedXI=starterKeys.map(k=>playerByKey.get(k)).filter(Boolean);
+    const teamOvr=starterKeys.length===11&&selectedXI.length===11?selectedXI.reduce((sum,p)=>sum+Number(p.ovr||0),0)/11:null;
     const normalDrills=drillSetup?Object.keys(drillSetup.normal?.drills||{}).length:0;
     const savedLevels=drillSetup?Object.values(drillSetup.normal?.drills||{}).filter(x=>x?.unlocked).length:0;
     const masterStock=drillSetup?Object.values(drillSetup.master?.stock||{}).reduce((a,v)=>a+Math.max(0,Number(v)||0),0):0;
@@ -146,7 +150,7 @@
         <div class="dashboard-glance-head"><div><span class="dashboard-glance-calendar" aria-hidden="true"></span><h2>Today at a glance</h2></div><time>${esc(today)}</time></div>
         <div class="dashboard-glance-metrics">
           <button class="dashboard-glance-metric" data-go="squad"><img src="${H}08-stat-players.svg" alt=""><span><b>${players.length}</b><small>Players</small></span></button>
-          <button class="dashboard-glance-metric" data-go="squad"><img src="${H}09-stat-avg-ovr.svg" alt=""><span><b>${players.length?Math.round(avg):'—'}</b><small>Avg OVR</small></span></button>
+          <button class="dashboard-glance-metric" data-go="team-plan"><img src="${H}09-stat-avg-ovr.svg" alt=""><span><b>${teamOvr==null?'—':Math.round(teamOvr)}</b><small>Team OVR</small></span></button>
           <button class="dashboard-glance-metric" data-go="training"><img src="${H}11-stat-training.svg" alt=""><span><b>${savedLevels}</b><small>Training opportunities</small></span></button>
         </div>`;
     }
@@ -404,7 +408,11 @@
   }
   function scanNaturalRoles(){return [$('#scanRole')?.value,$('#scanRole2')?.value,$('#scanRole3')?.value].filter((r,i,a)=>r&&a.indexOf(r)===i);}
   function renderAbilityPicker(){const roles=scanNaturalRoles(),eligible=new Set(D.specialAbilitiesForRoles?.(roles)||[]),choices=abilityChoicesForRoles(roles,state.scanAbilities);$('#abilityPicker').innerHTML=choices.map(a=>`<button type="button" class="chip ${state.scanAbilities.includes(a)?'active':''} ${eligible.has(a)?'':'outside-role'}" data-ability="${esc(a)}" ${state.scan?.updateOnly?'disabled':''} title="${eligible.has(a)?'Eligible for detected natural roles':'Detected/saved ability preserved outside current role filter'}">${esc(a)}${eligible.has(a)?'':' · detected'}</button>`).join('')||'<span class="mini-note">Choose a natural role to see eligible Special Abilities.</span>';}
-  function renderScanRelated(){const natural=new Set([$('#scanRole')?.value,$('#scanRole2')?.value,$('#scanRole3')?.value].filter(Boolean));state.scanRelatedRoles=state.scanRelatedRoles.filter(r=>!natural.has(r));$('#scanRelatedPicker').innerHTML=D.ALL_POSITIONS.filter(r=>!natural.has(r)).map(r=>`<button type="button" class="chip ${state.scanRelatedRoles.includes(r)?'active':''}" data-scan-related="${r}" ${state.scan?.updateOnly?'disabled':''}>${r}</button>`).join('');}
+  function renderScanRelated(){
+    // Related Roles are no longer part of the scanner review UI. Natural roles from
+    // the screenshot remain the authoritative role set for Add Player.
+    state.scanRelatedRoles=[];
+  }
   function renderDetectedRoles(){const el=$('#detectedRoles');if(!el||!state.scan)return;if(state.scan.updateOnly){el.innerHTML='<span class="chip verified-badge">Existing roles preserved</span>';return;}if(state.scan.manualEntry){el.innerHTML='<span class="chip manual-mode-badge">Manual player</span>';return;}const detected=(state.scan.roles||[]).filter(Boolean),primary=$('#scanRole')?.value||'';el.innerHTML=detected.length?detected.map(r=>`<button type="button" class="chip detected-role-chip ${r===primary?'active':''}" data-detected-primary-role="${esc(r)}">${esc(r)}${r===primary?' · primary':''}</button>`).join(''):'<span class="mini-note">Role needs review.</span>';}
   function refreshScanRoleDependentUi(){if(!state.scan)return;const roles=scanNaturalRoles();const selected=$('#scanPlaystyle')?.value||'';$('#scanPlaystyle').innerHTML=playstyleOptions(roles,selected);const has=!!$('#scanPlaystyle').value;$('#scanPlaystyleLevel').disabled=!has;state.scanRelatedRoles=state.scanRelatedRoles.filter(r=>!roles.includes(r));renderScanRelated();renderDetectedRoles();renderAbilityPicker();persistCurrentQueueDraft();refreshScanVerification();}
   function setDetectedPrimaryRole(role){if(!state.scan||state.scan.manualEntry)return;const detected=(state.scan.roles||[]).filter(Boolean),existing=[$('#scanRole')?.value,$('#scanRole2')?.value,$('#scanRole3')?.value].filter(Boolean),roles=[role,...detected,...existing].filter((r,i,a)=>r&&a.indexOf(r)===i).slice(0,3);if(state.scan.layout==='gk'&&role!=='GK')return;$('#scanRole').value=roles[0]||'';$('#scanRole2').value=roles[1]||'';$('#scanRole3').value=roles[2]||'';state.scan.position=roles[0]||state.scan.position;refreshScanRoleDependentUi();toast(`${role} set as primary role`);}

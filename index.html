@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-runtime="0.6.34">
+<html lang="en" data-runtime="0.6.35">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -10,16 +10,16 @@
   <meta name="application-name" content="Top Eleven Tool">
   <meta name="apple-mobile-web-app-title" content="Top Eleven Tool">
   <title>Top Eleven Tool</title>
-  <link rel="manifest" href="./manifest.json?r=0634">
+  <link rel="manifest" href="./manifest.json?r=0635">
   <link rel="icon" href="./icon-192.png"><link rel="apple-touch-icon" href="./icon-192.png">
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./css/app.css?r=0634"><link rel="stylesheet" href="./css/v060.css?r=0634">
+  <link rel="stylesheet" href="./css/app.css?r=0635"><link rel="stylesheet" href="./css/v060.css?r=0635">
 </head>
 <body class="booting">
 <div class="auth-gate" id="authGate" hidden>
   <div class="auth-shell">
-    <div class="auth-brand"><img src="./icon-192.png" alt=""><div><b>TOP ELEVEN <span>TOOL</span></b><small>Cloud account · v0.6.34</small></div></div>
+    <div class="auth-brand"><img src="./icon-192.png" alt=""><div><b>TOP ELEVEN <span>TOOL</span></b><small>Cloud account · v0.6.35</small></div></div>
     <div class="auth-message" id="authMessage"></div>
     <div data-auth-panel="setup">
       <div class="section-kicker">One-time setup</div><h1>Connect Firebase</h1><p class="body-copy">Paste the <b>firebaseConfig</b> object from Firebase Console. This project configuration is not a private password; it identifies the Firebase project used by the app.</p>
@@ -63,9 +63,9 @@
 <div class="app">
   <header class="topbar">
     <button class="brand-home" type="button" data-go="dashboard" aria-label="Go to Home" title="Home"><img class="brand-mark" src="./icon-192.png" alt="Top Eleven Tool"></button>
-    <div class="brand-copy brand-wordmark brand-wordmark-art" aria-label="Top Eleven Tool v0.6.34">
+    <div class="brand-copy brand-wordmark brand-wordmark-art" aria-label="Top Eleven Tool v0.6.35">
       <img class="brand-wordmark-image" src="./assets/v0629/headers/topbar.webp" alt="Top Eleven Tool">
-      <div class="brand-sub">v0.6.34</div>
+      <div class="brand-sub">v0.6.35</div>
     </div>
     <button class="home-search-shortcut" id="homeSearchShortcut" type="button" aria-label="Search squad"><img src="./assets/v0616/home/27-header-search.svg" alt=""><em>Search players, skills, or run a scan...</em><kbd>⌘ K</kbd></button>
     <div class="topbar-actions">
@@ -82,7 +82,7 @@
           <img src="./assets/v0616/home/home-hero-desktop.webp" alt="" decoding="async" fetchpriority="high">
         </picture>
         <div class="home-hero-branding page-header-art-wrap" aria-label="Top Eleven Tool Home">
-          <img class="page-header-art page-header-art-home" src="./assets/v0629/headers/home.webp" alt="Top Eleven Tool">
+          <img class="page-header-art page-header-art-home" src="./assets/v0635/headers/home.webp" alt="Top Eleven Tool">
         </div>
       </div>
       <div class="page-body dashboard-body v060-dashboard-body">
@@ -103,7 +103,7 @@
           <source media="(pointer: coarse) and (max-width: 1180px)" srcset="./assets/v0623/backgrounds/squad-mobile.png">
           <img src="./assets/v060/scenes/squad-hero-desktop.webp" alt="" decoding="async" fetchpriority="high">
         </picture>
-        <div class="hero-copy v0625-page-title branded-page-title page-header-art-wrap"><img class="page-header-art" src="./assets/v0629/headers/squad.webp" alt="Squad Management"></div>
+        <div class="hero-copy v0625-page-title branded-page-title page-header-art-wrap"><img class="page-header-art" src="./assets/v0635/headers/squad.webp" alt="Squad Management"></div>
       </div>
       <div class="page-body v062-squad-body">
 
@@ -157,7 +157,7 @@
         <img src="./assets/v0634/backgrounds/add-player.webp" alt="" decoding="async" loading="eager">
       </picture>
       <div class="hero v068-scanner-hero" style="--hero:url('./assets/v060/scenes/scanner-hero-desktop.webp');--hero-landscape:url('./assets/v060/scenes/scanner-hero-landscape.webp')">
-        <div class="hero-copy branded-page-title page-header-art-wrap" id="scanHeroTitleWrap"><img class="page-header-art" src="./assets/v0629/headers/add-player.webp" alt="Add Player"></div>
+        <div class="hero-copy branded-page-title page-header-art-wrap" id="scanHeroTitleWrap"><img class="page-header-art" src="./assets/v0635/headers/add-player.webp" alt="Add Player"></div>
       <span id="scanHeroEyebrow" hidden>Player scanner</span><span id="scanHeroTitle" hidden>Player Scanner</span><span id="scanHeroCopy" hidden>Player scanner</span></div>
       <div class="page-body v068-scanner-body">
         <section class="update-queue-overview" id="updateQueueOverview" hidden>
@@ -219,7 +219,7 @@
               <div class="mini-note">Tap a detected role below to make it the primary role.</div><div id="detectedRoles" class="filter-chips"></div>
               <div class="divider"></div>
               <div class="field-grid"><label class="field"><span>Playstyle</span><select class="select" id="scanPlaystyle"></select></label><label class="field"><span>Playstyle tier</span><select class="select" id="scanPlaystyleLevel"></select></label></div>
-              <div class="section-kicker spaced">Related roles (optional)</div><div class="filter-chips" id="scanRelatedPicker"></div>
+              
               <div class="section-kicker spaced">Visual detection</div><div class="mini-note" id="scanDetectedVisuals">Local asset matches will appear here.</div>
               <div class="section-kicker spaced">Special abilities</div><div class="mini-note">Gemini Flash Live scans each occupied unlocked ability slot independently against the verified coloured Special Ability reference pack. Detected existing abilities remain visible for review rather than being silently removed.</div><div class="filter-chips" id="abilityPicker"></div>
               <div id="scanManualVerify" class="manual-verify" style="display:none"><label><input type="checkbox" id="scanManualVerified"><span><b>I checked the screenshot manually</b><small>Use my corrected OVR and skill values even if the scanner aggregate still disagrees.</small></span></label></div>
@@ -240,7 +240,7 @@
         <img src="./assets/v0631/backgrounds/training.webp" alt="" decoding="async" loading="eager">
       </picture>
       <div class="hero v064-training-hero" style="--hero:url('./assets/v060/scenes/training-hero-desktop.webp');--hero-mobile:url('./assets/v060/scenes/training-hero-mobile.webp')">
-        <div class="hero-copy branded-page-title page-header-art-wrap"><img class="page-header-art" src="./assets/v0629/headers/training.webp" alt="Training"></div>
+        <div class="hero-copy branded-page-title page-header-art-wrap"><img class="page-header-art" src="./assets/v0635/headers/training.webp" alt="Training"></div>
       </div>
       <div class="page-body v064-training-body">
         <div class="mode-grid training-tabs v064-training-tabs" role="tablist" aria-label="Training mode">
@@ -293,7 +293,7 @@
 
     <section class="page v066-drills-page" id="page-my-drills" data-page="my-drills" data-nav-label="Drill Selection" data-nav-icon="assets/v0616/home/21-nav-training.svg">
       <div class="hero v066-drills-hero" style="--hero:url('./assets/v060/scenes/drills-hero-desktop.webp');--hero-mobile:url('./assets/v060/scenes/drills-hero-mobile.webp')">
-        <div class="hero-copy branded-page-title page-header-art-wrap"><img class="page-header-art" src="./assets/v0629/headers/drills.webp" alt="Drills"></div>
+        <div class="hero-copy branded-page-title page-header-art-wrap"><img class="page-header-art" src="./assets/v0635/headers/drills.webp" alt="Drills"></div>
       </div>
       <div class="page-body v066-drills-body">
         <div class="drills-summary-grid">
@@ -327,7 +327,7 @@
     </section>
 
     <section class="page v065-team-plan-page" id="page-team-plan" data-page="team-plan" data-nav-label="Team Plan" data-nav-icon="assets/v0616/home/22-nav-team-plan.svg">
-      <div class="v065-team-plan-head" style="--hero:url('./assets/v060/scenes/team-plan-header-desktop.webp');--hero-mobile:url('./assets/v060/scenes/team-plan-header-mobile.webp')"><div class="branded-page-title page-header-art-wrap"><img class="page-header-art" src="./assets/v0629/headers/team-plan.webp" alt="Team Plan"></div></div>
+      <div class="v065-team-plan-head" style="--hero:url('./assets/v060/scenes/team-plan-header-desktop.webp');--hero-mobile:url('./assets/v060/scenes/team-plan-header-mobile.webp')"><div class="branded-page-title page-header-art-wrap"><img class="page-header-art" src="./assets/v0635/headers/team-plan.webp" alt="Team Plan"></div></div>
       <div class="page-body v065-team-plan-body">
         <div class="mode-grid team-plan-tabs">
           <button class="mode active" data-team-plan-tab="formation"><img src="assets/icons/team.svg"><span>Lineup</span></button>
@@ -362,7 +362,7 @@
     </section>
 
     <section class="page v067-account-page" id="page-account" data-page="account">
-      <div class="hero v067-account-hero" style="--hero:url('./assets/v060/scenes/settings-hero-desktop.webp');--hero-mobile:url('./assets/v060/scenes/settings-hero-mobile.webp')"><div class="hero-copy branded-page-title page-header-art-wrap"><img class="page-header-art" src="./assets/v0629/headers/manager-profile.webp" alt="Manager Profile"></div></div>
+      <div class="hero v067-account-hero" style="--hero:url('./assets/v060/scenes/settings-hero-desktop.webp');--hero-mobile:url('./assets/v060/scenes/settings-hero-mobile.webp')"><div class="hero-copy branded-page-title page-header-art-wrap"><img class="page-header-art" src="./assets/v0635/headers/manager-profile.webp" alt="Manager Profile"></div></div>
       <div class="page-body v067-account-body">
         <div class="card"><div class="card-inner"><div class="account-head"><div class="account-avatar" id="accountAvatar">A</div><div><div class="section-title" id="accountDisplayName">Top Eleven Manager</div><div class="body-copy" id="accountEmail">—</div><span class="verify-pill" id="accountVerified">—</span></div></div><div class="filter-chips spaced" id="accountProviders"></div><div class="sync-pill" id="accountSyncStatus"><i></i><span>Checking cloud sync…</span></div><div class="btn-row spaced"><button class="btn ghost" id="resendVerificationBtn">Resend verification email</button><button class="btn danger" id="accountSignOut">Sign out</button></div><div class="auth-message" id="accountMessage"></div></div></div>
         <div class="section"><div class="card"><div class="card-inner"><div class="section-title">Profile</div><label class="field wide spaced"><span>Display name</span><input class="input" id="accountNameInput"></label><button class="btn primary" id="accountSaveName">Save profile</button><div class="divider"></div><div class="section-kicker">Linked sign-in methods</div><div class="btn-row spaced"><button class="btn ghost" id="linkGoogleBtn">Link Google</button></div></div></div></div>
@@ -375,7 +375,7 @@
 
     <section class="page v067-settings-page" id="page-settings" data-page="settings" data-nav-label="Settings" data-nav-icon="assets/v0616/home/25-sidebar-settings.svg">
       <div class="hero v067-settings-hero" style="--hero:url('./assets/v060/scenes/settings-hero-desktop.webp');--hero-mobile:url('./assets/v060/scenes/settings-hero-mobile.webp')">
-        <div class="hero-copy branded-page-title page-header-art-wrap"><img class="page-header-art" src="./assets/v0629/headers/settings.webp" alt="Settings"></div>
+        <div class="hero-copy branded-page-title page-header-art-wrap"><img class="page-header-art" src="./assets/v0635/headers/settings.webp" alt="Settings"></div>
       </div>
       <div class="page-body v067-settings-body">
         <div class="settings-grid">
@@ -400,7 +400,7 @@
 
           <section class="settings-card settings-version-card">
             <div class="settings-card-head"><img src="./icon-192.png" alt=""><div><span>About</span><b>Top Eleven Tool</b><small>Responsive web/PWA build.</small></div></div>
-            <div class="settings-version"><strong>v0.6.34</strong><span>Design branch</span></div>
+            <div class="settings-version"><strong>v0.6.35</strong><span>Design branch</span></div>
             <p class="mini-note">Internal game-data build references stay in the background and are not shown throughout the normal product UI.</p>
           </section>
         </div>
@@ -412,6 +412,6 @@
   <div class="dialog-backdrop" id="confirmDialogBackdrop"><div class="confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="confirmDialogTitle"><div class="section-kicker">Squad</div><div class="section-title" id="confirmDialogTitle">Delete player?</div><p id="confirmDialogCopy">Are you sure you want to permanently remove this player from your squad?</p><div class="btn-row spaced"><button class="btn ghost" id="confirmCancelBtn" type="button">Cancel</button><button class="btn danger" id="confirmDeleteBtn" type="button">Delete</button></div></div></div>
   <div class="toast" id="toast"></div>
 </div>
-<script src="./js/optimizer-data.js?r=0634"></script><script src="./js/bible-data.js?r=0634"></script><script src="./js/data.js?r=0634"></script><script src="./js/strategy-data.js?r=0634"></script><script src="./js/best-in-slot-data.js?r=0634"></script><script src="./js/strategy-logic.js?r=0634"></script><script src="./js/squad-coverage-engine.js?r=0634"></script><script src="./js/cloud.js?r=0634"></script><script src="./js/storage.js?r=0634"></script><script src="./js/drill-profile.js?r=0634"></script><script src="./js/players.js?r=0634"></script><script src="./js/training-engine.js?r=0634"></script><script src="./js/team-training-engine.js?r=0634"></script><script src="./js/scanner-engine.js?r=0634"></script><script src="./js/recommendations.js?r=0634"></script><script src="./js/formation.js?r=0634"></script><script src="./js/tactics-engine.js?r=0634"></script><script src="./js/mentor-engine.js?r=0634"></script><script src="./js/team-plan-engine.js?r=0634"></script><script src="./js/best-in-slot-engine.js?r=0634"></script><script src="./js/app.js?r=0634"></script>
+<script src="./js/optimizer-data.js?r=0635"></script><script src="./js/bible-data.js?r=0635"></script><script src="./js/data.js?r=0635"></script><script src="./js/strategy-data.js?r=0635"></script><script src="./js/best-in-slot-data.js?r=0635"></script><script src="./js/strategy-logic.js?r=0635"></script><script src="./js/squad-coverage-engine.js?r=0635"></script><script src="./js/cloud.js?r=0635"></script><script src="./js/storage.js?r=0635"></script><script src="./js/drill-profile.js?r=0635"></script><script src="./js/players.js?r=0635"></script><script src="./js/training-engine.js?r=0635"></script><script src="./js/team-training-engine.js?r=0635"></script><script src="./js/scanner-engine.js?r=0635"></script><script src="./js/recommendations.js?r=0635"></script><script src="./js/formation.js?r=0635"></script><script src="./js/tactics-engine.js?r=0635"></script><script src="./js/mentor-engine.js?r=0635"></script><script src="./js/team-plan-engine.js?r=0635"></script><script src="./js/best-in-slot-engine.js?r=0635"></script><script src="./js/app.js?r=0635"></script>
 <script>(()=>{const expected=document.documentElement.dataset.runtime;if(window.__TE_RUNTIME__!==expected){console.error('Runtime build mismatch',{expected,loaded:window.__TE_RUNTIME__||'missing'});const k='te:runtime-reload:'+expected;if(!sessionStorage.getItem(k)){sessionStorage.setItem(k,'1');location.reload();}}else{sessionStorage.removeItem('te:runtime-reload:'+expected);}})();</script>
 </body></html>

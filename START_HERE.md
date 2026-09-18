@@ -1,19 +1,18 @@
-# v0.6.34 — START HERE
+# v0.6.35 — START HERE
 
-**CURRENT UI BRANCH:** v0.6.34 — Global Header Scale + Add Player Redesign.  
-**APPROVED VISUAL STATE:** Home, Squad and Training are retained; branded page-title artwork now follows one smaller upper-left rule.  
+**CURRENT UI BRANCH:** v0.6.35 — Scan Review Polish + Selected-XI Team OVR.  
+**APPROVED VISUAL STATE:** Home, Squad and Training retained; Add Player uses its approved portrait background; all branded page titles now match Home's compact optical footprint and top-left placement.  
 **FROZEN DECISION CONTRACT:** v0.5.17.  
 **SCANNER CALIBRATION:** VERSION=12.
 
-Read `DESIGN_RECOVERY_HANDOFF_v0.6.34.md` first, then `V0634_ADD_PLAYER_HEADER_VALIDATION.md`.
+Read `DESIGN_RECOVERY_HANDOFF_v0.6.35.md` first, then `V0635_SCAN_REVIEW_TEAM_OVR_VALIDATION.md`.
 
-## v0.6.34 scope
-- Standardise page-header artwork size and move it slightly higher/left across the app.
-- Restore the approved Add Player portrait background.
-- Keep scanner as the primary Add Player workflow.
-- Move Add Player Manually directly below the Skills Screenshot scanner in its own secondary card.
-- Do not redesign Update Player until its dedicated background is created.
-- No scanner recognition/calibration or football/training logic changes.
+## v0.6.35 scope
+- Normalize every branded page-title asset to the Home title's visible footprint and top-left placement.
+- Remove Related Roles from the Add Player scan-review UI.
+- Restyle scanner Role / Playstyle selectors so they are integrated controls without the separate boxed arrow treatment.
+- Change Home Avg OVR to Team OVR calculated only from the 11 players in the saved starting XI.
+- Preserve scanner calibration and all football/training decision logic.
 
 ## Packaging
 Continue the split-release workflow:

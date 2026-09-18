@@ -163,7 +163,7 @@
       state.status='ready';hideGate();updateCloudChrome();
       scheduleFlush(0);
       if(localReady)syncDown().then(()=>scheduleFlush(0)).catch(err=>console.warn('Background cloud hydration',err));
-      console.info('[Top Eleven Tool] Cloud sync ready',{runtime:'0.6.34',source:state.lastSyncSource,records:state.syncCount,pending:state.pendingWrites,localFirst:localReady});
+      console.info('[Top Eleven Tool] Cloud sync ready',{runtime:'0.6.35',source:state.lastSyncSource,records:state.syncCount,pending:state.pendingWrites,localFirst:localReady});
       return true;
     }catch(err){state.error=err;state.status='error';showGate('setup');setAuthMessage(`Firebase setup error: ${friendlyAuthError(err)}`,'err');return false;}
   }
