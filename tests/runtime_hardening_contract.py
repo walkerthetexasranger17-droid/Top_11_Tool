@@ -13,9 +13,9 @@ scanner=(ROOT/'js/scanner-engine.js').read_text(encoding='utf-8')
 # Inline scene URLs must remain inside an app hosted at /top-eleven-tool/.
 base='https://example.invalid/top-eleven-tool/index.html'
 scene_refs=re.findall(r"--hero:url\('([^']+)'\)",html)
-picture_refs=re.findall(r'(?:src|srcset)="(\./assets/v060/scenes/squad-hero-(?:mobile|desktop)\.webp)"',html)
+picture_refs=re.findall(r'(?:src|srcset)="(\./assets/(?:v060/scenes/squad-hero-desktop\.webp|v0623/backgrounds/squad-mobile\.png))"',html)
 if len(scene_refs)!=6: errs.append(f'expected 6 current inline hero scene refs after Squad picture migration, found {len(scene_refs)}')
-if sorted(set(picture_refs))!=['./assets/v060/scenes/squad-hero-desktop.webp','./assets/v060/scenes/squad-hero-mobile.webp']: errs.append(f'Squad picture refs missing/incorrect: {picture_refs}')
+if sorted(set(picture_refs))!=['./assets/v060/scenes/squad-hero-desktop.webp','./assets/v0623/backgrounds/squad-mobile.png']: errs.append(f'Squad picture refs missing/incorrect: {picture_refs}')
 for ref in scene_refs+picture_refs:
     resolved=urlparse(urljoin(base,ref)).path
     if not resolved.startswith('/top-eleven-tool/assets/'):

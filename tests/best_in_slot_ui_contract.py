@@ -15,9 +15,9 @@ for ident in ['bestInSlotSection','bestInSlotFormation','bestInSlotPitch','bestI
 ck('Long-term squad goal' in html,'missing long-term goal label')
 ck('Best-in-Slot XI' in html,'missing Best-in-Slot title')
 ck(html.index('id="bestInSlotSection"') < html.index('id="squadCoverageCard"'),'Best-in-Slot goal is not directly below the current Formation area')
-ck('./js/best-in-slot-data.js?r=0627' in html,'Best-in-Slot data script not loaded')
-ck('./js/best-in-slot-engine.js?r=0627' in html,'Best-in-Slot engine script not loaded')
-ck(html.index('best-in-slot-data.js')<html.index('best-in-slot-engine.js')<html.index('app.js?r=0627'),'Best-in-Slot load order is wrong')
+ck('./js/best-in-slot-data.js?r=0628' in html,'Best-in-Slot data script not loaded')
+ck('./js/best-in-slot-engine.js?r=0628' in html,'Best-in-Slot engine script not loaded')
+ck(html.index('best-in-slot-data.js')<html.index('best-in-slot-engine.js')<html.index('app.js?r=0628'),'Best-in-Slot load order is wrong')
 for asset in ['./js/best-in-slot-data.js','./js/best-in-slot-engine.js']:
     ck(asset in sw,f'{asset} missing from service-worker precache')
 ck('async function renderBestInSlotGoal(existingPlayers=null)' in app,'Best-in-Slot renderer missing')

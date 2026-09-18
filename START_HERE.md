@@ -1,21 +1,21 @@
-# v0.6.27 — START HERE
+# v0.6.28 — START HERE
 
-**CURRENT UI BRANCH:** v0.6.27 — Unified typography, branded page titles, Home alignment and Squad cleanup.  
+**CURRENT UI BRANCH:** v0.6.28 — Approved image-based header branding.  
 **FROZEN DECISION CONTRACT:** v0.5.17.  
 **SCANNER CALIBRATION:** VERSION=12; nationality remains an isolated optional metadata extension.
 
-Read `DESIGN_RECOVERY_HANDOFF_v0.6.27.md` first, then `V0627_TYPOGRAPHY_SQUAD_CLEANUP_VALIDATION.md`.
+Read `DESIGN_RECOVERY_HANDOFF_v0.6.28.md` first, then `V0628_APPROVED_HEADER_ART_VALIDATION.md`.
 
 ## Current visual contract
 - Mobile phone is the product priority; desktop only needs to remain functional for development/testing.
-- The corrected tactics-board logo remains the official app icon/branding master: `assets/v0624/branding/top-eleven-tool-logo.png`.
-- Header wordmark is CSS-rendered for high-density sharpness. `TOOL` is centred beneath `TOP ELEVEN`, and the version is centred beneath `TOOL`.
-- Home hero branding is anchored in the upper-left rather than centred over the player.
-- Home keeps the `Today at a glance` summary bar; the old duplicate four-stat row remains removed.
-- Main functional page titles use the branded white/lime TOP ELEVEN TOOL visual language instead of motivational copy.
-- The app-wide letter/number system uses the same condensed branded type family consistently for normal UI text, labels, buttons and statistics.
-- Squad has no five-card summary block. Add Player / Update Players sit directly above the roster so the page is pulled upward.
-- Approved portrait background references remain embedded at `assets/v0624/reference-backgrounds/` and keep the v0.6.26 subtle photographic tone.
+- The official tactics-board app icon remains unchanged.
+- Header/page-title text is no longer recreated in CSS for the converted pages. Use the approved raster artwork in `assets/v0628/headers/`.
+- Global top bar uses `topbar.webp`; the version remains centred below it as live HTML text.
+- Home uses `home.webp` in the upper-left of the hero.
+- Squad uses `squad.webp`; Training uses `training.webp`; Team Plan uses `team-plan.webp`; Drills uses `drills.webp`; Settings uses `settings.webp`; Add Player uses `add-player.webp`; Manager Profile uses `manager-profile.webp`.
+- All page-header artwork is normalised to an exact 1774×887 (2:1) transparent canvas so CSS can size every page consistently without distorting the artwork.
+- Approved background imagery/tinting and v0.6.27 Squad cleanup remain unchanged.
+- Player Profile remains excluded from this header-art conversion pending its separate redesign.
 - Squad Role Order remains `GK → DL → DC → DR → DMC → ML → MC → MR → AML → AMC → AMR → ST`.
 
 Do not change frozen football/scanner/training calibration logic unless explicitly requested. Every development pass ends with regression checks, handoff update, full ZIP creation, fresh extraction and verification.

@@ -1441,3 +1441,111 @@ body{letter-spacing:.01em}
   .home-hero-branding{left:16px!important;top:10px!important}
   .page-brand-heading{font-size:31px!important}.page-brand-heading::after{margin-top:5px!important;height:1px!important}
 }
+
+/* ================================================================
+   v0.6.28 — Approved raster header artwork
+   Page-title typography is now supplied by one consistent image set.
+   ================================================================ */
+.brand-copy.brand-wordmark-art{
+  display:grid!important;
+  grid-template-rows:minmax(0,1fr) auto!important;
+  justify-items:center!important;
+  align-items:center!important;
+  align-content:center!important;
+  overflow:visible!important;
+}
+.brand-wordmark-image{
+  display:block!important;
+  width:100%!important;
+  height:43px!important;
+  object-fit:contain!important;
+  object-position:center!important;
+  filter:drop-shadow(0 2px 4px rgba(0,0,0,.42));
+}
+.brand-wordmark-art .brand-sub{
+  width:100%!important;
+  padding:0!important;
+  margin:0!important;
+  text-align:center!important;
+  justify-self:center!important;
+  font-size:6px!important;
+  line-height:1!important;
+  letter-spacing:.16em!important;
+  color:var(--v6-cyan)!important;
+}
+.page-header-art-wrap{
+  display:flex!important;
+  align-items:flex-start!important;
+  justify-content:flex-start!important;
+  width:300px!important;
+  max-width:calc(100% - 32px)!important;
+  height:auto!important;
+  overflow:visible!important;
+  pointer-events:none!important;
+}
+.page-header-art{
+  display:block!important;
+  width:100%!important;
+  height:auto!important;
+  aspect-ratio:2 / 1!important;
+  object-fit:contain!important;
+  object-position:left center!important;
+  filter:drop-shadow(0 3px 8px rgba(0,0,0,.34));
+}
+.home-hero-branding.page-header-art-wrap{
+  left:16px!important;
+  right:auto!important;
+  top:10px!important;
+  transform:none!important;
+  width:268px!important;
+  max-width:calc(100% - 32px)!important;
+  justify-items:unset!important;
+  text-align:left!important;
+}
+#page-squad .v0625-page-title.page-header-art-wrap{
+  left:18px!important;
+  right:auto!important;
+  top:14px!important;
+  bottom:auto!important;
+  width:286px!important;
+  max-width:calc(100% - 36px)!important;
+}
+.v068-scanner-hero .branded-page-title.page-header-art-wrap,
+.v064-training-hero .branded-page-title.page-header-art-wrap,
+.v066-drills-hero .branded-page-title.page-header-art-wrap,
+.v067-account-hero .branded-page-title.page-header-art-wrap,
+.v067-settings-hero .branded-page-title.page-header-art-wrap{
+  left:18px!important;
+  right:auto!important;
+  top:14px!important;
+  bottom:auto!important;
+  width:286px!important;
+  max-width:calc(100% - 36px)!important;
+}
+.v065-team-plan-head>.branded-page-title.page-header-art-wrap{
+  position:absolute!important;
+  left:18px!important;
+  right:auto!important;
+  top:14px!important;
+  width:286px!important;
+  max-width:calc(100% - 36px)!important;
+  z-index:3!important;
+}
+@media (max-width:420px){
+  .brand-copy.brand-wordmark-art{flex-basis:145px!important;max-width:145px!important}
+  .brand-wordmark-image{height:37px!important}
+  .brand-wordmark-art .brand-sub{font-size:5px!important}
+  .home-hero-branding.page-header-art-wrap{width:238px!important;left:14px!important;top:8px!important}
+  #page-squad .v0625-page-title.page-header-art-wrap,
+  .v068-scanner-hero .branded-page-title.page-header-art-wrap,
+  .v064-training-hero .branded-page-title.page-header-art-wrap,
+  .v066-drills-hero .branded-page-title.page-header-art-wrap,
+  .v067-account-hero .branded-page-title.page-header-art-wrap,
+  .v067-settings-hero .branded-page-title.page-header-art-wrap,
+  .v065-team-plan-head>.branded-page-title.page-header-art-wrap{
+    width:248px!important;
+    left:14px!important;
+    top:10px!important;
+    max-width:calc(100% - 28px)!important;
+  }
+}

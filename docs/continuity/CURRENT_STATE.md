@@ -1,10 +1,8 @@
-# CURRENT DESIGN OVERLAY — v0.6.27 Unified Typography + Squad Cleanup
+# CURRENT DESIGN OVERLAY — v0.6.28 Approved Header Artwork
 
-- Current UI branch: v0.6.27.
-- Mobile-first approved direction: corrected tactics-board branding, toned photographic backgrounds, upper-left Home hero branding, branded functional page titles, and one condensed UI typography system.
-- Home keeps `Today at a glance`; duplicate Home stat cards remain retired.
-- Squad summary cards are retired; Add Player / Update Players lead directly into the roster.
-- Header `TOOL` and version are centred beneath the TOP ELEVEN wordmark; final `N` clipping is guarded with extra spacing.
-- Decision/logic baseline remains frozen at v0.5.17.
-- Scanner calibration remains VERSION=12.
-- Next work after phone acceptance: continue approved page-fidelity passes; Player Profile remains reserved for its own redesign.
+- Current UI branch: v0.6.28.
+- Approved image headers are wired into Home, Squad, Training, Team Plan, Drills, Settings, Add Player and Manager Profile.
+- Page-header canvases are standardised to 1774×887 (2:1) transparent PNGs.
+- Global top-bar wordmark uses approved image artwork with the live version centred beneath it.
+- Decision/logic baseline remains frozen at v0.5.17 and scanner calibration remains VERSION=12.
+- Player Profile remains reserved for its own redesign.

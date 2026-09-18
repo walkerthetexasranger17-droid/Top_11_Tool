@@ -15,7 +15,7 @@ need('renderAbilityPicker();persistCurrentQueueDraft()' in app,'scan role change
 need("[...currentEditRoles(),...state.profilePreservedRoles]" in app,'all natural profile roles, including preserved imported roles, contribute')
 need('scanNaturalRoles()' in app,'scan filtering uses natural roles')
 need('Related roles' in idx and "Filtered by the player's natural roles" in idx,'profile explains natural-role filtering')
-need("Choices are filtered by the player's natural roles" in idx,'scanner review explains role filtering')
+need('Detected existing abilities remain visible for review' in idx,'scanner review explains existing-ability preservation')
 need('Never infer a playstyle or Special Ability from position, role, stats, OVR, player name, or football semantics.' in scanner,'scanner identity recognition remains role-independent')
 need('const ABILITIES=[...D.SPECIAL_ABILITIES]' in scanner,'scanner still compares against full 19-ability identity catalogue')
 print(f'Special Ability picker contract: PASS — {len(checks)} assertions')
