@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
-<defs>
-  <filter id="g"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-</defs>
-<g fill="none" stroke="#43DFFF" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" filter="url(#g)">
-  <rect x="35" y="35" width="186" height="186" rx="30"/>
-  <path d="M73 178V142 M111 178V120 M149 178V94 M187 178V67"/>
-</g>
-</svg>

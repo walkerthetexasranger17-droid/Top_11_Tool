@@ -767,7 +767,7 @@ main{max-width:var(--v6-content)}
 /* v0.6.16 mobile-first Home corrections: no hero CTAs, direct six-destination nav, richer Team Plan pitch. */
 #page-dashboard .hero-actions{display:none!important}
 .dashboard-mini-pitch{
-  background-image:url('../assets/v0616/home/team-plan-pitch.png')!important;
+  background-image:url('../assets/v0616/home/team-plan-pitch.webp')!important;
   background-size:cover!important;
   background-position:center!important;
   background-repeat:no-repeat!important;
@@ -1443,7 +1443,7 @@ body{letter-spacing:.01em}
 }
 
 /* ================================================================
-   v0.6.29 — Header transparency + stacked Home hotfix
+   v0.6.30 — Header transparency + stacked Home hotfix
    Page-title typography is now supplied by one consistent image set.
    ================================================================ */
 .brand-copy.brand-wordmark-art{
