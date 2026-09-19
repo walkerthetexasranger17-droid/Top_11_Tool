@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-runtime="0.6.50">
+<html lang="en" data-runtime="0.6.51">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -10,11 +10,11 @@
   <meta name="application-name" content="Top Eleven Tool">
   <meta name="apple-mobile-web-app-title" content="Top Eleven Tool">
   <title>Top Eleven Tool</title>
-  <link rel="manifest" href="./manifest.json?r=0650">
+  <link rel="manifest" href="./manifest.json?r=0651">
   <link rel="icon" href="./icon-192.png"><link rel="apple-touch-icon" href="./icon-192.png">
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./css/app.css?r=0650"><link rel="stylesheet" href="./css/v060.css?r=0650">
+  <link rel="stylesheet" href="./css/app.css?r=0651"><link rel="stylesheet" href="./css/v060.css?r=0651">
 </head>
 <body class="booting">
 <div class="auth-gate" id="authGate" hidden>
@@ -60,9 +60,9 @@
 <div class="app">
   <header class="topbar">
     <button class="brand-home" type="button" data-go="dashboard" aria-label="Go to Home" title="Home"><img class="brand-mark" src="./icon-192.png" alt="Top Eleven Tool"></button>
-    <div class="brand-copy brand-wordmark brand-wordmark-art" aria-label="Top Eleven Tool v0.6.50">
+    <div class="brand-copy brand-wordmark brand-wordmark-art" aria-label="Top Eleven Tool v0.6.51">
       <img class="brand-wordmark-image" src="./assets/v0629/headers/topbar.webp" alt="Top Eleven Tool">
-      <div class="brand-sub">v0.6.50</div>
+      <div class="brand-sub">v0.6.51</div>
     </div>
     <button class="home-search-shortcut" id="homeSearchShortcut" type="button" aria-label="Search squad"><img src="./assets/v0616/home/27-header-search.svg" alt=""><em>Search players, skills, or run a scan...</em><kbd>⌘ K</kbd></button>
     <div class="topbar-actions">
@@ -365,11 +365,36 @@
         </div>
 
         <div id="teamPlanTacticsPanel" style="display:none">
-          <div class="card tactic-calculator-card"><div class="card-inner"><div class="section-kicker">Tactic Calculator</div><div class="section-title">Match approach</div><div class="field-grid tactic-calculator-fields spaced"><label class="field"><span>Approach</span><select class="select" id="planApproach"><option value="auto" selected>Auto — Best Fit</option><option value="hardDefending">Hard Defending</option><option value="defending">Defending</option><option value="balanced">Balanced</option><option value="attacking">Attacking</option><option value="hardAttacking">Hard Attacking</option></select></label><label class="field"><span>Drain limit</span><select class="select" id="planDrain"><option>Low</option><option selected>Medium</option><option>High</option></select></label></div><button class="btn primary spaced" id="refreshPlanTacticsBtn">Calculate Tactics</button><div class="mini-note">Auto tests every mentality against the XI, structural fit and drain limit. Choose a named approach only when you want to force that mentality.</div></div></div>
-          <div class="tactic-phase-tabs" id="tacticPhaseTabs"><button class="active" data-tactic-phase="possession">In Possession</button><button data-tactic-phase="transition">In Transition</button><button data-tactic-phase="out">Out of Possession</button></div>
-          <div class="tactic-quick-head"><div><div class="section-kicker">What to select in Top Eleven</div><div class="section-title" id="tacticPhaseTitle">In Possession</div></div><div id="planDrainBadge" class="chip"></div></div>
-          <div class="tactic-simple-list" id="tacticPlan"></div><div class="mini-note spaced" id="tacticFitNote"></div>
-          <div class="section mentor-section"><div class="section-head"><div><div class="section-kicker">Mentor</div><div class="section-title">Recommended mentor</div></div></div><div class="mentor-strip" id="mentorStrip"></div><div class="mini-note" id="mentorReason"></div><div class="mentor-levels" id="mentorLevels"></div></div>
+          <div class="tactics-layout">
+            <div class="tactics-main-column">
+              <div class="card tactic-calculator-card tactic-setup-card">
+                <div class="card-inner">
+                  <div class="tactic-setup-head">
+                    <div><div class="section-kicker">Tactic Calculator</div><div class="section-title">Match approach</div></div>
+                    <div id="planDrainBadge" class="chip tactic-drain-chip"></div>
+                  </div>
+                  <div class="field-grid tactic-calculator-fields spaced">
+                    <label class="field"><span>Approach</span><select class="select" id="planApproach"><option value="auto" selected>Auto — Best Fit</option><option value="hardDefending">Hard Defending</option><option value="defending">Defending</option><option value="balanced">Balanced</option><option value="attacking">Attacking</option><option value="hardAttacking">Hard Attacking</option></select></label>
+                    <label class="field"><span>Drain limit</span><select class="select" id="planDrain"><option>Low</option><option selected>Medium</option><option>High</option></select></label>
+                  </div>
+                  <button class="btn primary spaced tactic-recalculate-btn" id="refreshPlanTacticsBtn">Recalculate tactics</button>
+                  <div class="mini-note tactic-setup-note">Auto uses the selected XI to find the best-fit mentality. Drain limit caps how aggressive the recommendation can be.</div>
+                </div>
+              </div>
+
+              <section class="tactics-game-card" aria-labelledby="tacticPhaseTitle">
+                <div class="tactic-game-head">
+                  <div><div class="section-kicker">Recommended settings</div><div class="section-title" id="tacticPhaseTitle">In Possession</div></div>
+                  <span class="tactic-selected-pill">Selected XI</span>
+                </div>
+                <div class="tactic-simple-list tactic-game-list" id="tacticPlan"></div>
+                <div class="tactic-phase-tabs" id="tacticPhaseTabs"><button class="active" data-tactic-phase="possession">In Possession</button><button data-tactic-phase="transition">In Transition</button><button data-tactic-phase="out">Out of Possession</button></div>
+                <div class="mini-note tactic-fit-note" id="tacticFitNote"></div>
+              </section>
+            </div>
+
+            <div class="section mentor-section"><div class="section-head"><div><div class="section-kicker">Mentor</div><div class="section-title">Recommended mentor</div></div></div><div class="mentor-strip" id="mentorStrip"></div><div class="mini-note" id="mentorReason"></div><div class="mentor-levels" id="mentorLevels"></div></div>
+          </div>
         </div>
       </div>
     </section>
@@ -483,7 +508,7 @@
 
           <section class="settings-card settings-version-card">
             <div class="settings-card-head"><img src="./icon-192.png" alt=""><div><span>About</span><b>Top Eleven Tool</b><small>Responsive web/PWA build.</small></div></div>
-            <div class="settings-version"><strong>v0.6.50</strong><span>Design branch</span></div>
+            <div class="settings-version"><strong>v0.6.51</strong><span>Design branch</span></div>
             <p class="mini-note">Internal game-data build references stay in the background and are not shown throughout the normal product UI.</p>
           </section>
         </div>
@@ -495,6 +520,6 @@
   <div class="dialog-backdrop" id="confirmDialogBackdrop"><div class="confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="confirmDialogTitle"><div class="section-kicker">Squad</div><div class="section-title" id="confirmDialogTitle">Delete player?</div><p id="confirmDialogCopy">Are you sure you want to permanently remove this player from your squad?</p><div class="btn-row spaced"><button class="btn ghost" id="confirmCancelBtn" type="button">Cancel</button><button class="btn danger" id="confirmDeleteBtn" type="button">Delete</button></div></div></div>
   <div class="toast" id="toast"></div>
 </div>
-<script src="./js/optimizer-data.js?r=0650"></script><script src="./js/bible-data.js?r=0650"></script><script src="./js/data.js?r=0650"></script><script src="./js/strategy-data.js?r=0650"></script><script src="./js/strategy-logic.js?r=0650"></script><script src="./js/squad-coverage-engine.js?r=0650"></script><script src="./js/cloud.js?r=0650"></script><script src="./js/storage.js?r=0650"></script><script src="./js/drill-profile.js?r=0650"></script><script src="./js/players.js?r=0650"></script><script src="./js/training-engine.js?r=0650"></script><script src="./js/team-training-engine.js?r=0650"></script><script src="./js/scanner-engine.js?r=0650"></script><script src="./js/recommendations.js?r=0650"></script><script src="./js/formation.js?r=0650"></script><script src="./js/tactics-engine.js?r=0650"></script><script src="./js/mentor-engine.js?r=0650"></script><script src="./js/team-plan-engine.js?r=0650"></script><script src="./js/app.js?r=0650"></script>
+<script src="./js/optimizer-data.js?r=0651"></script><script src="./js/bible-data.js?r=0651"></script><script src="./js/data.js?r=0651"></script><script src="./js/strategy-data.js?r=0651"></script><script src="./js/strategy-logic.js?r=0651"></script><script src="./js/squad-coverage-engine.js?r=0651"></script><script src="./js/cloud.js?r=0651"></script><script src="./js/storage.js?r=0651"></script><script src="./js/drill-profile.js?r=0651"></script><script src="./js/players.js?r=0651"></script><script src="./js/training-engine.js?r=0651"></script><script src="./js/team-training-engine.js?r=0651"></script><script src="./js/scanner-engine.js?r=0651"></script><script src="./js/recommendations.js?r=0651"></script><script src="./js/formation.js?r=0651"></script><script src="./js/tactics-engine.js?r=0651"></script><script src="./js/mentor-engine.js?r=0651"></script><script src="./js/team-plan-engine.js?r=0651"></script><script src="./js/app.js?r=0651"></script>
 <script>(()=>{const expected=document.documentElement.dataset.runtime;if(window.__TE_RUNTIME__!==expected){console.error('Runtime build mismatch',{expected,loaded:window.__TE_RUNTIME__||'missing'});const k='te:runtime-reload:'+expected;if(!sessionStorage.getItem(k)){sessionStorage.setItem(k,'1');location.reload();}}else{sessionStorage.removeItem('te:runtime-reload:'+expected);}})();</script>
 </body></html>

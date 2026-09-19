@@ -1,6 +1,6 @@
-# v0.6.50 — START HERE
+# v0.6.51 — START HERE
 
-**CURRENT UI BRANCH:** v0.6.50 — Team Plan Formation spacing + true Set Piece pitch map.  
+**CURRENT UI BRANCH:** v0.6.51 — Team Plan Tactics visual rebuild.  
 **DECISION BASELINE:** v0.5.17 release-frozen.  
 **SCANNER:** VERSION 12.
 
@@ -11,12 +11,12 @@ Do not crop, regenerate, resample, recompress or replace these without explicit 
 - `assets/v0649/team-plan/player-nameplate.png`
 
 ## Current Team Plan contract
-- **Formation:** recommended XI only on the locked pitch. Shirts/nameplates are deliberately smaller on mobile to prevent crowding.
-- **Set Pieces:** a separate pitch map showing only the assigned takers — Corner Kick L/R, Free Kick L/R, PEN 1–5 and Captain. It must not repeat the Formation XI.
-- The Set Pieces **AUTO chip/header copy and automatic-recommendation footnote are intentionally removed** because assignments are already preselected by the plan.
+- **Formation:** recommended XI only on the locked pitch; compact shirt/nameplate markers.
+- **Set Pieces:** separate pitch showing Corner Kick L/R, Free Kick L/R, PEN 1–5 and Captain. It must not repeat the Formation XI.
+- **Tactics:** game-inspired phased settings board in the app glass theme: In Possession, In Transition and Out of Possession. Approach and Drain Limit remain the only tactic-calculator inputs.
+- Approach/Drain selectors use a proper visible dropdown chevron.
 - Best-in-Slot XI, Squad Blueprint and Build Best Match Plan remain removed.
-- Tactics/Mentor are unchanged.
+- Set Piece AUTO UI remains removed.
+- Mentor stays attached to the Tactics tab; recommendation logic is unchanged.
 
-Read `DESIGN_RECOVERY_HANDOFF_v0.6.50.md` and `V0650_TEAM_PLAN_SET_PIECE_MAP_VALIDATION.md` before changing Team Plan.
-
-- The three high-resolution Team Plan assets are packaged and runtime-cached on demand rather than install-precached, keeping the PWA install cache bounded.
+Read `DESIGN_RECOVERY_HANDOFF_v0.6.51.md` and `V0651_TACTICS_VISUAL_VALIDATION.md` before changing Team Plan.
