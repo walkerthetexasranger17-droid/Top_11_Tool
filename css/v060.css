@@ -3068,3 +3068,229 @@ textarea.input,input.input,.queue-update-target,.drill-library-search,
   .auth-shell h1{font-size:40px!important}
   .auth-provider{min-height:56px!important}
 }
+
+/* ====================================================================
+   v0.6.47 — full visual correction pass
+   - Login uses the approved external logo + compact v0.6.42 glass shell.
+   - Update Player title uses the exact Add Player visual footprint.
+   - Every route uses the opacity-only page transition so fixed backgrounds
+     never become temporarily relative to a transformed page on first paint.
+   - All portrait-background routes use one fixed geometry contract.
+   - Team Plan restores the approved changing-room background on touch devices.
+   ==================================================================== */
+
+/* The old global pageIn animation translates each newly-active page. A CSS
+   transform creates a containing block for position:fixed descendants, which
+   is why Drills / Settings / Account / Add-Update initially rendered about one
+   page-header lower and then snapped into place. Keep the fade, remove geometry. */
+.page.active{animation:v631PageFade .14s ease-out both!important}
+
+/* One geometry contract for every portrait page background, matching the
+   already-stable Home/Squad viewport anchoring. */
+.team-plan-page-media{display:none}
+@media (pointer:coarse) and (max-width:1180px){
+  #page-training.page,
+  #page-add-player.page,
+  #page-my-drills.page,
+  #page-team-plan.page,
+  #page-account.page,
+  #page-settings.page{
+    position:relative!important;
+    isolation:isolate!important;
+    background:#020914!important;
+  }
+
+  .training-page-media,
+  .scanner-page-media,
+  .drills-page-media,
+  .team-plan-page-media,
+  .manager-profile-page-media,
+  .settings-page-media{
+    display:block!important;
+    position:fixed!important;
+    left:0!important;
+    right:0!important;
+    top:var(--v631-bg-top,66px)!important;
+    width:100vw!important;
+    height:calc(100dvh - var(--v631-bg-top,66px))!important;
+    min-height:calc(100svh - var(--v631-bg-top,66px))!important;
+    overflow:hidden!important;
+    pointer-events:none!important;
+    z-index:0!important;
+    transform:translateZ(0)!important;
+    will-change:auto!important;
+  }
+  .training-page-media>img,
+  .drills-page-media>img,
+  .team-plan-page-media>img,
+  .manager-profile-page-media>img,
+  .settings-page-media>img{
+    display:block!important;
+    width:100%!important;
+    height:100%!important;
+    object-fit:cover!important;
+    object-position:center top!important;
+    transform:none!important;
+    filter:var(--v626-photo-filter)!important;
+  }
+  .training-page-media::after,
+  .drills-page-media::after,
+  .team-plan-page-media::after,
+  .manager-profile-page-media::after,
+  .settings-page-media::after,
+  .scanner-page-media::after{
+    content:""!important;
+    position:absolute!important;
+    inset:0!important;
+    pointer-events:none!important;
+    background:linear-gradient(180deg,rgba(1,9,18,.12) 0%,rgba(1,9,18,.28) 42%,rgba(1,9,18,.62) 76%,rgba(1,9,18,.78) 100%)!important;
+  }
+
+  /* Team Plan uses the already-approved changing-room artwork rather than the
+     old tactical-pitch header image. The content remains the same glass system. */
+  #page-team-plan .v065-team-plan-head{
+    position:relative!important;
+    z-index:2!important;
+    min-height:200px!important;
+    background:transparent!important;
+    background-image:none!important;
+    border:0!important;
+    box-shadow:none!important;
+    overflow:visible!important;
+  }
+  #page-team-plan .v065-team-plan-head::after{content:none!important;display:none!important}
+  #page-team-plan .v065-team-plan-body{position:relative!important;z-index:5!important}
+}
+
+/* UPDATE PLAYER: preserve the exact user-approved 1747×900 artwork byte-for-byte.
+   Its source artwork occupies more of its canvas than ADD PLAYER, so match the
+   established visible title footprint using CSS only; never crop/resample the file. */
+#page-add-player.update-mode .branded-page-title.page-header-art-wrap{
+  width:130px!important;
+  max-width:calc(100% - 24px)!important;
+}
+#page-add-player.update-mode .scanner-title-update{
+  filter:drop-shadow(0 3px 8px rgba(0,0,0,.34))!important;
+}
+@media (orientation:landscape) and (pointer:coarse) and (max-height:700px){
+  #page-add-player.update-mode .branded-page-title.page-header-art-wrap{width:98px!important}
+}
+
+/* LOGIN: approved logo is outside the glass shell, with the compact direct
+   sign-in composition from the accepted mock-up. */
+.auth-gate{
+  overflow:auto!important;
+  align-items:center!important;
+  justify-content:center!important;
+  padding:clamp(16px,3vh,34px) 12px!important;
+}
+.auth-stage{
+  width:min(430px,100%)!important;
+  margin:auto!important;
+  display:grid!important;
+  justify-items:center!important;
+  align-content:center!important;
+  position:relative!important;
+}
+.auth-stage>.auth-brand.auth-brand-art{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  margin:0 0 12px!important;
+  position:relative!important;
+  z-index:3!important;
+  pointer-events:none!important;
+}
+.auth-stage>.auth-brand.auth-brand-art img{
+  display:block!important;
+  width:min(285px,72vw)!important;
+  max-width:100%!important;
+  height:auto!important;
+  border-radius:0!important;
+  object-fit:contain!important;
+  filter:drop-shadow(0 10px 28px rgba(0,0,0,.42))!important;
+}
+.auth-stage>.auth-shell{
+  width:100%!important;
+  min-height:0!important;
+  max-height:calc(100dvh - 42px)!important;
+  margin:0!important;
+  overflow:auto!important;
+  padding:22px 22px 20px!important;
+  border:1px solid var(--v642-line)!important;
+  border-radius:20px!important;
+  background:linear-gradient(145deg,var(--v642-panel-top),var(--v642-panel-bottom))!important;
+  background-color:transparent!important;
+  -webkit-backdrop-filter:blur(12px) saturate(112%)!important;
+  backdrop-filter:blur(12px) saturate(112%)!important;
+  box-shadow:0 24px 64px rgba(0,0,0,.44),inset 0 1px 0 rgba(255,255,255,.035)!important;
+}
+.auth-stage>.auth-shell .auth-message:empty{display:none!important}
+.auth-stage>.auth-shell .auth-message{margin:0 0 10px!important;min-height:0!important}
+.auth-stage>.auth-shell .section-kicker{font-size:8px!important;color:var(--v6-cyan)!important}
+.auth-stage>.auth-shell h1{font-size:38px!important;line-height:.9!important;margin:5px 0 8px!important}
+.auth-stage>.auth-shell .body-copy{font-size:10px!important;line-height:1.45!important;color:#a9bfcb!important;margin:0 0 14px!important}
+.auth-direct-fields{display:grid;gap:9px}
+.auth-direct-fields .field{margin:0!important;gap:5px!important}
+.auth-direct-fields .field>span:first-child{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip:rect(0 0 0 0)!important}
+.auth-direct-fields .input{
+  height:48px!important;
+  border-radius:12px!important;
+  padding:0 44px 0 14px!important;
+  background:var(--v642-control)!important;
+  border-color:rgba(75,190,240,.34)!important;
+  font-size:12px!important;
+}
+.auth-direct-fields .input::placeholder{color:#7892a3!important}
+.auth-direct-fields .password-toggle{right:9px!important;font-size:9px!important}
+.auth-forgot-row{display:flex;justify-content:flex-end;margin:7px 2px 0}
+.auth-forgot-row button,.auth-create-line button{
+  border:0!important;background:transparent!important;color:#46d7ff!important;
+  font:700 10px/1.2 "Barlow Condensed",sans-serif!important;padding:4px 0!important;cursor:pointer!important
+}
+.auth-stage .auth-signin-main{
+  width:100%!important;min-height:48px!important;margin:8px 0 0!important;border-radius:12px!important;
+  font:900 16px/1 "Barlow Condensed",sans-serif!important;text-transform:none!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;gap:18px!important
+}
+.auth-stage .auth-divider{margin:14px 0!important;color:#91a6b2!important;font-size:9px!important}
+.auth-stage .auth-provider.google{
+  width:100%!important;min-height:52px!important;margin:0!important;border-radius:12px!important;
+  background:#fff!important;color:#171b20!important;border:1.5px solid rgba(97,190,255,.90)!important;
+  box-shadow:0 9px 24px rgba(0,0,0,.20),0 0 13px rgba(66,217,255,.08)!important;
+  grid-template-columns:34px 1fr 34px!important;padding:0 15px!important
+}
+.auth-stage .auth-provider.google:hover{background:#fff!important;transform:translateY(-1px)!important}
+.auth-stage .auth-provider.google .auth-provider-icon img{width:24px!important;height:24px!important}
+.auth-stage .auth-provider.google .auth-provider-label{font-size:14px!important;font-weight:800!important}
+.auth-create-line{display:flex;align-items:center;justify-content:center;gap:7px;margin-top:14px;color:#8fa5b3;font-size:9px}
+
+/* Setup/signup/MFA keep the same shell and control system. */
+.auth-stage>.auth-shell [data-auth-panel="signup"] .field,
+.auth-stage>.auth-shell [data-auth-panel="setup"] .field,
+.auth-stage>.auth-shell [data-auth-panel="mfa"] .field{margin-top:9px!important}
+.auth-stage>.auth-shell .auth-main{min-height:46px!important}
+
+@media (max-width:699px){
+  .auth-gate{
+    padding:max(10px,env(safe-area-inset-top)) 10px max(10px,env(safe-area-inset-bottom))!important;
+    background:
+      linear-gradient(180deg,rgba(1,7,14,.12) 0%,rgba(1,7,14,.30) 44%,rgba(1,7,14,.62) 100%),
+      url('../assets/approved/backgrounds/login.png') center top/cover fixed!important;
+  }
+  .auth-stage{width:min(390px,100%)!important}
+  .auth-stage>.auth-brand.auth-brand-art{margin-bottom:8px!important}
+  .auth-stage>.auth-brand.auth-brand-art img{width:min(245px,68vw)!important}
+  .auth-stage>.auth-shell{padding:18px 16px 17px!important;border-radius:18px!important;max-height:calc(100dvh - 20px)!important}
+  .auth-stage>.auth-shell h1{font-size:34px!important}
+  .auth-stage>.auth-shell .body-copy{font-size:9px!important;margin-bottom:11px!important}
+  .auth-direct-fields{gap:8px!important}
+  .auth-direct-fields .input{height:45px!important}
+  .auth-stage .auth-signin-main{min-height:45px!important;font-size:15px!important}
+  .auth-stage .auth-provider.google{min-height:50px!important}
+  .auth-stage .auth-provider.google .auth-provider-label{font-size:13px!important}
+  .auth-stage .auth-divider{margin:11px 0!important}
+  .auth-create-line{margin-top:11px!important}
+}
+
+/* v0.6.48 asset-integrity hotfix: UPDATE PLAYER artwork is original/approved. */

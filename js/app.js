@@ -1,5 +1,5 @@
 (() => {
-  window.__TE_RUNTIME__='0.6.46';
+  window.__TE_RUNTIME__='0.6.48';
   const TE=window.TE5;const D=TE.Data,P=TE.Players,S=TE.Storage,DP=TE.DrillProfile,T=TE.Training,TT=TE.TeamTraining,SC=TE.Scanner,R=TE.Recommendations,F=TE.Formation,TP=TE.TeamPlan,TAC=TE.Tactics,M=TE.Mentor,B=TE.BibleData,C=TE.Cloud,BIS=TE.BestInSlot;
   const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
   const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -90,6 +90,9 @@
   async function applyPage(page,{scroll=true}={}){
     if(!document.getElementById('page-'+page))page='dashboard';
     const request=++pageRenderSeq;
+    // Set visual state BEFORE the route becomes visible. Update Player previously
+    // became active as Add Player for one frame, then swapped its background/title.
+    if(page==='add-player')$('#page-add-player')?.classList.toggle('update-mode',state.scanMode==='update');
     // Switch the shell immediately so the first tap always gets visible feedback. The
     // expensive renderer then runs through one serial queue, preventing overlapping page
     // renders/cloud refreshes from racing each other and leaving stale DOM behind.
@@ -689,8 +692,25 @@
   }
   $('#clearDataBtn')?.addEventListener('click',async()=>{const b=$('#clearDataBtn');if(!b.dataset.armed){b.dataset.armed='1';b.textContent='Tap again to confirm';setTimeout(()=>{delete b.dataset.armed;b.textContent='Clear all squad data';},3500);return;}for(const k of await S.list('player:'))await P.remove(k);for(const k of await S.list('training:session:'))await S.del(k);delete b.dataset.armed;b.textContent='Clear all squad data';toast('Squad data cleared');renderDashboard();});
   function primePageArtwork(){
-    for(const img of $$('.home-hero-media img,.squad-hero-media img,.training-page-media img,.page-header-art,.brand-wordmark-image')){
+    const selector=[
+      '.home-hero-media img','.squad-hero-media img','.training-page-media img',
+      '.scanner-page-media img','.drills-page-media img','.team-plan-page-media img',
+      '.settings-page-media img','.manager-profile-page-media img',
+      '.page-header-art','.brand-wordmark-image','.auth-brand-art img'
+    ].join(',');
+    for(const img of $$(selector)){
       try{img.loading='eager';img.fetchPriority='high';if(typeof img.decode==='function')img.decode().catch(()=>{});}catch(_){/* visual prewarm is best effort */}
+    }
+    const bgUrls=new Set(['./assets/approved/backgrounds/login.png']);
+    for(const el of $$('[style*="--hero"],[style*="--profile-bg"]')){
+      const style=el.getAttribute('style')||'';
+      for(const match of style.matchAll(/--(?:hero|hero-mobile|profile-bg|profile-bg-mobile):url\(([^)]+)\)/g)){
+        const raw=(match[1]||'').trim().replace(/^['"]|['"]$/g,'');
+        if(raw)bgUrls.add(raw);
+      }
+    }
+    for(const src of bgUrls){
+      try{const img=new Image();img.decoding='async';img.src=src;if(typeof img.decode==='function')img.decode().catch(()=>{});}catch(_){/* background prewarm is best effort */}
     }
   }
   async function startupStep(label,fn){try{return await fn();}catch(err){console.warn(`Startup step failed: ${label}`,err);return null;}}

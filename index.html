@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-runtime="0.6.46">
+<html lang="en" data-runtime="0.6.48">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -10,17 +10,18 @@
   <meta name="application-name" content="Top Eleven Tool">
   <meta name="apple-mobile-web-app-title" content="Top Eleven Tool">
   <title>Top Eleven Tool</title>
-  <link rel="manifest" href="./manifest.json?r=0646">
+  <link rel="manifest" href="./manifest.json?r=0648">
   <link rel="icon" href="./icon-192.png"><link rel="apple-touch-icon" href="./icon-192.png">
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./css/app.css?r=0646"><link rel="stylesheet" href="./css/v060.css?r=0646">
+  <link rel="stylesheet" href="./css/app.css?r=0648"><link rel="stylesheet" href="./css/v060.css?r=0648">
 </head>
 <body class="booting">
 <div class="auth-gate" id="authGate" hidden>
-  <div class="auth-shell">
+  <div class="auth-stage">
     <div class="auth-brand auth-brand-art"><img src="./assets/approved/branding/login-logo.png" alt="Top Eleven Tool"></div>
-    <div class="auth-message" id="authMessage"></div>
+    <div class="auth-shell">
+      <div class="auth-message" id="authMessage"></div>
     <div data-auth-panel="setup">
       <div class="section-kicker">One-time setup</div><h1>Connect Firebase</h1><p class="body-copy">Paste the <b>firebaseConfig</b> object from Firebase Console. This project configuration is not a private password; it identifies the Firebase project used by the app.</p>
       <textarea class="input auth-config" id="firebaseConfigInput" rows="10" placeholder="const firebaseConfig = {&#10;  apiKey: &quot;...&quot;,&#10;  authDomain: &quot;...&quot;,&#10;  projectId: &quot;...&quot;,&#10;  storageBucket: &quot;...&quot;,&#10;  messagingSenderId: &quot;...&quot;,&#10;  appId: &quot;...&quot;&#10;};"></textarea>
@@ -28,21 +29,16 @@
       <p class="mini-note">After Firebase is configured, the normal sign-in screen appears. Firestore security rules and sign-in providers still need to be enabled in Firebase Console.</p>
     </div>
     <div data-auth-panel="signin" hidden>
-      <div class="section-kicker">Cloud account</div><h1>Sign in</h1><p class="body-copy">Your squad, Mentor unlock/level state and team settings follow you across your phone, tablet and PC.</p>
-      <div class="auth-choice-stack">
-        <button class="auth-provider google" id="authGoogleBtn" type="button"><span class="auth-provider-icon"><img src="./assets/brands/google-g.svg" alt="Google"></span><span class="auth-provider-label">Continue with Google</span></button>
-        <div class="auth-divider"><span>OR</span></div>
-        <button class="auth-provider email" id="authEmailChoiceBtn" type="button"><span class="auth-provider-icon"><img src="./assets/brands/email.svg" alt=""></span><span class="auth-provider-label">Continue with Email &amp; Password</span></button>
+      <div class="section-kicker">Cloud account</div><h1>Welcome back</h1><p class="body-copy auth-welcome-copy">Sign in to your Top Eleven Tool account.</p>
+      <div class="auth-direct-fields">
+        <label class="field wide"><span>Email</span><input class="input" id="authEmail" type="email" autocomplete="email" placeholder="Email"></label>
+        <label class="field wide"><span>Password</span><span class="password-wrap"><input class="input" id="authPassword" type="password" autocomplete="current-password" placeholder="Password"><button class="password-toggle" type="button" data-password-toggle="authPassword" aria-label="Show password">Show</button></span></label>
       </div>
-      <p class="auth-choice-note">Secure cloud sign-in for your Top Eleven Tool account.</p>
-    </div>
-    <div data-auth-panel="email" hidden>
-      <div class="section-kicker">Email account</div><h1>Welcome back</h1><p class="body-copy">Sign in with the email and password linked to your account.</p>
-      <label class="field wide spaced"><span>Email</span><input class="input" id="authEmail" type="email" autocomplete="email"></label>
-      <label class="field wide"><span>Password</span><span class="password-wrap"><input class="input" id="authPassword" type="password" autocomplete="current-password"><button class="password-toggle" type="button" data-password-toggle="authPassword" aria-label="Show password">Show</button></span></label>
-      <button class="btn primary auth-main" id="authEmailBtn" type="button">Sign in</button>
-      <div class="auth-links"><button type="button" id="authResetBtn">Forgot password?</button><button type="button" data-auth-tab="signup">Create account</button></div>
-      <div class="auth-back"><button type="button" data-auth-tab="signin">← Back to sign-in options</button></div>
+      <div class="auth-forgot-row"><button type="button" id="authResetBtn">Forgot password?</button></div>
+      <button class="btn primary auth-main auth-signin-main" id="authEmailBtn" type="button">Sign In <span aria-hidden="true">→</span></button>
+      <div class="auth-divider"><span>OR</span></div>
+      <button class="auth-provider google" id="authGoogleBtn" type="button"><span class="auth-provider-icon"><img src="./assets/brands/google-g.svg" alt="Google"></span><span class="auth-provider-label">Continue with Google</span></button>
+      <div class="auth-create-line"><span>Don’t have an account?</span><button type="button" data-auth-tab="signup">Create account</button></div>
     </div>
     <div data-auth-panel="signup" hidden>
       <div class="section-kicker">New account</div><h1>Create account</h1>
@@ -51,21 +47,22 @@
       <label class="field wide"><span>Password</span><span class="password-wrap"><input class="input" id="signupPassword" type="password" autocomplete="new-password"><button class="password-toggle" type="button" data-password-toggle="signupPassword" aria-label="Show password">Show</button></span></label>
       <label class="field wide"><span>Confirm password</span><span class="password-wrap"><input class="input" id="signupPasswordConfirm" type="password" autocomplete="new-password"><button class="password-toggle" type="button" data-password-toggle="signupPasswordConfirm" aria-label="Show password">Show</button></span></label>
       <button class="btn primary auth-main" id="authCreateBtn" type="button">Create account</button>
-      <div class="auth-links"><button type="button" data-auth-tab="email">Already have an account? Sign in</button></div><div class="auth-back"><button type="button" data-auth-tab="signin">← Back to sign-in options</button></div>
+      <div class="auth-links"><button type="button" data-auth-tab="signin">Already have an account? Sign in</button></div><div class="auth-back"><button type="button" data-auth-tab="signin">← Back to sign-in options</button></div>
     </div>
     <div data-auth-panel="mfa" hidden>
       <div class="section-kicker">Two-step verification</div><h1>Verification code</h1><p class="body-copy" id="mfaHint">Enter the 6-digit code from your enrolled second factor.</p>
       <label class="field wide"><span>6-digit code</span><input class="input auth-code" id="mfaCode" inputmode="numeric" autocomplete="one-time-code" maxlength="6"></label>
       <button class="btn primary auth-main" id="mfaConfirmBtn" type="button">Verify &amp; continue</button>
     </div>
+    </div>
   </div>
 </div>
 <div class="app">
   <header class="topbar">
     <button class="brand-home" type="button" data-go="dashboard" aria-label="Go to Home" title="Home"><img class="brand-mark" src="./icon-192.png" alt="Top Eleven Tool"></button>
-    <div class="brand-copy brand-wordmark brand-wordmark-art" aria-label="Top Eleven Tool v0.6.46">
+    <div class="brand-copy brand-wordmark brand-wordmark-art" aria-label="Top Eleven Tool v0.6.48">
       <img class="brand-wordmark-image" src="./assets/v0629/headers/topbar.webp" alt="Top Eleven Tool">
-      <div class="brand-sub">v0.6.46</div>
+      <div class="brand-sub">v0.6.48</div>
     </div>
     <button class="home-search-shortcut" id="homeSearchShortcut" type="button" aria-label="Search squad"><img src="./assets/v0616/home/27-header-search.svg" alt=""><em>Search players, skills, or run a scan...</em><kbd>⌘ K</kbd></button>
     <div class="topbar-actions">
@@ -327,6 +324,9 @@
     </section>
 
     <section class="page v065-team-plan-page" id="page-team-plan" data-page="team-plan" data-nav-label="Team Plan" data-nav-icon="assets/v0616/home/22-nav-team-plan.svg">
+      <picture class="team-plan-page-media" aria-hidden="true">
+        <img src="./assets/v0624/reference-backgrounds/team-plan-approved.png" alt="" decoding="async" loading="eager">
+      </picture>
       <div class="v065-team-plan-head" style="--hero:url('./assets/v060/scenes/team-plan-header-desktop.webp');--hero-mobile:url('./assets/v060/scenes/team-plan-header-mobile.webp')"><div class="branded-page-title page-header-art-wrap"><img class="page-header-art" src="./assets/v0635/headers/team-plan.webp" alt="Team Plan"></div></div>
       <div class="page-body v065-team-plan-body">
         <div class="mode-grid team-plan-tabs">
@@ -470,7 +470,7 @@
 
           <section class="settings-card settings-version-card">
             <div class="settings-card-head"><img src="./icon-192.png" alt=""><div><span>About</span><b>Top Eleven Tool</b><small>Responsive web/PWA build.</small></div></div>
-            <div class="settings-version"><strong>v0.6.46</strong><span>Design branch</span></div>
+            <div class="settings-version"><strong>v0.6.48</strong><span>Design branch</span></div>
             <p class="mini-note">Internal game-data build references stay in the background and are not shown throughout the normal product UI.</p>
           </section>
         </div>
@@ -482,6 +482,6 @@
   <div class="dialog-backdrop" id="confirmDialogBackdrop"><div class="confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="confirmDialogTitle"><div class="section-kicker">Squad</div><div class="section-title" id="confirmDialogTitle">Delete player?</div><p id="confirmDialogCopy">Are you sure you want to permanently remove this player from your squad?</p><div class="btn-row spaced"><button class="btn ghost" id="confirmCancelBtn" type="button">Cancel</button><button class="btn danger" id="confirmDeleteBtn" type="button">Delete</button></div></div></div>
   <div class="toast" id="toast"></div>
 </div>
-<script src="./js/optimizer-data.js?r=0646"></script><script src="./js/bible-data.js?r=0646"></script><script src="./js/data.js?r=0646"></script><script src="./js/strategy-data.js?r=0646"></script><script src="./js/best-in-slot-data.js?r=0646"></script><script src="./js/strategy-logic.js?r=0646"></script><script src="./js/squad-coverage-engine.js?r=0646"></script><script src="./js/cloud.js?r=0646"></script><script src="./js/storage.js?r=0646"></script><script src="./js/drill-profile.js?r=0646"></script><script src="./js/players.js?r=0646"></script><script src="./js/training-engine.js?r=0646"></script><script src="./js/team-training-engine.js?r=0646"></script><script src="./js/scanner-engine.js?r=0646"></script><script src="./js/recommendations.js?r=0646"></script><script src="./js/formation.js?r=0646"></script><script src="./js/tactics-engine.js?r=0646"></script><script src="./js/mentor-engine.js?r=0646"></script><script src="./js/team-plan-engine.js?r=0646"></script><script src="./js/best-in-slot-engine.js?r=0646"></script><script src="./js/app.js?r=0646"></script>
+<script src="./js/optimizer-data.js?r=0648"></script><script src="./js/bible-data.js?r=0648"></script><script src="./js/data.js?r=0648"></script><script src="./js/strategy-data.js?r=0648"></script><script src="./js/best-in-slot-data.js?r=0648"></script><script src="./js/strategy-logic.js?r=0648"></script><script src="./js/squad-coverage-engine.js?r=0648"></script><script src="./js/cloud.js?r=0648"></script><script src="./js/storage.js?r=0648"></script><script src="./js/drill-profile.js?r=0648"></script><script src="./js/players.js?r=0648"></script><script src="./js/training-engine.js?r=0648"></script><script src="./js/team-training-engine.js?r=0648"></script><script src="./js/scanner-engine.js?r=0648"></script><script src="./js/recommendations.js?r=0648"></script><script src="./js/formation.js?r=0648"></script><script src="./js/tactics-engine.js?r=0648"></script><script src="./js/mentor-engine.js?r=0648"></script><script src="./js/team-plan-engine.js?r=0648"></script><script src="./js/best-in-slot-engine.js?r=0648"></script><script src="./js/app.js?r=0648"></script>
 <script>(()=>{const expected=document.documentElement.dataset.runtime;if(window.__TE_RUNTIME__!==expected){console.error('Runtime build mismatch',{expected,loaded:window.__TE_RUNTIME__||'missing'});const k='te:runtime-reload:'+expected;if(!sessionStorage.getItem(k)){sessionStorage.setItem(k,'1');location.reload();}}else{sessionStorage.removeItem('te:runtime-reload:'+expected);}})();</script>
 </body></html>
