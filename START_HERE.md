@@ -1,18 +1,11 @@
-# v0.6.40 — START HERE
+# v0.6.41 — START HERE
 
-**CURRENT UI BRANCH:** v0.6.40 — Global glass surfaces + manager avatar fidelity.  
-**DECISION / FOOTBALL BASELINE:** frozen v0.5.17.  
+**CURRENT UI BRANCH:** v0.6.41 — Unified glass surfaces + cyan-framed lime primary actions.  
+**DECISION/FOOTBALL BASELINE:** v0.5.17 frozen.  
 **SCANNER:** VERSION=12.
 
-Read `DESIGN_RECOVERY_HANDOFF_v0.6.40.md` first, then `V0640_AVATAR_GLASS_VALIDATION.md`.
+Read `DESIGN_RECOVERY_HANDOFF_v0.6.41.md` first, then `V0641_GLASS_CONSISTENCY_VALIDATION.md`.
 
-## v0.6.40 scope
-- Centre the shared manager/account avatar correctly everywhere it appears.
-- Use a higher-resolution Google profile-photo URL when Firebase gives a resizable Google-hosted photo URL.
-- Keep a safe fallback to the original photo/placeholder if the higher-resolution request fails.
-- Make the app's major cards/panels slightly more transparent so approved page backgrounds show through more.
-- Preserve the v0.6.39 drill category colours and gold Master Card framing while making their dark base slightly more transparent.
-- No football, training-optimiser, scanner, cloud-data, account-security or navigation logic changes.
+v0.6.41 standardises the transparency of cards/rows/controls across the app, preserves the approved Training/Drills category tint language, and changes solid lime primary buttons to translucent lime glass with a cyan/blue frame. v0.6.40 shared manager-avatar centring/high-resolution URL behaviour remains active.
 
-## Next work
-Remaining image-dependent redesign areas: Team Plan, Update Player, Login/Splash, Player Profile.
+Every future pass must update the recovery handoff, run regressions, create both lean deploy and full recovery ZIPs, extract both and verify the exact packaged outputs.

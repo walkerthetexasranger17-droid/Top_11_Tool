@@ -1,5 +1,5 @@
 (() => {
-  window.__TE_RUNTIME__='0.6.40';
+  window.__TE_RUNTIME__='0.6.41';
   const TE=window.TE5;const D=TE.Data,P=TE.Players,S=TE.Storage,DP=TE.DrillProfile,T=TE.Training,TT=TE.TeamTraining,SC=TE.Scanner,R=TE.Recommendations,F=TE.Formation,TP=TE.TeamPlan,TAC=TE.Tactics,M=TE.Mentor,B=TE.BibleData,C=TE.Cloud,BIS=TE.BestInSlot;
   const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
   const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
