@@ -3301,7 +3301,7 @@ textarea.input,input.input,.queue-update-target,.drill-library-search,
    no Build Best Match Plan button. Uses the user-approved pitch/shirt/nameplate.
    ==================================================================== */
 
-#teamPlanFormationPanel{display:block!important;max-width:920px;margin:0 auto!important}
+#teamPlanFormationPanel{display:block;max-width:920px;margin:0 auto!important}
 .team-plan-formation-stage{display:block;position:relative;margin:0 auto;padding:0!important;background:transparent!important;border:0!important;box-shadow:none!important}
 .formation-stage-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin:0 auto 10px;max-width:760px;padding:12px 14px;border:1px solid var(--v642-line);border-radius:16px;background:linear-gradient(145deg,rgba(7,27,43,.54),rgba(3,14,24,.64));backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);box-shadow:0 12px 30px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.025)}
 .formation-stage-head .section-kicker{color:#60dcff!important}
@@ -3351,4 +3351,39 @@ textarea.input,input.input,.queue-update-target,.drill-library-search,
   .set-piece-penalty-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}.set-piece-penalty-grid .set-piece-player-card:nth-child(4),.set-piece-penalty-grid .set-piece-player-card:nth-child(5){grid-column:auto}.set-piece-penalty-grid .set-piece-player-visual{height:48px}.set-piece-penalty-grid .set-piece-shirt{width:46px}.set-piece-penalty-grid .set-piece-nameplate{height:23px}.set-piece-penalty-grid .set-piece-nameplate>b{font-size:7px}.set-piece-penalty-grid .set-piece-role-label{font-size:7px}
   .set-piece-captain-section>.set-piece-player-card{column-gap:9px;padding:6px 8px}.set-piece-captain-section .set-piece-player-visual{height:58px}.set-piece-captain-section .set-piece-shirt{width:55px}.set-piece-captain-section .set-piece-nameplate{height:26px;width:min(140px,95%)}
   .set-piece-footnote{font-size:7px!important;padding:7px 8px!important}
+}
+
+
+/* ====================================================================
+   v0.6.50 — Team Plan Formation spacing + true Set Pieces pitch map
+   ==================================================================== */
+
+/* Inline tab state must be allowed to hide panels. */
+#teamPlanFormationPanel,#teamPlanSetPiecesPanel{max-width:920px;margin:0 auto!important}
+
+/* Formation: reduce marker footprint so the XI reads cleanly on portrait. */
+.formation-player-marker{width:clamp(50px,9.5vw,78px)!important}
+.formation-player-shirt{width:clamp(36px,6.9vw,58px)!important}
+.formation-player-nameplate{width:clamp(52px,9.5vw,78px)!important;height:clamp(17px,3.1vw,25px)!important;margin-top:clamp(-5px,-.65vw,-2px)!important}
+.formation-player-nameplate>b{font-size:clamp(6.5px,1.2vw,9.5px)!important}
+
+/* Set Pieces is its own tactical pitch — not the Formation panel repeated. */
+.set-piece-stage{display:block!important}
+.set-piece-pitch-shell{position:relative;width:min(100%,760px);margin:0 auto;border-radius:18px;overflow:hidden;border:1px solid rgba(69,203,247,.42);background:#07131d;box-shadow:0 24px 58px rgba(0,0,0,.42),0 0 28px rgba(45,194,255,.10),inset 0 1px 0 rgba(255,255,255,.035)}
+.set-piece-pitch-art{display:block;width:100%;height:auto;object-fit:contain;background:#07131d}
+.v065-team-plan-page #setPiecePitch.set-piece-player-layer{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;min-height:0!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;overflow:visible!important;display:block!important}
+.set-piece-map-marker{position:absolute;z-index:4;transform:translate(-50%,-50%);display:grid;justify-items:center;align-items:end;width:clamp(58px,10vw,82px);padding:0;border:0;background:transparent;cursor:pointer;filter:drop-shadow(0 4px 7px rgba(0,0,0,.35));-webkit-tap-highlight-color:transparent}
+.set-piece-map-marker:hover,.set-piece-map-marker:focus-visible{transform:translate(-50%,-50%) scale(1.05);outline:none;filter:drop-shadow(0 5px 11px rgba(30,190,255,.34))}
+.set-piece-assignment-tag{display:flex;align-items:center;justify-content:center;min-height:16px;max-width:92%;margin-bottom:-1px;padding:3px 5px;border-radius:5px;background:rgba(3,16,27,.90);border:1px solid rgba(166,255,25,.50);color:#efffd6;font:900 clamp(6px,1.05vw,8px)/1 var(--v627-type);letter-spacing:.05em;text-transform:uppercase;white-space:nowrap;box-shadow:0 2px 7px rgba(0,0,0,.28)}
+.set-piece-map-shirt{display:block;width:clamp(34px,6.4vw,54px);height:auto;object-fit:contain;pointer-events:none}
+.set-piece-map-nameplate{position:relative;display:grid;place-items:center;width:clamp(54px,9.5vw,78px);height:clamp(17px,3.1vw,25px);margin-top:clamp(-5px,-.65vw,-2px);pointer-events:none}
+.set-piece-map-nameplate>img{position:absolute;inset:0;width:100%;height:100%;object-fit:fill}
+.set-piece-map-nameplate>b{position:relative;z-index:2;max-width:82%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#fff;font:900 clamp(6.5px,1.2vw,9.5px)/1 var(--v627-type);letter-spacing:.01em;text-shadow:0 1px 2px #000,0 0 7px rgba(74,213,255,.45)}
+.set-piece-map-marker.unfilled{opacity:.55}.set-piece-map-empty{display:grid;place-items:center;width:32px;height:32px;border:1px dashed rgba(76,204,242,.35);border-radius:50%;background:rgba(2,15,25,.65);color:#799aab;font-size:18px}
+#setPieceEmpty{position:absolute!important;left:50%!important;top:50%!important;transform:translate(-50%,-50%)!important;z-index:7!important;width:min(280px,74%)!important;min-height:150px!important;padding:18px!important;border:1px solid rgba(73,197,240,.35)!important;border-radius:16px!important;background:linear-gradient(145deg,rgba(5,26,42,.90),rgba(2,14,24,.94))!important;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:0 18px 40px rgba(0,0,0,.30)!important}
+
+@media(max-width:767px){
+  .formation-player-marker{width:50px!important}.formation-player-shirt{width:36px!important}.formation-player-nameplate{width:52px!important;height:17px!important;margin-top:-3px!important}.formation-player-nameplate>b{font-size:6.5px!important}
+  .set-piece-pitch-shell{border-radius:13px}
+  .set-piece-map-marker{width:54px}.set-piece-map-shirt{width:33px}.set-piece-map-nameplate{width:50px;height:17px;margin-top:-3px}.set-piece-map-nameplate>b{font-size:6.3px}.set-piece-assignment-tag{min-height:14px;padding:2px 4px;font-size:5.7px}
 }
