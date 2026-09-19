@@ -1,13 +1,19 @@
-# v0.6.44 — START HERE
+# v0.6.45 — START HERE
 
-**CURRENT UI BRANCH:** v0.6.44 — Missed-surface cleanup.  
+**CURRENT UI BRANCH:** v0.6.45 — Green-button parity.  
 **FROZEN DECISION BASELINE:** v0.5.17.  
 **SCANNER:** VERSION=12.
 
-Read `DESIGN_RECOVERY_HANDOFF_v0.6.44.md` first, then `V0644_MISSED_SURFACE_VALIDATION.md`.
+Read `DESIGN_RECOVERY_HANDOFF_v0.6.45.md` first, then `V0645_GREEN_BUTTON_PARITY_VALIDATION.md`.
 
-v0.6.44 is a focused follow-up to the v0.6.42/v0.6.43 glass-system work. Phone review showed a small number of legacy solid surfaces still surviving inside interactive states. The corrected areas are the generated Training session shell/cards and Efficiency & Resources metrics, scanner upload well/progress surface, and primary lime actions across Training, Scanner, Account/Security and the rest of the app. Primary actions remain lime from edge to edge, but now use a translucent lime-glass fill with the existing cyan frame.
+## What changed
+The approved **Individual Training** active tab is now the literal visual source of truth for every enabled green primary action. The same background gradient, lime border, bottom lime keyline/glow and light text are reused globally rather than approximated with a separate lime-button design.
 
-Do not change the already-approved Home/Squad glass hierarchy, Training/Drills category colours, gold Mastercard treatment, swipe-delete behaviour, football/training optimiser logic or Scanner v12 calibration unless explicitly requested.
+This applies to Add Player, Build Session, Mark Session Completed, Save Profile, account/security actions, scanner actions, Settings Save Key, Team Plan build actions, player edit/train actions, auth primary actions and the other `.btn.primary` controls. Active Team Plan segmented tabs are also prevented from drifting away from the same green treatment.
 
-Remaining image-dependent redesign areas: Team Plan, Update Player, Login/Splash and Player Profile.
+Disabled primary actions remain deliberately subdued so disabled controls cannot be mistaken for active ones.
+
+## Do not change
+Do not alter the approved Home/Squad glass hierarchy, Training/Drills category colours, gold Mastercard treatment, scanner VERSION=12, v0.5.17 football/decision logic, Mastercard consumption, Firebase/cloud behaviour or squad data model unless explicitly requested.
+
+Remaining image-dependent redesign areas: **Team Plan, Update Player, Login/Splash and Player Profile.**
