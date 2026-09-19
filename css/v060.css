@@ -3294,3 +3294,61 @@ textarea.input,input.input,.queue-update-target,.drill-library-search,
 }
 
 /* v0.6.48 asset-integrity hotfix: UPDATE PLAYER artwork is original/approved. */
+
+/* ====================================================================
+   v0.6.49 — Team Plan Formation + Set Piece Takers rebuild
+   Formation is intentionally pitch-only: no Best-in-Slot, no Squad Blueprint,
+   no Build Best Match Plan button. Uses the user-approved pitch/shirt/nameplate.
+   ==================================================================== */
+
+#teamPlanFormationPanel{display:block!important;max-width:920px;margin:0 auto!important}
+.team-plan-formation-stage{display:block;position:relative;margin:0 auto;padding:0!important;background:transparent!important;border:0!important;box-shadow:none!important}
+.formation-stage-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin:0 auto 10px;max-width:760px;padding:12px 14px;border:1px solid var(--v642-line);border-radius:16px;background:linear-gradient(145deg,rgba(7,27,43,.54),rgba(3,14,24,.64));backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);box-shadow:0 12px 30px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.025)}
+.formation-stage-head .section-kicker{color:#60dcff!important}
+.formation-stage-head .section-title{font-size:27px!important;line-height:.94!important}
+.formation-stage-head #formationSummary{margin:5px 0 0!important;font-size:9px!important;line-height:1.35!important;color:#a7bdc9!important}
+.formation-pitch-shell{position:relative;width:min(100%,760px);margin:0 auto;border-radius:18px;overflow:hidden;border:1px solid rgba(69,203,247,.42);background:#07131d;box-shadow:0 24px 58px rgba(0,0,0,.42),0 0 28px rgba(45,194,255,.10),inset 0 1px 0 rgba(255,255,255,.035)}
+.formation-pitch-art{display:block;width:100%;height:auto;aspect-ratio:auto;object-fit:contain;background:#07131d}
+.v065-team-plan-page #formationPitch.formation-player-layer{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;min-height:0!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;overflow:visible!important}
+.formation-player-marker{position:absolute;z-index:4;transform:translate(-50%,-50%);display:grid;justify-items:center;align-items:end;width:clamp(56px,11vw,90px);padding:0;border:0;background:transparent;cursor:pointer;filter:drop-shadow(0 4px 7px rgba(0,0,0,.35));transition:transform .13s ease,filter .13s ease;-webkit-tap-highlight-color:transparent}
+.formation-player-marker:hover,.formation-player-marker:focus-visible{transform:translate(-50%,-50%) scale(1.06);filter:drop-shadow(0 5px 11px rgba(30,190,255,.34));outline:none}
+.formation-player-shirt{display:block;width:clamp(42px,8.2vw,70px);height:auto;object-fit:contain;pointer-events:none}
+.formation-player-nameplate{position:relative;display:grid;place-items:center;width:clamp(56px,10.8vw,88px);height:clamp(18px,3.6vw,30px);margin-top:clamp(-6px,-.8vw,-2px);pointer-events:none}
+.formation-player-nameplate>img{position:absolute;inset:0;width:100%;height:100%;object-fit:fill}
+.formation-player-nameplate>b{position:relative;z-index:2;max-width:82%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#fff;font:900 clamp(7px,1.4vw,11px)/1 var(--v627-type);letter-spacing:.02em;text-shadow:0 1px 2px #000,0 0 7px rgba(74,213,255,.45)}
+#formationEmpty{position:absolute!important;left:50%!important;top:50%!important;transform:translate(-50%,-50%)!important;z-index:7!important;width:min(280px,74%)!important;min-height:150px!important;padding:18px!important;border:1px solid rgba(73,197,240,.35)!important;border-radius:16px!important;background:linear-gradient(145deg,rgba(5,26,42,.90),rgba(2,14,24,.94))!important;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:0 18px 40px rgba(0,0,0,.30)!important}
+
+/* Set-piece page: same locked shirt + dynamic nameplate system. */
+#teamPlanSetPiecesPanel{display:block;max-width:920px;margin:0 auto!important}
+.set-piece-stage{display:grid;gap:10px}
+.set-piece-stage-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 15px;border:1px solid var(--v642-line);border-radius:16px;background:linear-gradient(145deg,rgba(7,27,43,.54),rgba(3,14,24,.64));backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);box-shadow:0 12px 30px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.025)}
+.set-piece-stage-head .section-title{font-size:27px!important}.set-piece-stage-head .body-copy{margin:4px 0 0!important;font-size:9px!important;color:#a6bdc8!important}
+.v065-team-plan-page #setPiecePitch.set-piece-board{display:grid!important;gap:10px!important;width:100%!important;height:auto!important;min-height:0!important;margin:0!important;padding:12px!important;border:1px solid rgba(65,207,250,.34)!important;border-radius:18px!important;background:linear-gradient(145deg,rgba(5,25,40,.72),rgba(2,13,23,.80))!important;box-shadow:0 18px 46px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.025)!important;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);overflow:hidden!important}
+.set-piece-primary-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.set-piece-player-card{position:relative;display:grid;justify-items:center;align-content:start;min-width:0;padding:10px 8px 9px;border:1px solid rgba(65,207,250,.26);border-radius:14px;background:linear-gradient(160deg,rgba(7,33,51,.78),rgba(3,17,29,.82));box-shadow:inset 0 1px 0 rgba(255,255,255,.025),0 8px 18px rgba(0,0,0,.14);overflow:hidden}
+.set-piece-player-card::after{content:"";position:absolute;left:14%;right:14%;top:0;height:1px;background:linear-gradient(90deg,transparent,#5ce4ff,transparent);opacity:.65}
+.set-piece-role-label{min-height:20px;display:flex;align-items:center;justify-content:center;text-align:center;color:#d8f4ff;font:900 9px/1 var(--v627-type);letter-spacing:.12em;text-transform:uppercase;text-shadow:0 0 8px rgba(78,218,255,.24)}
+.set-piece-player-visual{display:grid;place-items:center;height:76px;margin-top:1px}.set-piece-shirt{display:block;width:72px;height:auto;object-fit:contain;filter:drop-shadow(0 5px 8px rgba(0,0,0,.28))}
+.set-piece-nameplate{position:relative;display:grid;place-items:center;width:min(132px,92%);height:34px;margin-top:-7px}
+.set-piece-nameplate>img{position:absolute;inset:0;width:100%;height:100%;object-fit:fill}.set-piece-nameplate>b{position:relative;z-index:2;max-width:80%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#fff;font:900 11px/1 var(--v627-type);text-shadow:0 1px 2px #000,0 0 7px rgba(74,213,255,.45)}
+.set-piece-unfilled-mark{display:grid;place-items:center;width:58px;height:58px;border:1px dashed rgba(76,204,242,.28);border-radius:50%;color:#7897a8;font-size:25px}
+.set-piece-player-card.unfilled{opacity:.58}
+.set-piece-penalty-section,.set-piece-captain-section{padding:10px;border:1px solid rgba(65,207,250,.24);border-radius:14px;background:rgba(3,18,30,.42)}
+.set-piece-group-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px;padding:0 2px}.set-piece-group-title>span{font:900 13px/1 var(--v627-type);letter-spacing:.07em;color:#eef9fc;text-transform:uppercase}.set-piece-group-title>small{font:800 8px/1 var(--v627-type);letter-spacing:.08em;color:var(--v6-lime);text-transform:uppercase}
+.set-piece-penalty-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px}.set-piece-penalty-grid .set-piece-player-card{padding:8px 5px 7px}.set-piece-penalty-grid .set-piece-player-visual{height:58px}.set-piece-penalty-grid .set-piece-shirt{width:56px}.set-piece-penalty-grid .set-piece-nameplate{height:28px;margin-top:-5px}.set-piece-penalty-grid .set-piece-nameplate>b{font-size:9px}.set-piece-penalty-grid .set-piece-role-label{font-size:8px}
+.set-piece-captain-section>.set-piece-player-card{grid-template-columns:auto minmax(0,1fr);grid-template-rows:auto auto;column-gap:14px;align-items:center;justify-items:start;padding:8px 14px}.set-piece-captain-section .set-piece-role-label{grid-column:2;grid-row:1;justify-content:flex-start}.set-piece-captain-section .set-piece-player-visual{grid-column:1;grid-row:1/3;height:72px;margin:0}.set-piece-captain-section .set-piece-shirt{width:68px}.set-piece-captain-section .set-piece-nameplate{grid-column:2;grid-row:2;width:min(180px,95%);margin:0}
+.set-piece-footnote{margin:0!important;padding:9px 11px!important;border:1px solid rgba(65,207,250,.16);border-radius:10px;background:rgba(3,17,28,.58);color:#90a9b8!important}
+
+@media(max-width:767px){
+  #teamPlanFormationPanel,#teamPlanSetPiecesPanel{max-width:none!important}
+  .formation-stage-head{margin-bottom:7px;padding:10px 11px;border-radius:13px}.formation-stage-head .section-title{font-size:22px!important}.formation-stage-head #formationSummary{font-size:7.5px!important}
+  .formation-pitch-shell{border-radius:13px}
+  .formation-player-marker{width:56px}.formation-player-shirt{width:45px}.formation-player-nameplate{width:58px;height:19px;margin-top:-4px}.formation-player-nameplate>b{font-size:7px}
+  .set-piece-stage{gap:7px}.set-piece-stage-head{padding:10px 11px;border-radius:13px}.set-piece-stage-head .section-title{font-size:22px!important}.set-piece-stage-head .body-copy{font-size:7.5px!important}
+  .v065-team-plan-page #setPiecePitch.set-piece-board{gap:7px!important;padding:8px!important;border-radius:14px!important}
+  .set-piece-primary-grid{gap:7px}.set-piece-player-card{padding:7px 5px 6px;border-radius:11px}.set-piece-role-label{font-size:7.5px;min-height:16px}.set-piece-player-visual{height:60px}.set-piece-shirt{width:57px}.set-piece-nameplate{height:25px;width:min(104px,94%);margin-top:-5px}.set-piece-nameplate>b{font-size:8px}
+  .set-piece-penalty-section,.set-piece-captain-section{padding:7px;border-radius:11px}.set-piece-group-title{margin-bottom:6px}.set-piece-group-title>span{font-size:10px}.set-piece-group-title>small{font-size:6.5px}
+  .set-piece-penalty-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}.set-piece-penalty-grid .set-piece-player-card:nth-child(4),.set-piece-penalty-grid .set-piece-player-card:nth-child(5){grid-column:auto}.set-piece-penalty-grid .set-piece-player-visual{height:48px}.set-piece-penalty-grid .set-piece-shirt{width:46px}.set-piece-penalty-grid .set-piece-nameplate{height:23px}.set-piece-penalty-grid .set-piece-nameplate>b{font-size:7px}.set-piece-penalty-grid .set-piece-role-label{font-size:7px}
+  .set-piece-captain-section>.set-piece-player-card{column-gap:9px;padding:6px 8px}.set-piece-captain-section .set-piece-player-visual{height:58px}.set-piece-captain-section .set-piece-shirt{width:55px}.set-piece-captain-section .set-piece-nameplate{height:26px;width:min(140px,95%)}
+  .set-piece-footnote{font-size:7px!important;padding:7px 8px!important}
+}

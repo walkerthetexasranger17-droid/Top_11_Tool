@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-runtime="0.6.48">
+<html lang="en" data-runtime="0.6.49">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -10,11 +10,11 @@
   <meta name="application-name" content="Top Eleven Tool">
   <meta name="apple-mobile-web-app-title" content="Top Eleven Tool">
   <title>Top Eleven Tool</title>
-  <link rel="manifest" href="./manifest.json?r=0648">
+  <link rel="manifest" href="./manifest.json?r=0649">
   <link rel="icon" href="./icon-192.png"><link rel="apple-touch-icon" href="./icon-192.png">
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./css/app.css?r=0648"><link rel="stylesheet" href="./css/v060.css?r=0648">
+  <link rel="stylesheet" href="./css/app.css?r=0649"><link rel="stylesheet" href="./css/v060.css?r=0649">
 </head>
 <body class="booting">
 <div class="auth-gate" id="authGate" hidden>
@@ -60,9 +60,9 @@
 <div class="app">
   <header class="topbar">
     <button class="brand-home" type="button" data-go="dashboard" aria-label="Go to Home" title="Home"><img class="brand-mark" src="./icon-192.png" alt="Top Eleven Tool"></button>
-    <div class="brand-copy brand-wordmark brand-wordmark-art" aria-label="Top Eleven Tool v0.6.48">
+    <div class="brand-copy brand-wordmark brand-wordmark-art" aria-label="Top Eleven Tool v0.6.49">
       <img class="brand-wordmark-image" src="./assets/v0629/headers/topbar.webp" alt="Top Eleven Tool">
-      <div class="brand-sub">v0.6.48</div>
+      <div class="brand-sub">v0.6.49</div>
     </div>
     <button class="home-search-shortcut" id="homeSearchShortcut" type="button" aria-label="Search squad"><img src="./assets/v0616/home/27-header-search.svg" alt=""><em>Search players, skills, or run a scan...</em><kbd>⌘ K</kbd></button>
     <div class="topbar-actions">
@@ -330,25 +330,44 @@
       <div class="v065-team-plan-head" style="--hero:url('./assets/v060/scenes/team-plan-header-desktop.webp');--hero-mobile:url('./assets/v060/scenes/team-plan-header-mobile.webp')"><div class="branded-page-title page-header-art-wrap"><img class="page-header-art" src="./assets/v0635/headers/team-plan.webp" alt="Team Plan"></div></div>
       <div class="page-body v065-team-plan-body">
         <div class="mode-grid team-plan-tabs">
-          <button class="mode active" data-team-plan-tab="formation"><img src="assets/icons/team.svg"><span>Lineup</span></button>
+          <button class="mode active" data-team-plan-tab="formation"><img src="assets/icons/team.svg"><span>Formation</span></button>
           <button class="mode" data-team-plan-tab="set-pieces"><img src="assets/v0616/home/24-sidebar-drills.svg"><span>Set Pieces</span></button>
           <button class="mode" data-team-plan-tab="tactics"><img src="assets/v0616/home/22-nav-team-plan.svg"><span>Tactics</span></button>
         </div>
 
         <div id="teamPlanFormationPanel">
-          <div class="section"><div class="formation-head"><div><div class="section-kicker">Recommended XI</div><div class="section-title" id="formationName">Analyse squad</div><p id="formationSummary">Add at least 11 players to build a full XI.</p></div></div>
-            <div class="pitch" id="formationPitch"><div class="pitch-line pitch-mid"></div><div class="pitch-line pitch-circle"></div><div class="pitch-line pitch-box pitch-box-top"></div><div class="pitch-line pitch-box pitch-box-bottom"></div><div class="pitch-empty" id="formationEmpty"><img src="assets/v0616/home/20-nav-squad.svg" alt=""><b>0/11 PLAYERS</b><span>Build your squad before choosing a team plan.</span><button class="btn primary compact" data-go="add-player">+ Add Player</button></div></div>
-          </div>
-          <div class="formation-actions"><button class="btn primary" id="buildTeamPlanBtn">Build Best Match Plan</button><div class="mini-note" id="teamPlanNote">Builds the best complete Formation + Tactics + available Mentor plan from your current squad.</div></div>
-          <div class="section best-in-slot-section" id="bestInSlotSection"><div class="section-head"><div><div class="section-kicker">Long-term squad goal</div><div class="section-title">Best-in-Slot XI</div></div><span class="chip active">MODEL GOAL</span></div><div class="card"><div class="card-inner"><div class="best-in-slot-head"><div><b id="bestInSlotFormation">Calculating goal</b><small id="bestInSlotSummary">Idealised squad target, separate from the players you own today.</small></div><div class="best-in-slot-score" id="bestInSlotScore">—</div></div><div class="pitch best-in-slot-pitch" id="bestInSlotPitch"><div class="pitch-line pitch-mid"></div><div class="pitch-line pitch-circle"></div><div class="pitch-line pitch-box pitch-box-top"></div><div class="pitch-line pitch-box pitch-box-bottom"></div></div><div class="best-in-slot-plan" id="bestInSlotPlan"></div><div class="best-in-slot-coverage" id="bestInSlotCoverage"></div><div class="best-in-slot-grid" id="bestInSlotGrid"></div><p class="mini-note spaced" id="bestInSlotNote"></p></div></div></div>
-          <div class="card spaced" id="squadCoverageCard"><div class="card-inner"><div class="section-kicker">Squad Blueprint</div><div class="section-title" id="squadCoverageTitle">Coverage guide</div><p class="body-copy" id="squadCoverageSummary">Build a plan to analyse the natural-position coverage in your squad.</p><div class="filter-chips spaced" id="squadCoverageGaps"></div><div class="mini-note" id="squadCoverageProfiles"></div></div></div>
+          <section class="team-plan-formation-stage">
+            <div class="formation-head formation-stage-head">
+              <div>
+                <div class="section-kicker">Recommended XI</div>
+                <div class="section-title" id="formationName">Analyse squad</div>
+                <p id="formationSummary">Add at least 11 players to build a full XI.</p>
+              </div>
+            </div>
+            <div class="formation-pitch-shell">
+              <img class="formation-pitch-art" src="./assets/v0649/team-plan/formation-pitch.png" alt="" aria-hidden="true">
+              <div class="formation-player-layer" id="formationPitch">
+                <div class="pitch-empty" id="formationEmpty"><img src="assets/v0616/home/20-nav-squad.svg" alt=""><b>0/11 PLAYERS</b><span>Build your squad before choosing a team plan.</span><button class="btn primary compact" data-go="add-player">+ Add Player</button></div>
+              </div>
+            </div>
+          </section>
         </div>
 
         <div id="teamPlanSetPiecesPanel" style="display:none">
-          <div class="section-head spaced"><div><div class="section-kicker">Match roles</div><div class="section-title">Set Pieces</div></div></div>
-          <div class="pitch set-piece-pitch" id="setPiecePitch"><div class="pitch-line pitch-mid"></div><div class="pitch-line pitch-circle"></div><div class="pitch-line pitch-box pitch-box-left"></div><div class="pitch-line pitch-box pitch-box-right"></div><div class="pitch-empty" id="setPieceEmpty"><img src="assets/v0616/home/20-nav-squad.svg" alt=""><b>BUILD FORMATION FIRST</b><span>Set-piece assignments use the selected XI.</span></div></div>
-          <div class="set-piece-coverage" id="setPieceCoverage" style="display:none"><div class="set-piece-coverage-head"><div><div class="section-kicker">Current XI coverage</div><div class="section-title">Who covers what</div></div><span class="chip active">AUTO</span></div><div class="set-piece-coverage-grid" id="setPieceCoverageGrid"></div></div>
-          <div class="mini-note spaced" id="setPieceNote">Automatic recommendations from the selected XI. This view is informational — rebuild the Team Plan to refresh assignments.</div>
+          <section class="set-piece-stage">
+            <div class="set-piece-stage-head">
+              <div>
+                <div class="section-kicker">Selected XI</div>
+                <div class="section-title">Set Piece Takers</div>
+                <p class="body-copy">Automatic recommendations from the current formation.</p>
+              </div>
+              <span class="chip active">AUTO</span>
+            </div>
+            <div class="set-piece-board" id="setPiecePitch">
+              <div class="pitch-empty" id="setPieceEmpty"><img src="assets/v0616/home/20-nav-squad.svg" alt=""><b>BUILD FORMATION FIRST</b><span>Set-piece assignments use the selected XI.</span></div>
+            </div>
+            <div class="mini-note set-piece-footnote" id="setPieceNote">Assignments refresh automatically with the selected XI.</div>
+          </section>
         </div>
 
         <div id="teamPlanTacticsPanel" style="display:none">
@@ -470,7 +489,7 @@
 
           <section class="settings-card settings-version-card">
             <div class="settings-card-head"><img src="./icon-192.png" alt=""><div><span>About</span><b>Top Eleven Tool</b><small>Responsive web/PWA build.</small></div></div>
-            <div class="settings-version"><strong>v0.6.48</strong><span>Design branch</span></div>
+            <div class="settings-version"><strong>v0.6.49</strong><span>Design branch</span></div>
             <p class="mini-note">Internal game-data build references stay in the background and are not shown throughout the normal product UI.</p>
           </section>
         </div>
@@ -482,6 +501,6 @@
   <div class="dialog-backdrop" id="confirmDialogBackdrop"><div class="confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="confirmDialogTitle"><div class="section-kicker">Squad</div><div class="section-title" id="confirmDialogTitle">Delete player?</div><p id="confirmDialogCopy">Are you sure you want to permanently remove this player from your squad?</p><div class="btn-row spaced"><button class="btn ghost" id="confirmCancelBtn" type="button">Cancel</button><button class="btn danger" id="confirmDeleteBtn" type="button">Delete</button></div></div></div>
   <div class="toast" id="toast"></div>
 </div>
-<script src="./js/optimizer-data.js?r=0648"></script><script src="./js/bible-data.js?r=0648"></script><script src="./js/data.js?r=0648"></script><script src="./js/strategy-data.js?r=0648"></script><script src="./js/best-in-slot-data.js?r=0648"></script><script src="./js/strategy-logic.js?r=0648"></script><script src="./js/squad-coverage-engine.js?r=0648"></script><script src="./js/cloud.js?r=0648"></script><script src="./js/storage.js?r=0648"></script><script src="./js/drill-profile.js?r=0648"></script><script src="./js/players.js?r=0648"></script><script src="./js/training-engine.js?r=0648"></script><script src="./js/team-training-engine.js?r=0648"></script><script src="./js/scanner-engine.js?r=0648"></script><script src="./js/recommendations.js?r=0648"></script><script src="./js/formation.js?r=0648"></script><script src="./js/tactics-engine.js?r=0648"></script><script src="./js/mentor-engine.js?r=0648"></script><script src="./js/team-plan-engine.js?r=0648"></script><script src="./js/best-in-slot-engine.js?r=0648"></script><script src="./js/app.js?r=0648"></script>
+<script src="./js/optimizer-data.js?r=0649"></script><script src="./js/bible-data.js?r=0649"></script><script src="./js/data.js?r=0649"></script><script src="./js/strategy-data.js?r=0649"></script><script src="./js/strategy-logic.js?r=0649"></script><script src="./js/squad-coverage-engine.js?r=0649"></script><script src="./js/cloud.js?r=0649"></script><script src="./js/storage.js?r=0649"></script><script src="./js/drill-profile.js?r=0649"></script><script src="./js/players.js?r=0649"></script><script src="./js/training-engine.js?r=0649"></script><script src="./js/team-training-engine.js?r=0649"></script><script src="./js/scanner-engine.js?r=0649"></script><script src="./js/recommendations.js?r=0649"></script><script src="./js/formation.js?r=0649"></script><script src="./js/tactics-engine.js?r=0649"></script><script src="./js/mentor-engine.js?r=0649"></script><script src="./js/team-plan-engine.js?r=0649"></script><script src="./js/app.js?r=0649"></script>
 <script>(()=>{const expected=document.documentElement.dataset.runtime;if(window.__TE_RUNTIME__!==expected){console.error('Runtime build mismatch',{expected,loaded:window.__TE_RUNTIME__||'missing'});const k='te:runtime-reload:'+expected;if(!sessionStorage.getItem(k)){sessionStorage.setItem(k,'1');location.reload();}}else{sessionStorage.removeItem('te:runtime-reload:'+expected);}})();</script>
 </body></html>
