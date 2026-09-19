@@ -1,7 +1,5 @@
-# Top Eleven Tool v0.6.39
+# Top Eleven Tool v0.6.40
 
-> **Current branch: v0.6.39 / Drill category surface tint correction.** Drill cards now use an obvious translucent category-coloured container surface: Attacking red, Defending green, Possession yellow, Physical & Mental blue. Master Cards keep their gold frame while retaining the correct category tint underneath. The drill artwork itself remains untouched. Training-generated drill cards use the same visual language.
+> **Current branch: v0.6.40 / Global glass surfaces + manager avatar fidelity.** Manager account imagery is centred consistently and Google-hosted profile photos request a higher-resolution source where supported. Major app surfaces are slightly more transparent so approved backgrounds show through more. v0.6.39 drill category colours and gold Master Card treatment are preserved.
 
-Read `START_HERE.md` and `DESIGN_RECOVERY_HANDOFF_v0.6.39.md` before changing anything.
-
-The frozen v0.5.17 decision contract and Scanner VERSION=12 remain unchanged.
+Read `START_HERE.md` and `DESIGN_RECOVERY_HANDOFF_v0.6.40.md` before changing anything.

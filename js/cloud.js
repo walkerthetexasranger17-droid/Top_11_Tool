@@ -24,6 +24,35 @@
   function text(el,v){if(el)el.textContent=v??''}
   function escHtml(v){return String(v??'').replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c]))}
   function show(el,on=true){if(el)el.hidden=!on}
+  function profilePhotoUrl(user,size=256){
+    const raw=String(user?.photoURL||user?.providerData?.find?.(p=>p?.photoURL)?.photoURL||'').trim();
+    if(!raw)return '';
+    if(!/googleusercontent\.com/i.test(raw))return raw;
+    const px=Math.max(96,Math.min(512,Number(size)||256));
+    let out=raw;
+    if(/=s\d+/i.test(out))out=out.replace(/=s\d+/i,`=s${px}`);
+    else if(/([?&])sz=\d+/i.test(out))out=out.replace(/([?&])sz=\d+/i,`$1sz=${px}`);
+    return out;
+  }
+  function setAvatarImage(container,user,display,{size=256,fallbackImage='',fallbackInitial=true}={}){
+    if(!container)return;
+    const raw=String(user?.photoURL||user?.providerData?.find?.(p=>p?.photoURL)?.photoURL||'').trim();
+    const hi=profilePhotoUrl(user,size);
+    if(hi){
+      const img=document.createElement('img');
+      img.alt=display?`${display} profile picture`:'Manager profile picture';
+      img.referrerPolicy='no-referrer';
+      img.decoding='async';
+      img.src=hi;
+      if(raw&&hi!==raw){img.addEventListener('error',()=>{if(img.dataset.fallbackTried)return;img.dataset.fallbackTried='1';img.src=raw;},{once:false});}
+      container.replaceChildren(img);
+      return;
+    }
+    if(fallbackImage){
+      const img=document.createElement('img');img.src=fallbackImage;img.alt=display||'Manager';container.replaceChildren(img);return;
+    }
+    if(fallbackInitial)text(container,(display||'M').slice(0,1).toUpperCase());
+  }
   function cleanConfig(raw){
     if(!raw)return null;
     if(typeof raw==='object')return raw;
@@ -86,7 +115,7 @@
     const status=qs('.top-status');
     if(status){status.classList.toggle('cloud',!!state.user);const label=status.querySelector('b'),sub=status.querySelector('small');if(label)text(label,state.user?'Cloud synced':'Offline');if(sub)text(sub,state.user?'Sync active':'Local device');}
     const account=qs('#accountButton');
-    if(account){account.hidden=!state.user;const display=(state.user?.displayName||state.user?.email||'Manager').trim();const avatar=account.querySelector('.account-avatar'),meta=account.querySelector('.account-meta small');if(avatar){let img=avatar.querySelector('img');if(!img){img=document.createElement('img');avatar.replaceChildren(img);}img.src=state.user?.photoURL||'./assets/v0616/home/35-manager-avatar-placeholder.svg';img.alt=display;}if(meta)text(meta,display);}
+    if(account){account.hidden=!state.user;const display=(state.user?.displayName||state.user?.email||'Manager').trim();const avatar=account.querySelector('.account-avatar'),meta=account.querySelector('.account-meta small');setAvatarImage(avatar,state.user,display,{size:256,fallbackImage:'./assets/v0616/home/35-manager-avatar-placeholder.svg',fallbackInitial:false});if(meta)text(meta,display);}
   }
 
   function outboxStorageKey(uid=state.user?.uid){return uid?`${OUTBOX_PREFIX}${uid}:v1`:''}
@@ -163,7 +192,7 @@
       state.status='ready';hideGate();updateCloudChrome();
       scheduleFlush(0);
       if(localReady)syncDown().then(()=>scheduleFlush(0)).catch(err=>console.warn('Background cloud hydration',err));
-      console.info('[Top Eleven Tool] Cloud sync ready',{runtime:'0.6.39',source:state.lastSyncSource,records:state.syncCount,pending:state.pendingWrites,localFirst:localReady});
+      console.info('[Top Eleven Tool] Cloud sync ready',{runtime:'0.6.40',source:state.lastSyncSource,records:state.syncCount,pending:state.pendingWrites,localFirst:localReady});
       return true;
     }catch(err){state.error=err;state.status='error';showGate('setup');setAuthMessage(`Firebase setup error: ${friendlyAuthError(err)}`,'err');return false;}
   }
@@ -347,7 +376,7 @@
   function renderAccountPage(){
     const user=state.auth?.currentUser;if(!user)return;
     text(qs('#accountDisplayName'),user.displayName||'Top Eleven Manager');text(qs('#accountEmail'),user.email||'No email');
-    const av=qs('#accountAvatar');if(av){const display=(user.displayName||user.email||'Manager').trim();const photo=user.photoURL||user.providerData?.find?.(p=>p?.photoURL)?.photoURL||'';if(photo){const img=document.createElement('img');img.src=photo;img.alt=`${display} profile picture`;img.referrerPolicy='no-referrer';av.replaceChildren(img);}else{text(av,display.slice(0,1).toUpperCase());}}
+    const av=qs('#accountAvatar');if(av){const display=(user.displayName||user.email||'Manager').trim();setAvatarImage(av,user,display,{size:384});}
     const verified=qs('#accountVerified');if(verified){text(verified,user.emailVerified?'Verified':'Not verified');verified.classList.toggle('ok',!!user.emailVerified)}
     const providerBox=qs('#accountProviders');if(providerBox)providerBox.innerHTML=providerIds(user).map(p=>`<span class="provider-pill">${escHtml(p==='google.com'?'Google':p==='password'?'Email + password':p)}</span>`).join('');
     const factorBox=qs('#accountMfaStatus');const fs=factors();if(factorBox)factorBox.innerHTML=fs.length?fs.map(f=>`<div class="account-factor"><span><b>Authenticator app</b><small>${escHtml(f.displayName)}</small></span><button class="btn ghost compact" data-remove-mfa="${escHtml(f.uid)}">Remove</button></div>`).join(''):'<span class="mini-note security-warning">No authenticator app is enrolled. Email and password changes are locked until two-step verification is enabled.</span>';
@@ -387,5 +416,5 @@
   }
 
   document.addEventListener('DOMContentLoaded',()=>{bindUi();state.config=loadConfig();if(!state.config)showGate('setup')});
-  TE.Cloud={SDK_VERSION,state,ensureReady,loadConfig,saveConfig,clearConfig,shouldSyncKey,writeKey,deleteKey,queueSet,queueDelete,flushOutbox,syncDown,signInEmail,createAccount,socialSignIn,sendPasswordReset,signOut,currentUser:()=>state.auth?.currentUser||null,providerIds,factors,renderAccountPage,friendlyAuthError};
+  TE.Cloud={SDK_VERSION,state,ensureReady,loadConfig,saveConfig,clearConfig,shouldSyncKey,writeKey,deleteKey,queueSet,queueDelete,flushOutbox,syncDown,signInEmail,createAccount,socialSignIn,sendPasswordReset,signOut,currentUser:()=>state.auth?.currentUser||null,providerIds,factors,renderAccountPage,friendlyAuthError,profilePhotoUrl};
 })();

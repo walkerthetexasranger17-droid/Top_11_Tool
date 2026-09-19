@@ -1,7 +1,7 @@
 @echo off
 setlocal
 cd /d "%~dp0"
-title Top Eleven Tool v0.6.39
+title Top Eleven Tool v0.6.40
 powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File "%~dp0START_APP.ps1"
 if errorlevel 1 (
   echo.
