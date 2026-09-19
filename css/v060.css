@@ -2958,3 +2958,113 @@ textarea.input,input.input,.queue-update-target,.drill-library-search,
   -webkit-backdrop-filter:none!important;
   backdrop-filter:none!important;
 }
+
+/* ====================================================================
+   v0.6.46 — Update Player + Login visual integration
+   Approved artwork only. No scanner/football/cloud logic changes.
+   Reuses the v0.6.42-v0.6.45 glass hierarchy and green-action contract.
+   ==================================================================== */
+
+/* Scanner page owns two approved visual states without changing scanner mode
+   logic: Add Player remains exactly as before; Update Player swaps only art. */
+.scanner-page-bg-update,.scanner-title-update{display:none!important}
+#page-add-player.update-mode .scanner-page-bg-add,
+#page-add-player.update-mode .scanner-title-add{display:none!important}
+#page-add-player.update-mode .scanner-title-update{display:block!important}
+#page-add-player.update-mode .update-queue-overview{
+  background:linear-gradient(145deg,var(--v642-panel-top),var(--v642-panel-bottom))!important;
+  background-color:transparent!important;
+  border-color:var(--v642-line)!important;
+  -webkit-backdrop-filter:blur(7px);
+  backdrop-filter:blur(7px);
+}
+
+/* Mobile/tablet app: Update Player uses its dedicated approved portrait scene
+   as the fixed page surface, matching the already-approved Add Player pattern. */
+@media (pointer:coarse) and (max-width:1180px){
+  #page-add-player.update-mode{position:relative;isolation:isolate;background:#020914!important}
+  #page-add-player.update-mode .scanner-page-media{
+    display:block!important;position:fixed;left:0;right:0;top:var(--v631-bg-top,66px);
+    width:100vw;height:calc(100dvh - var(--v631-bg-top,66px));
+    min-height:calc(100svh - var(--v631-bg-top,66px));overflow:hidden;pointer-events:none;z-index:0;
+    transform:translateZ(0)
+  }
+  #page-add-player.update-mode .scanner-page-media .scanner-page-bg-update{
+    display:block!important;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+    object-position:center top;filter:var(--v626-photo-filter)
+  }
+  #page-add-player.update-mode .scanner-page-media::after{
+    content:"";position:absolute;inset:0;background:rgba(1,10,19,.25);pointer-events:none
+  }
+  #page-add-player.update-mode .v068-scanner-hero{
+    position:relative!important;z-index:2!important;overflow:visible!important;
+    background:transparent!important;background-image:none!important;border:0!important;
+    border-radius:0!important;box-shadow:none!important
+  }
+  #page-add-player.update-mode .v068-scanner-hero::before,
+  #page-add-player.update-mode .v068-scanner-hero::after{content:none!important;display:none!important}
+  #page-add-player.update-mode .v068-scanner-body{position:relative!important;z-index:5!important}
+  #page-add-player.update-mode .scanner-primary-panel,
+  #page-add-player.update-mode .scanner-guide-panel,
+  #page-add-player.update-mode .scanner-review-panel,
+  #page-add-player.update-mode .scanner-review-actions,
+  #page-add-player.update-mode .update-queue-overview{
+    -webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px)
+  }
+}
+
+@media (orientation:portrait) and (max-width:699px) and (pointer:coarse){
+  #page-add-player.update-mode .v068-scanner-hero{height:260px!important;min-height:260px!important}
+  #page-add-player.update-mode .v068-scanner-body{margin-top:-14px!important;padding:0 10px 92px!important}
+}
+
+/* Login / auth is now the same product surface system as the signed-in app:
+   approved stadium background + approved transparent brand + one glass shell. */
+.auth-gate{
+  background:
+    linear-gradient(180deg,rgba(1,7,14,.30) 0%,rgba(1,7,14,.44) 48%,rgba(1,7,14,.66) 100%),
+    url('../assets/approved/backgrounds/login.png') center center/cover fixed!important;
+  padding:clamp(18px,4vh,42px)!important;align-items:center!important;justify-content:center!important
+}
+.auth-gate::before,.auth-gate::after{content:none!important;display:none!important}
+.auth-shell{
+  width:min(500px,calc(100% - 24px))!important;min-height:0!important;margin:auto!important;
+  padding:24px 26px 26px!important;border:1px solid var(--v642-line)!important;border-radius:22px!important;
+  background:linear-gradient(145deg,rgba(7,27,43,.58),rgba(3,14,24,.66))!important;
+  background-color:transparent!important;
+  -webkit-backdrop-filter:blur(12px) saturate(112%);backdrop-filter:blur(12px) saturate(112%);
+  box-shadow:0 26px 70px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.035)!important;
+  justify-content:flex-start!important;max-height:calc(100dvh - 36px);overflow:auto
+}
+.auth-brand.auth-brand-art{display:flex!important;justify-content:center!important;align-items:center!important;margin:0 0 18px!important}
+.auth-brand.auth-brand-art img{
+  display:block!important;width:min(285px,78%)!important;height:auto!important;max-width:100%!important;
+  border-radius:0!important;object-fit:contain!important;filter:drop-shadow(0 10px 26px rgba(0,0,0,.34))
+}
+.auth-shell [data-auth-panel]{position:relative}
+.auth-shell h1{font-size:46px!important}
+.auth-shell .body-copy{color:#b5c8d3}
+.auth-provider.email{
+  color:var(--v645-green-action-text)!important;background:var(--v645-green-action-bg)!important;
+  border-color:var(--v645-green-action-border)!important;box-shadow:var(--v645-green-action-shadow)!important
+}
+.auth-provider.email:hover{background:var(--v645-green-action-bg)!important;filter:brightness(1.05)}
+.auth-provider.email::after{display:none!important}
+
+@media (max-width:699px){
+  .auth-gate{
+    padding:max(12px,env(safe-area-inset-top)) 10px max(12px,env(safe-area-inset-bottom))!important;
+    background:
+      linear-gradient(180deg,rgba(1,7,14,.18) 0%,rgba(1,7,14,.34) 42%,rgba(1,7,14,.68) 100%),
+      url('../assets/approved/backgrounds/login.png') center top/cover fixed!important
+  }
+  .auth-shell{
+    width:100%!important;max-width:470px!important;min-height:0!important;margin:auto!important;
+    padding:18px 17px 20px!important;border-radius:18px!important;
+    max-height:calc(100dvh - max(24px,env(safe-area-inset-top) + env(safe-area-inset-bottom)))!important
+  }
+  .auth-brand.auth-brand-art{margin-bottom:12px!important}
+  .auth-brand.auth-brand-art img{width:min(245px,70vw)!important}
+  .auth-shell h1{font-size:40px!important}
+  .auth-provider{min-height:56px!important}
+}
