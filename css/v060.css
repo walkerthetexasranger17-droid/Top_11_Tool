@@ -2783,3 +2783,111 @@ textarea.input,input.input,.queue-update-target,.drill-library-search,
     background-color:transparent!important;
   }
 }
+
+/* ====================================================================
+   v0.6.44 — missed-surface visual cleanup
+   Follow-up to the full v0.6.42/v0.6.43 glass audit after phone review.
+   Keeps the approved surface hierarchy intact and fixes only remaining
+   legacy-solid islands visible in real interactive states.
+   ==================================================================== */
+:root{
+  --v644-lime-top:rgba(181,255,55,.58);
+  --v644-lime-bottom:rgba(145,239,22,.48);
+  --v644-lime-hover-top:rgba(194,255,77,.68);
+  --v644-lime-hover-bottom:rgba(155,247,30,.58);
+}
+
+/* Primary actions remain lime from edge to edge, but are now genuinely glass
+   rather than opaque neon slabs. There is deliberately no dark/navy stop. */
+.btn.primary,.squad-action-add{
+  color:#071006!important;
+  background:linear-gradient(180deg,var(--v644-lime-top),var(--v644-lime-bottom))!important;
+  background-color:transparent!important;
+  border:1.5px solid rgba(72,220,255,.96)!important;
+  -webkit-backdrop-filter:blur(8px) saturate(125%);
+  backdrop-filter:blur(8px) saturate(125%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.24),inset 0 -1px 0 rgba(73,159,0,.16),0 0 16px rgba(66,217,255,.11),0 7px 18px rgba(0,0,0,.14)!important;
+  text-shadow:none!important;
+}
+.btn.primary:hover,.squad-action-add:hover{
+  background:linear-gradient(180deg,var(--v644-lime-hover-top),var(--v644-lime-hover-bottom))!important;
+  border-color:#6de8ff!important;
+}
+.btn.primary:disabled{
+  color:rgba(226,238,220,.62)!important;
+  background:rgba(75,99,67,.18)!important;
+  border-color:rgba(66,217,255,.22)!important;
+  -webkit-backdrop-filter:blur(6px);
+  backdrop-filter:blur(6px);
+}
+.scan-placeholder .scan-cta,.training-cta strong{
+  color:#071006!important;
+  background:linear-gradient(180deg,rgba(181,255,55,.56),rgba(145,239,22,.46))!important;
+  background-color:transparent!important;
+  border:1px solid rgba(72,220,255,.92)!important;
+  -webkit-backdrop-filter:blur(7px) saturate(120%);
+  backdrop-filter:blur(7px) saturate(120%);
+}
+
+/* Scanner upload well was still carrying a fully opaque legacy #03101b fill.
+   Keep the scan focus while allowing the approved page background through. */
+.v068-scanner-page .scan-window{
+  background:
+    radial-gradient(circle at 50% 50%,rgba(30,119,169,.10),transparent 60%),
+    linear-gradient(145deg,rgba(3,16,27,.32),rgba(2,12,21,.42))!important;
+  background-color:transparent!important;
+  -webkit-backdrop-filter:blur(6px);
+  backdrop-filter:blur(6px);
+}
+.v068-scanner-page .scan-progress{background:rgba(4,20,32,.34)!important}
+
+/* Generated Training result cards keep the approved category language but the
+   category colour is now a transparent glass hue rather than an opaque block. */
+.v064-training-results .drill-row{
+  background:linear-gradient(112deg,
+    color-mix(in srgb,var(--drill-accent) 20%,rgba(4,21,33,.34)) 0%,
+    color-mix(in srgb,var(--drill-accent) 12%,rgba(4,21,33,.34)) 58%,
+    rgba(3,15,25,.42) 100%)!important;
+  background-color:transparent!important;
+  border-color:color-mix(in srgb,var(--drill-accent) 68%,#102b3c)!important;
+  border-left-color:var(--drill-accent)!important;
+  -webkit-backdrop-filter:blur(7px);
+  backdrop-filter:blur(7px);
+}
+.v064-training-results .drill-row.master{
+  background:linear-gradient(112deg,
+    color-mix(in srgb,var(--drill-accent) 22%,rgba(5,20,31,.35)) 0%,
+    color-mix(in srgb,var(--drill-accent) 15%,rgba(45,34,8,.31)) 58%,
+    rgba(3,15,25,.43) 100%)!important;
+  background-color:transparent!important;
+  border:2px solid #e9c44d!important;
+}
+
+/* Generated result intelligence had several old #061522 / ~98% navy islands. */
+.v064-training-results .priority-pill,
+.v064-training-results .session-summary>div,
+.v064-training-intel>div{
+  background:linear-gradient(145deg,rgba(6,28,43,.34),rgba(3,15,25,.43))!important;
+  background-color:transparent!important;
+  border-color:rgba(66,217,255,.25)!important;
+  -webkit-backdrop-filter:blur(7px);
+  backdrop-filter:blur(7px);
+}
+.v064-training-results .session-summary p{background:transparent!important}
+
+/* The settings/status family should never reintroduce old solid helper boxes. */
+.settings-status-box,.settings-details,.settings-version{
+  background-color:transparent!important;
+}
+
+/* The generated-session shell itself was still using the pre-glass
+   --training-panel (~97–99% navy) even though its child cards had been fixed.
+   Keep the generated result area readable while letting the Training scene show
+   through at the same density as the rest of the app. */
+.v064-training-results .training-results-main{
+  background:linear-gradient(145deg,rgba(6,27,42,.42),rgba(3,15,25,.50))!important;
+  background-color:transparent!important;
+  border-color:rgba(66,217,255,.30)!important;
+  -webkit-backdrop-filter:blur(7px);
+  backdrop-filter:blur(7px);
+}
