@@ -2501,3 +2501,285 @@ textarea.input,input.input,.queue-update-target{
 .scanner-config-note{background:linear-gradient(125deg,rgba(48,83,19,.14),rgba(4,20,32,.62))!important}
 .more-drawer{background:linear-gradient(180deg,rgba(6,20,33,.84),rgba(2,10,18,.90))!important;backdrop-filter:blur(14px)}
 .te-select-menu{backdrop-filter:blur(14px)}
+
+/* ====================================================================
+   v0.6.42 — deep surface-system audit
+   One explicit visual surface system across the signed-in app.
+   - Major panels: translucent navy glass
+   - Nested rows/tiles: lighter translucent navy glass
+   - Controls: slightly stronger translucent glass for readability
+   - Primary actions: FULL lime across the entire button + cyan frame
+   - Training/Drills categories: category-tinted glass remains authoritative
+   - Functional underlays (e.g. Squad swipe delete rail) stay hidden until used
+   ==================================================================== */
+:root{
+  --v642-panel-top:rgba(7,27,43,.54);
+  --v642-panel-bottom:rgba(3,14,24,.62);
+  --v642-panel-flat:rgba(4,20,32,.54);
+  --v642-nested:rgba(4,20,32,.46);
+  --v642-nested-hover:rgba(7,31,47,.58);
+  --v642-control:rgba(4,20,32,.56);
+  --v642-control-hover:rgba(7,31,47,.64);
+  --v642-line:rgba(66,217,255,.31);
+  --v642-line-soft:rgba(66,217,255,.22);
+  --v642-lime-top:rgba(181,255,55,.90);
+  --v642-lime-bottom:rgba(145,239,22,.84);
+  --v642-lime-border:rgba(72,220,255,.96);
+}
+
+/* ---------- Major structural panels ---------- */
+.card,.scanner-card,.builder-card,.squad-summary,.squad-toolbar-card,.data-version,.formation-head,
+.dashboard-panel,.squad-filter-panel,.squad-roster-panel,.profile-panel,
+.scanner-primary-panel,.scanner-guide-panel,.scanner-review-panel,.scanner-review-actions,
+.training-setup-card,.training-side-card,.v064-team-training-head,.v064-training-page .training-team-card,
+.settings-card,.v0637-manager-profile-body>.card,.manager-account-change-panel,
+.v0638-normal-panel,.team-card,.set-piece-coverage,
+#page-team-plan .card,#page-team-plan .section:not(.best-in-slot-section),
+.best-in-slot-coverage,.tactic-calculator-card,
+.v065-team-plan-page .formation-actions,.v065-team-plan-page #squadCoverageCard,
+.v065-team-plan-page .best-in-slot-section,
+.scanner-manual-card{
+  background:linear-gradient(145deg,var(--v642-panel-top),var(--v642-panel-bottom))!important;
+  border-color:var(--v642-line)!important;
+}
+
+/* Home's single glance bar belongs to the same family. Its child metrics remain
+   transparent so it still reads as one purposeful bar rather than four boxes. */
+.dashboard-stat-grid.dashboard-glance{
+  background:linear-gradient(135deg,rgba(5,28,43,.58),rgba(3,17,28,.61))!important;
+  border-color:rgba(70,215,255,.44)!important;
+}
+.dashboard-glance-metric{background:transparent!important}
+.dashboard-glance-metric:hover{background:rgba(66,217,255,.055)!important}
+
+/* ---------- Nested cards, rows, tiles and mini-panels ---------- */
+.dashboard-player-row,.dashboard-mini-stats>div,.dashboard-action-grid button,
+.squad-player-row,.player-row,.scan-window,.verify,.scan-queue-row,.identity-card,.role-score-card,
+.tactic-choice-card,.bench-card,.plan-item,.rank-card,.set-piece-coverage-card,
+.security-method,.settings-status-box,.settings-details,.manager-account-message,
+.team-card-summary>span,.best-in-slot-card,.best-in-slot-plan span,.provider-pill,
+.totp-setup,.totp-secret,.queue-update-target,.training-intel>div,.scanner-step-list>div,
+.update-overview-stats>div,.profile-badge,.profile-key .track,.skill,
+.profile-development-insight,.sync-pill,.settings-version,
+.drills-tip,.home-search-shortcut,.more-drawer>button,
+.best-in-slot-section>.card,.mentor-level-row{
+  background:var(--v642-nested)!important;
+}
+
+.dashboard-player-row:hover,.squad-player-row:hover,.player-row:hover,
+.dashboard-action-grid button:hover,.more-drawer>button:hover{
+  background:var(--v642-nested-hover)!important;
+}
+
+/* Squad roster rows need the same glass density as every other nested row.
+   The red swipe-to-delete rail is a functional underlay and must NEVER bleed
+   through the translucent row while it is closed. */
+.player-delete-rail{opacity:0!important;transition:opacity .12s ease!important}
+.player-swipe.open .player-delete-rail,.player-swipe.swiping .player-delete-rail{opacity:1!important}
+.squad-player-row,.squad-player-list.cards .squad-player-row{
+  background:linear-gradient(90deg,rgba(5,25,39,.56),rgba(3,16,27,.54))!important;
+  border-color:rgba(61,174,225,.27)!important;
+  border-left-color:var(--v6-lime)!important;
+}
+.squad-player-row:hover,.squad-player-list.cards .squad-player-row:hover{
+  background:linear-gradient(90deg,rgba(8,35,52,.65),rgba(4,22,34,.62))!important;
+  border-color:rgba(77,199,246,.40)!important;
+  border-left-color:var(--v6-lime)!important;
+}
+
+/* ---------- Controls / inputs / selectors ---------- */
+.input,.select,.level-select,.squad-search,.te-select-trigger,
+textarea.input,input.input,.queue-update-target,.drill-library-search,
+.squad-view-switch,.squad-view-switch button,.te-select-menu{
+  background:var(--v642-control)!important;
+  border-color:rgba(75,190,240,.34)!important;
+}
+.te-select-trigger:hover,.squad-view-switch button:hover{
+  background:var(--v642-control-hover)!important;
+}
+.te-select-menu{backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+
+/* ---------- Tabs / segmented controls ---------- */
+.mode-grid.training-tabs,.team-plan-tabs{
+  background:linear-gradient(145deg,rgba(4,22,35,.56),rgba(2,13,23,.61))!important;
+  border-color:var(--v642-line)!important;
+}
+.mode-grid .mode,.team-plan-tabs .mode{
+  background:rgba(4,20,32,.34)!important;
+}
+.mode-grid .mode.active,.team-plan-tabs .mode.active{
+  background:linear-gradient(135deg,rgba(119,200,34,.25),rgba(4,20,32,.48))!important;
+  border-color:rgba(168,255,25,.52)!important;
+}
+
+/* ---------- Drills summary / toolbar ---------- */
+.v0638-drills-summary .drills-summary-card{
+  background:linear-gradient(145deg,rgba(4,24,38,.56),rgba(3,14,24,.61))!important;
+  border-color:rgba(69,190,235,.28)!important;
+}
+.v0638-drills-summary .master-stock-summary{
+  background:linear-gradient(145deg,rgba(92,67,13,.34),rgba(4,20,32,.59) 58%)!important;
+  border-color:rgba(240,200,74,.48)!important;
+}
+.v0638-drill-toolbar .drill-library-search,
+.v0638-drill-toolbar .select,
+.v0638-drill-toolbar .btn{
+  background:var(--v642-control)!important;
+}
+
+/* Master library outer panel stays gold-aware; inner cards keep their category
+   colours. Do not flatten them back to generic cyan/navy. */
+.v0638-master-panel{
+  background:linear-gradient(150deg,rgba(76,55,12,.27),rgba(5,24,37,.55) 34%,rgba(2,14,24,.61))!important;
+  border-color:rgba(240,200,74,.36)!important;
+}
+.v0638-normal-panel .drill-config-row{
+  background:linear-gradient(112deg,
+    color-mix(in srgb,var(--drill-accent) 27%,rgba(4,21,33,.57)) 0%,
+    color-mix(in srgb,var(--drill-accent) 17%,rgba(4,21,33,.57)) 55%,
+    rgba(3,15,25,.62) 100%)!important;
+  border-color:color-mix(in srgb,var(--drill-accent) 64%,#173044)!important;
+  border-left-color:var(--drill-accent)!important;
+}
+.v0638-master-panel .master-card{
+  background:linear-gradient(112deg,
+    color-mix(in srgb,var(--drill-accent) 30%,rgba(5,20,31,.58)) 0%,
+    color-mix(in srgb,var(--drill-accent) 20%,rgba(40,31,8,.52)) 58%,
+    rgba(4,17,27,.63) 100%)!important;
+  border:2px solid #e9c44d!important;
+  box-shadow:inset 0 3px 0 var(--drill-accent),0 0 16px rgba(234,198,78,.10)!important;
+}
+.v0638-master-panel .master-card input{
+  background:rgba(4,16,26,.52)!important;
+  border-color:rgba(240,200,74,.48)!important;
+}
+.master-chip{
+  color:#ffe578!important;
+  background:rgba(89,65,10,.26)!important;
+  border-color:rgba(255,217,99,.72)!important;
+}
+
+/* Training generated drills preserve the exact same category system. */
+.v064-training-results .drill-row{
+  background:linear-gradient(112deg,
+    color-mix(in srgb,var(--drill-accent) 28%,rgba(4,21,33,.58)) 0%,
+    color-mix(in srgb,var(--drill-accent) 18%,rgba(4,21,33,.58)) 58%,
+    rgba(3,15,25,.63) 100%)!important;
+  border-color:color-mix(in srgb,var(--drill-accent) 68%,#102b3c)!important;
+  border-left-color:var(--drill-accent)!important;
+}
+.v064-training-results .drill-row.master{
+  background:linear-gradient(112deg,
+    color-mix(in srgb,var(--drill-accent) 31%,rgba(5,20,31,.58)) 0%,
+    color-mix(in srgb,var(--drill-accent) 21%,rgba(45,34,8,.53)) 58%,
+    rgba(3,15,25,.63) 100%)!important;
+  border:2px solid #e9c44d!important;
+}
+.v064-training-page .team-mini-list .team-drill-item{
+  background:linear-gradient(105deg,
+    color-mix(in srgb,var(--drill-accent) 27%,rgba(4,20,32,.56)) 0%,
+    color-mix(in srgb,var(--drill-accent) 16%,rgba(4,20,32,.55)) 55%,
+    rgba(3,15,25,.61) 100%)!important;
+}
+
+/* ---------- Primary actions: FULL lime, never half-lime / half-dark ---------- */
+.btn.primary,.squad-action-add{
+  color:#071006!important;
+  background:linear-gradient(180deg,var(--v642-lime-top),var(--v642-lime-bottom))!important;
+  border:1.5px solid var(--v642-lime-border)!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.26),
+    inset 0 -1px 0 rgba(73,159,0,.22),
+    0 0 16px rgba(66,217,255,.11),
+    0 7px 18px rgba(0,0,0,.16)!important;
+  text-shadow:none!important;
+}
+.btn.primary:hover,.squad-action-add:hover{
+  background:linear-gradient(180deg,rgba(194,255,77,.94),rgba(155,247,30,.88))!important;
+  border-color:#6de8ff!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.30),0 0 20px rgba(66,217,255,.18)!important;
+}
+.btn.primary:disabled{
+  color:rgba(226,238,220,.62)!important;
+  background:rgba(75,99,67,.22)!important;
+  border-color:rgba(66,217,255,.22)!important;
+  box-shadow:none!important;
+  text-shadow:none!important;
+}
+
+/* CTA-like elements that aren't .btn still use a FULL lime treatment. */
+.scan-placeholder .scan-cta,.training-cta strong{
+  color:#071006!important;
+  background:linear-gradient(180deg,rgba(181,255,55,.86),rgba(145,239,22,.79))!important;
+  border:1px solid rgba(72,220,255,.90)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 0 14px rgba(66,217,255,.09)!important;
+}
+
+/* Secondary / destructive actions use predictable translucent states. */
+.btn.ghost{
+  background:rgba(4,20,32,.46)!important;
+  border-color:rgba(66,217,255,.34)!important;
+}
+.btn.ghost:hover{background:rgba(7,31,47,.57)!important}
+.btn.danger{
+  background:rgba(99,18,31,.20)!important;
+  border-color:rgba(255,101,116,.42)!important;
+}
+
+/* ---------- Special-state surfaces ---------- */
+.security-method.preferred{
+  background:linear-gradient(135deg,rgba(65,120,29,.18),rgba(3,19,30,.54))!important;
+  border-color:rgba(168,255,25,.25)!important;
+}
+.verify.warn{background:linear-gradient(135deg,rgba(90,58,8,.17),rgba(4,20,32,.47))!important}
+.scanner-config-note{background:linear-gradient(125deg,rgba(48,83,19,.16),rgba(4,20,32,.50))!important}
+.profile-badge.gold{background:rgba(82,59,10,.20)!important}
+.skill.white{background:linear-gradient(115deg,rgba(55,113,68,.23),rgba(4,20,32,.45))!important}
+
+/* Menu/drawer surfaces need a little more density because they float above the
+   current page, but they remain visibly translucent. */
+.more-drawer{background:linear-gradient(180deg,rgba(6,20,33,.76),rgba(2,10,18,.82))!important;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+
+/* Keep decorative/page-image surfaces and the fixed navigation/header outside
+   the glass-token sweep. They form the frame around the content, not a card. */
+
+/* v0.6.42 audit follow-up: specificity / remaining special surfaces */
+.chip.master-chip{
+  color:#ffe578!important;
+  background:rgba(89,65,10,.26)!important;
+  border-color:rgba(255,217,99,.72)!important;
+}
+.drill-category-section{
+  background:linear-gradient(150deg,var(--drill-soft),rgba(3,17,28,.56) 28%,rgba(2,13,23,.62))!important;
+}
+.drill-category-head{
+  background:linear-gradient(90deg,var(--drill-soft),rgba(2,15,25,.22))!important;
+}
+.team-plan-tabs .mode,.mode-grid .mode{border-color:rgba(66,217,255,.18)!important}
+.team-plan-tabs .mode.active,.mode-grid .mode.active{border-color:rgba(168,255,25,.52)!important}
+.pitch-empty{
+  background:linear-gradient(160deg,rgba(4,19,31,.58),rgba(5,37,34,.56))!important;
+  border-color:rgba(113,210,255,.28)!important;
+  box-shadow:0 12px 32px rgba(0,0,0,.22)!important;
+}
+.master-projection section{
+  background:linear-gradient(105deg,rgba(66,42,6,.24),rgba(6,21,34,.52))!important;
+}
+/* Swipe rail visibility is state-driven, not animated through translucent content. */
+.player-delete-rail{transition:none!important}
+
+/* ====================================================================
+   v0.6.43 — visual-verification correction
+   The v0.6.42 glass gradients were correct, but a legacy phone-portrait
+   background-color longhand (higher specificity) still sat underneath the
+   Home and Squad major panels at 91% opacity. Clear that hidden paint so the
+   declared glass gradients are the only panel surface.
+   ==================================================================== */
+@media (orientation:portrait) and (max-width:699px) and (pointer:coarse){
+  body #page-dashboard.active .dashboard-stat,
+  body #page-dashboard.active .dashboard-panel,
+  body #page-squad.active .squad-stat,
+  body #page-squad.active .squad-roster-panel{
+    background-color:transparent!important;
+  }
+}
