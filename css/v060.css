@@ -1966,3 +1966,236 @@ body.te-select-open{overflow:hidden}
   content:"";position:absolute;left:1px;right:1px;bottom:0;height:1px;border-radius:2px;
   background:linear-gradient(90deg,var(--v6-lime),rgba(66,211,255,.8),transparent 82%);opacity:.55;pointer-events:none;
 }
+
+
+/* ================================================================
+   v0.6.36 — Settings approved background only
+   No Settings layout/content/logic changes in this pass.
+   ================================================================ */
+.settings-page-media{display:none}
+@media (pointer:coarse) and (max-width:1180px){
+  #page-settings.v067-settings-page{position:relative;isolation:isolate;background:#020914!important}
+  #page-settings .settings-page-media{
+    display:block;
+    position:fixed;
+    left:0;right:0;top:var(--v631-bg-top,66px);
+    width:100vw;
+    height:calc(100dvh - var(--v631-bg-top,66px));
+    min-height:calc(100svh - var(--v631-bg-top,66px));
+    overflow:hidden;
+    pointer-events:none;
+    z-index:0;
+    transform:translateZ(0);
+  }
+  #page-settings .settings-page-media img{
+    display:block;width:100%;height:100%;object-fit:cover;object-position:center top;
+    filter:var(--v626-photo-filter);
+  }
+  #page-settings .settings-page-media::after{
+    content:"";position:absolute;inset:0;background:rgba(1,10,19,.24);pointer-events:none;
+  }
+  #page-settings .v067-settings-hero{
+    position:relative!important;z-index:2!important;overflow:visible!important;
+    background:transparent!important;background-image:none!important;border:0!important;
+    border-radius:0!important;box-shadow:none!important;
+  }
+  #page-settings .v067-settings-hero::before,
+  #page-settings .v067-settings-hero::after{content:none!important;display:none!important}
+  #page-settings .v067-settings-body{position:relative!important;z-index:5!important}
+  #page-settings .settings-card{
+    backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);
+  }
+}
+
+/* ================================================================
+   v0.6.37 — Manager Profile visual consolidation
+   Uses approved manager-account background; preserves Firebase auth logic.
+   ================================================================ */
+#page-account.v067-account-page{position:relative;isolation:isolate;background:#020914!important}
+.manager-profile-page-media{display:block;position:fixed;left:0;right:0;top:var(--v631-bg-top,66px);width:100vw;height:calc(100dvh - var(--v631-bg-top,66px));min-height:calc(100svh - var(--v631-bg-top,66px));overflow:hidden;pointer-events:none;z-index:0;transform:translateZ(0)}
+.manager-profile-page-media img{display:block;width:100%;height:100%;object-fit:cover;object-position:center top;filter:var(--v626-photo-filter)}
+.manager-profile-page-media::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(1,9,18,.12) 0%,rgba(1,9,18,.30) 42%,rgba(1,9,18,.63) 74%,rgba(1,9,18,.78) 100%);pointer-events:none}
+#page-account .v067-account-hero{position:relative!important;z-index:2!important;overflow:visible!important;background:transparent!important;background-image:none!important;border:0!important;border-radius:0!important;box-shadow:none!important}
+#page-account .v067-account-hero::before,#page-account .v067-account-hero::after{content:none!important;display:none!important}
+#page-account .v067-account-body{position:relative!important;z-index:5!important}
+
+.v0637-manager-profile-body{display:grid!important;grid-template-columns:minmax(285px,.72fr) minmax(0,1.28fr)!important;gap:12px!important;align-items:start!important;max-width:1180px!important;margin-left:auto!important;margin-right:auto!important;padding-top:8px!important}
+.v0637-manager-profile-body>.manager-profile-card{grid-column:1!important;grid-row:1!important;margin:0!important}
+.v0637-manager-profile-body>.manager-security-card{grid-column:2!important;grid-row:1!important;margin:0!important}
+.v0637-manager-profile-body>.manager-account-message{grid-column:1/-1!important;grid-row:2!important;margin:0!important}
+.v0637-manager-profile-body>.card{border:1px solid rgba(61,196,242,.28)!important;background:linear-gradient(160deg,rgba(4,26,41,.94),rgba(2,14,25,.91))!important;box-shadow:0 18px 46px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.025)!important;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
+.v0637-manager-profile-body>.card::before{content:"";display:block;height:2px;background:linear-gradient(90deg,#39a7ff 0%,#42d8ff 43%,#a8ff19 100%)}
+.v0637-manager-profile-body .card-inner{padding:16px!important}
+
+.manager-profile-head{grid-template-columns:86px minmax(0,1fr)!important;gap:14px!important;align-items:center!important}
+.manager-profile-avatar{width:84px!important;height:84px!important;min-width:84px!important;border:2px solid rgba(70,218,255,.78)!important;box-shadow:0 0 0 3px rgba(4,17,27,.8),0 0 26px rgba(70,218,255,.17)!important;background:radial-gradient(circle at 35% 30%,#173d50,#06131f 72%)!important;font:900 28px/1 var(--v627-type)!important;overflow:hidden!important}
+.manager-profile-avatar img{width:100%!important;height:100%!important;display:block!important;object-fit:cover!important;border-radius:50%!important}
+.manager-profile-identity{min-width:0;display:grid;align-content:center}
+.manager-profile-identity .section-kicker{margin-bottom:3px;color:#59ddff}
+.manager-profile-identity .section-title{font-size:28px!important;line-height:.95!important;overflow-wrap:anywhere}
+.manager-profile-identity .body-copy{margin-top:5px;font-size:8px!important;color:#9fb6c5;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.manager-profile-identity .verify-pill{justify-self:start;margin-top:8px}
+
+.manager-profile-status-row{display:grid;grid-template-columns:minmax(0,1fr);gap:9px;margin-top:14px}
+.manager-profile-status-row .filter-chips{margin-top:6px}
+.manager-profile-status-row .sync-pill{margin:0!important}
+.manager-profile-edit{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:9px;align-items:end}
+.manager-profile-edit .btn{height:40px;min-width:118px}
+.manager-profile-actions{display:flex!important;flex-wrap:wrap;gap:7px!important}
+.manager-profile-actions .btn{min-height:38px}
+.manager-profile-actions #accountSignOut{margin-left:auto}
+
+.manager-security-card .section-title{font-size:27px!important}
+.manager-security-intro{max-width:760px;margin:5px 0 13px!important;color:#9eb4c2!important}
+.manager-two-step-block{padding:12px;border:1px solid rgba(89,212,255,.18);border-radius:12px;background:rgba(1,12,22,.48)}
+.manager-security-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+.manager-security-heading span{display:block;color:#5edcff;font:800 7px/1 var(--v627-type);letter-spacing:.16em;text-transform:uppercase}
+.manager-security-heading b{display:block;margin-top:3px;color:#f2f7f8;font:900 18px/1 var(--v627-type);text-transform:uppercase}
+.manager-security-card .security-method-grid{margin-top:9px!important}
+.manager-security-card .security-method{padding:10px 11px!important;border-radius:10px!important;background:linear-gradient(135deg,rgba(35,71,16,.14),rgba(3,19,30,.82))!important}
+.manager-security-card .account-factor{margin-top:7px}
+.manager-identity-check{display:grid;grid-template-columns:minmax(170px,.42fr) minmax(0,1fr);gap:12px;align-items:end}
+.manager-identity-check .mini-note{margin-top:3px}
+.manager-account-change-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.manager-account-change-panel{display:grid;align-content:start;gap:9px;padding:12px;border:1px solid rgba(77,180,229,.17);border-radius:11px;background:rgba(2,15,25,.54)}
+.manager-account-change-panel .section-title{font-size:20px!important}
+.manager-account-change-panel .field{margin:0!important}
+.manager-account-change-panel .btn{justify-self:start;margin-top:1px}
+.manager-account-change-panel .mini-note{margin:0!important;line-height:1.45}
+.manager-account-message:empty{display:none}
+.manager-account-message{padding:10px 12px;border-radius:10px;background:rgba(2,15,25,.92);border:1px solid rgba(77,180,229,.18)}
+
+@media(max-width:900px){
+  .v0637-manager-profile-body{grid-template-columns:1fr!important;max-width:none!important}
+  .v0637-manager-profile-body>.manager-profile-card,.v0637-manager-profile-body>.manager-security-card,.v0637-manager-profile-body>.manager-account-message{grid-column:1!important;grid-row:auto!important}
+}
+
+@media (orientation:portrait) and (max-width:699px) and (pointer:coarse){
+  #page-account .v067-account-hero{height:430px!important;min-height:430px!important}
+  #page-account .v067-account-body{margin-top:-20px!important;padding:0 10px 92px!important}
+  .manager-profile-page-media::after{background:linear-gradient(180deg,rgba(1,9,18,.08) 0%,rgba(1,9,18,.18) 36%,rgba(1,9,18,.56) 66%,rgba(1,9,18,.82) 100%)}
+  .v0637-manager-profile-body{display:grid!important;gap:9px!important}
+  .v0637-manager-profile-body .card-inner{padding:12px!important}
+  .manager-profile-head{grid-template-columns:78px minmax(0,1fr)!important;gap:11px!important}
+  .manager-profile-avatar{width:76px!important;height:76px!important;min-width:76px!important}
+  .manager-profile-identity .section-title{font-size:24px!important}
+  .manager-profile-identity .body-copy{font-size:7.2px!important}
+  .manager-profile-edit{grid-template-columns:1fr!important}
+  .manager-profile-edit .btn{width:100%}
+  .manager-profile-actions{display:grid!important;grid-template-columns:1fr 1fr!important}
+  .manager-profile-actions #accountSignOut{margin-left:0;grid-column:1/-1}
+  .manager-identity-check{grid-template-columns:1fr!important;gap:7px}
+  .manager-account-change-grid{grid-template-columns:1fr!important;gap:8px;margin-top:10px}
+  .manager-account-change-panel{padding:10px}
+  .manager-account-change-panel .btn{width:100%}
+  .manager-security-card .security-method{grid-template-columns:1fr auto!important;align-items:center!important}
+  .manager-security-card .security-method .btn{width:auto!important;margin-top:0!important}
+}
+
+@media (orientation:landscape) and (pointer:coarse) and (max-height:700px){
+  #page-account .v067-account-hero{height:150px!important;min-height:150px!important}
+  #page-account .v067-account-body{padding:0 8px 58px!important;margin-top:-4px!important}
+  .v0637-manager-profile-body{grid-template-columns:minmax(260px,.7fr) minmax(0,1.3fr)!important;gap:8px!important;max-width:none!important}
+  .v0637-manager-profile-body .card-inner{padding:10px!important}
+  .manager-profile-head{grid-template-columns:62px 1fr!important;gap:9px!important}.manager-profile-avatar{width:60px!important;height:60px!important;min-width:60px!important}.manager-profile-identity .section-title{font-size:20px!important}.manager-account-change-panel{padding:9px}.manager-account-change-panel .section-title{font-size:17px!important}.manager-security-intro{margin-bottom:8px!important}
+}
+/* Keep enough of the approved Manager background visible before the account cards begin. */
+@media (max-width:699px){#page-account .v067-account-hero{height:420px!important;min-height:420px!important}}
+@media (orientation:landscape) and (pointer:coarse) and (max-height:700px){#page-account .v067-account-hero{height:150px!important;min-height:150px!important}}
+@media (max-width:699px){
+  #page-account .v067-account-body{margin-top:-20px!important;padding:0 10px 92px!important}
+  .v0637-manager-profile-body{grid-template-columns:1fr!important;gap:9px!important;max-width:none!important}
+  .v0637-manager-profile-body>.manager-profile-card,.v0637-manager-profile-body>.manager-security-card,.v0637-manager-profile-body>.manager-account-message{grid-column:1!important;grid-row:auto!important}
+  .manager-profile-edit{grid-template-columns:1fr!important}.manager-profile-edit .btn{width:100%}
+  .manager-profile-actions{display:grid!important;grid-template-columns:1fr 1fr!important}.manager-profile-actions #accountSignOut{grid-column:1/-1;margin-left:0!important}
+  .manager-identity-check{grid-template-columns:1fr!important;gap:7px}
+  .manager-account-change-grid{grid-template-columns:1fr!important;gap:8px!important;margin-top:10px!important}
+  .manager-account-change-panel .btn{width:100%!important}
+}
+
+/* ================================================================
+   v0.6.38 — Drills library + Master Card integration
+   Approved Drills background, compact three-card summary, Master Cards
+   before normal drills, category-grouped/tinted drill library, and shared
+   category treatment with Training recommendations.
+   ================================================================ */
+#page-my-drills.v0638-drills-page{position:relative;isolation:isolate;background:#020914!important}
+.drills-page-media{display:block;position:fixed;left:0;right:0;top:var(--v631-bg-top,66px);width:100%;height:calc(100dvh - var(--v631-bg-top,66px));min-height:calc(100svh - var(--v631-bg-top,66px));overflow:hidden;pointer-events:none;z-index:0;transform:translateZ(0)}
+.drills-page-media img{display:block;width:100%;height:100%;object-fit:cover;object-position:center top;filter:var(--v626-photo-filter)}
+.drills-page-media::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(1,9,18,.13) 0%,rgba(1,9,18,.25) 35%,rgba(1,9,18,.61) 70%,rgba(1,9,18,.82) 100%);pointer-events:none}
+#page-my-drills .v066-drills-hero{position:relative!important;z-index:2!important;overflow:visible!important;background:transparent!important;background-image:none!important;border:0!important;border-radius:0!important;box-shadow:none!important}
+#page-my-drills .v066-drills-hero::before,#page-my-drills .v066-drills-hero::after{content:none!important;display:none!important}
+#page-my-drills .v0638-drills-body{position:relative!important;z-index:5!important;display:grid!important;gap:10px!important}
+
+/* Three purposeful counters only. */
+.v0638-drills-summary{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important;margin:0!important}
+.v0638-drills-summary .drills-summary-card{min-height:84px!important;border:1px solid rgba(69,190,235,.26)!important;background:linear-gradient(145deg,rgba(4,24,38,.92),rgba(3,14,24,.94))!important;box-shadow:0 10px 25px rgba(0,0,0,.18)!important;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
+.v0638-drills-summary .master-stock-summary{border-color:rgba(240,200,74,.48)!important;background:linear-gradient(145deg,rgba(64,45,8,.42),rgba(4,20,32,.94) 58%)!important;box-shadow:inset 0 2px 0 rgba(240,200,74,.65),0 10px 25px rgba(0,0,0,.18)!important}
+.v0638-drills-summary .unlocked-summary{box-shadow:inset 0 2px 0 rgba(168,255,25,.42),0 10px 25px rgba(0,0,0,.18)!important}
+.v0638-drills-summary .max-level-summary{box-shadow:inset 0 2px 0 rgba(75,216,255,.48),0 10px 25px rgba(0,0,0,.18)!important}
+.v0638-drills-summary b{font-size:25px!important}
+.v0638-drills-summary small{font-size:6.5px!important}.v0638-drills-summary em{font-size:6px!important}
+
+/* Master Cards live first: category tint inside a gold consumable frame. */
+.v0638-master-panel,.v0638-normal-panel{position:relative!important;min-width:0!important;padding:12px!important;border:1px solid rgba(62,189,236,.28)!important;border-radius:13px!important;background:linear-gradient(150deg,rgba(4,25,40,.93),rgba(2,14,24,.95))!important;box-shadow:0 16px 38px rgba(0,0,0,.22)!important;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
+.v0638-master-panel{border-color:rgba(240,200,74,.34)!important;background:linear-gradient(150deg,rgba(47,34,8,.34),rgba(4,24,38,.94) 32%,rgba(2,14,24,.96))!important}
+.v0638-master-panel .section-head,.v0638-normal-panel .section-head{margin-bottom:6px!important}
+.v0638-master-panel .section-title,.v0638-normal-panel .section-title{font-size:23px!important}
+.master-chip{color:#2d1c00!important;background:linear-gradient(90deg,#e9b92d,#ffe57a)!important;border-color:#ffd963!important}
+.v0638-master-panel .master-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important;margin-top:9px!important}
+.v0638-master-panel .master-card{--drill-accent:#62dff6;--drill-soft:rgba(98,223,246,.09);position:relative!important;display:grid!important;grid-template-columns:68px minmax(0,1fr) 70px!important;gap:8px!important;align-items:center!important;min-height:86px!important;padding:6px!important;border:2px solid #e9c44d!important;border-radius:11px!important;background:linear-gradient(105deg,var(--drill-soft),rgba(36,29,8,.42) 30%,rgba(4,19,31,.94) 72%)!important;box-shadow:inset 0 3px 0 var(--drill-accent),0 0 16px rgba(234,198,78,.08)!important;overflow:hidden!important}
+.v0638-master-panel .master-card::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,color-mix(in srgb,var(--drill-accent) 9%,transparent),transparent 48%,rgba(255,210,75,.035));}
+.v0638-master-panel .master-card>img{position:relative;z-index:1;width:66px!important;height:70px!important;border:1px solid color-mix(in srgb,var(--drill-accent) 50%,transparent)!important;border-radius:8px!important;object-fit:cover!important}
+.v0638-master-panel .master-card-copy,.v0638-master-panel .master-card>label{position:relative;z-index:1}
+.master-card-badges{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.v0638-master-panel .master-card-copy b{font-size:13px!important;line-height:1.02!important;margin:4px 0!important}
+.v0638-master-panel .master-card-copy small{font-size:6.3px!important;line-height:1.3!important}
+.v0638-master-panel .master-card input{height:31px!important;color:#ffe06b!important;border-color:rgba(240,200,74,.46)!important;background:rgba(4,16,26,.88)!important}
+
+/* Search/filter belongs to the normal library. */
+.v0638-drill-toolbar{margin:0!important;grid-template-columns:minmax(240px,1fr) 190px 118px!important}
+.v0638-drill-toolbar .drill-library-search,.v0638-drill-toolbar .select,.v0638-drill-toolbar .btn{background:rgba(4,22,35,.92)!important;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
+
+/* Four category sections, in the requested order. */
+.drill-category-library{display:grid!important;gap:10px!important}
+.drill-category-section{--drill-accent:#62dff6;--drill-soft:rgba(98,223,246,.09);border:1px solid color-mix(in srgb,var(--drill-accent) 40%,#173044);border-radius:12px;background:linear-gradient(150deg,var(--drill-soft),rgba(3,17,28,.82) 28%,rgba(2,13,23,.88));overflow:hidden}
+.drill-category-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 10px;border-bottom:1px solid color-mix(in srgb,var(--drill-accent) 28%,transparent);background:linear-gradient(90deg,var(--drill-soft),rgba(2,15,25,.30))}
+.drill-category-head>div{display:flex;align-items:center;gap:8px}.drill-category-dot{width:7px;height:28px;border-radius:99px;background:var(--drill-accent);box-shadow:0 0 12px color-mix(in srgb,var(--drill-accent) 45%,transparent)}
+.drill-category-head small{display:block;font:800 6px/1 var(--v627-type);letter-spacing:.13em;text-transform:uppercase;color:var(--drill-accent)}
+.drill-category-head b{display:block;margin-top:2px;font:900 17px/1 var(--v627-type);text-transform:uppercase;color:#f4f8fa}
+.drill-category-head em{font-style:normal;font:800 6.5px/1 var(--v627-type);text-transform:uppercase;letter-spacing:.08em;color:var(--drill-accent);padding:4px 6px;border:1px solid color-mix(in srgb,var(--drill-accent) 35%,transparent);border-radius:999px;background:var(--drill-soft)}
+.drill-category-rows{display:grid;gap:6px;padding:7px}
+.v0638-normal-panel .drill-config-row{--drill-accent:#62dff6;--drill-soft:rgba(98,223,246,.09);position:relative!important;min-height:72px!important;border:1px solid color-mix(in srgb,var(--drill-accent) 43%,#173044)!important;border-left:3px solid var(--drill-accent)!important;background:linear-gradient(95deg,var(--drill-soft),rgba(4,21,33,.86) 42%,rgba(3,15,25,.94))!important;box-shadow:inset 0 1px 0 color-mix(in srgb,var(--drill-accent) 16%,transparent)!important}
+.v0638-normal-panel .drill-config-row:hover{border-color:var(--drill-accent)!important}
+.v0638-normal-panel .drill-config-main img{border:1px solid color-mix(in srgb,var(--drill-accent) 42%,transparent)!important}
+.v0638-normal-panel .drill-config-main .drill-category-badge{display:inline-block;margin-bottom:3px}
+.v0638-normal-panel .level-select{border-color:color-mix(in srgb,var(--drill-accent) 30%,#234258)!important;background:rgba(4,19,31,.90)!important}
+
+/* Keep one category language everywhere: Training recommendations use the
+   same translucent category wash; Master recommendations add the gold frame. */
+.v064-training-results .drill-row{background:linear-gradient(105deg,var(--drill-soft),rgba(4,21,33,.90) 42%,rgba(3,15,25,.97))!important;border:1px solid color-mix(in srgb,var(--drill-accent) 55%,#102b3c)!important;border-left:3px solid var(--drill-accent)!important;box-shadow:inset 0 1px 0 color-mix(in srgb,var(--drill-accent) 18%,transparent)!important}
+.v064-training-results .drill-row.master{border:2px solid #e9c44d!important;border-left:3px solid #e9c44d!important;background:linear-gradient(105deg,var(--drill-soft),rgba(45,34,8,.36) 38%,rgba(3,15,25,.97) 78%)!important;box-shadow:inset 0 3px 0 var(--drill-accent),0 0 15px rgba(233,196,77,.10)!important}
+
+@media(max-width:767px){
+  #page-my-drills .v066-drills-hero{height:300px!important;min-height:300px!important}
+  #page-my-drills .v0638-drills-body{padding:8px 10px 92px!important;gap:8px!important}
+  .v0638-drills-summary{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important}
+  .v0638-drills-summary .drills-summary-card{min-height:78px!important;grid-template-columns:32px minmax(0,1fr)!important;column-gap:6px!important;padding:7px!important}
+  .v0638-drills-summary .drills-summary-icon{width:31px!important;height:31px!important;font-size:17px!important}
+  .v0638-drills-summary b{font-size:18px!important}.v0638-drills-summary small{font-size:5.6px!important}.v0638-drills-summary em{font-size:5.2px!important;line-height:1.2!important}
+  .v0638-master-panel,.v0638-normal-panel{padding:9px!important}
+  .v0638-master-panel .master-grid{grid-template-columns:1fr!important;gap:6px!important}
+  .v0638-master-panel .master-card{grid-template-columns:60px minmax(0,1fr) 64px!important;min-height:76px!important}
+  .v0638-master-panel .master-card>img{width:58px!important;height:60px!important}
+  .v0638-master-panel .master-card-copy b{font-size:12px!important}
+  .v0638-drill-toolbar{grid-template-columns:1fr 1fr!important;gap:6px!important}
+  .v0638-drill-toolbar .drill-library-search{grid-column:1/-1!important}
+  .v0638-drill-toolbar .btn{grid-column:auto!important}
+  .drill-category-library{gap:8px!important}.drill-category-head{padding:8px!important}.drill-category-head b{font-size:15px!important}
+  .v0638-normal-panel .drill-config-row{grid-template-columns:1fr 40px!important;gap:6px!important;padding:6px!important}
+  .v0638-normal-panel .drill-config-main{grid-template-columns:62px minmax(0,1fr)!important;gap:7px!important}
+  .v0638-normal-panel .drill-config-main img{width:62px!important;height:54px!important}
+  .v0638-normal-panel .drill-config-main b{font-size:13px!important}
+  .v0638-normal-panel .level-select{grid-column:1/-1!important;width:100%!important}
+  .drills-page-media::after{background:linear-gradient(180deg,rgba(1,9,18,.09) 0%,rgba(1,9,18,.18) 32%,rgba(1,9,18,.55) 62%,rgba(1,9,18,.84) 100%)}
+}

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-runtime="0.6.35">
+<html lang="en" data-runtime="0.6.38">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -10,16 +10,16 @@
   <meta name="application-name" content="Top Eleven Tool">
   <meta name="apple-mobile-web-app-title" content="Top Eleven Tool">
   <title>Top Eleven Tool</title>
-  <link rel="manifest" href="./manifest.json?r=0635">
+  <link rel="manifest" href="./manifest.json?r=0638">
   <link rel="icon" href="./icon-192.png"><link rel="apple-touch-icon" href="./icon-192.png">
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./css/app.css?r=0635"><link rel="stylesheet" href="./css/v060.css?r=0635">
+  <link rel="stylesheet" href="./css/app.css?r=0638"><link rel="stylesheet" href="./css/v060.css?r=0638">
 </head>
 <body class="booting">
 <div class="auth-gate" id="authGate" hidden>
   <div class="auth-shell">
-    <div class="auth-brand"><img src="./icon-192.png" alt=""><div><b>TOP ELEVEN <span>TOOL</span></b><small>Cloud account · v0.6.35</small></div></div>
+    <div class="auth-brand"><img src="./icon-192.png" alt=""><div><b>TOP ELEVEN <span>TOOL</span></b><small>Cloud account · v0.6.38</small></div></div>
     <div class="auth-message" id="authMessage"></div>
     <div data-auth-panel="setup">
       <div class="section-kicker">One-time setup</div><h1>Connect Firebase</h1><p class="body-copy">Paste the <b>firebaseConfig</b> object from Firebase Console. This project configuration is not a private password; it identifies the Firebase project used by the app.</p>
@@ -63,9 +63,9 @@
 <div class="app">
   <header class="topbar">
     <button class="brand-home" type="button" data-go="dashboard" aria-label="Go to Home" title="Home"><img class="brand-mark" src="./icon-192.png" alt="Top Eleven Tool"></button>
-    <div class="brand-copy brand-wordmark brand-wordmark-art" aria-label="Top Eleven Tool v0.6.35">
+    <div class="brand-copy brand-wordmark brand-wordmark-art" aria-label="Top Eleven Tool v0.6.38">
       <img class="brand-wordmark-image" src="./assets/v0629/headers/topbar.webp" alt="Top Eleven Tool">
-      <div class="brand-sub">v0.6.35</div>
+      <div class="brand-sub">v0.6.38</div>
     </div>
     <button class="home-search-shortcut" id="homeSearchShortcut" type="button" aria-label="Search squad"><img src="./assets/v0616/home/27-header-search.svg" alt=""><em>Search players, skills, or run a scan...</em><kbd>⌘ K</kbd></button>
     <div class="topbar-actions">
@@ -291,38 +291,37 @@
       </div>
     </section>
 
-    <section class="page v066-drills-page" id="page-my-drills" data-page="my-drills" data-nav-label="Drill Selection" data-nav-icon="assets/v0616/home/21-nav-training.svg">
-      <div class="hero v066-drills-hero" style="--hero:url('./assets/v060/scenes/drills-hero-desktop.webp');--hero-mobile:url('./assets/v060/scenes/drills-hero-mobile.webp')">
+    <section class="page v066-drills-page v0638-drills-page" id="page-my-drills" data-page="my-drills" data-nav-label="Drill Selection" data-nav-icon="assets/v0616/home/21-nav-training.svg">
+      <picture class="drills-page-media" aria-hidden="true">
+        <img src="./assets/v0638/backgrounds/drills.webp" alt="" decoding="async" loading="eager">
+      </picture>
+      <div class="hero v066-drills-hero">
         <div class="hero-copy branded-page-title page-header-art-wrap"><img class="page-header-art" src="./assets/v0635/headers/drills.webp" alt="Drills"></div>
       </div>
-      <div class="page-body v066-drills-body">
-        <div class="drills-summary-grid">
-          <div><span class="drills-summary-icon">▤</span><small>Normal drills</small><b id="drillSummaryTotal">0</b><em>available in the model</em></div>
-          <div><span class="drills-summary-icon lime">▥</span><small>Saved levels</small><b id="drillSummaryUnlocked">0</b><em>drills you own</em></div>
-          <div><span class="drills-summary-icon gold">★</span><small>Master cards</small><b id="drillSummaryMaster">0</b><em>cards currently owned</em></div>
-          <div><span class="drills-summary-icon cyan">◎</span><small>Categories</small><b id="drillSummaryCategories">4</b><em>Attack · Possession · Defence · Physical</em></div>
+      <div class="page-body v066-drills-body v0638-drills-body">
+        <div class="drills-summary-grid v0638-drills-summary">
+          <div class="drills-summary-card master-stock-summary"><span class="drills-summary-icon gold">★</span><small>Master Cards</small><b id="drillSummaryMaster">0</b><em>cards currently available</em></div>
+          <div class="drills-summary-card unlocked-summary"><span class="drills-summary-icon lime">▥</span><small>Normal Drills Unlocked</small><b id="drillSummaryUnlocked">0 / 29</b><em>drills available to training</em></div>
+          <div class="drills-summary-card max-level-summary"><span class="drills-summary-icon cyan">◆</span><small>Max-Level Drills</small><b id="drillSummaryMaxLevel">0</b><em>unlocked drills at the top regular level</em></div>
         </div>
 
-        <div class="drill-library-toolbar">
-          <label class="drill-library-search"><span>⌕</span><input id="drillLibrarySearch" type="search" placeholder="Search drills by name…" autocomplete="off"></label>
-          <select class="select" id="drillLibraryCategory"><option value="">All categories</option><option value="Attack">Attack</option><option value="Possession">Possession</option><option value="Defence">Defence</option><option value="Physical & Mental">Physical & Mental</option></select>
+        <section class="drill-master-panel v0638-master-panel">
+          <div class="section-head"><div><div class="section-kicker">Consumable boosts</div><div class="section-title">Master Drill Cards</div></div><span class="chip master-chip">USE ON COMPLETION</span></div>
+          <p class="mini-note">Master Cards are consumable. Training can use only the cards currently in stock, and a card is deducted only after you confirm <b>Mark Session Completed</b>.</p>
+          <div class="master-grid" id="masterStockConfig"></div>
+        </section>
+
+        <div class="drill-library-toolbar v0638-drill-toolbar">
+          <label class="drill-library-search"><span>⌕</span><input id="drillLibrarySearch" type="search" placeholder="Search normal drills by name…" autocomplete="off"></label>
+          <select class="select" id="drillLibraryCategory"><option value="">All categories</option><option value="Attack">Attacking</option><option value="Defence">Defending</option><option value="Possession">Possession</option><option value="Physical & Mental">Physical & Mental</option></select>
           <button class="btn ghost" id="resetDrillsBtn">Clear setup</button>
         </div>
 
-        <div class="v066-drills-workspace">
-          <section class="drill-library-panel">
-            <div class="section-head"><div><div class="section-kicker">Normal drills</div><div class="section-title">My Drill Levels</div></div><span class="chip active">ACCOUNT DATA</span></div>
-            <p class="mini-note drill-account-note">Drill levels are personal to your account and sync through the cloud. Choose only the drills and levels you actually have.</p>
-            <div class="drill-config-list" id="normalDrillConfig"></div>
-          </section>
-
-          <aside class="drill-master-panel">
-            <div class="section-head"><div><div class="section-kicker">Drill Lab / Campus</div><div class="section-title">Master Card Stock</div></div></div>
-            <div class="master-grid" id="masterStockConfig"></div>
-            <p class="mini-note">No artificial maximum. Enter the exact number of cards you currently own; each selected Master slot consumes one card only when you mark the session completed.</p>
-            <div class="drills-tip"><span>🏆</span><div><b>Keep this page current</b><p>The optimiser can only recommend the levels and Master cards you tell it you own.</p></div></div>
-          </aside>
-        </div>
+        <section class="drill-library-panel v0638-normal-panel">
+          <div class="section-head"><div><div class="section-kicker">Normal drills</div><div class="section-title">My Drill Levels</div></div><span class="chip active">ACCOUNT DATA</span></div>
+          <p class="mini-note drill-account-note">Normal drills are grouped by their in-game category. Unlock only the drills you own and set their exact saved level.</p>
+          <div class="drill-config-list drill-category-library" id="normalDrillConfig"></div>
+        </section>
       </div>
     </section>
 
@@ -362,18 +361,88 @@
     </section>
 
     <section class="page v067-account-page" id="page-account" data-page="account">
+      <picture class="manager-profile-page-media" aria-hidden="true">
+        <img src="./assets/v0637/backgrounds/manager-profile.webp" alt="" decoding="async" loading="eager">
+      </picture>
       <div class="hero v067-account-hero" style="--hero:url('./assets/v060/scenes/settings-hero-desktop.webp');--hero-mobile:url('./assets/v060/scenes/settings-hero-mobile.webp')"><div class="hero-copy branded-page-title page-header-art-wrap"><img class="page-header-art" src="./assets/v0635/headers/manager-profile.webp" alt="Manager Profile"></div></div>
-      <div class="page-body v067-account-body">
-        <div class="card"><div class="card-inner"><div class="account-head"><div class="account-avatar" id="accountAvatar">A</div><div><div class="section-title" id="accountDisplayName">Top Eleven Manager</div><div class="body-copy" id="accountEmail">—</div><span class="verify-pill" id="accountVerified">—</span></div></div><div class="filter-chips spaced" id="accountProviders"></div><div class="sync-pill" id="accountSyncStatus"><i></i><span>Checking cloud sync…</span></div><div class="btn-row spaced"><button class="btn ghost" id="resendVerificationBtn">Resend verification email</button><button class="btn danger" id="accountSignOut">Sign out</button></div><div class="auth-message" id="accountMessage"></div></div></div>
-        <div class="section"><div class="card"><div class="card-inner"><div class="section-title">Profile</div><label class="field wide spaced"><span>Display name</span><input class="input" id="accountNameInput"></label><button class="btn primary" id="accountSaveName">Save profile</button><div class="divider"></div><div class="section-kicker">Linked sign-in methods</div><div class="btn-row spaced"><button class="btn ghost" id="linkGoogleBtn">Link Google</button></div></div></div></div>
-        <div class="section"><div class="card"><div class="card-inner"><div class="section-title">Security check</div><p class="body-copy">Changing your email or password requires a fresh sign-in <b>and</b> an enrolled second factor. Sensitive changes are blocked until two-step verification is enabled.</p><label class="field wide spaced"><span>Current password (email/password accounts)</span><input class="input" id="accountCurrentPassword" type="password" autocomplete="current-password"></label></div></div></div>
-        <div class="section"><div class="card"><div class="card-inner"><div class="section-title">Change email</div><label class="field wide spaced"><span>New email</span><input class="input" id="accountNewEmail" type="email" autocomplete="email"></label><button class="btn primary" id="accountChangeEmail">Verify & change email</button><p class="mini-note">Firebase sends verification to the new address before applying the change.</p></div></div></div>
-        <div class="section"><div class="card"><div class="card-inner"><div class="section-title">Change password</div><label class="field wide spaced"><span>New password</span><input class="input" id="accountNewPassword" type="password" autocomplete="new-password"></label><label class="field wide"><span>Confirm new password</span><input class="input" id="accountNewPasswordConfirm" type="password" autocomplete="new-password"></label><button class="btn primary spaced" id="accountChangePassword">Verify & change password</button></div></div></div>
-        <div class="section"><div class="card"><div class="card-inner"><div class="section-title">Two-step verification</div><p class="body-copy">Protect sensitive account changes with a free authenticator-app code.</p><div id="accountMfaStatus"></div><div class="security-method-grid spaced"><div class="security-method preferred"><div><span>Free security method</span><b>Authenticator app</b><small>Use Google Authenticator, Microsoft Authenticator, 1Password or another compatible authenticator app.</small></div><button class="btn primary compact" id="accountStartTotp" type="button">Set up</button></div></div><div class="totp-setup" id="totpSetupBox" hidden><div class="mini-note"><b>Manual setup key</b></div><code class="totp-secret" id="totpSecret"></code><label class="field wide spaced"><span>Authenticator URI (optional copy)</span><input class="input" id="totpUri" readonly></label><label class="field wide"><span>6-digit code</span><input class="input" id="totpConfirmCode" inputmode="numeric" maxlength="6" autocomplete="one-time-code"></label><button class="btn primary spaced" id="accountConfirmTotp">Enable two-step verification</button></div></div></div></div>
+      <div class="page-body v067-account-body v0637-manager-profile-body">
+        <section class="card manager-profile-card">
+          <div class="card-inner">
+            <div class="account-head manager-profile-head">
+              <div class="account-avatar manager-profile-avatar" id="accountAvatar" aria-label="Manager profile picture">A</div>
+              <div class="manager-profile-identity">
+                <div class="section-kicker">Manager account</div>
+                <div class="section-title" id="accountDisplayName">Top Eleven Manager</div>
+                <div class="body-copy" id="accountEmail">—</div>
+                <span class="verify-pill" id="accountVerified">—</span>
+              </div>
+            </div>
+
+            <div class="manager-profile-status-row">
+              <div><div class="section-kicker">Sign-in methods</div><div class="filter-chips" id="accountProviders"></div></div>
+              <div class="sync-pill" id="accountSyncStatus"><i></i><span>Checking cloud sync…</span></div>
+            </div>
+
+            <div class="divider"></div>
+            <div class="manager-profile-edit">
+              <label class="field wide"><span>Display name</span><input class="input" id="accountNameInput"></label>
+              <button class="btn primary" id="accountSaveName">Save profile</button>
+            </div>
+
+            <div class="btn-row manager-profile-actions spaced">
+              <button class="btn ghost" id="linkGoogleBtn">Link Google</button>
+              <button class="btn ghost" id="resendVerificationBtn">Resend verification email</button>
+              <button class="btn danger" id="accountSignOut">Sign out</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="card manager-security-card">
+          <div class="card-inner">
+            <div class="section-kicker">Account security</div>
+            <div class="section-title">Security & sign-in</div>
+            <p class="body-copy manager-security-intro">Two-step verification protects sensitive account changes. Email/password accounts confirm with the current password; Google-only accounts confirm through Google sign-in.</p>
+
+            <div class="manager-two-step-block">
+              <div class="manager-security-heading"><div><span>Two-step verification</span><b>Authenticator app</b></div></div>
+              <div id="accountMfaStatus"></div>
+              <div class="security-method-grid spaced"><div class="security-method preferred"><div><span>Recommended</span><b>Authenticator app</b><small>Use Google Authenticator, Microsoft Authenticator, 1Password or another compatible authenticator app.</small></div><button class="btn primary compact" id="accountStartTotp" type="button">Set up</button></div></div>
+              <div class="totp-setup" id="totpSetupBox" hidden><div class="mini-note"><b>Manual setup key</b></div><code class="totp-secret" id="totpSecret"></code><label class="field wide spaced"><span>Authenticator URI (optional copy)</span><input class="input" id="totpUri" readonly></label><label class="field wide"><span>6-digit code</span><input class="input" id="totpConfirmCode" inputmode="numeric" maxlength="6" autocomplete="one-time-code"></label><button class="btn primary spaced" id="accountConfirmTotp">Enable two-step verification</button></div>
+            </div>
+
+            <div class="divider"></div>
+            <div class="manager-identity-check">
+              <div><div class="section-kicker">Confirm identity</div><div class="mini-note">Only required for accounts that use email + password.</div></div>
+              <label class="field wide" id="accountCurrentPasswordField"><span>Current password</span><input class="input" id="accountCurrentPassword" type="password" autocomplete="current-password"></label>
+            </div>
+
+            <div class="manager-account-change-grid">
+              <section class="manager-account-change-panel">
+                <div class="section-kicker">Account email</div>
+                <div class="section-title">Change email</div>
+                <label class="field wide"><span>New email</span><input class="input" id="accountNewEmail" type="email" autocomplete="email"></label>
+                <button class="btn primary" id="accountChangeEmail">Verify & change email</button>
+                <p class="mini-note">A verification message is sent to the new address before Firebase applies the change.</p>
+              </section>
+              <section class="manager-account-change-panel">
+                <div class="section-kicker">Account password</div>
+                <div class="section-title">Change password</div>
+                <label class="field wide"><span>New password</span><input class="input" id="accountNewPassword" type="password" autocomplete="new-password"></label>
+                <label class="field wide"><span>Confirm new password</span><input class="input" id="accountNewPasswordConfirm" type="password" autocomplete="new-password"></label>
+                <button class="btn primary" id="accountChangePassword">Verify & change password</button>
+              </section>
+            </div>
+          </div>
+        </section>
+
+        <div class="auth-message manager-account-message" id="accountMessage"></div>
       </div>
     </section>
 
     <section class="page v067-settings-page" id="page-settings" data-page="settings" data-nav-label="Settings" data-nav-icon="assets/v0616/home/25-sidebar-settings.svg">
+      <picture class="settings-page-media" aria-hidden="true">
+        <img src="./assets/v0636/backgrounds/settings.webp" alt="" decoding="async" loading="eager">
+      </picture>
       <div class="hero v067-settings-hero" style="--hero:url('./assets/v060/scenes/settings-hero-desktop.webp');--hero-mobile:url('./assets/v060/scenes/settings-hero-mobile.webp')">
         <div class="hero-copy branded-page-title page-header-art-wrap"><img class="page-header-art" src="./assets/v0635/headers/settings.webp" alt="Settings"></div>
       </div>
@@ -400,7 +469,7 @@
 
           <section class="settings-card settings-version-card">
             <div class="settings-card-head"><img src="./icon-192.png" alt=""><div><span>About</span><b>Top Eleven Tool</b><small>Responsive web/PWA build.</small></div></div>
-            <div class="settings-version"><strong>v0.6.35</strong><span>Design branch</span></div>
+            <div class="settings-version"><strong>v0.6.38</strong><span>Design branch</span></div>
             <p class="mini-note">Internal game-data build references stay in the background and are not shown throughout the normal product UI.</p>
           </section>
         </div>
@@ -412,6 +481,6 @@
   <div class="dialog-backdrop" id="confirmDialogBackdrop"><div class="confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="confirmDialogTitle"><div class="section-kicker">Squad</div><div class="section-title" id="confirmDialogTitle">Delete player?</div><p id="confirmDialogCopy">Are you sure you want to permanently remove this player from your squad?</p><div class="btn-row spaced"><button class="btn ghost" id="confirmCancelBtn" type="button">Cancel</button><button class="btn danger" id="confirmDeleteBtn" type="button">Delete</button></div></div></div>
   <div class="toast" id="toast"></div>
 </div>
-<script src="./js/optimizer-data.js?r=0635"></script><script src="./js/bible-data.js?r=0635"></script><script src="./js/data.js?r=0635"></script><script src="./js/strategy-data.js?r=0635"></script><script src="./js/best-in-slot-data.js?r=0635"></script><script src="./js/strategy-logic.js?r=0635"></script><script src="./js/squad-coverage-engine.js?r=0635"></script><script src="./js/cloud.js?r=0635"></script><script src="./js/storage.js?r=0635"></script><script src="./js/drill-profile.js?r=0635"></script><script src="./js/players.js?r=0635"></script><script src="./js/training-engine.js?r=0635"></script><script src="./js/team-training-engine.js?r=0635"></script><script src="./js/scanner-engine.js?r=0635"></script><script src="./js/recommendations.js?r=0635"></script><script src="./js/formation.js?r=0635"></script><script src="./js/tactics-engine.js?r=0635"></script><script src="./js/mentor-engine.js?r=0635"></script><script src="./js/team-plan-engine.js?r=0635"></script><script src="./js/best-in-slot-engine.js?r=0635"></script><script src="./js/app.js?r=0635"></script>
+<script src="./js/optimizer-data.js?r=0638"></script><script src="./js/bible-data.js?r=0638"></script><script src="./js/data.js?r=0638"></script><script src="./js/strategy-data.js?r=0638"></script><script src="./js/best-in-slot-data.js?r=0638"></script><script src="./js/strategy-logic.js?r=0638"></script><script src="./js/squad-coverage-engine.js?r=0638"></script><script src="./js/cloud.js?r=0638"></script><script src="./js/storage.js?r=0638"></script><script src="./js/drill-profile.js?r=0638"></script><script src="./js/players.js?r=0638"></script><script src="./js/training-engine.js?r=0638"></script><script src="./js/team-training-engine.js?r=0638"></script><script src="./js/scanner-engine.js?r=0638"></script><script src="./js/recommendations.js?r=0638"></script><script src="./js/formation.js?r=0638"></script><script src="./js/tactics-engine.js?r=0638"></script><script src="./js/mentor-engine.js?r=0638"></script><script src="./js/team-plan-engine.js?r=0638"></script><script src="./js/best-in-slot-engine.js?r=0638"></script><script src="./js/app.js?r=0638"></script>
 <script>(()=>{const expected=document.documentElement.dataset.runtime;if(window.__TE_RUNTIME__!==expected){console.error('Runtime build mismatch',{expected,loaded:window.__TE_RUNTIME__||'missing'});const k='te:runtime-reload:'+expected;if(!sessionStorage.getItem(k)){sessionStorage.setItem(k,'1');location.reload();}}else{sessionStorage.removeItem('te:runtime-reload:'+expected);}})();</script>
 </body></html>

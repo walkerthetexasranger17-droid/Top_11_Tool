@@ -1,5 +1,5 @@
-# Top Eleven Tool v0.6.35
+# Top Eleven Tool v0.6.38
 
-> **Current branch: v0.6.35 / Scan Review + Team OVR + Header Normalization.** All branded page titles now match Home's compact optical footprint, Add Player review no longer shows Related Roles, Role/Playstyle selectors use integrated app styling, and Home Team OVR is calculated from the saved starting XI only. The calibrated v0.5.17 decision contract remains frozen. Scanner calibration remains VERSION=12.
+> **Current branch: v0.6.38 / Drills + Master Card integration.** Drills now uses its approved portrait background, a three-card summary, Master Cards above normal drills, four category-grouped normal-drill sections, and the same category colour language as Training recommendations. Master Cards are consumed only when a session is marked completed; exhausted cards are excluded from the next build. The frozen v0.5.17 decision contract and Scanner VERSION=12 remain unchanged.
 
-Read `START_HERE.md` and `DESIGN_RECOVERY_HANDOFF_v0.6.35.md` before changing anything.
+Read `START_HERE.md` and `DESIGN_RECOVERY_HANDOFF_v0.6.38.md` before changing anything.
