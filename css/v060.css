@@ -2199,3 +2199,74 @@ body.te-select-open{overflow:hidden}
   .v0638-normal-panel .level-select{grid-column:1/-1!important;width:100%!important}
   .drills-page-media::after{background:linear-gradient(180deg,rgba(1,9,18,.09) 0%,rgba(1,9,18,.18) 32%,rgba(1,9,18,.55) 62%,rgba(1,9,18,.84) 100%)}
 }
+
+
+/* ====================================================================
+   v0.6.39 — category-tinted drill card surfaces
+   The drill artwork itself stays untouched. The card/container surface
+   behind the artwork + copy carries the category hue. Gold identifies
+   Master Cards; the underlying category hue remains visible.
+   ==================================================================== */
+.cat-attack{--drill-accent:#ff4d5f!important;--drill-soft:rgba(255,77,95,.22)!important}
+.cat-defence{--drill-accent:#62dd72!important;--drill-soft:rgba(98,221,114,.20)!important}
+.cat-possession{--drill-accent:#ffd84e!important;--drill-soft:rgba(255,216,78,.18)!important}
+.cat-physical{--drill-accent:#45a9ff!important;--drill-soft:rgba(69,169,255,.21)!important}
+.cat-neutral{--drill-accent:#62dff6!important;--drill-soft:rgba(98,223,246,.16)!important}
+
+/* Normal drill library: tint the complete card surface, not the image. */
+.v0638-normal-panel .drill-config-row{
+  background:linear-gradient(112deg,
+    color-mix(in srgb,var(--drill-accent) 22%,rgba(4,21,33,.96)) 0%,
+    color-mix(in srgb,var(--drill-accent) 13%,rgba(4,21,33,.96)) 55%,
+    rgba(3,15,25,.96) 100%)!important;
+  border-color:color-mix(in srgb,var(--drill-accent) 64%,#173044)!important;
+  border-left-color:var(--drill-accent)!important;
+}
+
+/* Master Cards: gold outer frame + unmistakable category-coloured interior. */
+.v0638-master-panel .master-card{
+  background:linear-gradient(112deg,
+    color-mix(in srgb,var(--drill-accent) 25%,rgba(5,20,31,.96)) 0%,
+    color-mix(in srgb,var(--drill-accent) 16%,rgba(40,31,8,.86)) 58%,
+    rgba(4,17,27,.96) 100%)!important;
+  border:2px solid #e9c44d!important;
+  box-shadow:inset 0 3px 0 var(--drill-accent),0 0 16px rgba(234,198,78,.10)!important;
+}
+.v0638-master-panel .master-card::after{
+  background:linear-gradient(115deg,
+    color-mix(in srgb,var(--drill-accent) 12%,transparent),
+    transparent 52%,rgba(255,210,75,.04))!important;
+}
+
+/* Individual Training generated six: same category-tinted card surface. */
+.v064-training-results .drill-row{
+  background:linear-gradient(112deg,
+    color-mix(in srgb,var(--drill-accent) 24%,rgba(4,21,33,.97)) 0%,
+    color-mix(in srgb,var(--drill-accent) 14%,rgba(4,21,33,.97)) 58%,
+    rgba(3,15,25,.98) 100%)!important;
+  border-color:color-mix(in srgb,var(--drill-accent) 68%,#102b3c)!important;
+  border-left:4px solid var(--drill-accent)!important;
+}
+.v064-training-results .drill-row.master{
+  background:linear-gradient(112deg,
+    color-mix(in srgb,var(--drill-accent) 27%,rgba(5,20,31,.97)) 0%,
+    color-mix(in srgb,var(--drill-accent) 17%,rgba(45,34,8,.88)) 58%,
+    rgba(3,15,25,.98) 100%)!important;
+  border:2px solid #e9c44d!important;
+  border-left:4px solid #e9c44d!important;
+  box-shadow:inset 0 3px 0 var(--drill-accent),0 0 15px rgba(233,196,77,.10)!important;
+}
+
+/* Team Training uses the same visual language too. */
+.v064-training-page .team-mini-list .team-drill-item{
+  background:linear-gradient(105deg,
+    color-mix(in srgb,var(--drill-accent) 22%,rgba(4,20,32,.95)) 0%,
+    color-mix(in srgb,var(--drill-accent) 12%,rgba(4,20,32,.93)) 55%,
+    rgba(3,15,25,.96) 100%)!important;
+  border-color:color-mix(in srgb,var(--drill-accent) 62%,#163246)!important;
+  border-left-color:var(--drill-accent)!important;
+}
+.v064-training-page .team-mini-list .team-drill-item.master{
+  border:2px solid #e9c44d!important;border-left:4px solid #e9c44d!important;
+  box-shadow:inset 0 2px 0 var(--drill-accent)!important;
+}

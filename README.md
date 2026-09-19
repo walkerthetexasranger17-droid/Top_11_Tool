@@ -1,5 +1,7 @@
-# Top Eleven Tool v0.6.38
+# Top Eleven Tool v0.6.39
 
-> **Current branch: v0.6.38 / Drills + Master Card integration.** Drills now uses its approved portrait background, a three-card summary, Master Cards above normal drills, four category-grouped normal-drill sections, and the same category colour language as Training recommendations. Master Cards are consumed only when a session is marked completed; exhausted cards are excluded from the next build. The frozen v0.5.17 decision contract and Scanner VERSION=12 remain unchanged.
+> **Current branch: v0.6.39 / Drill category surface tint correction.** Drill cards now use an obvious translucent category-coloured container surface: Attacking red, Defending green, Possession yellow, Physical & Mental blue. Master Cards keep their gold frame while retaining the correct category tint underneath. The drill artwork itself remains untouched. Training-generated drill cards use the same visual language.
 
-Read `START_HERE.md` and `DESIGN_RECOVERY_HANDOFF_v0.6.38.md` before changing anything.
+Read `START_HERE.md` and `DESIGN_RECOVERY_HANDOFF_v0.6.39.md` before changing anything.
+
+The frozen v0.5.17 decision contract and Scanner VERSION=12 remain unchanged.
