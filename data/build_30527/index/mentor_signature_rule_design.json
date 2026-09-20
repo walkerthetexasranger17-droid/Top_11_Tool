@@ -1,0 +1,155 @@
+{
+  "schema_version": 1,
+  "updated": "2026-09-14",
+  "status": "COMPANION_RULE_DESIGN_NOT_RUNTIME",
+  "principle": "Do not convert heterogeneous Signature Moves into a fabricated universal numeric score. Match explicit game-authored activation conditions to plan/live context and surface trade-offs.",
+  "official_current": {
+    "halftime_swap": true,
+    "prestige_levels_after_10": 3,
+    "sources": [
+      "https://nordeus.helpshift.com/hc/en/3-top-eleven-be-a-soccer-manager/faq/1803-top-eleven-2027-is-here/",
+      "https://nordeus.helpshift.com/hc/en/3-top-eleven-be-a-soccer-manager/faq/1805-leveling-up-mentors/?l=en"
+    ]
+  },
+  "ranking_architecture": {
+    "pre_match": [
+      "direct Tactical-family match",
+      "active Attribute-family assigned-role coverage",
+      "named Signature-context flags when the condition is genuinely inferable from the selected plan",
+      "explicit Signature downside/trade-off warnings",
+      "stable order only after evidence-backed criteria tie"
+    ],
+    "halftime_live": [
+      "current score state",
+      "current tactical change selected by the manager",
+      "opponent passing/zone information only when actually known",
+      "named Signature activation context",
+      "trade-off warning"
+    ],
+    "forbidden": [
+      "one cross-Mentor Signature percentage score",
+      "invented activation probabilities",
+      "invented match-outcome value",
+      "using community anecdotes as trigger rules"
+    ]
+  },
+  "mentors": {
+    "saboteur": {
+      "display_name": "Rubén Herrera",
+      "signature": "Blind Side",
+      "game_condition": "during a counter-attack",
+      "pre_match_context": {
+        "status": "DIRECT_PLAN_MATCH",
+        "signal": "tactics.values.won == counter",
+        "reason": "The selected plan deliberately forces counter attacks, matching both Herrera's Tactical family and the Signature wording once Signature is active."
+      },
+      "halftime_context": {
+        "signal": "manager switches to / retains Force Counter Attack",
+        "reason": "Signature condition is explicit and can be matched to the chosen tactical action."
+      },
+      "tradeoff": null
+    },
+    "wing_commander": {
+      "display_name": "Lewis Green",
+      "signature": "Aerial Dominance",
+      "game_condition": "on crosses",
+      "pre_match_context": {
+        "status": "DIRECT_ACTION_CONTEXT",
+        "signals": [
+          "wing focus is selected",
+          "Cross tendency is elevated"
+        ],
+        "reason": "The Signature explicitly applies on crosses. Wing focus and greater cross tendency are transparent plan signals that the manager intends to create that action more often, but are not claimed as hidden trigger thresholds."
+      },
+      "halftime_context": {
+        "signal": "manager switches toward wing/cross delivery",
+        "reason": "Strongest explicit Signature-action fit in the Mentor set."
+      },
+      "tradeoff": null
+    },
+    "analyst": {
+      "display_name": "Jonas Braun",
+      "signature": "Adaptive Blueprint",
+      "game_condition": "at halftime identify opponent weakest defensive zone; players attacking through it receive the boost",
+      "pre_match_context": {
+        "status": "NO_SIGNATURE_PREMATCH_SCORE",
+        "signal": null,
+        "reason": "The Signature is explicitly halftime- and opponent-zone-dependent; the relevant weakest zone is not safely known pre-match from the current companion inputs."
+      },
+      "halftime_context": {
+        "status": "HIGH_VALUE_IF_ZONE_KNOWN",
+        "signal": "official client/live evidence identifies the opponent weakest defensive zone",
+        "reason": "Recommend exploiting the known zone; do not invent the zone from formation alone."
+      },
+      "tradeoff": null
+    },
+    "architect": {
+      "display_name": "Cesc Fàbregas",
+      "signature": "Momentum Chain",
+      "game_condition": "successful pass chain; next pass harder to intercept; midfielders lose extra Stamina per attack",
+      "pre_match_context": {
+        "status": "PLAN_COMPATIBLE_WITH_EXPLICIT_COST",
+        "signals": [
+          "Short Pass is selected",
+          "possession/pass-chain plan is intended"
+        ],
+        "reason": "Short passing is already Cesc's exact Tactical-family match and is semantically compatible with repeated successful pass chains. The Signature wording itself does not prove only short passes can trigger it."
+      },
+      "halftime_context": {
+        "signal": "manager retains/switches to a pass-chain possession plan",
+        "reason": "Can be recommended only with the extra midfield Stamina cost displayed."
+      },
+      "tradeoff": "midfielders lose extra Stamina per attack"
+    },
+    "deadball_specialist": {
+      "display_name": "Alan Shearer",
+      "signature": "Ankle Breaker",
+      "game_condition": "corners, free kicks and penalties; after a miss opponent attackers are reduced for their next attack",
+      "pre_match_context": {
+        "status": "EVENT_OPPORTUNITY_CONTEXT_ONLY",
+        "signals": [
+          "strong/assigned set-piece takers exist"
+        ],
+        "reason": "The Signature is tied to dead-ball events, but the companion cannot safely predict how many such events the match will produce. Do not create a set-piece frequency score."
+      },
+      "halftime_context": {
+        "signal": "set-piece leverage is strategically desired",
+        "reason": "Contextual alternative rather than guaranteed-value recommendation."
+      },
+      "tradeoff": null
+    },
+    "iron_guard": {
+      "display_name": "Nemanja Vidić",
+      "signature": "Iron Check",
+      "game_condition": "each successful defensive check drains opponent attacker Condition; extra card risk",
+      "pre_match_context": {
+        "status": "DEFENSIVE_CONTEXT_WITH_RISK",
+        "signals": [
+          "Defending or Hard Defending approach"
+        ],
+        "reason": "The overall plan intends more defensive work, matching Vidić's Tactical family. Do not equate a specific Tackling setting with 'defensive check' without proof."
+      },
+      "halftime_context": {
+        "signal": "manager is prioritising defensive disruption",
+        "reason": "Surface opponent-Condition benefit and card-risk downside together."
+      },
+      "tradeoff": "extra card risk; Tactical family also has extra Condition/Stamina cost"
+    },
+    "enforcer": {
+      "display_name": "Claude Makélélé",
+      "signature": "Parking the Bus",
+      "game_condition": "while leading; defenders gain Defensive attributes and team loses Attacking attributes",
+      "pre_match_context": {
+        "status": "NO_SIGNATURE_PREMATCH_SCORE",
+        "signal": null,
+        "reason": "The team is not yet leading before kickoff. Pre-match fit should come from opponent Short Passes and Attribute coverage, not the Signature."
+      },
+      "halftime_context": {
+        "status": "DIRECT_SCORE_STATE_MATCH",
+        "signal": "team is leading",
+        "reason": "This is an explicit live match-state trigger and therefore a strong halftime switch context, especially when the opponent uses Short Passes."
+      },
+      "tradeoff": "team Attacking attributes are reduced while the Signature is active"
+    }
+  }
+}

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-runtime="0.6.51">
+<html lang="en" data-runtime="0.6.54">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -10,11 +10,11 @@
   <meta name="application-name" content="Top Eleven Tool">
   <meta name="apple-mobile-web-app-title" content="Top Eleven Tool">
   <title>Top Eleven Tool</title>
-  <link rel="manifest" href="./manifest.json?r=0651">
+  <link rel="manifest" href="./manifest.json?r=0654">
   <link rel="icon" href="./icon-192.png"><link rel="apple-touch-icon" href="./icon-192.png">
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./css/app.css?r=0651"><link rel="stylesheet" href="./css/v060.css?r=0651">
+  <link rel="stylesheet" href="./css/app.css?r=0654"><link rel="stylesheet" href="./css/v060.css?r=0654">
 </head>
 <body class="booting">
 <div class="auth-gate" id="authGate" hidden>
@@ -60,9 +60,9 @@
 <div class="app">
   <header class="topbar">
     <button class="brand-home" type="button" data-go="dashboard" aria-label="Go to Home" title="Home"><img class="brand-mark" src="./icon-192.png" alt="Top Eleven Tool"></button>
-    <div class="brand-copy brand-wordmark brand-wordmark-art" aria-label="Top Eleven Tool v0.6.51">
+    <div class="brand-copy brand-wordmark brand-wordmark-art" aria-label="Top Eleven Tool v0.6.54">
       <img class="brand-wordmark-image" src="./assets/v0629/headers/topbar.webp" alt="Top Eleven Tool">
-      <div class="brand-sub">v0.6.51</div>
+      <div class="brand-sub">v0.6.54</div>
     </div>
     <button class="home-search-shortcut" id="homeSearchShortcut" type="button" aria-label="Search squad"><img src="./assets/v0616/home/27-header-search.svg" alt=""><em>Search players, skills, or run a scan...</em><kbd>⌘ K</kbd></button>
     <div class="topbar-actions">
@@ -84,12 +84,12 @@
       </div>
       <div class="page-body dashboard-body v060-dashboard-body">
         <div class="dashboard-stat-grid dashboard-glance" id="dashboardStats" aria-label="Today at a glance"></div>
-        <div class="dashboard-workspace">
-          <section class="dashboard-panel dashboard-recent"><div class="dashboard-panel-head"><div><h2>Recent Players</h2></div><button class="section-link" data-go="squad">View all <img src="./assets/v0616/home/30-chevron-right.svg" alt=""></button></div><div id="dashboardRecentPlayers" class="dashboard-player-list"></div></section>
-          <section class="dashboard-panel dashboard-training"><div class="dashboard-panel-head dashboard-feature-head"><img class="dashboard-feature-icon asset-icon" src="./assets/v0616/home/12-training-builder-icon.svg" alt=""><div><h2>Training Builder</h2><p>Build a 6-slot session from your saved drill levels and Master cards.</p></div><button class="feature-arrow" data-go="training" aria-label="Open Training"><img src="./assets/v0616/home/30-chevron-right.svg" alt=""></button></div><div class="dashboard-mini-stats" id="dashboardTrainingStats"></div><button class="btn primary full dashboard-build-btn" data-go="training">Build training session <img src="./assets/v0616/home/29-arrow-right.svg" alt=""></button></section>
-          <section class="dashboard-panel dashboard-plan"><div class="dashboard-panel-head dashboard-feature-head"><img class="dashboard-feature-icon asset-icon" src="./assets/v0616/home/13-team-plan-icon.svg" alt=""><div><h2>Team Plan Snapshot</h2><p>Optimise development for your squad with intelligent recommendations.</p></div><button class="feature-arrow" data-go="team-plan" aria-label="Open Team Plan"><img src="./assets/v0616/home/30-chevron-right.svg" alt=""></button></div><div id="dashboardPlanSnapshot" class="dashboard-plan-snapshot"></div></section>
-          <section class="dashboard-panel dashboard-insight"><div class="dashboard-panel-head dashboard-feature-head"><img class="dashboard-feature-icon asset-icon" src="./assets/v0616/home/14-performance-icon.svg" alt=""><div><h2>Performance Insights</h2><p>Find your squad's strengths and biggest improvement opportunities.</p></div><button class="feature-arrow" data-go="squad" aria-label="Review squad"><img src="./assets/v0616/home/30-chevron-right.svg" alt=""></button></div><div id="dashboardInsight" class="dashboard-insight-copy"></div></section>
-          <section class="dashboard-panel dashboard-actions"><div class="dashboard-panel-head dashboard-feature-head"><img class="dashboard-feature-icon asset-icon" src="./assets/v0616/home/15-quick-actions-icon.svg" alt=""><div><h2>Quick Actions</h2><p>Common tasks, one click away.</p></div><button class="section-link" data-go="squad">View all</button></div><div class="dashboard-action-grid"><button data-go="add-player"><img src="./assets/v0616/home/16-action-add-player.svg" alt=""><b>Add Player</b></button><button id="dashboardUpdatePlayers" type="button"><img src="./assets/v0616/home/17-action-update-players.svg" alt=""><b>Update Players</b></button><button data-go="add-player"><img src="./assets/v0616/home/18-action-run-scan.svg" alt=""><b>Run Scan</b></button></div></section>
+        <div class="dashboard-workspace dashboard-workspace-v0653">
+          <section class="dashboard-panel dashboard-plan"><div class="dashboard-panel-head dashboard-feature-head"><img class="dashboard-feature-icon asset-icon" src="./assets/v0616/home/13-team-plan-icon.svg" alt=""><div><h2>Team Plan Snapshot</h2><p>Your current formation, tactics and set pieces.</p></div><button class="feature-arrow" data-go="team-plan" aria-label="Open Team Plan"><img src="./assets/v0616/home/30-chevron-right.svg" alt=""></button></div><div id="dashboardPlanSnapshot" class="dashboard-plan-snapshot"></div></section>
+          <section class="dashboard-panel dashboard-squad-snapshot"><div class="dashboard-panel-head dashboard-feature-head"><img class="dashboard-feature-icon asset-icon" src="./assets/v0616/home/20-nav-squad.svg" alt=""><div><h2>Squad Snapshot</h2><p>Your squad and current starting XI.</p></div><button class="feature-arrow" data-go="squad" aria-label="Open Squad"><img src="./assets/v0616/home/30-chevron-right.svg" alt=""></button></div><div id="dashboardSquadSnapshot" class="dashboard-squad-snapshot-body"></div></section>
+          <section class="dashboard-panel dashboard-training"><div class="dashboard-panel-head dashboard-feature-head"><img class="dashboard-feature-icon asset-icon" src="./assets/v0616/home/12-training-builder-icon.svg" alt=""><div><h2>Training Snapshot</h2><p>Your saved drill levels and Master cards.</p></div><button class="feature-arrow" data-go="training" aria-label="Open Training"><img src="./assets/v0616/home/30-chevron-right.svg" alt=""></button></div><div class="dashboard-mini-stats" id="dashboardTrainingStats"></div><button class="btn primary full dashboard-build-btn" data-go="training">Open training <img src="./assets/v0616/home/29-arrow-right.svg" alt=""></button></section>
+          <section class="dashboard-panel dashboard-data"><div class="dashboard-panel-head dashboard-feature-head"><img class="dashboard-feature-icon asset-icon" src="./assets/v0616/home/14-performance-icon.svg" alt=""><div><h2>Data Status</h2><p>Facts already stored by the app.</p></div></div><div id="dashboardDataStatus" class="dashboard-data-status"></div></section>
+          <section class="dashboard-panel dashboard-actions"><div class="dashboard-panel-head dashboard-feature-head"><img class="dashboard-feature-icon asset-icon" src="./assets/v0616/home/15-quick-actions-icon.svg" alt=""><div><h2>Quick Links</h2><p>Jump straight to the tools you use most.</p></div></div><div class="dashboard-action-grid dashboard-action-grid-v0653"><button data-go="add-player"><img src="./assets/v0616/home/16-action-add-player.svg" alt=""><b>Add Player</b></button><button id="dashboardUpdatePlayers" type="button"><img src="./assets/v0616/home/17-action-update-players.svg" alt=""><b>Update Players</b></button><button data-go="team-plan"><img src="./assets/v0616/home/13-team-plan-icon.svg" alt=""><b>Team Plan</b></button><button data-go="training"><img src="./assets/v0616/home/21-nav-training.svg" alt=""><b>Training</b></button><button data-go="my-drills"><img src="./assets/v0616/home/24-sidebar-drills.svg" alt=""><b>Drills</b></button></div></section>
         </div>
       </div>
     </section>
@@ -508,7 +508,7 @@
 
           <section class="settings-card settings-version-card">
             <div class="settings-card-head"><img src="./icon-192.png" alt=""><div><span>About</span><b>Top Eleven Tool</b><small>Responsive web/PWA build.</small></div></div>
-            <div class="settings-version"><strong>v0.6.51</strong><span>Design branch</span></div>
+            <div class="settings-version"><strong>v0.6.54</strong><span>Design branch</span></div>
             <p class="mini-note">Internal game-data build references stay in the background and are not shown throughout the normal product UI.</p>
           </section>
         </div>
@@ -520,6 +520,6 @@
   <div class="dialog-backdrop" id="confirmDialogBackdrop"><div class="confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="confirmDialogTitle"><div class="section-kicker">Squad</div><div class="section-title" id="confirmDialogTitle">Delete player?</div><p id="confirmDialogCopy">Are you sure you want to permanently remove this player from your squad?</p><div class="btn-row spaced"><button class="btn ghost" id="confirmCancelBtn" type="button">Cancel</button><button class="btn danger" id="confirmDeleteBtn" type="button">Delete</button></div></div></div>
   <div class="toast" id="toast"></div>
 </div>
-<script src="./js/optimizer-data.js?r=0651"></script><script src="./js/bible-data.js?r=0651"></script><script src="./js/data.js?r=0651"></script><script src="./js/strategy-data.js?r=0651"></script><script src="./js/strategy-logic.js?r=0651"></script><script src="./js/squad-coverage-engine.js?r=0651"></script><script src="./js/cloud.js?r=0651"></script><script src="./js/storage.js?r=0651"></script><script src="./js/drill-profile.js?r=0651"></script><script src="./js/players.js?r=0651"></script><script src="./js/training-engine.js?r=0651"></script><script src="./js/team-training-engine.js?r=0651"></script><script src="./js/scanner-engine.js?r=0651"></script><script src="./js/recommendations.js?r=0651"></script><script src="./js/formation.js?r=0651"></script><script src="./js/tactics-engine.js?r=0651"></script><script src="./js/mentor-engine.js?r=0651"></script><script src="./js/team-plan-engine.js?r=0651"></script><script src="./js/app.js?r=0651"></script>
+<script src="./js/optimizer-data.js?r=0654"></script><script src="./js/bible-data.js?r=0654"></script><script src="./js/data.js?r=0654"></script><script src="./js/strategy-data.js?r=0654"></script><script src="./js/strategy-logic.js?r=0654"></script><script src="./js/squad-coverage-engine.js?r=0654"></script><script src="./js/cloud.js?r=0654"></script><script src="./js/storage.js?r=0654"></script><script src="./js/drill-profile.js?r=0654"></script><script src="./js/players.js?r=0654"></script><script src="./js/training-engine.js?r=0654"></script><script src="./js/team-training-engine.js?r=0654"></script><script src="./js/scanner-engine.js?r=0654"></script><script src="./js/recommendations.js?r=0654"></script><script src="./js/formation.js?r=0654"></script><script src="./js/tactics-engine.js?r=0654"></script><script src="./js/mentor-engine.js?r=0654"></script><script src="./js/team-plan-engine.js?r=0654"></script><script src="./js/app.js?r=0654"></script>
 <script>(()=>{const expected=document.documentElement.dataset.runtime;if(window.__TE_RUNTIME__!==expected){console.error('Runtime build mismatch',{expected,loaded:window.__TE_RUNTIME__||'missing'});const k='te:runtime-reload:'+expected;if(!sessionStorage.getItem(k)){sessionStorage.setItem(k,'1');location.reload();}}else{sessionStorage.removeItem('te:runtime-reload:'+expected);}})();</script>
 </body></html>

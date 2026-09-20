@@ -1,0 +1,34 @@
+{
+  "ClubResponse": {
+    "TacticsConditionDrain": 154,
+    "PlayerMaxRateAge": 53,
+    "PlayerHalfRateAge": 54,
+    "PlayerQuarterRateAge": 55,
+    "AttributeMultiplier": 92,
+    "SkillPointsForOneAttribute": 93,
+    "PlaystyleDefinitions": 129
+  },
+  "Player": {
+    "SpecialAbility": 14,
+    "SecondSpecialAbility": 52,
+    "SpecialAbilities": 54,
+    "ThirdSpecialAbility": 58,
+    "Playstyle": 55,
+    "Roles": 40
+  },
+  "MentorLive": {
+    "MatchPeriod.HomeMentorStateSnapshot": 45,
+    "MatchPeriod.AwayMentorStateSnapshot": 46,
+    "JoinMatchResponse.MentorStateSnapshot": 76,
+    "JoinMatchResponse.HomeMentorStateSnapshot": 77,
+    "JoinMatchResponse.AwayMentorStateSnapshot": 78
+  },
+  "AssignMentorInMatchRequest": {
+    "MentorId": 1,
+    "MatchId": 2
+  },
+  "AssignMentorInMatchResponse": {
+    "Status": 1,
+    "FullStateSnapshot": 2
+  }
+}

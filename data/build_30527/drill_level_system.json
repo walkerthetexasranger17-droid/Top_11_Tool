@@ -1,0 +1,23 @@
+{
+  "max_regular_level": 3,
+  "levels": [
+    {
+      "level_id": 1,
+      "name": "Semi-pro",
+      "training_effect_percent": 10
+    },
+    {
+      "level_id": 2,
+      "name": "Pro",
+      "training_effect_percent": 20
+    },
+    {
+      "level_id": 3,
+      "name": "World-class",
+      "training_effect_percent": 30
+    }
+  ],
+  "native_rule": "For BasicDrill, TrainingDrillExtensions.AdditionalGainPercentage = Level * 10. For ConsumableDrill, it returns AdditionalTrainingEffectPercent.",
+  "master_campus_training_effect_percent_current": 80,
+  "do_not_ask_user_for_effect_percent": "For normal drills ask only level; derive +10/+20/+30. Master/Campus effect is sourced from the catalogue."
+}

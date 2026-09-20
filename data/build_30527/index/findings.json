@@ -1,0 +1,764 @@
+{
+  "schema_version": 1,
+  "updated": "2026-09-16",
+  "findings": [
+    {
+      "id": "TACTICS-001",
+      "system": "tactics",
+      "status": "GAME_FACT",
+      "title": "Exact condition drain arithmetic and constructor defaults",
+      "summary": "Client arithmetic is proven: 11 tactic dimensions are resolved through Low/Medium/High intensity values, added to MinConditionDrain, normalized, then classified by strict thresholds. Build-30527 constructor defaults are 0/5/7 + base 15 with >0.40/>0.65 thresholds; these are fallback/default facts, not proof of the current live-2027 runtime override state.",
+      "confidence": "high",
+      "sources": [
+        "source_archive/NATIVE_FORMULAS_PASS1.md",
+        "source_archive/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.1_VERIFIED.md"
+      ],
+      "unresolved": [
+        "Current live runtime overrides/settings, if any"
+      ]
+    },
+    {
+      "id": "TACTICS-002",
+      "system": "tactics",
+      "status": "GAME_ASSET_FACT",
+      "title": "All 11 tactic semantic tooltips recovered",
+      "summary": "Build localisation explicitly describes passing, shooting, focus, crossing, possession transitions, mentality, marking, pressing, back line and tackling behaviour.",
+      "confidence": "high",
+      "sources": [
+        "source_archive/TACTICS_V2_TOOLTIP_EXTRACT.txt"
+      ],
+      "unresolved": []
+    },
+    {
+      "id": "TACTICS-003",
+      "system": "tactics",
+      "status": "UNRESOLVED",
+      "title": "Private best-tactic effectiveness formula",
+      "summary": "No authoritative client-side numerical score selecting the best tactic for a given XI has been recovered.",
+      "confidence": "high",
+      "sources": [
+        "source_archive/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.1_VERIFIED.md"
+      ],
+      "unresolved": [
+        "Football Engine option effectiveness weights",
+        "opponent interaction magnitudes"
+      ]
+    },
+    {
+      "id": "MENTOR-001",
+      "system": "mentors",
+      "status": "GAME/LIVE_FACT",
+      "title": "Mentor effect state reaches live matches",
+      "summary": "Mentor snapshots are carried in JoinMatchResponse and MatchPeriod; in-match assign/unassign returns full updated mentor state.",
+      "confidence": "high",
+      "sources": [
+        "source_archive/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.1_VERIFIED.md"
+      ],
+      "unresolved": []
+    },
+    {
+      "id": "MENTOR-002",
+      "system": "mentors",
+      "status": "LIVE_FACT",
+      "title": "Seven mentor raw effect arrays captured",
+      "summary": "Current and next effect arrays are preserved for saboteur, wing_commander, analyst, architect, deadball_specialist, iron_guard and enforcer.",
+      "confidence": "high",
+      "sources": [
+        "data/build_30527/index/mentor_effects.json"
+      ],
+      "unresolved": []
+    },
+    {
+      "id": "MENTOR-003",
+      "system": "mentors",
+      "status": "GAME_ASSET_FACT",
+      "title": "Mentor boost units and meanings decoded",
+      "summary": "Localisation proves tactic boosts are percentage effectiveness values, attribute boosts are +attribute points to all players, and signature array positions have named gameplay semantics.",
+      "confidence": "high",
+      "sources": [
+        "source_archive/MENTOR_LOCALIZATION_EXTRACT.txt",
+        "data/build_30527/index/mentor_effects.json"
+      ],
+      "unresolved": []
+    },
+    {
+      "id": "MENTOR-004",
+      "system": "mentors",
+      "status": "UNRESOLVED",
+      "title": "Exact Football Engine consumer",
+      "summary": "The state/domain flow is proven, but the exact Football Engine numerical fields that consume Mentor CurrentEffects remain unresolved.",
+      "confidence": "high",
+      "sources": [
+        "source_archive/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.1_VERIFIED.md"
+      ],
+      "unresolved": [
+        "CurrentEffects[] -> Football Engine variable/function"
+      ]
+    },
+    {
+      "id": "SETPIECE-001",
+      "system": "set_pieces",
+      "status": "GAME_FACT",
+      "title": "Explicit stored set-piece duties",
+      "summary": "Captain, left/right corners, left/right free kicks, penalty kicker and ordered penalty takers are explicit current-client assignments.",
+      "confidence": "high",
+      "sources": [
+        "source_archive/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.1_VERIFIED.md"
+      ],
+      "unresolved": []
+    },
+    {
+      "id": "SETPIECE-002",
+      "system": "set_pieces",
+      "status": "GAME_FACT_PLUS_COMPANION_DEFAULT",
+      "title": "Captaincy effect and automatic default",
+      "summary": "Historical Nordeus Support explicitly stated that assigning Captain does not make a player stronger or change stats, and later community reports consistently describe captaincy as cosmetic. The recovered current build stores Captain assignment but exposes no captain performance/ranking formula. v0.5.14 therefore gives Captain zero Team Plan value and auto-fills the highest-OVR starter only as a convenient cosmetic default; manual choices are performance-equivalent.",
+      "confidence": "high that no proven positive gameplay effect should be modelled; automatic default is companion UX only",
+      "sources": [
+        "source_archive/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.1_VERIFIED.md",
+        "docs/research/build_30527/V0513_COMPLETE_TEAM_PLAN_STITCHING_CHECKPOINT.md",
+        "TEAM_PLAN_EVIDENCE_LEDGER_PREINDEX.md",
+        "external: Nordeus Support reply archived on Top Eleven Forum (2015-10-30)",
+        "external: later Top Eleven community threads reporting captaincy as cosmetic"
+      ],
+      "unresolved": [
+        "Whether Nordeus ever changes captaincy behaviour in a future build; re-audit if new client code or official documentation appears."
+      ]
+    },
+    {
+      "id": "PLAYER-001",
+      "system": "players",
+      "status": "GAME_FACT",
+      "title": "Current 12-role model and pitch rectangles",
+      "summary": "Current playable roles are GK, DL, DC, DR, DMC, ML, MC, MR, AML, AMC, AMR, ST with recovered 0–1000 pitch rectangles; DML/DMR are legacy/internal.",
+      "confidence": "high",
+      "sources": [
+        "source_archive/BUILD_30527_IMPLEMENTATION_LEDGER.md"
+      ],
+      "unresolved": []
+    },
+    {
+      "id": "PLAYER-002",
+      "system": "players",
+      "status": "GAME_FACT",
+      "title": "Role key/white attributes",
+      "summary": "The client has role->key-attribute data; multi-role players use the union of natural-role key attributes.",
+      "confidence": "high",
+      "sources": [
+        "source_archive/BUILD_30527_IMPLEMENTATION_LEDGER.md",
+        "source_archive/NATIVE_FORMULAS_PASS1.md"
+      ],
+      "unresolved": []
+    },
+    {
+      "id": "PLAYSTYLE-001",
+      "system": "playstyles",
+      "status": "GAME/LIVE_FACT",
+      "title": "Current playstyle schema and eligibility source",
+      "summary": "Current playstyle IDs/levels are known; role eligibility is server-provided PlaystyleDefinition data. Ball Playing GK is not currently offered.",
+      "confidence": "high",
+      "sources": [
+        "source_archive/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.1_VERIFIED.md"
+      ],
+      "unresolved": []
+    },
+    {
+      "id": "SA-001",
+      "system": "special_abilities",
+      "status": "SUPERSEDED_BY_CURRENT_CLIENT",
+      "title": "Current special ability enum is 1..19",
+      "summary": "Older build-30527 interpretation incorrectly treated the raw Long Shots/LongShots token as a player-facing Special Ability name. Current Windows/WSA client evidence shows the player-facing identity is Shadow Striker; the raw token is provenance only. See v0.5.9 current-client evidence.",
+      "confidence": "high",
+      "sources": [
+        "source_archive/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.1_VERIFIED.md",
+        "data/current_windows_client_2026-09-14/special_ability_current_client.json",
+        "docs/research/build_30527/V059_FULL_WINDOWS_GAME_CHECKPOINT.md"
+      ],
+      "unresolved": []
+    },
+    {
+      "id": "SA-002",
+      "system": "special_abilities",
+      "status": "SERVER_RUNTIME",
+      "title": "Training eligibility is player-specific",
+      "summary": "Client requests GetAvailableTrainingAbilitiesResponse for a specific player; no universal role->ability training matrix should be invented.",
+      "confidence": "high",
+      "sources": [
+        "source_archive/BUILD_30527_IMPLEMENTATION_LEDGER.md"
+      ],
+      "unresolved": []
+    },
+    {
+      "id": "TRAIN-001",
+      "system": "training",
+      "status": "GAME_FACT",
+      "title": "Deterministic local skill-point distributor exists",
+      "summary": "Recovered 3-way group split, deterministic 48-bit LCG, state-dependent per-attribute selection, caps and ceil conversion.",
+      "confidence": "high",
+      "sources": [
+        "source_archive/NATIVE_FORMULAS_PASS1.md",
+        "source_archive/NATIVE_FORMULAS_PASS2.md"
+      ],
+      "unresolved": []
+    },
+    {
+      "id": "TRAIN-002",
+      "system": "training",
+      "status": "GAME/LIVE_BOUNDARY",
+      "title": "Normal ExecuteTraining final AttributeGain is server-returned",
+      "summary": "Current normal training response carries per-player final AttributeGain arrays; local distributor existence must not be overstated as the normal-session authority.",
+      "confidence": "high",
+      "sources": [
+        "source_archive/NATIVE_FORMULAS_PASS5.md",
+        "source_archive/NATIVE_FORMULAS_PASS6.md"
+      ],
+      "unresolved": []
+    },
+    {
+      "id": "BUILD-001",
+      "system": "build",
+      "status": "GAME_FACT",
+      "title": "Exact Windows binary identity",
+      "summary": "TopEleven_Full(4).zip package v27.3.0.0 has GameAssembly/global-metadata hashes identical to the previously inspected build-30527 Windows binaries.",
+      "confidence": "high",
+      "sources": [
+        "data/build_30527/index/source_manifest.json"
+      ],
+      "unresolved": []
+    },
+    {
+      "id": "MENTOR-005",
+      "system": "mentors",
+      "status": "GAME_ASSET_FACT",
+      "title": "Analyst display name is Jonas Braun",
+      "summary": "Exact build localisation uses mentorName_jonasBraun / Jonas Braun. The companion previously displayed Jonas Brown; v0.5.2 corrects only the display name and leaves the internal analyst ID/effects unchanged.",
+      "confidence": "high",
+      "sources": [
+        "source_archive/MENTOR_LOCALIZATION_EXTRACT.txt"
+      ],
+      "unresolved": []
+    },
+    {
+      "id": "MENTOR-006",
+      "system": "mentors",
+      "status": "APP_DEFECT",
+      "title": "Current level override does not change effect state",
+      "summary": "mentor-engine effectiveMentor() changes only mentor.level; rawEffects() continues returning the captured arrays and attributeCoverage() counts the Attribute family regardless of level/availability. This can score effects that are not proven active at the overridden level.",
+      "confidence": "high",
+      "sources": [
+        "js/mentor-engine.js",
+        "js/bible-data.js"
+      ],
+      "unresolved": [
+        "correct per-level effect-family availability source",
+        "uncaptured intermediate magnitudes"
+      ]
+    },
+    {
+      "id": "MENTOR-007",
+      "system": "mentors",
+      "status": "GAME_FACT",
+      "title": "Mentor boost-family unlock levels",
+      "summary": "Native client logic separates family availability by Mentor level: Tactical at 1, Attribute at 5, Signature at 10.",
+      "confidence": "high",
+      "sources": [
+        "docs/research/build_30527/V053_RESEARCH_CHECKPOINT.md"
+      ],
+      "unresolved": []
+    },
+    {
+      "id": "MENTOR-008",
+      "system": "mentors",
+      "status": "SERVER_RUNTIME",
+      "title": "Complete per-level Mentor magnitudes are not in static boost map",
+      "summary": "MentorBoostMap carries presentation/localisation metadata while CurrentEffects/NextLevelEffects arrive in Mentor state. No complete local Level 1-10 numeric ladder has been recovered.",
+      "confidence": "high",
+      "sources": [
+        "docs/research/build_30527/V053_RESEARCH_CHECKPOINT.md",
+        "data/build_30527/index/mentor_effects.json"
+      ],
+      "unresolved": [
+        "Level 1-10 numeric magnitudes for every Mentor/effect"
+      ]
+    },
+    {
+      "id": "MENTOR-009",
+      "system": "mentors",
+      "status": "STRONG_EVIDENCE",
+      "title": "Mentor match application appears server-side",
+      "summary": "Inspected live-match state update and assign/unassign paths transport Mentor snapshots without visible local football arithmetic; no obvious Mentor-named Football Engine consumer was found in the broad metadata pass.",
+      "confidence": "medium-high",
+      "sources": [
+        "docs/research/build_30527/V053_RESEARCH_CHECKPOINT.md"
+      ],
+      "unresolved": [
+        "Direct authoritative effect-application consumer"
+      ]
+    },
+    {
+      "id": "FORMATION-001",
+      "system": "formation",
+      "status": "GAME_ASSET_FACT",
+      "title": "Lineup Balance affects ball-winning chance and possession",
+      "summary": "Current shipped guidance states that better Lineup Balance improves the chance of winning the ball and therefore possession; exact 0-10 calculation remains private.",
+      "confidence": "high",
+      "sources": [
+        "docs/research/build_30527/V053_RESEARCH_CHECKPOINT.md"
+      ],
+      "unresolved": [
+        "Exact Lineup Balance formula"
+      ]
+    },
+    {
+      "id": "FORMATION-002",
+      "system": "formation",
+      "status": "GAME_FACT",
+      "title": "Current hard and irregular formation rules decompiled",
+      "summary": "SquadUtil current native validator plus shipped localisation establish exact goalkeeper/defender/midfield/central/flank/attacking-area requirements and per-role crowding caps; irregular warnings separately require ST-or-AMC, both flanks, DC, DMC-or-MC and MC-or-AMC presence.",
+      "confidence": "high",
+      "sources": [
+        "docs/research/build_30527/source_archive/native/NATIVE_FORMATION_VALIDATOR_PASS.md"
+      ],
+      "unresolved": []
+    },
+    {
+      "id": "FORMATION-003",
+      "system": "formation",
+      "status": "LIVE_FACT",
+      "title": "Lower-OVR natural ST produced higher Lineup Balance",
+      "summary": "In a controlled same-slot ST substitution, quality-44 François Roelandt raised server Lineup Balance from ~9.8298 to 10.0 versus quality-51 Gosling Lataille. Both were natural STs. Roelandt also had a slightly lower equal-weight mean across all nine ST key attributes, ruling out both OVR-only and equal-all-white-average explanations for this observation. This remains a valid historical observation for that state, but v0.5.5 current re-testing shows it must not be interpreted as proof of ST skill weighting.",
+      "confidence": "high",
+      "sources": [
+        "docs/research/build_30527/V054_ROLE_PRIORITY_CHECKPOINT.md",
+        "data/build_30527/index/role_attribute_priority_hypotheses.json",
+        "docs/research/build_30527/V055_CURRENT_ST_BALANCE_RETEST.md"
+      ],
+      "unresolved": [
+        "Which player/profile inputs caused the Balance increase"
+      ]
+    },
+    {
+      "id": "FORMATION-004",
+      "system": "formation",
+      "status": "UNRESOLVED_HYPOTHESIS",
+      "title": "White/key attributes may have unequal role importance",
+      "summary": "Unequal role-specific white-skill importance remains plausible for match actions, but the historical ST Lineup Balance comparison is no longer accepted as direct evidence for it. Current re-testing shows a much stronger Lataille and weaker Roelandt both display 9.9 Balance in the same slot.",
+      "confidence": "low-medium",
+      "sources": [
+        "docs/research/build_30527/V054_ROLE_PRIORITY_CHECKPOINT.md",
+        "data/build_30527/index/role_attribute_priority_hypotheses.json",
+        "docs/research/build_30527/V055_CURRENT_ST_BALANCE_RETEST.md"
+      ],
+      "unresolved": [
+        "Per-role primary/secondary hierarchy",
+        "Exact weights",
+        "Whether Lineup Balance uses role-skill weights at all",
+        "Native/action-consumer attribute relationships"
+      ]
+    },
+    {
+      "id": "TRAIN-003",
+      "system": "training",
+      "status": "COMPANION_LOGIC",
+      "title": "Role+Playstyle target-shape Training creates deliberate specialists",
+      "summary": "v0.5.14 ranks every current role and offered Role+Playstyle white-skill set and applies transparent relative target-shape ratios (S 1.18, A 1.05, B 0.92, C 0.85; secondary-role-only 0.82). Training closes target-shape gaps rather than equalising all white skills. These ratios are companion logic, not official Nordeus caps or coefficients.",
+      "confidence": "transparent-companion-design",
+      "sources": [
+        "docs/research/build_30527/V054_ROLE_PRIORITY_CHECKPOINT.md",
+        "docs/research/build_30527/V0513_COMPLETE_TEAM_PLAN_STITCHING_CHECKPOINT.md",
+        "data/build_30527/index/decision_logic_v2.json"
+      ],
+      "unresolved": [
+        "Private Nordeus numeric per-attribute weighting, if any",
+        "Exact normal-training final gains remain server/runtime-owned",
+        "Calibration of companion target-shape ratios against controlled own-squad fixtures"
+      ]
+    },
+    {
+      "id": "FORMATION-005",
+      "system": "formation",
+      "status": "LIVE_UI_FACT",
+      "title": "Current striker swap displays unchanged 9.9 Lineup Balance",
+      "summary": "In the current user lineup, swapping OVR-157 Stellar Gosling Lataille and OVR-103 Rare François Roelandt in the ST slot leaves the displayed Lineup Balance at 9.9, despite Lataille now being stronger across essentially the entire ST key-skill profile.",
+      "confidence": "high for displayed UI state",
+      "sources": [
+        "docs/research/build_30527/V055_CURRENT_ST_BALANCE_RETEST.md"
+      ],
+      "unresolved": [
+        "Whether underlying server Balance floats are exactly equal or merely round to the same 9.9 display"
+      ]
+    },
+    {
+      "id": "FORMATION-006",
+      "system": "formation",
+      "status": "RESEARCH_CORRECTION",
+      "title": "Lineup Balance is not a safe proxy for per-role skill weights",
+      "summary": "The historical Roelandt/Lataille Balance delta should be interpreted as whole-lineup/placement compatibility evidence, not proof that Shooting/Finishing carry greater ST Balance weight. Per-role skill priority must be researched independently.",
+      "confidence": "high as research boundary",
+      "sources": [
+        "docs/research/build_30527/V055_CURRENT_ST_BALANCE_RETEST.md"
+      ],
+      "unresolved": [
+        "What exact inputs Lineup Balance compares across the XI"
+      ]
+    },
+    {
+      "id": "PLAYER-003",
+      "system": "players",
+      "status": "GAME_UI_FACT",
+      "title": "Tier OVR contribution scales with player-wide key-attribute count",
+      "summary": "Tier grants a fixed bonus to every player-wide key attribute. For outfield players, underlying Tier OVR contribution is bonus × key-count / 15. UI examples confirm ST Stellar +50 across 9 keys => +30 OVR; AML Rare +10 across 8 keys => ~+5.33 underlying / +5 displayed; AMC+AMR Rare +10 across 9 union keys => +6 OVR.",
+      "confidence": "high",
+      "sources": [
+        "docs/research/build_30527/systems/tier_ovr.md"
+      ],
+      "unresolved": [
+        "Exact UI rounding implementation beyond tested examples",
+        "Whether any match-engine path uses reconstructed pre-Tier attributes rather than permanent post-Tier values"
+      ]
+    },
+    {
+      "id": "FORMATION-007",
+      "system": "formation",
+      "status": "CALCULATION",
+      "title": "Current legal formation space exhaustively enumerated",
+      "summary": "Recovered build-30527 rules yield 2,843 hard-legal role-count configurations, 1,893 warning-free configurations and 249 warning-free exactly symmetric configurations. A transparent one-slot advisory-robustness companion filter leaves 12 symmetric candidates.",
+      "confidence": "high",
+      "sources": [
+        "docs/research/build_30527/source_archive/native/NATIVE_FORMATION_VALIDATOR_PASS.md",
+        "docs/research/build_30527/tools/formation_validator_30527.py"
+      ],
+      "unresolved": []
+    },
+    {
+      "id": "FORMATION-008",
+      "system": "formation",
+      "status": "COMPANION_LOGIC",
+      "title": "4-1-1-3-1 DMC+MC is current default long-term Target Formation candidate",
+      "summary": "GK/DL/DC/DC/DR/DMC/MC/AML/AMC/AMR/ST is fully legal, warning-free, symmetric and one-slot advisory-resilient, covers 18/19 active Playstyles and provides complementary DMC+MC key-attribute profiles while preserving both-flank and central tactical options. This is a transparent app target, not an official Nordeus best-formation claim.",
+      "confidence": "medium-high",
+      "sources": [
+        "docs/research/build_30527/systems/formation_target.md",
+        "data/build_30527/index/target_formation_comparison.json"
+      ],
+      "unresolved": [
+        "Opponent-specific counter-formations",
+        "Private Lineup Balance formula",
+        "Private match-engine formation effectiveness"
+      ]
+    },
+    {
+      "id": "TACTICS-004",
+      "system": "tactics",
+      "status": "LIVE_CALIBRATION_OBSERVATION",
+      "title": "2026-09-15 live UI drain intensities and pure-class transition counts supersede constructor defaults for current calibration",
+      "summary": "Controlled live UI testing classified every current tactic option as observed Low/Medium/High intensity (0/1/2 labels only, not linear points). Tackling is Stay On Feet Low, Balanced Medium, Aggressive High. From an all-Low baseline, Medium-only plans first become overall Medium at 3 choices and High at 9; High-only plans first become Medium at 2 choices and High at 6. Mixed Medium/High weighting remains unresolved, so the live profile must not invent a numeric total.",
+      "confidence": "high for per-option intensity classes and pure Medium-only/High-only transition counts; mixed Medium/High numeric weighting remains unresolved",
+      "sources": [
+        "data/calibration/live_tactics_drain_observation_2026-09-15.json",
+        "docs/research/calibration/V0515_TACTICS_DRAIN_LIVE_RECALIBRATION.md"
+      ],
+      "unresolved": [
+        "mixed Medium/High exchange rate / class boundaries",
+        "exact runtime numeric Low/Medium/High contribution values and normalization",
+        "exact per-match condition percentage caused by each tactic package"
+      ]
+    },
+    {
+      "id": "TACTICS-005",
+      "system": "tactics",
+      "status": "GAME_ASSET_FACT",
+      "title": "Assistant Feedback exposes tactic/context relationships",
+      "summary": "Build 30527 ships 227 Assistant Feedback strings. Relevant messages explicitly relate short passing to possession/midfield control; defensive situations to long balls+counter-attacks; fast players to counter-attacks; lane focus to where passing succeeds; midfield numbers to possession; high press to ball recovery with fatigue trade-off; attacking style to offside-trap use; and card accumulation to easing tackling. These are semantic/context relationships, not numerical match weights.",
+      "confidence": "high",
+      "sources": [
+        "source_archive/TACTICS_ASSISTANT_FEEDBACK_EXTRACT.txt",
+        "data/build_30527/index/tactics_assistant_feedback.json",
+        "systems/tactics_semantic_archetypes.md"
+      ],
+      "unresolved": []
+    },
+    {
+      "id": "TACTICS-006",
+      "system": "tactics",
+      "status": "SERVER_RUNTIME_BOUNDARY",
+      "title": "Assistant Feedback trigger logic is server-owned in MatchPeriod",
+      "summary": "Nordeus.Communication.MatchPeriod carries HomeMatchFeedback/AwayMatchFeedback, and MatchFeedback contains Minute, StringId and AssistantId. The client receives the selected feedback message rather than exposing the conditions that selected it. Exact trigger thresholds/decision rules are therefore not recovered client-side.",
+      "confidence": "high",
+      "sources": [
+        "source_archive/native/NATIVE_MATCH_FEEDBACK_BOUNDARY.md"
+      ],
+      "unresolved": [
+        "server-side assistant feedback trigger thresholds and selection logic"
+      ]
+    },
+    {
+      "id": "FORMATION-009",
+      "system": "formation",
+      "status": "COMPANION_CALCULATION",
+      "title": "Robust frontier has two 18/19-playstyle leaders",
+      "summary": "Among all 12 symmetric warning-free one-slot-advisory-resilient role-count shapes, two cover 18/19 active Playstyles: the advanced-wide DMC+MC shape (DL DC DC DR / DMC MC / AML AMC AMR / ST), missing only False Winger, and the midfield-wide DMC+MC shape (DL DC DC DR / DMC ML MC MR / AMC ST), missing only Inside Forward. The advanced-wide version remains the default target because it retains four advanced attacking roles and higher Shooting/Finishing role-key membership while preserving every native structural warning group.",
+      "confidence": "high",
+      "sources": [
+        "data/build_30527/index/formation_resilient_frontier.json",
+        "systems/formation_target.md"
+      ],
+      "unresolved": []
+    },
+    {
+      "id": "MENTOR-010",
+      "system": "mentors",
+      "status": "COMPANION_LOGIC_GAP",
+      "title": "Signature semantics are not integrated into current Mentor ranking",
+      "summary": "mentor-synergy-v3 ranks direct Tactical match, active Attribute key-skill coverage, Signature-unlocked Boolean, then stable order. Exact Signature activation conditions/trade-offs are supporting text only, so three-effect Mentor decision support is not finished.",
+      "confidence": "high",
+      "sources": [
+        "js/mentor-engine.js",
+        "docs/research/build_30527/V058_MENTOR_ST_COMMUNITY_CHECKPOINT.md"
+      ],
+      "unresolved": [
+        "rule-based pre-match Signature-context fit",
+        "halftime/live Mentor switch logic"
+      ]
+    },
+    {
+      "id": "MENTOR-011",
+      "system": "mentors",
+      "status": "GAME_STATIC_CLIENT+OFFICIAL_CURRENT",
+      "title": "Mentors have three Prestige levels after Level 10",
+      "summary": "Current client and official Help both prove Mentor progression continues after Level 10 through 3 Prestige levels; client state exposes PriceForNextPrestige/PrestigeProgress and resource strings identify Signature Seals as the Prestige gating currency used to upgrade Signature Move.",
+      "confidence": "high for current official product rules",
+      "sources": [
+        "https://nordeus.helpshift.com/hc/en/3-top-eleven-be-a-soccer-manager/faq/1805-leveling-up-mentors/?l=en",
+        "https://nordeus.helpshift.com/hc/en/3-top-eleven-be-a-soccer-manager/faq/1803-top-eleven-2027-is-here/",
+        "data/build_30527/index/mentor_effects.json",
+        "data/current_windows_client_2026-09-14/mentor_full_client_evidence.json",
+        "docs/research/build_30527/V059_FULL_WINDOWS_GAME_CHECKPOINT.md"
+      ],
+      "unresolved": [
+        "Exact build-30527 Prestige/Signature-Seal protocol/static fields"
+      ]
+    },
+    {
+      "id": "PLAYER-004",
+      "system": "players",
+      "status": "COMPANION_LOGIC",
+      "title": "First qualitative ST Playstyle priority bands preserved",
+      "summary": "Cross-source evidence supports a qualitative ST scoring core of Shooting+Finishing with Positioning structural support; Poacher, Target Man and False Nine receive separate evidence-based modifiers. No private numeric Nordeus weights are claimed.",
+      "confidence": "medium-high as transparent companion model",
+      "sources": [
+        "data/build_30527/index/st_role_priority_evidence.json",
+        "data/build_30527/white_skill_map_30527.json",
+        "data/build_30527/normal_drills.json",
+        "docs/research/build_30527/V058_MENTOR_ST_COMMUNITY_CHECKPOINT.md"
+      ],
+      "unresolved": [
+        "Numeric priority weights",
+        "False Nine Passing/Positioning priority",
+        "Special Ability modifier",
+        "tactic-context modifier"
+      ]
+    },
+    {
+      "id": "FORMATION-010",
+      "system": "formation",
+      "status": "COMMUNITY_CORROBORATION",
+      "title": "Current community structure evidence does not overturn Formation v1",
+      "summary": "Recent player reports repeatedly value midfield control and often pair a single DMC with a back four; these observations are compatible with the current target but remain anecdotal and do not prove a universal best formation.",
+      "confidence": "community-only",
+      "sources": [
+        "data/build_30527/index/community_evidence_2026-09-14.json",
+        "docs/research/build_30527/V058_MENTOR_ST_COMMUNITY_CHECKPOINT.md"
+      ],
+      "unresolved": []
+    },
+    {
+      "id": "SA-003",
+      "system": "special_abilities",
+      "status": "RESEARCH_BOUNDARY",
+      "title": "Current ST Special Ability weighting cannot be safely recovered from static/community evidence",
+      "summary": "Current client explicitly represents role/player SA eligibility and exact live-match SA activation events, but no universal static role→SA table or comparable inherent effect multiplier/ranking has yet been recovered. Shadow Striker is current; LongShots is only the internal enum/localisation token for that entry. Community rankings remain contradictory, so ST SA numeric weighting stays unresolved pending deeper native/static work or controlled event captures.",
+      "confidence": "high as boundary",
+      "sources": [
+        "data/build_30527/special_abilities_30527.json",
+        "data/build_30527/index/st_role_priority_evidence.json",
+        "docs/research/build_30527/V058_MENTOR_ST_COMMUNITY_CHECKPOINT.md",
+        "https://nordeus.helpshift.com/hc/en/3-top-eleven-be-a-soccer-manager/faq/778-how-does-adding-a-new-special-ability-work/",
+        "data/current_windows_client_2026-09-14/special_ability_current_client.json",
+        "docs/research/build_30527/V059_FULL_WINDOWS_GAME_CHECKPOINT.md"
+      ],
+      "unresolved": [
+        "current private SA multipliers",
+        "current attacker-SA action hooks",
+        "controlled live activation evidence"
+      ]
+    },
+    {
+      "id": "PLAYER-005",
+      "system": "players",
+      "status": "COMPANION_LOGIC",
+      "title": "ST tactic context can be separated by Playstyle without fixed presets",
+      "summary": "Target Man has the strongest current context match: official aerial-pass/hold-up semantics plus Lewis Green's extracted Wing/Crossing/Heading/Aerial package support cross/aerial service. False Nine and Poacher have clear role semantics but insufficient evidence for fixed passing/focus/counter presets.",
+      "confidence": "medium-high for Target Man; medium/low for fixed settings on the others",
+      "sources": [
+        "data/build_30527/index/st_role_priority_evidence.json",
+        "docs/research/build_30527/V058_MENTOR_ST_COMMUNITY_CHECKPOINT.md"
+      ],
+      "unresolved": [
+        "whether Long Pass is a specific Target Man engine trigger",
+        "fixed False Nine tactic mappings",
+        "fixed Poacher tactic mappings"
+      ]
+    },
+    {
+      "id": "MENTOR-012",
+      "system": "mentors",
+      "status": "COMPANION_RULE_DESIGN",
+      "title": "Signature-aware Mentor decision architecture mapped without universal numeric scoring",
+      "summary": "All seven Signatures are now mapped to explicit pre-match or halftime/live context rules. Herrera/Green have direct selected-plan/action context; Braun and Makélélé depend on live halftime/score state; Cesc, Shearer and Vidić carry explicit opportunity/cost/risk context. Production recommender remains unchanged pending rule tests.",
+      "confidence": "high as transparent companion architecture",
+      "sources": [
+        "data/build_30527/index/mentor_effects.json",
+        "data/build_30527/index/mentor_signature_rule_design.json",
+        "docs/research/build_30527/V058_MENTOR_ST_COMMUNITY_CHECKPOINT.md"
+      ],
+      "unresolved": [
+        "runtime implementation/test contract",
+        "Prestige-level exact magnitude/state fields"
+      ]
+    },
+    {
+      "id": "SA-004",
+      "system": "special_abilities",
+      "status": "GAME_STATIC_CLIENT",
+      "title": "LongShots is an internal enum/localisation token for Shadow Striker",
+      "summary": "Current client localizes special_ability_6 and LongShots keys as Shadow Striker. LongShots is not a separate player-facing Special Ability name and must never be presented as one.",
+      "confidence": "high",
+      "sources": [
+        "data/current_windows_client_2026-09-14",
+        "docs/research/build_30527/V059_FULL_WINDOWS_GAME_CHECKPOINT.md"
+      ],
+      "unresolved": []
+    },
+    {
+      "id": "SA-005",
+      "system": "special_abilities",
+      "status": "GAME_STATIC_CLIENT",
+      "title": "Three Special Ability slots are supported",
+      "summary": "Current metadata/resources expose first/second/third ability fields and explicit Third Special Ability reward/UI text.",
+      "confidence": "high",
+      "sources": [
+        "data/current_windows_client_2026-09-14",
+        "docs/research/build_30527/V059_FULL_WINDOWS_GAME_CHECKPOINT.md"
+      ],
+      "unresolved": []
+    },
+    {
+      "id": "MATCH-001",
+      "system": "match_stream",
+      "status": "GAME_STATIC_CLIENT",
+      "title": "SA and Playstyle activations are explicit match-stream events",
+      "summary": "Football Engine streaming descriptors record SpecialAbilityType and PlaystyleTriggerType/PlaystyleOutcomeType, enabling future controlled capture counting.",
+      "confidence": "high",
+      "sources": [
+        "data/current_windows_client_2026-09-14",
+        "docs/research/build_30527/V059_FULL_WINDOWS_GAME_CHECKPOINT.md"
+      ],
+      "unresolved": [
+        "Inherent SA effect multiplier",
+        "full trigger threshold logic"
+      ]
+    },
+    {
+      "id": "PLAYSTYLE-002",
+      "system": "playstyles",
+      "status": "GAME_STATIC_CLIENT",
+      "title": "Per-Playstyle post-match semantic feedback exists",
+      "summary": "Current resources contain Playstyle-specific post-match and trait-test text. Target Man explicitly links to high balls, aerial control, long passes, crosses and hold-up; analogous semantics exist for all current Playstyles.",
+      "confidence": "high",
+      "sources": [
+        "data/current_windows_client_2026-09-14",
+        "docs/research/build_30527/V059_FULL_WINDOWS_GAME_CHECKPOINT.md"
+      ],
+      "unresolved": [
+        "Numeric hidden Playstyle coefficients"
+      ]
+    },
+    {
+      "id": "MENTOR-013",
+      "system": "mentors",
+      "status": "GAME_STATIC_CLIENT",
+      "title": "Signature Seals are the Prestige gating currency",
+      "summary": "Current resource strings explicitly state Signature Seals Prestige Mentors and further improve Signature Moves.",
+      "confidence": "high",
+      "sources": [
+        "data/current_windows_client_2026-09-14",
+        "docs/research/build_30527/V059_FULL_WINDOWS_GAME_CHECKPOINT.md"
+      ],
+      "unresolved": []
+    },
+    {
+      "id": "TACTICS-010",
+      "system": "tactics",
+      "status": "GAME_STATIC_CLIENT",
+      "title": "Current client still models condition drain across all 11 tactic dimensions",
+      "summary": "TacticsConditionDrainSettings/Overrides/Repo/Service cover all 11 tactical families. Current numeric override values were not safely recovered from the newer client.",
+      "confidence": "high",
+      "sources": [
+        "data/current_windows_client_2026-09-14",
+        "docs/research/build_30527/V059_FULL_WINDOWS_GAME_CHECKPOINT.md"
+      ],
+      "unresolved": [
+        "current Windows-client numeric override table"
+      ]
+    },
+    {
+      "id": "COMMUNITY-001",
+      "system": "formation_tactics_mentors",
+      "status": "COMPANION_LOGIC_EVIDENCE",
+      "title": "2024-26 forum + Reddit rules support joint plan scoring",
+      "summary": "Recent community evidence repeatedly supports central midfield/DMC coverage, opponent weak-lane exploitation, plan-dependent passing and Mentor alignment, while conflicting on a universal 3CB/back-four winner or one fixed tactic recipe. Use these as transparent companion ranking rules only.",
+      "confidence": "medium-high for structural principles; lower for individual formation/mentor matchup anecdotes",
+      "sources": [
+        "docs/research/build_30527/V059_COMMUNITY_LOGIC_CHECKPOINT.md",
+        "data/build_30527/index/community_logic_2024_2026.json",
+        "data/build_30527/index/community_evidence_2026-09-14.json"
+      ],
+      "unresolved": [
+        "numeric companion score calibration",
+        "universal current-meta backline winner",
+        "fixed pressing/offside/man-marking recipe"
+      ]
+    },
+    {
+      "id": "TRAIN-004",
+      "system": "training",
+      "status": "GAME_FACT",
+      "title": "Harder regular drills carry greater base training XP",
+      "summary": "Captured build-30527 intensity data maps Very Easy/Easy/Medium/Hard/Very Hard to XP per player 1/2/3/4/5 and condition drop 0.75/1.5/2.25/3.0/3.75. Regular drill level adds +10/+20/+30% effect. v0.5.14 uses strength = XP × (1 + effect%) so, for the same useful white-skill coverage and drill level, harder drills rank above easier drills in Max Growth. Exact final AttributeGain remains server-authoritative.",
+      "confidence": "high",
+      "sources": [
+        "data/build_30527/intensity_system.json",
+        "data/build_30527/drill_level_system.json",
+        "docs/reference/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.md",
+        "docs/research/build_30527/source_archive/NATIVE_FORMULAS_PASS5.md"
+      ],
+      "unresolved": [
+        "Exact server-side final per-attribute percentage gain for a completed normal session."
+      ]
+    },
+    {
+      "id": "TACTICS-011",
+      "system": "tactics",
+      "status": "LIVE_FACT",
+      "title": "FocusPassingCenter is displayed as Through the Middle in the current live UI",
+      "summary": "A current live Top Eleven tactics screenshot supplied by the user shows Focus Passing choices Left Flank, Right Flank, Both Flanks, Through the Middle and Balanced. The recovered current client still exposes internal enum FocusPassingCenter, so companion key center is retained internally and mapped to user-facing Through the Middle.",
+      "confidence": "high",
+      "sources": [
+        "docs/research/calibration/V0517_FOCUS_PASSING_LIVE_UI_LABEL.md",
+        "data/current_windows_client_2026-09-14/tactics_condition_drain_schema.json"
+      ],
+      "unresolved": []
+    }
+  ]
+}

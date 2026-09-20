@@ -1,0 +1,38 @@
+{
+  "version": "v0.5.18",
+  "status": "RELEASE v0.5.18 DRAIN BAND INTENT FIX — v0.5.15 CALIBRATED OWN-SQUAD MODEL OTHERWISE UNCHANGED",
+  "generated_date": "2026-09-19",
+  "files": {
+    "decision_logic_v2.json": {
+      "sha256": "180f004f85ff573be665a1ea33040cbf63fdb9e450c17f17d0e2df3a21b0ae7d",
+      "bytes": 122509
+    },
+    "strategy_strings_v2.json": {
+      "sha256": "7fcd614e17c18d20460cb14020df180911449f31ac765e5685ac3b980b78e7f1",
+      "bytes": 18590
+    }
+  },
+  "counts": {
+    "feature_quality_definitions": 13,
+    "core_coverage_slots": 11,
+    "flexibility_slots": 5,
+    "availability_depth_slots": 4,
+    "formation_candidates": 12,
+    "formation_rules": 11,
+    "tactic_dimensions": 11,
+    "tactic_options": 33,
+    "tactic_rules": 56,
+    "playstyle_tactic_affinities": 19,
+    "special_ability_tactic_affinities": 12,
+    "mentors": 7,
+    "role_training_profiles": 12,
+    "role_playstyle_profiles": 28,
+    "training_tactic_modifiers": 21,
+    "training_sa_modifiers": 6,
+    "set_piece_slots": 10,
+    "target_shape_tiers": 4,
+    "explanation_strings": 143
+  },
+  "runtime_boundary": "v0.5.18 preserves the v0.5.15 calibrated own-squad Formation/Set Pieces/Mentor/Training model and all opponent-free boundaries, while changing Drain Limit from a widening ceiling to an explicit Low/Medium/High target band. Mixed-intensity live drain weighting remains unresolved and is not fabricated.",
+  "next_step": "Treat v0.5.18 drain-band semantics as the active contract. Reopen numeric live-drain calibration only when current server/runtime weighting is recovered."
+}

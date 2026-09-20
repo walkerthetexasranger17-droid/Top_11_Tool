@@ -1,0 +1,86 @@
+{
+  "date": "2026-09-15",
+  "status": "LIVE_OBSERVED_RELATIVE_DRAIN_CALIBRATION",
+  "source": "User live Top Eleven 2027 tactics drain-bar testing",
+  "evidence_class": "LIVE_UI_OBSERVATION",
+  "important_boundary": "Values 0/1/2 are live-observed per-option drain intensity classes (Low/Medium/High ordering), not proven linear numeric contributions or exact condition percentages.",
+  "native_formula_context": "Current client proves additive condition-drain processing across 11 tactic dimensions, but exact current Low/Medium/High contribution values, normalization factor and class thresholds are server/runtime supplied.",
+  "dimensions": {
+    "shooting": {
+      "sight": 0,
+      "balanced": 1,
+      "box": 2
+    },
+    "passing": {
+      "long": 0,
+      "mixed": 1,
+      "short": 2
+    },
+    "focus": {
+      "left": 0,
+      "right": 0,
+      "center": 0,
+      "balanced": 1,
+      "both": 2
+    },
+    "cross": {
+      "low": 0,
+      "medium": 0,
+      "high": 0
+    },
+    "lost": {
+      "regroup": 0,
+      "counterPress": 1
+    },
+    "won": {
+      "buildup": 0,
+      "counter": 1
+    },
+    "mentality": {
+      "normal": 0,
+      "defending": 1,
+      "attacking": 1,
+      "hardDefending": 2,
+      "hardAttacking": 2
+    },
+    "marking": {
+      "zonal": 0,
+      "man": 1
+    },
+    "pressing": {
+      "low": 0,
+      "mid": 1,
+      "high": 2
+    },
+    "backLine": {
+      "offside": 0,
+      "track": 1
+    },
+    "tackling": {
+      "stay": 0,
+      "balanced": 1,
+      "aggressive": 2
+    }
+  },
+  "relative_minimum": 0,
+  "confirmed_major_legacy_conflict": "Legacy/default client profile ranked tackling Balanced < Aggressive < Stay On Feet for drain. Live 2027 observation ranks Stay On Feet < Balanced < Aggressive.",
+  "unresolved": [
+    "Exact current server numeric contribution assigned to Low/Medium/High option intensities",
+    "Exact current server normalized Medium/High thresholds",
+    "How mixed counts of Medium- and High-intensity options combine at the class boundaries",
+    "Exact per-match condition percentage caused by each tactic package"
+  ],
+  "release_rule": "Use the live observations as authoritative option-intensity ordering. Until hidden numeric weights or sufficient mixed-boundary observations are recovered, do not sum 0/1/2 as linear drain points and do not use guessed Low/Medium/High thresholds for production filtering.",
+  "class_transition_observations": {
+    "all_low_baseline": "Low",
+    "medium_intensity_only": {
+      "first_medium_at_count": 3,
+      "first_high_at_count": 9
+    },
+    "high_intensity_only": {
+      "first_medium_at_count": 2,
+      "first_high_at_count": 6
+    },
+    "interpretation": "These measurements prove that intensity class 2 is not safely modelled as exactly twice intensity class 1. They constrain the hidden numeric mapping but do not uniquely identify it."
+  }
+}

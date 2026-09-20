@@ -1,0 +1,360 @@
+{
+  "evidence_model": {
+    "raw_arrays": "LIVE FACT from captured mentor state",
+    "descriptions_and_units": "GAME ASSET FACT from build-30527 localisation",
+    "exact_football_engine_consumer": "UNRESOLVED"
+  },
+  "mentors": [
+    {
+      "display_name": "Rubén Herrera",
+      "internal_id": "saboteur",
+      "level": 7,
+      "name_confidence": "live-confirmed",
+      "tactic": {
+        "id": "tacticCounterAttackEffectiveness",
+        "current": [
+          30
+        ],
+        "next": [
+          30
+        ],
+        "semantics": "Counter Attack effectiveness +{0}%"
+      },
+      "attribute": {
+        "id": "attributeCreativityPassing",
+        "current": [
+          20
+        ],
+        "next": [
+          25
+        ],
+        "semantics": "All players +{0} Creativity and +{0} Passing during the match"
+      },
+      "signature": {
+        "id": "signatureBlindSide",
+        "current": [
+          30
+        ],
+        "next": [
+          35
+        ],
+        "semantics": "During a counter-attack, opponent Marking, Positioning and Speed are {0}% less effective"
+      }
+    },
+    {
+      "display_name": "Lewis Green",
+      "internal_id": "wing_commander",
+      "level": 8,
+      "name_confidence": "live-confirmed",
+      "tactic": {
+        "id": "tacticWingAttacksEffectiveness",
+        "current": [
+          30
+        ],
+        "next": [
+          30
+        ],
+        "semantics": "Attacks over the Wings effectiveness +{0}%"
+      },
+      "attribute": {
+        "id": "attributeCrossingHeading",
+        "current": [
+          20
+        ],
+        "next": [
+          40
+        ],
+        "semantics": "All players +{0} Crossing and +{0} Heading during the match"
+      },
+      "signature": {
+        "id": "signatureAerialDominance",
+        "current": [
+          80
+        ],
+        "next": [
+          81
+        ],
+        "semantics": "On crosses, defender Heading is {0}% less effective in aerial duels"
+      }
+    },
+    {
+      "display_name": "Jonas Braun",
+      "internal_id": "analyst",
+      "level": 4,
+      "name_confidence": "live-confirmed",
+      "tactic": {
+        "id": "tacticLongPassEffectiveness",
+        "current": [
+          30
+        ],
+        "next": [
+          30
+        ],
+        "semantics": "Long Pass effectiveness +{0}%"
+      },
+      "attribute": {
+        "id": "attributeStrengthPositioning",
+        "current": [
+          5
+        ],
+        "next": [
+          10
+        ],
+        "semantics": "All players +{0} Strength and +{0} Positioning during the match"
+      },
+      "signature": {
+        "id": "signatureAdaptiveBlueprint",
+        "current": [
+          20
+        ],
+        "next": [
+          21
+        ],
+        "semantics": "At halftime, identify opponent weakest defensive zone; players attacking through it get +{0} All Attributes for rest of match"
+      }
+    },
+    {
+      "display_name": "Cesc Fàbregas",
+      "internal_id": "architect",
+      "level": 6,
+      "name_confidence": "app-asset/display mapping",
+      "tactic": {
+        "id": "tacticShortPassEffectiveness",
+        "current": [
+          30
+        ],
+        "next": [
+          30
+        ],
+        "semantics": "Short Pass effectiveness +{0}%"
+      },
+      "attribute": {
+        "id": "attributeDribblingShooting",
+        "current": [
+          10
+        ],
+        "next": [
+          15
+        ],
+        "semantics": "All players +{0} Dribbling and +{0} Shooting during the match"
+      },
+      "signature": {
+        "id": "signatureMomentumChain",
+        "current": [
+          15,
+          8
+        ],
+        "next": [
+          15,
+          6
+        ],
+        "semantics": "Each successful pass makes the next {0}% harder to intercept; midfielders lose {1}% more Stamina per attack"
+      }
+    },
+    {
+      "display_name": "Alan Shearer",
+      "internal_id": "deadball_specialist",
+      "level": 8,
+      "name_confidence": "live-confirmed",
+      "tactic": {
+        "id": "tacticSoloDribbleEffectiveness",
+        "current": [
+          30
+        ],
+        "next": [
+          30
+        ],
+        "semantics": "Dribbling action effectiveness +{0}%"
+      },
+      "attribute": {
+        "id": "attributeStrengthShooting",
+        "current": [
+          20
+        ],
+        "next": [
+          25
+        ],
+        "semantics": "All players +{0} Strength and +{0} Shooting during the match"
+      },
+      "signature": {
+        "id": "signatureAnkleBreaker",
+        "current": [
+          25,
+          10
+        ],
+        "next": [
+          30,
+          10
+        ],
+        "semantics": "Corners, Free Kicks and Penalties are {0}% more effective; if missed, opponent attackers get -{1}% to their next attack"
+      }
+    },
+    {
+      "display_name": "Nemanja Vidić",
+      "internal_id": "iron_guard",
+      "level": 6,
+      "name_confidence": "app-asset/display mapping",
+      "tactic": {
+        "id": "tacticDefensiveActionsEffectivenessWithStaminaPenalty",
+        "current": [
+          25
+        ],
+        "next": [
+          25
+        ],
+        "semantics": "Defensive actions +{0}% effective, at fixed 10% more Condition/Stamina cost (localisation wording varies)"
+      },
+      "attribute": {
+        "id": "attributeTacklingBravery",
+        "current": [
+          15
+        ],
+        "next": [
+          20
+        ],
+        "semantics": "All players +{0} Tackling and +{0} Bravery during the match"
+      },
+      "signature": {
+        "id": "signatureIronCheck",
+        "current": [
+          2,
+          10
+        ],
+        "next": [
+          5,
+          8
+        ],
+        "semantics": "Each successful defensive check drains {0}% of opponent attacker's maximum Condition; card risk +{1}%"
+      }
+    },
+    {
+      "display_name": "Claude Makélélé",
+      "internal_id": "enforcer",
+      "level": 7,
+      "name_confidence": "app-asset/display mapping",
+      "tactic": {
+        "id": "tacticDefensiveActionsEffectivenessAgainstShortPasses",
+        "current": [
+          25
+        ],
+        "next": [
+          25
+        ],
+        "semantics": "Defensive actions are {0}% more effective against Short Passes"
+      },
+      "attribute": {
+        "id": "attributeBraveryPositioning",
+        "current": [
+          20
+        ],
+        "next": [
+          25
+        ],
+        "semantics": "All players +{0} Bravery and +{0} Positioning during the match"
+      },
+      "signature": {
+        "id": "signatureParkingTheBus",
+        "current": [
+          15,
+          10
+        ],
+        "next": [
+          20,
+          10
+        ],
+        "semantics": "While leading, defenders +{0} to all Defensive attributes; team's Attacking attributes -{1}"
+      }
+    }
+  ],
+  "protocol": {
+    "MatchPeriod": {
+      "45": "HomeMentorStateSnapshot",
+      "46": "AwayMentorStateSnapshot"
+    },
+    "JoinMatchResponse": {
+      "76": "MentorStateSnapshot",
+      "77": "HomeMentorStateSnapshot",
+      "78": "AwayMentorStateSnapshot"
+    },
+    "AssignMentorInMatchRequest": {
+      "1": "MentorId",
+      "2": "MatchId"
+    },
+    "AssignMentorInMatchResponse": {
+      "1": "Status",
+      "2": "FullStateSnapshot"
+    },
+    "status_enum": {
+      "ValidationFailed": 0,
+      "Ok": 1,
+      "NoEffect": 2,
+      "NotPresent": 3
+    }
+  },
+  "architecture": {
+    "state_flow": [
+      "MentorsState protobuf",
+      "MentorsStateDtoExtensions.ToDomain",
+      "MentorsStateDomain",
+      "MentorDomain[]",
+      "MentorBoostDomain[]"
+    ],
+    "boost_fields": [
+      "Id",
+      "CurrentEffects[]",
+      "NextLevelEffects[]"
+    ],
+    "asset_provider_methods": [
+      "EnsureLoaded",
+      "IsLoaded",
+      "TryGetEntry",
+      "GetBoostIds"
+    ],
+    "live_service": [
+      "HomeMentorsState",
+      "AwayMentorsState",
+      "MentorStateUpdated",
+      "UpdateMentorsStateIfPresentInPeriod",
+      "AssignMentorInMatch",
+      "UnassignMentorInMatch",
+      "UpdateMentorStateAfterHalftimeSwap"
+    ]
+  },
+  "official_current_progression_2026_09_14": {
+    "evidence": "GAME FACT from current official Top Eleven Help Center; static build-30527 representation UNRESOLVED",
+    "levels": "1-10 plus 3 Prestige levels",
+    "attribute_unlock_level": 5,
+    "signature_unlock_level": 10,
+    "prestige_levels": 3,
+    "prestige_requirement": "Mentor XP + Signature Seal per stage",
+    "prestige_effect": "further upgrades Signature Move",
+    "halftime_swap": true,
+    "sources": [
+      "https://nordeus.helpshift.com/hc/en/3-top-eleven-be-a-soccer-manager/faq/1805-leveling-up-mentors/?l=en",
+      "https://nordeus.helpshift.com/hc/en/3-top-eleven-be-a-soccer-manager/faq/1803-top-eleven-2027-is-here/"
+    ],
+    "embedded_static_search": "No Prestige/Signature Seal structure recovered in the embedded research archive during v0.5.8. Do not invent protocol fields."
+  },
+  "companion_recommender_v057_audit": {
+    "status": "INCOMPLETE_FOR_THREE_EFFECT_DECISION_SUPPORT",
+    "runtime_model": "mentor-synergy-v3",
+    "ranking_order": [
+      "direct Tactical-family match",
+      "active Attribute-family key-skill coverage",
+      "Signature unlocked boolean",
+      "stable order"
+    ],
+    "gap": "Signature semantics/activation conditions are not scored or rule-matched; Signature is only an availability tie-break.",
+    "recommended_next_architecture": [
+      "pre-match semantic fit",
+      "halftime/live context switch advisor"
+    ],
+    "numeric_cross_mentor_signature_score": "NOT_APPROVED"
+  },
+  "current_windows_client_2026_09_14": {
+    "prestige": "Client-proven: 3 prestige stages represented; PriceForNextPrestige + PrestigeProgress[]",
+    "currency": "Signature Seals explicitly identified as Prestige gating currency",
+    "effects": "CurrentEffects[] and NextLevelEffects[] preserved; signature localization formulas recovered",
+    "source": "data/current_windows_client_2026-09-14/mentor_full_client_evidence.json"
+  }
+}

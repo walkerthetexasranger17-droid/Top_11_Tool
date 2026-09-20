@@ -1,0 +1,14 @@
+Top Eleven Tool v0.4.10
+Accounts & Cloud Foundation
+
+- Firebase Authentication + Firestore client foundation
+- Profile & Security page
+- Verified email change + password change
+- Optional TOTP authenticator MFA
+- Per-user Firestore key/value sync with local offline cache
+- Gemini scanner API key remains device-local
+- Existing scanner/training/team-plan logic retained
+
+See ../setup/FIREBASE.md before first cloud login.
+v0.4.10: removed all paid authentication UI and paid-plan prompts; authenticator-app TOTP is the only in-app second factor; added clear hover/cursor/focus feedback to the top-right Profile & Security button; improved local/PWA update freshness. Scanner logic unchanged.
+v0.4.9: polished Google + Email/Password auth choice, removed abandoned social-provider code, added mandatory MFA gate for email/password changes, and exposed cloud sync status. Scanner logic unchanged.

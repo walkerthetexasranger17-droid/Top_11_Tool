@@ -1,0 +1,183 @@
+{
+  "schema_version": 3,
+  "updated": "2026-09-14",
+  "status": "ST_COMPANION_EVIDENCE_BANDS_DRAFTED_NUMERIC_WEIGHTS_UNRESOLVED",
+  "rule": "Do not use Lineup Balance as direct evidence of per-role attribute weighting; do not use production weighting until independently proven.",
+  "known_role_key_membership_source": "data/build_30527/white_skill_map_30527.json",
+  "hypothesis": "White/key attributes within a role may have unequal match-action importance, but the historical Roelandt/Lataille Lineup Balance result is not sufficient evidence for those weights.",
+  "candidate_primary_attributes": {
+    "ST": {
+      "attributes": [
+        "Shooting",
+        "Finishing"
+      ],
+      "status": "HYPOTHESIS_ONLY_NOT_SUPPORTED_BY_BALANCE_ALONE",
+      "reason": "Shooting/Finishing remain plausible football-action candidates, but the current re-test shows Lineup Balance does not track this pair strongly enough to establish role weighting."
+    }
+  },
+  "all_other_roles": {
+    "status": "UNRESOLVED",
+    "instruction": "Search game/native data before assigning primary attributes or weights."
+  },
+  "training_design_boundary": {
+    "approved": "Use priority tiers only after evidence is recovered.",
+    "not_approved": [
+      "Equalising all white skills to one target",
+      "Hard-coding 250/180 or other target values",
+      "Inventing per-role weights from football intuition"
+    ]
+  },
+  "historical_controlled_evidence": {
+    "role": "ST",
+    "baseline_player": {
+      "name": "Gosling Lataille",
+      "quality": 51,
+      "balance": 9.8297964933,
+      "key_attributes": {
+        "Passing": 52.62,
+        "Dribbling": 52.74,
+        "Shooting": 53.08,
+        "Finishing": 57.34,
+        "Positioning": 54.17,
+        "Heading": 55.71,
+        "Strength": 53.52,
+        "Speed": 54.43,
+        "Creativity": 50.95
+      },
+      "equal_weight_key_mean": 53.84,
+      "playstyle": "Poacher",
+      "playstyle_level": "Intermediate"
+    },
+    "replacement_player": {
+      "name": "François Roelandt",
+      "quality": 44,
+      "balance": 10.0,
+      "key_attributes": {
+        "Passing": 58.37,
+        "Dribbling": 57.44,
+        "Shooting": 63.46,
+        "Finishing": 67.82,
+        "Positioning": 40.82,
+        "Heading": 44.99,
+        "Strength": 45.37,
+        "Speed": 57.1,
+        "Creativity": 40.94
+      },
+      "equal_weight_key_mean": 52.92,
+      "playstyle": "False Nine",
+      "playstyle_level": "Intermediate"
+    },
+    "balance_delta": 0.1702035067,
+    "key_observation": "Replacement has lower OVR and lower equal-weight all-key mean, but much higher Shooting and Finishing and produces higher server Lineup Balance.",
+    "interpretation_status": "VALID_OBSERVATION_BUT_NOT_ROLE_WEIGHT_PROOF"
+  },
+  "current_retest": {
+    "date": "2026-09-14",
+    "measurement": "UI displayed Lineup Balance",
+    "reported_balance_with_either_ST": 9.9,
+    "precision_boundary": "Underlying server float was not captured in this re-test; equal displayed 9.9 does not prove exact float equality.",
+    "players": {
+      "Gosling Lataille": {
+        "ovr": 157,
+        "tier": "STELLAR",
+        "tier_key_attribute_bonus_text": "+50 permanent increase on all key attributes",
+        "key_attributes": {
+          "Passing": 183,
+          "Dribbling": 183,
+          "Shooting": 190,
+          "Finishing": 201,
+          "Positioning": 201,
+          "Heading": 195,
+          "Strength": 184,
+          "Speed": 187,
+          "Creativity": 173
+        },
+        "equal_weight_key_mean": 188.56
+      },
+      "François Roelandt": {
+        "ovr": 103,
+        "tier": "RARE",
+        "tier_key_attribute_bonus_text": "+10 permanent increase on all key attributes",
+        "key_attributes": {
+          "Passing": 163,
+          "Dribbling": 159,
+          "Shooting": 183,
+          "Finishing": 201,
+          "Positioning": 93,
+          "Heading": 109,
+          "Strength": 111,
+          "Speed": 158,
+          "Creativity": 93
+        },
+        "equal_weight_key_mean": 141.11
+      }
+    },
+    "observation": "Lataille now dominates the ST key-skill profile (Finishing tied) but either striker displays 9.9 Balance in the current lineup.",
+    "evidence_images": [
+      "docs/research/build_30527/evidence/current_striker_balance_2026-09-14/Gosling_Lataille_ST_current.png",
+      "docs/research/build_30527/evidence/current_striker_balance_2026-09-14/Francois_Roelandt_ST_current.png"
+    ]
+  },
+  "research_boundary": [
+    "Lineup Balance may reflect whole-XI capability matching and exact placement rather than direct per-role skill priority.",
+    "Current UI 9.9 is lower precision than the earlier captured server float.",
+    "Seek native/action-consumer evidence before assigning per-role weights."
+  ],
+  "tier_normalisation_note": {
+    "status": "GAME_UI_FACT",
+    "formula": "underlying Tier OVR contribution = tier bonus × player-wide key-attribute count / 15 for outfield players",
+    "research_use": "When comparing trained/base profiles, subtract the Tier bonus from each player-wide key attribute; do not remove Tier for match-facing player selection without evidence.",
+    "source": "docs/research/build_30527/systems/tier_ovr.md"
+  },
+  "st_companion_evidence_model": {
+    "source": "data/build_30527/index/st_role_priority_evidence.json",
+    "base_scoring_core": [
+      "Shooting",
+      "Finishing"
+    ],
+    "base_structural_support": [
+      "Positioning"
+    ],
+    "playstyle_modifiers": {
+      "Poacher": {
+        "elevate": [
+          "Shooting",
+          "Finishing"
+        ],
+        "support": [
+          "Speed",
+          "Creativity",
+          "Positioning"
+        ]
+      },
+      "Target Man": {
+        "elevate": [
+          "Heading",
+          "Strength",
+          "Positioning",
+          "Finishing"
+        ],
+        "support": [
+          "Shooting"
+        ]
+      },
+      "False Nine": {
+        "elevate": [
+          "Dribbling"
+        ],
+        "support": [
+          "Creativity",
+          "Speed",
+          "Shooting",
+          "Finishing"
+        ],
+        "candidate": [
+          "Passing",
+          "Positioning"
+        ]
+      }
+    },
+    "evidence_boundary": "Qualitative COMPANION bands only. No Nordeus numeric weights recovered."
+  },
+  "community_corroboration_source": "data/build_30527/index/community_evidence_2026-09-14.json"
+}

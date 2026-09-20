@@ -1,0 +1,41 @@
+# Build 30527 — Source Manifest
+
+- Windows package version: `27.3.0.0`
+- Reference archive SHA-256: `9715e0892febff74565c1eb3b027fc666d981e88f29703d38fedbd3cf6d99acf`
+- GameAssembly SHA-256: `b17a8e9adeda6a78245f6ac43cdfaa2b768418507bc340f082576ff6c22ec9fe`
+- global-metadata SHA-256: `b0a1896faab8e4b1a9fd01beda787ff12f2a3389d94cd79d585c9e95489cdcfc`
+
+## Embedded evidence
+- `docs/research/build_30527/source_archive/BUILD_30527_IMPLEMENTATION_LEDGER.md` — `3e0f87a4320f7efb9ff4a2ea2f0b38d317c2ad8f3231dd5df0218f11095dcfd2`
+- `docs/research/build_30527/source_archive/FULL_MINE_REPORT.md` — `72a47176705c1c373ad86908747d625b8749ef934cc109ee219734ee0bf21329`
+- `docs/research/build_30527/source_archive/MENTOR_LOCALIZATION_EXTRACT.txt` — `b93132dd561803a2f5b8914e703974d377cf0dc6919d71d62161bcb57a325f83`
+- `docs/research/build_30527/source_archive/NATIVE_FORMULAS_PASS1.md` — `f90094903273a17d88f4c796b1eab199470f8f1e63088ce35d59094db1efcd11`
+- `docs/research/build_30527/source_archive/NATIVE_FORMULAS_PASS2.md` — `3981d6243b14083206da2d6bd98a67ed8cd6216f8ab512bbece7e589326b55cc`
+- `docs/research/build_30527/source_archive/NATIVE_FORMULAS_PASS3.md` — `89f6ac8355e57d3d3f4f8f3626c1c3dbfbd0c915b3212224221ccefd030b9433`
+- `docs/research/build_30527/source_archive/NATIVE_FORMULAS_PASS4.md` — `e4324208746587eabe0300fc8c93f0f75cf2d183636c25e237fc45e79d688435`
+- `docs/research/build_30527/source_archive/NATIVE_FORMULAS_PASS5.md` — `3940e7022e482ac3671ceb85f7c49b09832a059140d73868e55f3cbf3873c3e9`
+- `docs/research/build_30527/source_archive/NATIVE_FORMULAS_PASS6.md` — `87841a3e2d7b8eb3a2d3107ef7ca771b3cf1df785e660351098804b593cfa4e3`
+- `docs/research/build_30527/source_archive/TACTICS_V2_TOOLTIP_EXTRACT.txt` — `82c509a201efd132b12dea80e23eec2d01c231c5fe238208cacba92fe875f470`
+- `docs/research/build_30527/source_archive/TOP_ELEVEN_TOOL_BIBLE_BUILD_30527_v1.1_VERIFIED.md` — `a6ff50f339e7bf4690c63b445870253232bdfa128539bacf7c0f086557019bc8`
+- `docs/research/build_30527/source_archive/Top_Eleven_Build_30527_Verification_Audit.md` — `281e1db88ea5b2d8d1bdef31f6c17f0121c56ac24e6d32b2b1a5ba758a11ce2d`
+
+## User-supplied Tier assets preserved in v0.5.6
+- `docs/research/build_30527/source_archive/tier_assets/TopEleven_Tier_Assets_Source.rar` — `fdf1781d009718e8b04af9fbe584933547addfebc2212d51d28ca459a5d16547` — original RAR5 Tier asset archive supplied by user; preserve for future genuine Tier UI extraction.
+- `docs/research/build_30527/source_archive/tier_assets/lataille_stellar_ovr_breakdown.png` — `4ac047c11ed633b5d5534c9b85218a3689c392962994941f2c7db4cf5c325dd2`
+- `docs/research/build_30527/source_archive/tier_assets/kazachenko_rare_profile.png` — `44f81073b95196c313a3a3a067b1adec4d245e92cb61655b23396826b90b8307`
+- `docs/research/build_30527/source_archive/tier_assets/kazachenko_rare_ovr_breakdown.png` — `fc442d9d9777bff835eb6edd97339b50f9c3d712616b79a2c8a4385e120f0794`
+- `docs/research/build_30527/source_archive/tier_assets/sanchez_rare_profile.png` — `25473a7aeb0bf761b4ac9aafedec07619e52df96a01555528ab6cddcc35024a7`
+- `docs/research/build_30527/source_archive/tier_assets/sanchez_rare_ovr_breakdown.png` — `cd1484aed37ea0f1aa5d5705b4d96dc446394a23bcbfbb2e0b9979a8a906b3a6`
+
+
+## v0.5.7 embedded tactic / Mentor sources
+- `docs/research/build_30527/source_archive/TACTICS_ASSISTANT_FEEDBACK_EXTRACT.txt` — `5cbc025e5f977f80f151be2c474cb1f3f7eca402ace4f4c8ee865c8c8c712f6e` — shipped Assistant Feedback extraction.
+- `docs/research/build_30527/source_archive/native/NATIVE_MATCH_FEEDBACK_BOUNDARY.md` — `e71a0cdb24c9d639f8f2d8823492e0d748df3e8d90087bd88ed19790d7c93e29` — native MatchFeedback server-boundary evidence.
+- `docs/research/build_30527/source_archive/tier_assets/TopEleven_Tier_Assets_Source.rar` — `fdf1781d009718e8b04af9fbe584933547addfebc2212d51d28ca459a5d16547` — preserved original Tier asset archive.
+- `docs/research/build_30527/source_archive/mentor_assets_official/img_mentor_card_big_s1_01.png` — `750421ac9b6074c705cb77dd2b9f098cb29b9678d9c79685a7b7d2114dfe68d5` — official user-supplied game Mentor render; identity mapping intentionally unresolved.
+- `docs/research/build_30527/source_archive/mentor_assets_official/img_mentor_card_big_s1_02.png` — `032c7949e838ab8036773a6bd9b64fca538e1912ee1cae764c94e7e007e1b673` — official user-supplied game Mentor render; identity mapping intentionally unresolved.
+- `docs/research/build_30527/source_archive/mentor_assets_official/img_mentor_card_big_s1_03.png` — `bd20169517dd7d0ce7dc52825bb26cc8cb2c12a8546639c78d450eb7655d2466` — official user-supplied game Mentor render; identity mapping intentionally unresolved.
+- `docs/research/build_30527/source_archive/mentor_assets_official/img_mentor_card_big_s1_04.png` — `c20078d2ac0f1f9ff999fb2619d6067c286eeeef632ea1c882965134571312aa` — official user-supplied game Mentor render; identity mapping intentionally unresolved.
+- `docs/research/build_30527/source_archive/mentor_assets_official/img_mentor_card_big_s1_05.png` — `f77ece3345d5254c3dce5f16ea84478897aef90f87ea5a9f690432eecdf27b76` — official user-supplied game Mentor render; identity mapping intentionally unresolved.
+- `docs/research/build_30527/source_archive/mentor_assets_official/img_mentor_card_big_s1_06.png` — `c63f601a84fe7c7de255cc1a81909b1503f55464f186e800f0b3175cef034575` — official user-supplied game Mentor render; identity mapping intentionally unresolved.
+- `docs/research/build_30527/source_archive/mentor_assets_official/img_mentor_card_big_s1_07.png` — `50e968e7f74bdf05aaeca65789869dca8421c50f8ccb262d916025212213885e` — official user-supplied game Mentor render; identity mapping intentionally unresolved.
